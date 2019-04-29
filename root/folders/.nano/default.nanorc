@@ -1,0 +1,96 @@
+syntax "default"
+comment "#.*$"
+color green "^#.*"
+color brightgreen "^##.*"
+color yellow "^###.*"
+color brightred start="[$@%]" end="([[:alnum:]]|_)*"
+color green "^[ \t]*#.*"
+#color brightwhite ".*="
+#color brightmagenta "=.*"
+## Comments
+color brightwhite,blue "#.*$"
+color cyan "(^|[[:space:]])#.*$"
+color ,green "[[:space:]]+$"
+## Control
+color black,green "\<(if|else|for|function|case|esac|in|select|until|while|do|elif|then|set|\.|done|fi)\>"
+## Control
+color red "\<(ARCH|HOMEPAGE|DESCRIPTION|IUSE|SRC_URI|LICENSE|SLOT|KEYWORDS|FILESDIR|WORKDIR|(P|R)?DEPEND|PROVIDE|DISTDIR|RESTRICT|USERLAND)\>"
+color brightyellow "[(){}[;|<>]"
+## Brackets and redirects
+color brightyellow "\]"
+## Brackets and redirects
+## Builtins
+color brightgreen "\<(source|alias|bg|bind|break|builtin|cd|command|compgen|complete|continue|dirs|disown|echo|enable|eval|exec|exit|fc|fg|getopts|hash|help|history|jobs|kill|let|logout|popd|printf|pushd|pwd|return|set|shift|shopt|suspend|test|times|trap|type|ulimit|umask|unalias|wait)\>"
+
+## Unix Commands
+color brightgreen "\<(arch|awk|bash|bunzip2|bzcat|bzcmp|bzdiff|bzegrep|bzfgrep|bzgrep|bzip2|bzip2recover|bzless|bzmore|cat|chattr|chgrp|chmod|chown|chvt|cp|date|dd|deallocvt|df|dir|dircolors|dmesg|dnsdomainname|domainname|du|dumpkeys|echo|ed|egrep|false|fgconsole|fgrep|fuser|gawk|getkeycodes|gocr|grep|groups|gunzip|gzexe|gzip|hostname|igawk|install|kbd_mode|kbdrate|killall|last|lastb|link|ln|loadkeys|loadunimap|login|ls|lsattr|lsmod|lsmod.old|mapscrn|mesg|mkdir|mkfifo|mknod|mktemp|more|mount|mv|nano|netstat|nisdomainname|openvt|pgawk|pidof|ping|ps|pstree|pwd|rbash|readlink|red|resizecons|rm|rmdir|run-parts|sash|sed|setfont|setkeycodes|setleds|setmetamode|setserial|sh|showkey|shred|sleep|ssed|stat|stty|su|sync|tar|tempfile|touch|true|umount|uname|unicode_start|unicode_stop|unlink|utmpdump|uuidgen|vdir|wall|wc|ypdomainname|zcat|zcmp|zdiff|zegrep|zfgrep|zforce|zgrep|zless|zmore|znew|zsh)\>"
+
+## More Unix Commands
+color green "\<(aclocal|aconnect|aplay|apm|apmsleep|apropos|ar|arecord|as|as86|autoconf|autoheader|automake|awk|basename|bc|bison|c\+\+|cal|cat|cc|cdda2wav|cdparanoia|cdrdao|cd-read|cdrecord|chfn|chgrp|chmod|chown|chroot|chsh|clear|cmp|co|col|comm|cp|cpio|cpp|cut|dc|dd|df|diff|diff3|dir|dircolors|directomatic|dirname|du|env|expr|fbset|file|find|flex|flex\+\+|fmt|free|ftp|funzip|fuser|g\+\+|gawk|gc|gcc|gdb|getent|getopt|gettext|gettextize|gimp|gimp-remote|gimptool|gmake|gs|head|hexdump|id|install|join|kill|killall|ld|ld86|ldd|less|lex|ln|locate|lockfile|logname|lp|lpr|ls|lynx|m4|make|man|mkdir|mknod|msgfmt|mv|namei|nasm|nawk|nc|nice|nl|nm|nm86|nmap|nohup|nop|od|passwd|patch|pcregrep|pcretest|perl|perror|pidof|pr|printf|procmail|prune|ps2ascii|ps2epsi|ps2frag|ps2pdf|ps2ps|psbook|psmerge|psnup|psresize|psselect|pstops|rcs|rev|rm|scp|sed|seq|setterm|shred|size|size86|skill|slogin|snice|sort|sox|split|ssh|ssh-add|ssh-agent|ssh-keygen|ssh-keyscan|stat|strings|strip|sudo|suidperl|sum|tac|tail|tee|test|tr|uniq|unlink|unzip|updatedb|updmap|uptime|users|vmstat|w|wc|wget|whatis|whereis|which|who|whoami|write|xargs|yacc|yes|zip|zsoelim)\>"
+
+## Strings
+#color yellow '"(\.|[^"])*"'
+color brightyellow "'(\\.|[^\'])*'"
+color brightyellow ""(\\.|[^"])*"" "'(\\.|[^'])*'"
+## Added
+## Valid colors: white, black, red, blue, green, yellow, magenta, cyan.
+icolor cyan,red "red"
+icolor brightred,blue "blue"
+icolor black,green "green"
+icolor black,yellow "yellow"
+icolor brightwhite,magenta "magenta"
+icolor black,cyan "cyan"
+icolor black,white "black"
+icolor brightwhite,black "brightwhite"
+icolor brightblack,white "brightblack"
+icolor black,red "red"
+icolor black,blue "blue"
+icolor black,green "green"
+icolor black,yellow "yellow"
+icolor black,magenta "magenta"
+icolor black,cyan "cyan"
+icolor brightcyan "brightcyan"
+icolor brightred "brightred"
+icolor brightblue "brightblue"
+icolor brightgreen "brightgreen"
+icolor brightyellow "brightyellow"
+icolor brightmagenta "brightmagenta"
+icolor brightcyan "brightcyan"
+icolor brightwhite,green "\<(true|=1|=y|=yes|begin|success|win|winning|best|positive|enable|enabled|active|on|yes|all|eveything)\>"
+icolor brightwhite,red "\<(false|=0|=n|=no|=false|warn|end|defeat|lose|losing|die|worst|negative|disable|disabled|inactive|off|no|none|nothing)\>"
+color brightwhite "="
+color brightblue "\<((g|ig)?awk|find|diff|\w{0,4}grep|kill|killall|\w{0,4}less|make|pkill|sed|sudo|tar)\>"
+color brightblue "\<(base(32|64)|basename|cat|chcon|chgrp|chmod|chown|chroot|cksum|comm|cp|csplit|cut|date|dd|df|dir|dircolors|dirname|du|echo|env|expand|expr|factor|false|fmt|fold|head|hostid|id|install|join|link|ln|logname|ls|md5sum|mkdir|mkfifo|mknod|mktemp|mv|nice|nl|nohup|nproc|numfmt|od|paste|pathchk|pinky|pr|printenv|ptx|pwd|readlink|realpath|rm|rmdir|runcon|seq|(sha1|sha224|sha256|sha384|sha512)sum|shred|shuf|sleep|sort|split|stat|stdbuf|stty|sum|sync|tac|tail|tee|test|timeout|touch|tr|true|truncate|tsort|tty|uname|unexpand|uniq|unlink|users|vdir|wc|who|whoami|yes)\>"
+color brightmagenta,black "\<(loc|is_text|R777|ok_fail|online_check|snippets|findarray|shtrace|ubuntu_gmail_mailx-v11.10.sh|clr|antest|my_info|colnames|is_folder|grp|emojify|hextorgb|join.sh|mank|speedtest|loop|samesize|overdrive|highlight.css|rcss|scptopi|quotify|updateall|header_replace|stfu|%s\n|path|newbin|git-cheat|e|88|dir_link|col_word|lnp|liner|yorn|pbcopy|cmdfu|qqlan|wptest|xnumdb|setx|initmnt|sh_timeout|chrootall|open|cheater|caa|src_post.bash|setup_arch.sh|fork|currency.sh|init_helper|ca|exit_if_running.sh|ato|echo-args.sh|colorperl|script.bash|mount2|nmapall|notify|is_there|updategrub|umnt|cout|back.sh|prcol|is_numeric|beautify.rb|is_bash|linerl|mkrlconf.sh|is_in_path|vcprompt|airscript|yorndialog|lscolortest|wp|powerline_simple|undebug|hex|.directory|tre|sc|new_script|colorrgb|patotst|consolidate-path|exit_code|perl_fix.sh|sshpi|print_escapes|hextoxterm|echo-params|tstrnd|aquote|wpconf|colorstrue|shell_prompt.bash|rgbr|ansiweather|rgbtohex|strip_all|rgb|powerlinelatest|.zshrc.save|colandformat|cata|is_match|wpmenu|sh_exit|is_ga|sshga|colorscript|sh_warn|pipestatus|info_script|browser.sh|acheck|freemem|testing.sh|fontconf|kdelogout|template.bash|increment_version|.bash-powerline.sh|emote|colors.sh|base16.bash|mnt|li|lesspipe.sh|lk|exemples|strip|ansi|wpinfo|center_string|wpa_supplicant.conf|clipboard|targz|qqdb|is_pi|wat|rs|pbpaste|wp1|edsc|spark|prep|rsga|box|sshfsga|argv|rmshit.py|prompt_powerlin2|on|wpreconf|source.bash|ainfo|println|pa|shssh|mntsdc|tldr|opti|file_link|is_pipeline|ch|p|synergy.sh|wppw|fortunes|g4.sh|push|calc|prompt.sh|netreset|lnkernelshift-right|coltest|bashful-doc|kill_ps|bashful-execute|ack2|flip|failbackup|bashful-profile|dequote|composure|bashful|bashful-messages|git_prompt|color-spaces.pl|bashful-utils|shdoc|dutop|743|bashful-modes|ffsync|bashful-input|termtheme|colxcapes|colandformat.sh|catall|bashful-terminfo|bashful-files|common.bash|extract|ii)\>"
+color brightwhite,magenta "\<(ANBLUEGREEN|ANDARK|ANLB|ANBM|ANDB|ANLC|ANO|ANBOLD|ANDG|ANLG|ANP|ANSTRIKE|ANB|ANBP|ANDIM|ANLM|ANPLAIN|ANBB|ANBR|ANG|ANLO|ANR|ANUNDER|ANBC|ANBS|ANH|ANLP|ANRED|ANW|ANBG|ANBW|ANHIDDEN|ANLR|ANRES|ANY|ANBLACK|ANBY|ANLY|ANREVERSE|ANBLINK|ANC|ANITALIC|ANM)\>"
+color brightmagenta,black "\<(aex|ccat|cpv|d|unps|exp|ff|gitclone|h|lc|ls|ddv|manc|mkd|ord|mvv|noexit|pacq|pas|pass|pato|psmem|pscpu|rmrf|s|s1|s4|sb|src|typea|yornq|pt|print_args|var2arr|whichpath|wch|title|xv|bg_color|stde|ccat|cpv|d|unps|ff|gitclone|h|lc|ls|manc|mkd|mvv|noexit|pas|pass|pato|psmem|rmrf|s|s1|s4|sb|src|typea|var2arr|wch|prompt_command|RET|do_meteo|git_prompt|meteo|time_echo|wifiip|load_cpu|src|prompt_command|print_title|show_user|ps1_timer|RET|do_meteo|git_prompt|meteo|check_source_files|time_echo|wifiip|xtitle|se|load_cpu|sys_color|ps1_writer)\>"
+color brightgreen "(\{|\}|\(|\)|\;|\]|\[|\`|\\|\$|<|>|!|=|&|\|)"
+color brightgreen "-[Ldefgruwx]\>"
+color brightred "\$\{?[a-zA-Z_0-9]+\}?"
+## Highlight variables ... official portage ones in red, all others in bright red
+color red "\<(S|D|T|PV|PF|P|PN|A)\>" "\<C(XX)?FLAGS\>" "\<LDFLAGS\>" "\<C(HOST|TARGET|BUILD)\>"
+## Highlight variables ... official portage ones in red, all others in bright red
+color green "-(e|d|f|r|g|u|w|x|L)\>"
+color brightgreen "-(eq|ne|gt|lt|ge|le|s|n|z)\>"
+icolor brightred,blue "\$\{?[0-9A-Z_!@#$*?-]+\}?"
+color cyan "(^|[[:space:]])#.*$"
+color ,green "[[:space:]]+$"
+color cyan,magenta "(/[0-9a-z]*/)+[[:space:]]+"
+color brightmagenta "^\[(Unit|Install|Service|Socket)\]"
+color red "="
+color brightblack "(^|[[:space:]])#([^{].*)?$"
+color ,red "	+ +| +	+"
+## Variables
+color brightblue,red start="[$@%]" end="([[:alnum:]]|_)*"
+# NOTE: Keep this section below the Strings section, such that Variables are highlighted inside strings.
+#color yellow ""\(\.|[^"])*"" "'(\\.|[^'])*'"
+color cyan start="(^|[[:space:]])(#|;).*$" end="$"
+# Comments
+color brightblue "(^|[[:space:]])(#|;)"
+# Comments
+icolor green "[[:space:]][0-9]+[0-9.]*[KMGT]*"
+# Numbers
+icolor brightred "(^|[[:space:]])((\[|\()[0-9a-z_!@#$%^&*-]+(\]|\)))"
+# Braces and parentheses
+icolor brightyellow start="=" end="$"
+# Variable name and value

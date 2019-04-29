@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Aug 14 01:17:25 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-08-14#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/reporeset_#######################..::#3#
+repo --color=auto forall -c 'git reset --hard ; git clean -ffdx'
+
+
+

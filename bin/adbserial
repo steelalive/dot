@@ -1,0 +1,39 @@
+#!/bin/bash
+adbserial() {
+	unset serial ANDROID_SERIAL
+
+	export tv_serial="$tv:5555" g4_serial='ZY2242NPXP' g4_lan="$g4:5555"
+	devices=$(adb devices 2>/dev/null)
+	grep $g4_serial <<<$devices &>/dev/null && serial="$g4_serial"
+	grep $tv_serial <<<$devices &>/dev/null && serial="$tv_serial"
+	grep $g4_lan <<<$devices &>/dev/null && serial="$g4_lan"
+	[[ $serial == ZY2242NPXP ]] && ANDROID_SERIAL=ZY2242NPXP
+	[[ $serial == "192.168.0.5:5555" ]] && ANDROID_SERIAL="192.168.0.5:5555"
+	[[ $serial == "$g4_lan" ]] && ANDROID_SERIAL="$g4_lan"
+	#	if [[ ! $serial ]]; then
+	#		for address in "$tv" "$g4"; do
+	#				ANDROID_SERIAL="${address}:5555"
+	#				adb connect $ANDROID_SERIAL
+	#				adb root
+	#				adb connect $ANDROID_SERIAL
+	#				adb remount
+	#				break
+	#		done
+	#	fi
+	LANG=C command \grep --color=auto "$g4_lan" &>/dev/null <<<"$devices" && export serial="$g4_lan"
+	LANG=C command \grep --color=auto "$tv_serial" &>/dev/null <<<"$devices" && export serial="$tv_serial"
+	export tmp_serial=/tmp/adbserial
+	if (($(wc --words <<<$serial) == 2)); then
+		echo export ANDROID_SERIAL="$tv_serial" >"$tmp_serial"
+		#echo $tv_serial > $container_file;
+		export ANDROID_SERIAL=$(cat "$tmp_serial")
+	else
+		[[ $serial ]] || serial="$tv_serial"
+		echo export ANDROID_SERIAL="$serial" >"$tmp_serial"
+		export ANDROID_SERIAL="$serial"
+	fi
+
+	#	ex=$(adb shell echo "/mnt/media_rw/????-????")
+	export ex serial ANDROID_SERIAL
+}
+#adbserial "$@"

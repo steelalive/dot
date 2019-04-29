@@ -1,0 +1,6 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Wed Jun  7 00:13:07 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.2 - #_# #@#070617#@# #2#
+#3#::..#####################_/dot/bin/exit_code_#######################..::#3#
+egrep '^#define EX_.*' /usr/include/sysexits.h | sed -e 's/#define/declare -r/g' | sed 's/\//#/g' | sed -e 's/\s\{1,\}/ /g' | sed -e 's/ \([0-9]\)/\=\1/'g

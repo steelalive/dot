@@ -1,0 +1,15 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Mon Jun  5 21:31:46 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.6 - #_# #@#050617#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+is_bash() {
+	is_it_bash=$1
+	unset ok
+	[[ -f $is_it_bash ]] || return 2
+	head -n1 "$is_it_bash" | grep -q -E -w "sh|bash|ksh" &>/dev/null && ok=1
+	[[ ${is_it_bash##*.} =~ sh|bash|rc ]] && ok=1
+	[[ $ok ]] && return 0
+	return 2
+}
+is_bash "$@"

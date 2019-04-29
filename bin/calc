@@ -1,0 +1,23 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri Sep 30 16:34:00 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.6 - #_# #@#300916#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+function calc() {
+	local result=""
+	result="$(echo -en "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
+	#                       └─ default (when `--mathlib` is used) is 20
+	#
+	if [[ $result == *.* ]]; then
+		# improve the output for decimal numbers
+		echo -en "$result" |
+			sed -e 's/^\./0./' $(# add "0" for cases like ".5"` \
+				-e 's/^-\./-0./'
+			) # add "0" for cases like "-.5"`\
+		-e 's/0*$//;s/\.$//' # remove trailing zeros
+	else
+		echo -en "$result"
+	fi
+	printf "\n"
+}
+calc "$@"

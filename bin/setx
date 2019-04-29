@@ -1,0 +1,25 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Sat Sep 17 16:47:27 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.5 - #_# #@#170916#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+setx() {
+	if [[ $setx ]]; then
+		set -x
+		ANO "-x is set.\n"
+	fi
+	if [[ $setv ]]; then
+		set -v
+		ANO "-v is set.\n"
+	fi
+	if [[ $@ =~ x ]] || [[ $@ == "setx" ]]; then
+		set -x
+		ANO "-x is set.\n"
+	fi
+	if [[ $@ =~ v ]] || [[ $@ == "setv" ]]; then
+		set -v
+		ANO "-v is set.\n"
+	fi
+}
+export -f setx
+setx

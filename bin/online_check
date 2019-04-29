@@ -1,0 +1,12 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri Apr 14 12:48:31 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.1.1 - #_# #@#140417#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+if p 88 &>/dev/null; then
+	touch /tmp/online
+	exit 0
+else
+	ANRED "internet_offline\n"
+	exit 1
+fi

@@ -1,0 +1,9 @@
+if [ -d "$1" ]; then
+
+eval $(dircolors -b "/dot/LS_COLOR")
+exec ls --color=force -lF "$1"
+fi
+  case $1 in
+    *.json) if [ -x `which jq 2>/dev/null` ]; then exec jq -C . "$1"; fi ;;
+  esac
+

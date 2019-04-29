@@ -1,0 +1,47 @@
+#!/bin/bash
+##-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu May  3 09:28:15 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.1.5 - #_# #@#030518#@# #2#
+#3#::..#####################_/dot/bin/+master_#######################..::#3#
+#[[ $1 ]] || set -- ./* ./.??*
+#[[ $1 == '/' ]] && exit
+[[ $1 == '/' ]] && exit
+#    find "$@" -type d -exec \chown master:users --preserve-root --changes {} +
+#   find "$@" -type f -exec \chown master:users --preserve-root --changes {} +
+unset sudo recurse chowned 
+#exit
+case $1 in
+-r | r | -R | R | --recursive | recursive | lickmypussy)
+	recurse="R"
+	shift
+	;;
+esac
+unset sudo
+. $dot/al.sh
+[[ $1 ]] || set -- '-R' /root /out/.ccache /dot
+[[ $USER == root ]] || sudo=/usr/bin/sudo
+if [[ $1 == root ]] || [[ $1 == master ]] || [[ $1 == arch ]] || [[ $1 == shell ]]; then
+	chowned=$1 && shift
+fi
+[[ $chowned ]] || chowned=shell
+[[ $recurse == R ]] && set -- R "$@"
+case $1 in
+-r | r | -R | $recurse | R | --recursive | recursive | lickmypussy)
+	shift
+	[[ -e $1 ]] || exit 1
+	echo -en "${LO}"
+	$sudo find "$@" -type d -exec \chown "$chowned" --preserve-root --changes -R {} +
+	echo -en "${LY}"
+	$sudo find "$@" -type f -exec \chown "$chowned" --preserve-root --changes -R {} +
+	;;
+*)
+	[[ $1 ]] || exit
+	for file in "$@"; do
+		[[ -e $1 ]] || exit
+		[[ -f $file ]] && echo -en "${LY}" && $sudo command \chown "$chowned" --preserve-root --changes "$file"
+		[[ -d $file ]] && echo -en "${LO}" && $sudo command \chown "$chowned" --preserve-root --changes "$file"
+	done
+	echo "-R if you want to recursively do this thing"
+	;;
+esac
+$sudo fixdot fix

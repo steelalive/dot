@@ -1,0 +1,8 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:29 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+qqlan
+#/usr/bin/nmap -sV -sX -T4 -O -A -v -PE -PM -PP -PS -PA -PU -PO -PY --traceroute -e eth0 10.0.0.10 10.0.0.11 10.0.0.12 10.0.0.13 10.0.0.14 10.0.0.15 10.0.0.16 10.0.0.17 10.0.0.18
+#10.0.0.19 10.0.0.20 10.0.0.1
+nmap -sV -sX -T4 -O -A -v -PE -PM -PP -PS -PA -PU -PO -PY --traceroute -e eth0 10.0.0.12

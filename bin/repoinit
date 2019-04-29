@@ -1,0 +1,16 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Aug 14 01:12:34 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-08-14#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/repoinit_#######################..::#3#
+
+repoinit() {
+	[[ -e $src/.repo/manifest.xml ]] &&  roomer >$src/.repo/local_manifests/room.xml
+	local rep=${1:-"https://github.com/LineageOS/android.git"}
+	local branch=${2:-"cm-14.1"}
+	repo --color=auto init -u "$rep" -b "$branch" --depth=1 --platform=linux $3 $4 $5 #--group=all
+	mkdir -p $src/.repo/local_manifests
+	[[ -e $src/.repo/manifest.xml ]] && roomer >$src/.repo/local_manifests/room.xml
+}
+repoinit "$@"

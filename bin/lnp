@@ -1,0 +1,6 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Wed Jul 12 05:08:34 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.1.8 - #_# #@#120717#@# #2#
+#3#::..#####################_/dot/bin/lnp_#######################..::#3#
+command ln -Pv "$@"

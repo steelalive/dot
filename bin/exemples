@@ -1,0 +1,6 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Sat May 13 00:19:15 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.3 - #_# #@#130517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+lynx -width=$COLUMNS -nonumbers -dump "http://www.shell-fu.org/lister.php?tag=$1" | sed -n '/^[a-zA-Z]/,$p' | grep -v -E '^http|^javas|View Comm|HIDE|] \+|to Share|^ +\*|^ +[HV][a-z]* l|^ .*efu.*ep.*!$' | sed -e '/^  *__*/N;s/\n$//g' | ca

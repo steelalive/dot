@@ -1,0 +1,9 @@
+#!/bin/bash
+. /dot/ex.sh
+apk_name="$1"
+name="$(aapt dump badging "$apk_name" | grep application-label:)"
+[[ "$name" ]] || name="$(aapt dump badging "$apk_name" | grep "package: name='.*' " | sed 's/package: name=//' | awk '{print $1}')"
+name="${name#*:}"
+name="$(echo "$name" | tr -d ' ' | tr -d "'")"
+what="$(echo "$name" | sed "s/'//g")"
+tr -d \'\" <<<"$what"

@@ -1,0 +1,3 @@
+echo -en "${LO}"    
+find "$@" -maxdepth 4 -type d -exec \chmod --preserve-root -c 755 {} +
+

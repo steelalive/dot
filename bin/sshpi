@@ -1,0 +1,12 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Sat Jul  8 01:31:18 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.1.7 - #_# #@#080717#@# #2#
+#3#::..#####################_/dot/bin/sshpi_#######################..::#3
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/*
+pi=${pi:-192.168.0.110}
+arp -a
+ssh-add /root/.ssh/id_rsa
+ssh -i /root/.ssh/id_rsa 192.168.0.110 || telnet ${pi}
+#rsync -e "/usr/bin/ssh -p22" -a --progress --stats --delete -l -z -v -r -p /root

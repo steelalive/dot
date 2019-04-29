@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Wed Jun 14 13:58:53 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.9 - #_# #@#140617#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+for to_kill in signonpluginprocess signond octopi-notifier baloo_file pacmanhelper kded5 krunner systemd-journald gvfsd udisksd gvfsd-fuse smbd polkitd kio_http_cache_cleaner chrome chromium google-chrome-unstable chrome-sandbox nacl_helper ssh-agent mission-control-5 msm_kde_notifier; do
+	killall "$to_kill" &>/dev/null
+	sh_exit $?
+done
+#su master -c "kill -9 -1"

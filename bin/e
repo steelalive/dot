@@ -1,0 +1,86 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Thu May 31 12:00:13 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.1.2.2 - #_# #@#310518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# vi: ft=sh:noro:
+unset skip arg1 arg2 arg3 onarg
+arg1=
+#[[ $1 == skip ]] || . testing.sh "$@"
+#[[ $1 == skip ]] && shift
+base_name="$(basename "${1}")"
+arg1="${1}"
+arg2="${2}"
+arg3="${3}"
+mkdir -p $HOME/.local/share/nano
+if [[ $SHELL == *zsh* ]] || [[ -e /oem ]]; then
+	#hash nvim &>/dev/null && EDITOR=${EDITOR:-nvim}
+	export EDITOR="nano --syntax sh"
+	true
+fi
+if [[ -d /oem ]]; then
+	export EDITOR="nano --syntax sh"
+	#[[ -x $lux/usr/bin/nano ]] && export EDITOR=$lux/usr/bin/nano
+fi
+
+edit_file() {
+	hash file &>/dev/null && if ! file -L "${1}" | grep -q -e text -e ascii -e link -e script -e data &>/dev/null; then
+		ANRED "ERROR! ${1} is not text\n"
+		file -L "$1" 2>/dev/null
+		return 2
+	fi
+	"$dot/bin/edsc" "$@"
+	shfmtw "$1"
+	sharden "$1"
+	skip=1
+	return
+}
+if [[ -e $arg1 ]]; then
+	edit_file "$@" && return
+	export skip=1
+fi
+
+on "$arg1" echo && onarg1="$(on "$arg1" echo 2>/dev/null)"
+sleep 1
+[[ -f $onarg1 ]] && shift && edit_file "$onarg1" "$@" && skip=1
+
+if [[ "$skip" ]]; then
+	true
+else
+	is_script="/usr/bin/$arg1"
+	if is_bash "$is_script"; then
+		ANW "$C$arg1$G is a bash file located in$R $C$is_script ${BY}do you want to open it?$RES"
+		echo
+		if yorn yes; then
+			arg1="$is_script"
+			shift
+			edit_file "$arg1" "$@"
+			return
+		fi
+	fi
+
+	if [[ -d $arg1 ]]; then
+		cd "$arg1" || exit
+		lk .
+		unset f arg1
+		return
+	fi
+	if echo "$arg1" | grep "/" &>/dev/null; then #Filename is a path
+		ANBY "Do you want to create a bash template file named$R $C$arg1$Y?"
+		echo
+		yorn && {
+			newbin "$arg1"
+			return
+		}
+	else
+		arg_maybe="$dot/bin/$arg1"
+		ANBY "Create plain new file in current dir:$R $C$PWD/$arg1$Y?"
+		echo
+		yorn && edsc "$PWD/$arg1"
+
+		ANBY "Do you want to create a bash template file named$R $C$arg_maybe$Y?"
+		echo
+		if yorn; then
+			newbin "$arg_maybe"
+		fi
+	fi
+fi

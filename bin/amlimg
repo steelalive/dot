@@ -1,0 +1,98 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Mon Jun  4 07:05:05 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-04#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/amlimg_#######################..::#3#
+#. "$dot"/ex.sh &>/dev/null
+old_dir=/prog/linux-amlogic-toolkit
+old_tmp=/tmp/linux-amlogic-toolkit
+aml_dir=/tmp/aml
+out_dir="$aml_dir"/output
+sys_dir="$out_dir"/system
+s10_dir=/prog/s10
+s10_recovery=/prog/AIK-Linux/scv1utimate_recovery/image-new.img
+aik_dir=/prog/AIK-Linux
+#ln -s "$sys_dir"/vendor /
+#ln -s "$sys_dir" /
+prepare() {
+
+	cd "$aml_dir"
+	if [[ -e $aml_dir/output ]]; then
+		echo "rm -rfv output?
+	Start Fresh?"
+		yorn y && {
+			$aml_dir/bin/cleanup
+			[[ -e $aml_dir ]] && rm -rfv $aml_dir
+		}
+	fi
+
+	if [[ ! -e $aml_dir ]]; then
+		cp -av "$old_dir" --target-directory=/tmp
+		mv "$old_tmp" "$aml_dir"
+		cd "$aml_dir" || return 2
+		"$aml_dir"/bin/build
+	fi
+	cd "$aml_dir" || return 2
+	if [[ $1 != skip ]]; then
+		select img in $(printf "%s\n" /last/s10/img/*.img); do break; done
+		echo "$img" >$aml_dir/img.choice
+		"$aml_dir"/bin/unpack "$img"
+		"$aml_dir"/bin/extract_initrd
+	fi
+	cd "$out_dir"/ || return 2
+	ln -s "$out_dir"/ /tmp/
+	echo "proper?"
+	yorn y && proper
+	cd $sys_dir && proper
+	cd "$out_dir"/initrd && proper
+	cd $out_dir && proper
+	cd $sys_dir
+	andromod $sys_dir
+	ANORANGE "Copy config?"
+	rm -v $sys_dir/preinstall/*
+	chown -cR 0:0 "$s10_dir"/*
+	+755 -R "$s10_dir"/*
+	chown -cR 0:2000 "$s10_dir"/xbin "$s10_dir/bin" "$s10_dir"/etc/install-recovery*
+	cd $s10_dir
+	for i in $s10_dir/**; do grep -q ".apk" <<<"${i}" 2>/dev/null && [[ -e ${i} ]] && chmod -c 644 "$i" && chown -c root:root "$i"; done
+	chmod +x -Rc "$s10_dir"/etc/install-recovery* "$s10_dir"/xbin $s10_dir/bin
+	chmod 4777 -Rc $s10_dir/xbin/*
+	cp -av "$s10_dir"/system/* "$sys_dir"/
+	#cp -av "$s10_dir"/xposed.prop "$sys_dir"/
+	cp -av /dot/etc/hosts $sys_dir/etc/
+	#		cp -av $s10_recovery $out_dir/image/recovery.PARTITON
+	echo "Add dot.zip?"
+	#yorn n && zip -ur "$sys_dir"/usr/dot.zip /dot
+	echo "Edit recovery?"
+	yorn y && {
+		cd $aik_dir
+		ANORANGE "Use  twrp 3.2.1.0 custom? Say no to original recovery from rom"
+		if yorn y; then
+			cp -av /last/s10/Download/3gb-S912-3.2.1-0_twrp.img $aik_dir/recovery.img
+		else
+			cp -av '/last/s10/Download/3gb-S912-3.2.1-0_twrp_modded.img' $out_dir/image/recovery.PARTITION
+		fi
+		cd $aik_dir
+		bootcopy skip recovery
+		bash $aik_dir/repackimg.sh
+		cp -av $aik_dir/image-new.img $out_dir/image/recovery.PARTITION
+		bash $aik_dir/cleanup.sh backup
+	}
+}
+finalize() {
+	cd "$aml_dir" || return 2
+	ANORANGE "Repack initrd?\n"
+	yorn n && "$aml_dir"/bin/recreate_initrd
+	printf '%s\n' /last/s10/img/*
+	echo "Last img name is : $(cat $aml_dir/img.choice)"
+	read -p "Img name?" answer
+	"$aml_dir"/bin/repack "$answer"
+	"$aml_dir"/bin/unmount
+	rm -rfv "$aml_dir"
+	ANR "Removed $aml_dir"
+}
+[[ $1 == edit ]] || {
+	[[ $1 == begin ]] && shift && prepare "$@"
+	[[ $1 == end ]] && shift && finalize "$@"
+}

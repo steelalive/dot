@@ -1,0 +1,21 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed Jul 25 21:34:54 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-07-25#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/amlmod_#######################..::#3#
+
+#[[ -d system ]] && sys_dir=system
+#[[ -d /system ]] && sys_dir=/system
+[[ $1 ]] && sys_dir=$1
+[[ $1 ]] || sys_dir=$(pwd)
+#[[ -d $sys_dir ]] || exit 2
+
+for i in SoundRecorder HoloSpiralWallpaper PhaseBeam AppInstaller BasicDreams BluetoothRemote Camera2 CaptivePortalLogin FileBrowser GoogleContactsSyncAdapter HTMLViewer LatinIME Magisk Miracast Music NativeImagePlayer PPPoE PhotoTable RemoteIME SubTitle VideoPlayer WAPPushManager WebViewGoogle Browser Dig Lighthome VSOTAUpgrade nova GoogleFeedback MusicFX VpnDialogs WallpaperCropper ProxyHandler CalendarProvide DLNA AtvRemoteService ContactsProvider Gallery2 GoogleBackupTransport ProxyHandler SharedStorageBackup Telecom box-fix-v3 NoiseField; do
+	apk="${sys_dir}/app/${i}"
+	[[ -e $apk ]] || apk="${sys_dir}/priv-app/${i}"
+	[[ -e $apk ]] || echo $apk error
+	[[ -e $apk ]] || continue
+	ANORANGE "Remove $apk?"
+	yorn y && rm -rfv "$apk"
+done

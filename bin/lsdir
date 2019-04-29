@@ -1,0 +1,5 @@
+lsdir() {
+	[[ "$1" ]] || set -- ./* ./??.*
+	command \ls --color -lhd "$(realpath "${PWD:-$1}")"*/*/
+}
+lsdir "$@"

@@ -1,0 +1,34 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Fri Jun 15 07:59:30 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-15#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/cp-apk_#######################..::#3#
+arg1=$1
+[[ $1 ]] && shift
+amldir=/tmp/linux-amlogic-toolkit/output/system
+if [[ -e $1 ]]; then
+	dir="$1"
+else
+	dir=/tmp/linux-amlogic-toolkit/output/system/priv-app
+fi
+echo $dir
+
+case $arg1 in
+step1)
+	cd /last/s10 || return
+	select i in *.apk; do
+		mkdir "$dir/$i"
+		cp -av "$i" "$dir/$i"
+		chmod 644 "$dir/$i"
+	done
+	;;
+step2)
+	cd "$amldir/app" || exit
+	rm -rfv AppInstaller BasicDreams BluetoothRemote HTMLViewer Miracast Music PPPoE RemoteIME VideoPlayer
+	cd "$amldir/priv-app" || exit
+	rm -rfv MusicFX GoogleFeedback
+	cp -av /prog/s10/preinstall/* $amldir/preinstall
+	cp -av /prog/s10/priv-app/* $amldir/priv-app/
+	;;
+esac

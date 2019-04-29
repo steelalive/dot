@@ -1,0 +1,5 @@
+s1() {
+	color=$1
+	shift
+	printf "\x1b[1;38;5;${color}m%s\n" "$*"
+}

@@ -1,0 +1,102 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon May 28 02:20:24 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.3.1 - #_# #@#280518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+
+case $1 in
+reverse | enable)
+	rm /etc/resolv.conf
+	ln -sF /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+	for e in systemd-resolved.service \
+		systemd-networkd.socket \
+		systemd-networkd.service \
+		systemd-networkd-wait-online.service \
+		NetworkManager.service \
+		NetworkManager-wait-online.service \
+		NetworkManager-dispatcher.service \
+		NetworkManager.service \
+		wpa_supplicant-nl80211@wlan0.service \
+		wpa_supplicant.service; do
+		systemctl enable $e &>/dev/null &
+		disown
+		systemctl start $e &>/dev/null &
+		disown
+	done
+	;;
+esac
+
+center_string "${RED}${UNDER}Network service and wifi adapter reset v0.13 ${PACKAGER}${R}\n"
+if is_in_path macchanger; then
+    macchanger wlan0 --show | grep Current | grep -i CA:91:5E:71:72:E7 || ip link set $NET down;macchanger wlan0 --mac=CA:91:5E:71:72:E7
+fi
+
+
+dhcpcd -k -x "$NET" >/dev/null 2>&1
+dhcpcd -k -x >/dev/null 2>&1
+dhclient -x -r >/dev/null 2>&1
+#ip link set "$LAN" down;
+ip link set "$NET" down >/dev/null 2>&1
+ifconfig "$NET" down >/dev/null 2>&1
+iwconfig "$NET"
+for i in {0..1}; do
+	ip link set wlan${i} down &>/dev/null
+	ifconfig wlan${i} down &>/dev/null
+	rfkill unblock $i &>/dev/null
+done
+#ifconfig "$LAN" down;
+#iwconfig "$NET" txpower 27 auto;
+
+#for decrisse in /var/run/wpa_supplicant/*; do rm -fr "$decrisse"; done; unset decrisse;
+#rm /run/dhcpcd* >/dev/null 2>&1
+stfu rm /var/run/wpa_supplicant/$NET
+stfu rm -rf /var/run/wpa_supplicant
+#iwconfig "$NET" txpower 30 auto;
+
+i=
+for service in NetworkManager.service \
+	systemd-networkd \
+	systemd-networkd-wait-online.service \
+	NetworkManager.service \
+	NetworkManager-wait-online.service \
+	NetworkManager-dispatcher.service \
+	dbus-org.freedesktop.NetworkManager.service \
+	wpa_supplicant \
+	systemd-networkd.socket \
+	NetworkManager.service \
+	wpa_supplicant-nl80211@wlan0.service \
+	wpa_supplicant.service \
+	systemd-networkd.service \
+	systemd-networkd.socket \
+	systemd-networkd-wait-online.service \
+	network.target \
+	systemd-resolved.service \
+	ModemManager.service \
+	dhcpd4.service \
+	dhcpd6.service \
+	systemd-networkd.service \
+	systemd-networkd.socket \
+	systemd-resolved.service \
+	systemd-rfkill.socket \
+	systemd-networkd-wait-online.service \
+	wpa_supplicant-nl80211@wlan0.service \
+	wpa_supplicant.service \
+	nm-applet \
+	kea-idhcp4.service \
+	kea-dhcp6.service \
+	wpa_supplicant \
+	dhclient; do case $1 in
+	reverse | enable)
+	#	rm /etc/resolv.conf
+	#	ln -sF /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+		systemctl enable $service &>/dev/null &
+		disown
+		systemctl start $service &>/dev/null &
+		disown
+		;;
+	*)
+		systemctl stop "$service" &>/dev/null
+		#		systemctl disable "$service" &>/dev/null
+		killall "$service" &>/dev/null
+		;;
+	esac
+done

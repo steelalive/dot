@@ -1,0 +1,9 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Jun 19 04:21:00 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-19#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/cpv_#######################..::#3#
+printf "%b" "\033[1;38;5;11m"
+command \cp -av --dereference --strip-trailing-slashes --update --context "$@"
+printf "%b" "\033[m"

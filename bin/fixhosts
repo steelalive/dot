@@ -1,0 +1,13 @@
+# [ANYTHING OUTSIDE OF 'User configurations' WILL BE OVERWITTEN!]
+#
+# /etc/hosts: static lookup table for host names
+#$(date +%d%m)
+#<ip-address>    <hostname.domain.org>    <hostname>
+127.0.0.1				PC.localdomain    PC
+# aliases
+192.168.0.20		PC
+192.168.0.5			TV
+192.168.0.8			S4
+192.168.0.1			router
+# End of file
+# User configuration

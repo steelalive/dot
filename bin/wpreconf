@@ -1,0 +1,307 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Sat Jun 25 11:31:24 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.2 - #_# #@#250616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+wppath=/root/bin/wpa/
+EXIT=0
+remove=0
+gen_opts='bgscan=""
+eapol_flags=2
+disabled=0'
+
+bell199='ssid="BELL199"
+psk=73e1557d98a045b89349f56b3e019a0fa444477f17709b70a74723d930e64305'
+p199="${wppath}199"
+
+bell238='ssid="BELL238"
+wep_key0=37669641500599780433559721
+key_mgmt=NONE'
+p238="${wppath}238"
+
+mk='ssid="Mk"
+psk=4eddd9eead4111971a3b8ee4f57a26842e103a60fa25a07022090b90e3ae4261'
+pmk="${wppath}mk"
+
+tremblant='ssid="poneetremblant"
+psk=e38676c406e3b6df186be5d56cd0d1b4827bca2bd19798bb91d24cecdf70c805'
+ptremblant="${wppath}tremblant"
+
+demande='ssid="demande le "
+psk=fffe353fc47257a3ab1acadeebc961218bf7ad3f93620145024561ed0ec596d6'
+pdemande="${wppath}demande"
+
+bell803='ssid="BELL803"
+psk=9071ce5419de0be8a123382c8a702b8a441dccd4711462ef726673c9443b10c1'
+p803="${wppath}803"
+
+encore='ssid="encore"
+psk=45e7361f3fa21955d7c13b4aec6798d48b56cee37c37b17c589c89c12b1a209f'
+pencore="${wppath}encore"
+
+lavigne='ssid="Lavigne"
+psk=0c6cd4f63d94df805195ad24caf3042feeef5ec7ef173a63fec918da9a6169d7'
+plavigne="${wppath}lavigne"
+
+bell743='ssid="BELL743"
+wep_key0=20767706138285705871879040
+key_mgmt=NONE
+group=WEP104'
+p743="${wppath}743"
+
+bell685='ssid="BELL685"
+wep_key0=50179888996581034486820811
+key_mgmt=NONE
+group=WEP104'
+p685="${wppath}685"
+
+chalet4='ssid="Chalet4"
+wep_key0="bearthinksnow"
+key_mgmt=NONE
+group=WEP104'
+pchalet4="${wppath}chalet4"
+
+pimbana='ssid="pimbana"
+psk=d4ac38b2c7e1538dd184899ae11b175660b5552d18c5e887ade53048bd7a5837
+key_mgmt=NONE
+group=WEP104'
+ppimbana="${wppath}pimbana"
+
+unset i y net_ans rem_ans
+WPA=/root/bin/wpa
+names="238
+mk
+tremblant
+demande
+803
+encore
+lavigne
+743
+685
+chalet4
+pimbana
+199"
+#NAMES=($names)
+#################_UI_######################
+if [[ $# == 0 ]]; then
+	for i in $names; do
+		y=$((y + 1))
+		ANLY "${y}- ${i}\n"
+	done
+	ANY "l- Keep last config\n"
+	ANY "r- Remove networks from last config\n"
+	ANY "a- All\n"
+	ANY "e- All EXEPT specified networks\n"
+	ANY "i- Info with wpa_cli on availaible wifi and signal strenght then return to menu\n"
+	ANY "n- Same as above with aircrack-ng\n"
+	ANY "0- Exit\n"
+	read -p "numbers or wifi name space separated by spaces:\n" net_ans
+else
+	net_ans="$*"
+fi
+#####################################################################
+case ${net_ans} in
+r | remove | R)
+	export rem_ans=($net_ans)
+	export net_ans
+	;;
+e | execpt | ae | ea)
+	remove=1
+	export rem_ans=($net_ans)
+	export net_ans=($names)
+	;;
+a | A | 144 | all | ALL)
+	export net_ans=($names)
+	export rem_ans=(${net_ans[*]})
+	;;
+100 | l | last | keep | wp)
+	EXIT=1
+	exit 1 &
+	wp
+	;;
+101 | i | wpinfo | info)
+	wpinfo
+	EXIT=1
+	exit 1 &
+	wpreconf
+	;;
+n | ng)
+	wpng
+	EXIT=1
+	exit 1 &
+	wpreconf
+	;;
+0 | exit)
+	EXIT=1
+	exit 1
+	;;
+esac
+((EXIT != 0)) && exit 1
+((remove != 1)) && rm /root/bin/wpa/*
+/usr/bin/cat >/root/bin/wpa/11head <<EOF
+ctrl_interface=/var/run/wpa_supplicant
+autoscan=exponential:6:3009
+update_config=1
+fast_reauth=1
+ap_scan=1
+country=CA
+EOF
+
+#################WPA_OCNFIGURATION>CONFWHATEVER####################
+for i in ${net_ans[*]}; do
+	case ${i[*]} in
+	1 | 238 | BELL238)
+		/usr/bin/cat >$p238 <<EOF
+network={
+$bell238
+$gen_opts
+}
+EOF
+		;;
+	2 | Mk | mk)
+		/usr/bin/cat >$pmk <<EOF
+network={
+$mk
+$gen_opts
+}
+EOF
+		;;
+	3 | ponnetremblant | tremblant)
+		/usr/bin/cat >$ptremblant <<EOF
+network={
+$tremblant
+$gen_opts
+}
+EOF
+		;;
+	4 | demande)
+		/usr/bin/cat >$pdemande <<EOF
+network={
+$demande
+$gen_opts
+}
+EOF
+		;;
+	5 | 803 | bell803 | BELL803)
+		/usr/bin/cat >$p803 <<EOF
+network={
+$bell803
+$gen_opts
+}
+EOF
+		;;
+	6 | encore)
+		/usr/bin/cat >$pencore <<EOF
+network={
+$encore
+$gen_opts
+}
+EOF
+		;;
+	7 | lavigne)
+		/usr/bin/cat >$plavigne <<EOF
+network={
+$lavigne
+$gen_opts
+}
+EOF
+		;;
+	8 | 743 | bell743 | BELL743)
+		/usr/bin/cat >$p743 <<EOF
+network={
+$bell743
+$gen_opts
+}
+EOF
+		;;
+	9 | 685 | bell685 | BELL685)
+		/usr/bin/cat >$p685 <<EOF
+network={
+$bell685
+$gen_opts
+}
+EOF
+		;;
+	10 | chalet4)
+		/usr/bin/cat >$pchalet4 <<EOF
+network={
+$chalet4
+$gen_opts
+}
+EOF
+		;;
+	11 | pimbana)
+		/usr/bin/cat >$ppimbana <<EOF
+network={
+$pimbana
+$gen_opts
+}
+EOF
+		;;
+	12 | 199 | bell199 | BELL199)
+		/usr/bin/cat >$p199 <<EOF
+network={
+$bell199
+$gen_opts
+}
+EOF
+		;;
+	0 | exit | quit | q)
+		EXIT=1
+		exit 1
+		;;
+	esac
+done
+######################_WRAP_IT_UP_#####################
+((EXIT != 0)) && exit 1
+for i in ${rem_ans[*]}; do
+	case ${i[*]} in
+	1 | 238 | BELL238)
+		rm $p238
+		;;
+	2 | Mk | mk)
+		rm $pmk
+		;;
+	3 | ponnetremblant | tremblant)
+		rm $ptremblant
+		;;
+	4 | demande)
+		rm $pdemande
+		;;
+	5 | 803 | bell803 | BELL803)
+		rm $p803
+		;;
+	6 | encore)
+		rm $pencore
+		;;
+	7 | lavigne)
+		rm $plavigne
+		;;
+	8 | 743 | bell743 | BELL743)
+		rm $p743
+		;;
+	9 | 685 | bell685 | BELL685)
+		rm $p685
+		;;
+	10 | chalet4)
+		rm $pchalet4
+		;;
+	11 | pimbana)
+		rm $ppimbana
+		;;
+	12 | 199 | bell199 | BELL199)
+		rm $p199
+		;;
+	0 | exit | quit | q)
+		EXIT=1
+		exit 1
+		;;
+	esac
+done
+((EXIT != 0)) && exit 1
+cat ${wppath}* >/root/bin/wpconf
+active=($(echo ${wppath}/*))
+baseactive=$(for i in ${active[*]}; do basename $i; done)
+ANM "${baseactive[*]}* are active\n"
+export CUNT=1
+wp
+exit 0

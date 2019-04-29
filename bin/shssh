@@ -1,0 +1,21 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed Jul 12 14:47:54 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.6 - #_# #@#120717#@# #2#
+#3#::..#####################_/dot/bin/shssh_#######################..::#3#
+
+#chmod 700 ~/.ssh
+#chmod 640 ~/.ssh/authorized_keys
+pi=${pi:-192.168.0.110}
+ga=${ga:-192.168.0.100}
+g4=${g4:-192.168.0.120}
+[[ $1 == ga || $1 == GA ]] && host_ip=$ga
+[[ $1 == pi || $1 == PI ]] && host_ip=$pi
+[[ $1 == g4 || $1 == G4 ]] && host_ip="$g4" && options="-p 2222"
+arp -a
+[[ $HOSTNAME == PI ]] && id_rsa=id_rsa_pi
+[[ $HOSTNAME == GA ]] && id_rsa=id_rsa_ga
+[[ $HOSTNAME == G4 ]] && id_rsa=id_rsa
+
+ssh-add /root/.ssh/id_rsa
+ssh -i /root/.ssh/id_rsa $host_ip $options || telnet ${host_ip}

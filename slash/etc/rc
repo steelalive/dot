@@ -1,0 +1,197 @@
+#case $- in
+#	*i*) ;;
+#	*) exit 0 ;;
+#esac
+
+#[[ $PS1 ]] || return 0
+
+#shopt &>/dev/null || return 2
+
+
+export lux=/mnt/media_rw/c68dcfb1-c438-4f9f-8109-7ce175ca99a3
+export dot=/data/dot
+export slash=$dot/slash
+export dot_dir=$dot LANG='en_US.UTF-8'
+export pc=192.168.0.20 s4=192.168.0.8 tv=192.168.0.5
+export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
+result=":"
+IFS=:
+for p in $PATH; do
+	[[ $result == *:"$p":* ]] || result="${result}${p}:"
+done
+result="${result#:}" PATH=$(echo "${result%:}")
+unset IFS
+export ANDROID_DATA=/data ANDROID_ROOT=/system
+if shopt &>/dev/null; then
+	for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
+	for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
+	for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath execfail lithist; do
+		builtin shopt -s "$shopt_opt" &>/dev/null
+	done
+	unset shopt_opt set_minus set_plus
+fi
+
+bb=$(command -v busybox 2>/dev/null) || bb="commmand -v "
+export bb
+
+bb() { command "$bb" "$@"; }
+
+if hash bb &>/dev/null; then unset bb; fi
+
+for i in /ex $(echo /mnt/media_rw/????-????) $(echo /storage/????-????) /external_sd; do
+	[[ -e $i/misc-android ]] || continue
+	export ex=$i
+done
+[[ $ex ]] || ex=/sdcard
+
+echo /init.* | grep amlogic &>/dev/null && export HOSTNAME=TV
+{ echo /* | grep qcom &>/dev/null || grep harpia /default.prop &>/dev/null; } && export HOSTNAME=G4
+[[ $HOSTNAME ]] || { getprop ro.product.device &>/dev/null && export HOSTNAME="$(getprop ro.product.device)"; }
+[[ -d $dot/root ]] && HOME=$dot/root
+[[ -e $HOME ]] || HOME=$ex
+[[ -e $HOME ]] || HOME=/sdcard
+
+[[ -e /etc/terminfo ]] && TERMINFO=/etc/terminfo
+[[ -e $slash/etc/terminfo ]] && TERMINFO=$slash/etc/terminfo
+[[ -e /sbin/terminfo ]] && TERMINFO=/sbin/terminfo
+[[ -e $TERMINFO ]] && export TERMINFO TERM=screen-256color
+export TERM=xterm-256color
+
+
+[[ -x $BASH ]] || export BASH=/data/dot/slash/sbin/bash
+[[ -x $BASH ]] || BASH=$(command -v bash)
+[[ -x $BASH ]] || [[ -x $lux/usr/bin/bash ]] && export BASH=$lux/usr/bin/bash
+
+mkdir -p /tmp
+[[ -d /data/local/tmp ]] && TMP=/data/local/tmp
+[[ -d /tmp ]] && TMP=/tmp
+
+[[ $USER ]] || USER=$(whoami 2 &>/dev/null) || USER=$(logname 2 &>/dev/null)
+
+[[ -x /bin/nano ]] && export EDITOR="/bin/nano" VISUAL="$EDITOR"
+[[ HOSTNAME == PC ]] && lux=/data/lux
+
+boot="$(find /dev/block -iname boot | tail -1 )"
+recovery="$(find /dev/block -iname recovery | tail -1)"
+#if [[ -e /external_sd ]]; theni
+#	boot=$(cat /fstab.* | cut -d '#' -f 1 | grep /boot | grep -o '/dev/[^ ]*' | head -1)
+#	boot=$(cat /fstab.* | cut -d '#' -f 1 | grep /recovery | grep -o '/dev/[^ ]*' | head -1)
+#fi
+
+export TMP TMPDIR=$TMP BASH SHELL=$BASH HISTFILE="${dot}/root/histfile" HISTSIZE=50000 USER slash
+hostname $HOSTNAME
+alias e='. $dot/bin/e'
+cmdpackage() {
+	cmd package compile -a -m everything
+}
+remntf() {
+	bb mount -o rw,remount,rw / &>/dev/null || mount -o rw,remount,rw / &>/dev/null
+	bb mount -o rw,remount,rw /system &>/dev/null || mount -o rw,remount,rw /system &>/dev/null
+}
+remntf
+chrootlux() {
+	chroot $lux /usr/bin/bash
+}
+
+hash remnt &>/dev/null && remnt
+
+unalias src 2>/dev/null
+
+src() {
+	if [[ -x $lux/usr/bin/bash ]]; then
+		export SHELL=$lux/usr/bin/bash BASH=$SHELL
+	fi
+	. $dot/init.sh || echo "Problem while executing command exec $BASH"
+}
+
+pminstall() {
+	[[ $1 ]] || command \ls *.apk
+	for apk; do
+		ANLO "Installing $apk ...\n"
+		pm install -r -g "$apk"
+	done
+}
+
+unalias ls &>/dev/null
+if cp --help 2>&1 | grep -o "\-c" &>/dev/null; then alias cp='cp -c ';fi
+unset ls LS_OPTIONS &>/dev/null
+if busybox ls --help 2>&1 | grep 'Z' &>/dev/null; then LS_OPTIONS=' -Z '; fi
+if busybox ls --help 2>&1 | grep 'group-directories-first' &>/dev/null; then
+	export LS_OPTIONS="$LS_OPTIONS --group-directories-first "
+fi
+export LS_OPTIONS="$LS_OPTIONS -AHhpFl --color "
+
+ls() { busybox ls $LS_OPTIONS "$@"; }
+alias nano='nano --syntax sh '
+if echo $0 | grep bash &>/dev/null; then
+	if [[ ${EUID} == 0 ]]; then
+		PS1='\[\033[01;31m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
+	else
+		PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
+	fi
+fi
+
+#if ! grep CD00160E541E /data/misc/wifi/wpa_supplicant.conf &>/dev/null; then
+#	mkdir -p /data/misc/wifi
+#	cat $ex/misc-android/wpa_supplicant.conf >>/data/misc/wifi/wpa_supplicant.conf
+#	cat $ex/misc-android/wpa_supplicant.conf >>/system/etc/wifi/wpa_supplicant.conf
+#fi
+remnt
+
+#Check busybox validity and correct.
+if ! busybox | grep '1.29.2' &>/dev/null; then
+	echo "Setup a newer busybox..."
+		cd $slash
+		bash ./Busybox-installer-arm.bin
+fi
+
+[[ -d $ex ]] && rm_empty_dir /sdcard/* $ex/*
+
+for bin_dir in /system/bin /system/xbin; do
+	for fix_bb in su bash; do
+		bin_bb=$bin_dir/$fix_bb
+
+		if [[ -e $bin_bb ]] && [[ -L $bin_bb ]]; then
+			echo "$bin_bb found delete?"
+
+			mv -v "$bin_bb" "${bin_bb}.back" && echo "Renamed $bin_bb ${bin_bb}.back..."
+		fi
+	done
+done
+
+#####_SETUP RC FILES_#####
+
+init_incantation='
+########## -INIT-  ##########
+
+setenforce 0
+busybox mount -o remount,rw / 2>/dev/null
+busybox mount -o remount,rw /system 2>/dev/null
+/data/dot/slash/sbin/remnt 2>/dev/null
+ln -s /data/dot/slash/etc/mk / 2>/dev/null
+ln -s /data/dot/slash/etc/rc / 2>/dev/null
+ln -s /data/dot/slash / 2>/dev/null
+chmod 777 -R /data/dot
+########## _INIT_ ###########
+'
+
+
+if ! grep "/data/dot/slash" /system/etc/init.d/90userinit &>/dev/null; then
+	echo "$init_incantation" >>/system/etc/init.d/90userinit
+	echo "$init_incantation
+
+########### -MK- ###########
+
+TERMINFO=/data/dot/slash/etc/terminfo
+TERM=xterm-256color
+[[ -e /data/dot/slash/etc/mk ]] && . /data/dot/slash/etc/mk
+
+########### _MK_ ###########
+" >>/system/etc/mkshrc
+fi
+hash resize &>/dev/null && eval $(resize) &>/dev/null
+return 0
+#rm /sdcard; ln -s $ex /sdcard
+# vi: ft=sh
+#export PATH=/system/xbin:/system/bin:/vendor/bin:/bin:/sbin:/system/sbin:/data/dot/slash/sbin:/data/dot/bin:/data/dot/bin/final:/data/dot
+unalias nano

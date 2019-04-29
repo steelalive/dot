@@ -1,0 +1,13 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed Jun 13 09:55:31 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-13#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/ls-colors_#######################..::#3#
+dir_colors=/dot/.dir_colors
+dir_head=/tmp/dir_head
+dir_tail=/tmp/dir_tail
+tail_sorted=/tmp/tail_sorted
+head -n"$(grep -n '##!DIR!##' $dir_colors | cut -d: -f1)" $dir_colors >$dir_head
+tail -n$(("$(wc -l $dir_colors | awk '{print $1}')" - "$(grep -n '##!DIR!##' $dir_colors | cut -d: -f1)")) $dir_colors >$dir_tail
+sort $dir_tail | uniq >$tail_sorted

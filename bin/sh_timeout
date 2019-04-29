@@ -1,0 +1,15 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Tue Jun 20 13:13:35 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.3 - #_# #@#200617#@# #2#
+#3#::..#####################_/dot/bin/sh_timeout_#######################..::#3#
+timeout=3
+while [ $timeout -gt 0 ]; do
+	ANO " $timeout"
+	if read -n1 -t1 -r -s x; then
+		echo
+		exit 1
+		echo
+	fi
+	let timeout--
+done

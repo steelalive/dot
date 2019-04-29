@@ -1,0 +1,91 @@
+#!/bin/bash
+aik=/ext/AIK-Linux
+[[ $adb ]] || adb=/usr/bin/adb
+cd $aik || exit
+cd $aik
+[[ -e recovery.img ]] && imgtoedit=recovery
+[[ -e boot.img ]] && imgtoedit=boot
+{ [[ $1 == recovery ]] || [[ $1 == boot ]]; } && export imgtoedit=$1 && echo export imgtoedit=$1 && shift
+[[ $imgtoedit ]] || {
+	export imgtoedit=boot
+}
+export imgtoedit
+adbcmd() { $adb -d "$@"; }
+ANRED "imgtoedit=${W}$imgtoedit"
+$adb shell su 0 -c "bash /data/dot/slash/sbin/remnt" &>/dev/null
+cd $aik || exit
+export imgtoedit
+if $adb shell su 0 -c "ls /dev/block/bootdevice/by-name/$imgtoedit" &>/dev/null || $adb shell ls /dev/block/bootdevice/by-name/$imgtoedit; then
+	boot_path=/dev/block/bootdevice/by-name
+else
+	$adb shell su 0 -c "ls /dev/block/$imgtoedit" || $adb shell ls /dev/block/$imgtoedit && boot_path=/dev/block
+fi
+$adb shell su 0 -c "ls /dev/block/platform/msm_sdcc.1/by-name/$imgtoedit" && boot_path=/dev/block/platform/msm_sdcc.1/by-name
+recovery=$(adb shell su 0 -c "find /dev/block -iname recovery")
+boot=$(adb shell su 0 -c "find /dev/block -iname boot")
+if ex=$(. $dot/bin/ad ex) && $adb shell ls $ex &>/dev/null; then
+	work_path=$ex
+else
+	adb shell touch /sdcard/test && work_path=/sdcard
+	[[ $work_path ]] || work_path=/
+fi
+$adb shell su 0 -c "mount -o remount,rw /"
+$adb shell su 0 -c "mount -o remount,rw /system"
+export img_orig="${work_path}/${imgtoedit}"
+	[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
+	[[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="$boot"
+
+case $1 in
+repack*)
+	[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
+	[[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="$boot"
+	bash repackimg.sh
+	cp image-new.img ${imgtoedit}_mod.img
+	[[ -e unsigned_new.img ]] && cp unsigned-new.img ${imgtoedit}_mod.img
+	$adb push ${imgtoedit}_mod.img $work_path
+	$adb shell su -c "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096" ||
+		$adb shell "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"
+	$adb shell su -c "sync && sync" ||
+		$adb shell "sync && sync"
+	bash backup.sh backup
+	exit
+	;;
+cleanup*)
+	bash cleanup.sh backup ${imgtoedit}
+	exit
+	;;
+fstab | mnt | path)
+	echo "/sbin/supersu/xbin:/sbin/supersu/bin:/data/adb/su/xbin:/data/adb/su/bin:/su/xbin:/su/bin:/system/xbin:/system/bin:/vendor/bin:/bin:/sbin:/system/sbin:/data/dot/bin:/data/dot/bin/final:/data/dot:/data/lux/usr/bin"
+	;;
+setuprecovery)
+	if [[ $imgtoedit == recovery ]] && [[ $1 != repack ]]; then
+		ANORANGE "Perform recovery miracle?"
+		recovery_miracle
+		exit
+	fi
+	;;
+*)
+
+	liner
+	echo $boot_path $imgtoedit
+	liner
+	if [[ $1 != skip ]]; then
+		$adb shell su -c "dd if="${block_to_write}" of=${img_orig}.img bs=4096"
+		$adb shell "dd if="${block_to_write}" of=${img_orig}.img bs=4096"
+		$adb pull ${img_orig}.img
+	fi
+	bash unpackimg.sh ${imgtoedit}.img || {
+		abootimg -x ${imgtoedit}.img
+		abootimg-unpack-initrd
+	}
+	echo "Copy config?"
+	if yorn; then
+		proper
+	fi
+	if [[ $imgtoedit == recovery ]] && [[ $1 != repack ]]; then
+		ANORANGE "Perform recovery miracle?"
+		recovery_miracle
+		exit
+	fi
+	;;
+esac

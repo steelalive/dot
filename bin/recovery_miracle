@@ -1,0 +1,38 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Jul 31 17:01:39 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-07-31#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/recovery_miracle_#######################..::#3#
+aik=/ext/AIK-Linux
+recovery_miracle() {
+	cd $aik/ramdisk/sbin || return 2
+	rm -v mk rc bash busybox nano.bin nano ssl_helper
+	cp -av $slash/etc/mk .
+	cp -av $slash/etc/rc .
+	cp -av $slash/sbin/bash .
+	cp -av $slash/etc/terminfo .
+	select bbox in /last/misc-android/busybox*; do
+		break
+	done
+	select toybox in /last/misc-android/toybox*; do
+		break
+	done
+	cp -av "$bbox" .
+	mv $(basename $bbox) busybox
+	cp -av "$toybox" .
+	cp -av /last/misc-android/ssl_helper-arm ssl_helper
+	cp -av $slash/sbin/nano.bin .
+	cp -av $slash/sbin/nano .
+	for i in $(<$aik/bb_list.txt); do
+		[[ -e $i ]] && [[ ! -L $i ]] && continue
+		ln -svf busybox "$i" 2>/dev/null
+	done
+	for i in acpi base64 basename blkid blockdev bunzip2 bzcat cal cat catv chattr chgrp chmod chown chroot chrt chvt cksum clear cmp comm count cp cpio crc32 cut date df dirname dmesg dos2unix du echo egrep eject env expand factor fallocate false fgrep file find flock fmt free freeramdisk fsfreeze fstype fsync ftpget ftpput grep groups halt head help hexedit hostname hwclock iconv id ifconfig inotifyd insmod install ionice iorenice iotop kill killall killall5 link ln logger login logname losetup ls lsattr lsmod lspci lsusb makedevs md5sum microcom mix mkdir mkfifo mknod mkpasswd mkswap mktemp modinfo mount mountpoint mv nbd-client nc netcat netstat nice nl nohup nproc od oneit partprobe passwd paste patch pgrep pidof pivot_root pkill pmap poweroff printenv printf ps pwd pwdx readahead readlink realpath reboot renice reset rev rfkill rm rmdir rmmod sed seq setfattr setsid sha1sum shred sleep sort split stat strings swapoff swapon switch_root sync sysctl tac tail taskset tee time timeout top touch true truncate tty tunctl umount uname uniq unix2dos unlink uptime usleep uudecode uuencode vconfig vmstat w wc which who whoami xargs xxd yes; do [[ -e $i ]] || ln -sv $(basename $toybox) "$i" 2>/dev/null; done
+	rm -v su sulogin
+	chown -R root:root ./*
+	chmod 7777 busybox $(basename $toybox) nano nano.bin bash ssl_helper
+
+}
+
+recovery_miracle "$@"

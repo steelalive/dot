@@ -1,0 +1,18 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Wed May 24 08:49:46 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.2 - #_# #@#240517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Usage: PATH="$(consolidate-path "$PATH")"
+#
+# Remove duplicate entries from PATH.
+
+result=":"
+
+IFS=:
+for p in $1; do
+	[[ $result == *:"$p":* ]] || result="${result}${p}:"
+done
+
+result="${result#:}"
+echo "${result%:}"

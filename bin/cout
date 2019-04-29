@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Sat May 13 20:47:27 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.3 - #_# #@#130517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+if [[ -t 0 ]]; then
+	pygmentize -O style=monokai -f console256 -l bash "$*"
+else
+	pygmentize -O style=monokai -f console256 -l bash
+fi

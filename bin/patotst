@@ -1,0 +1,19 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Thu May 25 01:12:11 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.1.4 - #_# #@#250517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: #
+file="/tst"
+[[ $1 == 2 ]] && file=/tst2
+true >$file
+xclip -o >>$file
+e $file --syntax=bash --tempfile --syntax=shell
+chmod 777 $file
+ca $file
+ANBY "Execute ${file}?"
+echo
+if yorn; then
+	$file
+fi
+ANLB "Done!"
+unset file

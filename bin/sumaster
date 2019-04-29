@@ -1,0 +1,7 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Fri Jun  1 20:43:24 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-01#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/sumaster_#######################..::#3#
+su master -c """$@"

@@ -1,0 +1,86 @@
+[user]
+	email = demers.francis@hotmail.com
+	name = steelalive
+[alias]
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	st = status
+	change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ $`echo $VAR` = \\\"$OLD\\\" ]]; then export $VAR=\\\"$NEW\\\"; fi\" $@; }; f "
+	clog = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
+	fpush = push --force-with-lease
+	lol = "log --oneline --graph --decorate --all"
+	merge-pr = "!f() { git fetch $1 $2; git branch _FETCH_HEAD FETCH_HEAD && git rebase HEAD _FETCH_HEAD && git checkout master && git merge --ff-only _FETCH_HEAD; git branch -d _FETCH_HEAD; }; f"
+	l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+		# list aliases
+	la = "!git config -l | grep alias | cut -c 7-"
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+	ui = true
+	interactive = auto
+	grep = auto
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	commit = yellow bold
+	whitespace = red reverse
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+[core]
+	excludesfile = /root/.gitignore_global
+	legacyheaders = false
+	autocrl = input
+	fileMode = true
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[help]
+	autocorrect = 10
+[push]
+	default = simple
+[advice]
+	statusHints = true
+[github]
+	user = steelalive
+[interactive]
+	singlekey = true
+
+[branch]
+	autosetuprebase = always
+[repack]
+	usedeltabaseoffset = true
+[log]
+	decorate = full
+[stash]
+	showPatch = true
+[push]
+	followTags = true
+[tar "tar.xz"]
+	command = xz -c
+[url "git@github.com"]
+	insteadOf = github:
+[format]
+	pretty = oneline
+[rerere]
+	enabled = true
+	autoupdate = true
+[github]
+  user = steelalive
+[credential]
+	helper = store
+[http]
+	sslverify = false
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[diff-so-fancy]
+	first-run = false

@@ -1,0 +1,555 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:30 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# $RCSfile: rcss,v $
+# $Revision: 1.3 $
+# $Date: 2014/01/16 14:57:51 $
+# $Source: /home/davec/bin/RCS/rcss,v $
+# $Author: davec $
+
+# PROJECT: rcss - (RCS S)implified.
+# CREATED BY: Dave Crouse - crouse@usalug.net
+# DESCRIPTION: Special RCS utility for simplifying rcs use.
+#              Allows for easy RCS usages for file management/backup/recovery/creation/editing, etc.
+
+# Normal usage is "rcss <filename>".
+
+# Optional arguments:
+# -h or --help (show help file)
+# -l (make it do rlog file), lists the rlog of the file.
+# -v (make it "view" a revision" ...co -l -r1.5;view file;ci -u file)
+# -R (make it REVERT back to revsion number.  rcss -R <revision number> <filename>
+# -p Change permisions rcss -p 555 filename ... changes the ,v file in the RCS dir.
+#
+# -bash (create new bash file)
+# -php (create new php file)
+# -clphp (create new commandline php file)
+# -perl (create new perl file)
+
+# Make sure the neccesary programs are installed.
+# REQUIRES: vim, mawk, rcs, and whoami (coreutils).
+if ! type -p vim >/dev/null; then
+	echo "You must install vim for this program to work."
+	echo "UBUNTU: sudo apt-get install vim"
+	echo "Please install the missing program and try again."
+	exit 1
+fi
+if ! type -p co >/dev/null; then
+	echo "You must install rcs for this program to work."
+	echo "UBUNTU: sudo apt-get install rcs"
+	echo "Please install the missing program and try again."
+	exit 1
+fi
+if ! type -p awk >/dev/null; then
+	echo "You must install awk for this program to work."
+	echo "UBUNTU: sudo apt-get install mawk"
+	echo "Please install the missing program and try again."
+	exit 1
+fi
+if ! type -p whoami >/dev/null; then
+	echo "You must install whoami for this program to work."
+	echo "UBUNTU: sudo apt-get install coreutils"
+	echo "Please install the missing program and try again."
+	exit 1
+fi
+
+# Set paths here.  Defaults to default paths. Change if neccesary.
+CP=$(type -p cp)
+DATE=$(type -p date)
+CHMOD=$(type -p chmod)
+LESS=$(type -p less)
+MKDIR=$(type -p mkdir)
+RM=$(type -p rm)
+AWK=$(type -p awk)
+CI=$(type -p ci)
+CO=$(type -p co)
+RLOG=$(type -p rlog)
+VIM=$(type -p vim)
+VIEW=$(type -p view)
+VIMDIFF=$(type -p vimdiff)
+WHOAMI=$(type -p whoami)
+# NOTE: Please also check hard coded paths in functions for perl/bash/php.
+#       Default set to Ubuntu paths, can be changed if neccesary as well.
+
+# Break apart arguments and store in an array.
+args=("$@")
+# Use Arguments as: ${args[0]} ${args[1]} ${args[2]} ...
+
+### FUNCTIONS
+# -h or --help
+# Help function shows usage and information
+helpinfo() {
+	if [[ ${#args[@]} != 1 ]]; then
+		echo "USAGE:"
+		echo "        -h or --help"
+		echo "                 Example: rcss -h"
+		echo "                 Shows this help file"
+		exit 1
+	else
+		echo "ABOUT: rcss is basically a wrapper around the rcs utility."
+		echo "It is designed to simplify rcs and add features to make rcs easy to use."
+		echo ""
+		echo "Normal Usage: rcss <filename>"
+		echo ""
+		echo "Options:"
+		echo "        -h or --help"
+		echo "                 Example: rcss -h"
+		echo "                 Shows this help file"
+		echo ""
+		echo "           -l <filename>"
+		echo "                 Example: rcss -l test.txt"
+		echo "                 Shows the rcs log file for test.txt"
+		echo '                 NOTE: Parsed through "less", so hit "q" when finished !  :)'
+		echo ""
+		echo "           -d <version number> <version number> <filename>"
+		echo "                 Example: rcss -d 1.5 1.7 test.txt"
+		echo "                 This shows a diff of version 1.5 and version 1.7 of test.txt"
+		echo '                 Note: just ignore the "2 files to edit" message that spits out after closing ;) '
+		echo ""
+		echo "           -v <filename>"
+		echo "                 Example: rcss -v 1.5 test.txt"
+		echo "                 This shows (via view) version 1.5 of file test.txt"
+		echo ""
+		echo "           -R <version number> <filename>"
+		echo "                 Example: rcss -R 1.5 test.txt"
+		echo "                 This will revert test.txt back to version 1.5"
+		echo ""
+		echo "           -p <permissions> <filename>"
+		echo "                 Example: rcss 777 test.sh"
+		echo "                 This will set permissions on test.sh back to 777"
+		echo ""
+		echo "    ############# SPECIAL PAGE CREATION OPTIONS ######################"
+		echo ""
+		echo "        -bash <filename>"
+		echo "                 Example: rcss -bash helloworld.sh"
+		echo "                 Creates a new bash file helloworld.sh"
+		echo ""
+		echo "        -php <filename>"
+		echo "                 Example: rcss -php testsetup.php"
+		echo "                 Creates a new php file testsetup.php"
+		echo ""
+		echo "        -clphp <filename>"
+		echo "                 Example: rcss -clphp emaillogfile.php"
+		echo "                 Creates a new command line php file emaillogfile.php"
+		echo ""
+		echo "        -perl <filename>"
+		echo "                 Example: rcss -perl <filename>"
+		echo "                 Creates a new perl file"
+		echo ""
+		echo "        -python <filename>"
+		echo "                 Example: rcss -python <filename>"
+		echo "                 Creates a new python file"
+		echo ""
+	fi
+	exit 0
+}
+
+# -bash
+# Creates a new bash file
+newbash() {
+	if [[ ${#args[@]} != 2 ]]; then
+		echo "USAGE:"
+		echo "        -bash <filename>"
+		echo "                 Example: rcss -bash helloworld.sh"
+		echo "                 Creates a new bash file helloworld.sh"
+		exit 1
+	else
+		echo "#!/bin/bash
+#-*- coding: utf-8 -*-
+[[ -r "$init_script" ]] && . "$init_script" "$@"; init_function &>/dev/null && init_function "@"; [[ -v init_var ]] && eval "$init_var" #1#_SCRIPT_#1#
+#2#::.. Last edit: - Mon Jun  6 18:54:30 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+#-*- coding: utf-8 -*-
+VERSION=0.0.0.001 
+cmd_pwd=$(pwd) cmd_name="$0" cmd_dir="$(cd "$(dirname "$CMD")" && pwd -P)"
+[[ -r "$init_script" ]] && . "$init_script"
+init_function &>/dev/null && init_function
+[[ -v init_var ]] && eval "$init_var"
+
+##########_MAIN_##########" >>${args[1]}
+		echo '# $RCSfile$' >>${args[1]}
+		echo '# $Revision$' >>${args[1]}
+		echo '# $Date$' >>${args[1]}
+		echo '# $Source$' >>${args[1]}
+		echo '# $Author$' >>${args[1]}
+		echo " " >>${args[1]}
+		echo "# PROJECT: " >>${args[1]}
+		echo "# CREATED BY: ${adminname}" >>${args[1]}
+		echo -n "# DATE: " >>${args[1]}
+		$DATE >>${args[1]}
+		echo "# DESCRIPTION: " >>${args[1]}
+		echo "# " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		chmod 775 ${args[1]}
+		echo "File ${args[1]} created"
+		echo ""
+		echo "Check file for correct permissions"
+		echo "Default file permissions set to were 775 for bash files"
+		echo "USER: rwx GROUP: rwx WORLD: rx"
+		echo ""
+		echo "Check in file with rcss ${args[1]}"
+		echo "Edit DESCRIPTION:"
+		echo "Save file. - File will then be in RCS"
+	fi
+	exit 0
+}
+
+# -php
+# Creates a new php file
+newphp() {
+	if [[ ${#args[@]} != 2 ]]; then
+		echo "USAGE:"
+		echo "        -php <filename>"
+		echo "                 Example: rcss -php testsetup.php"
+		echo "                 Creates a new php file testsetup.php"
+		exit 1
+	else
+		echo "<?php" >>${args[1]}
+		echo '// $RCSfile$' >>${args[1]}
+		echo '// $Revision$' >>${args[1]}
+		echo '// $Date$' >>${args[1]}
+		echo '// $Source$' >>${args[1]}
+		echo '// $Author$' >>${args[1]}
+		echo " " >>${args[1]}
+		echo "// PROJECT: " >>${args[1]}
+		echo "// CREATED BY: ${adminname}" >>${args[1]}
+		echo -n "// DATE: " >>${args[1]}
+		$DATE >>${args[1]}
+		echo "// DESCRIPTION: " >>${args[1]}
+		echo "// " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo "?>" >>${args[1]}
+		chmod 664 ${args[1]}
+		echo "File ${args[1]} created"
+		echo ""
+		echo "Check file for correct permissions"
+		echo "Default file permissions were set to 664 for php files"
+		echo "USER: rw GROUP: rw WORLD: r"
+		echo ""
+		echo "Check in file with rcss ${args[1]}"
+		echo "Edit DESCRIPTION:"
+		echo "Save file. - File will then be in RCS"
+	fi
+	exit 0
+}
+
+# -clphp
+# (create new commandline php file)
+newclphp() {
+	if [[ ${#args[@]} != 2 ]]; then
+		echo "USAGE:"
+		echo "        -clphp <filename>"
+		echo "                 Example: rcss -clphp emaillogfile.php"
+		echo "                 Creates a new command line php file emaillogfile.php"
+		exit 1
+	else
+		echo "#!/usr/bin/php -q" >>${args[1]}
+		echo "<?php" >>${args[1]}
+		echo '// $RCSfile$' >>${args[1]}
+		echo '// $Revision$' >>${args[1]}
+		echo '// $Date$' >>${args[1]}
+		echo '// $Source$' >>${args[1]}
+		echo '// $Author$' >>${args[1]}
+		echo " " >>${args[1]}
+		echo "// PROJECT: " >>${args[1]}
+		echo "// CREATED BY: ${adminname}" >>${args[1]}
+		echo -n "// DATE: " >>${args[1]}
+		$DATE >>${args[1]}
+		echo "// DESCRIPTION: " >>${args[1]}
+		echo "// " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo "?>" >>${args[1]}
+		chmod 775 ${args[1]}
+		echo "File ${args[1]} created"
+		echo ""
+		echo "Check file for correct permissions"
+		echo "Default file permissions were set to 775 for php command line files"
+		echo "USER: rwx GROUP: rwx WORLD: rx"
+		echo ""
+		echo "Check in file with rcss ${args[1]}"
+		echo "Edit DESCRIPTION:"
+		echo "Save file. - File will then be in RCS"
+	fi
+	exit 0
+}
+
+# -perl
+# Creates a new perl file
+newperl() {
+	if [[ ${#args[@]} != 2 ]]; then
+		echo "USAGE:"
+		echo "        -perl <filename>"
+		echo "                 Example: rcss -perl <filename>"
+		echo "                 Creates a new perl file"
+		exit 1
+	else
+		echo "#!/usr/bin/perl" >>${args[1]}
+		echo '# $RCSfile$' >>${args[1]}
+		echo '# $Revision$' >>${args[1]}
+		echo '# $Date$' >>${args[1]}
+		echo '# $Source$' >>${args[1]}
+		echo '# $Author$' >>${args[1]}
+		echo " " >>${args[1]}
+		echo "# PROJECT: " >>${args[1]}
+		echo "# CREATED BY: ${adminname}" >>${args[1]}
+		echo -n "# DATE: " >>${args[1]}
+		$DATE >>${args[1]}
+		echo "# DESCRIPTION: " >>${args[1]}
+		echo "# " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		chmod 775 ${args[1]}
+		echo "File ${args[1]} created"
+		echo ""
+		echo "Check file for correct permissions"
+		echo "Default file permissions were set to 775 for perl files"
+		echo "USER: rwx GROUP: rwx WORLD: rx"
+		echo ""
+		echo "Check in file with rcss ${args[1]}"
+		echo "Edit DESCRIPTION:"
+		echo "Save file. - File will then be in RCS"
+	fi
+	exit 0
+}
+
+# -python
+# Creates a new python file
+newpython() {
+	if [[ ${#args[@]} != 2 ]]; then
+		echo "USAGE:"
+		echo "        -python <filename>"
+		echo "                 Example: rcss -python <filename>"
+		echo "                 Creates a new python file"
+		exit 1
+	else
+		echo "#!/usr/bin/python" >>${args[1]}
+		echo "" >>${args[1]}
+		echo "__version__ = \"\$Revision: 1.3 $" >>${args[1]}
+		echo '# $RCSfile$' >>${args[1]}
+		#echo "# \$Revision\$" >> ${args[1]}
+		echo '# $Date$' >>${args[1]}
+		echo '# $Source$' >>${args[1]}
+		echo '# $Author$' >>${args[1]}
+		echo " " >>${args[1]}
+		echo "# PROJECT: " >>${args[1]}
+		echo "# CREATED BY: ${adminname}" >>${args[1]}
+		echo -n "# DATE: " >>${args[1]}
+		$DATE >>${args[1]}
+		echo "# DESCRIPTION: " >>${args[1]}
+		echo "# " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		echo " " >>${args[1]}
+		chmod 775 ${args[1]}
+		echo "File ${args[1]} created"
+		echo ""
+		echo "Check file for correct permissions"
+		echo "Default file permissions were set to 775 for python files"
+		echo "USER: rwx GROUP: rwx WORLD: rx"
+		echo ""
+		echo "Check in file with rcss ${args[1]}"
+		echo "Edit DESCRIPTION:"
+		echo "Save file. - File will then be in RCS"
+	fi
+	exit 0
+}
+
+# -l
+# Show rlog of the filename
+showlog() {
+	if [[ ${#args[@]} != 2 ]]; then
+		echo "USAGE:"
+		echo "           -l <filename>"
+		echo "                 Example: rcss -l test.txt"
+		echo "                 Shows the rcs log file for test.txt"
+		echo '                 NOTE: Parsed through "less", so hit "q" when finished !  :)'
+		exit 1
+	else
+		$RLOG ${args[1]} | $LESS
+	fi
+	exit 0
+}
+
+# -v
+# (make it "view" a revision" ...co -l -r1.5;view file;ci -u file)
+# example syntax "rcss -v 1.5 filename"
+viewversion() {
+	if [[ ${#args[@]} != 3 ]]; then
+		echo "USAGE:"
+		echo "           -v <filename>"
+		echo "                 Example: rcss -v 1.5 test.txt"
+		echo "                 This shows (via view) version 1.5 of file test.txt"
+		exit 1
+	else
+		$CO -l -r${args[1]} ${args[2]}
+		$VIEW -M ${args[2]}
+		$CI -u ${args[2]}
+	fi
+	exit 0
+}
+
+# -R
+# (make it REVERT back to revsion number.
+# example syntax "rcss -R 1.5 filename"
+revertversion() {
+	if [[ ${#args[@]} != 3 ]]; then
+		echo "USAGE:"
+		echo "           -R <version number> <filename>"
+		echo "                 Example: rcss -R 1.5 test.txt"
+		echo "                 This will revert test.txt back to version 1.5"
+		exit 1
+	else
+		echo "Reverting file to version ${args[1]}"
+		echo "You will need to enter rcs message for this change."
+		echo ""
+		$CO -l -r${args[1]} ${args[2]}
+		$CP -p ${args[2]} /tmp/Ver.${args[1]}.${args[2]}
+		$CI -u ${args[2]}
+		$CO -l ${args[2]}
+		$CP -p /tmp/Ver.${args[1]}.${args[2]} ${args[2]}
+		$CI -u ${args[2]}
+		$RM -f /tmp/Ver.${args[1]}.${args[2]}
+	fi
+	exit 0
+}
+
+# -d
+# Show a diff of 2 versions of a file
+versiondiff() {
+	if [[ ${#args[@]} != 4 ]]; then
+		echo "USAGE:"
+		echo "           -d <version number> <version number> <filename>"
+		echo "                 Example: rcss -d 1.5 1.7 test.txt"
+		echo "                 This shows a diff of version 1.5 and version 1.7 of test.txt"
+		echo '                 Note: just ignore the "2 files to edit" message that spits out after closing ;) '
+		exit 1
+	else
+		$CO -l -r${args[1]} ${args[3]} >/dev/null 2>&1
+		$CP ${args[3]} /tmp/Version-${args[1]}.${args[3]} >/dev/null 2>&1
+		$CI -u ${args[3]} >/dev/null 2>&1
+		$CO -l -r${args[2]} ${args[3]} >/dev/null 2>&1
+		$CP ${args[3]} /tmp/Version-${args[2]}.${args[3]} >/dev/null 2>&1
+		$CI -u ${args[3]} >/dev/null 2>&1
+		$VIMDIFF -M /tmp/Version-${args[1]}.${args[3]} /tmp/Version-${args[2]}.${args[3]}
+		$RM -f /tmp/Version-${args[1]}.${args[3]} /tmp/Version-${args[2]}.${args[3]} >/dev/null 2>&1
+	fi
+	exit 0
+}
+
+# -p
+# Set permissions on file
+setperms() {
+	if [[ ${#args[@]} != 3 ]]; then
+		echo "USAGE:"
+		echo "           -p <permissions> <filename>"
+		echo "                 Example: rcss 777 test.sh"
+		echo "                 This will set permissions on test.sh back to 777"
+		exit 1
+	else
+		echo "Setting new permissions on file: ${args[2]} to: ${args[1]}"
+		$CHMOD ${args[1]} RCS/${args[2]},v
+		$CO -l ${args[2]}
+		$CI -u ${args[2]}
+		echo ""
+		echo "New permissions have been set."
+		echo ""
+	fi
+	exit 0
+}
+############################################################0
+######## Program run starts here ###########################
+
+## TEST for RCS directory here!! If not found just automatically create it...give it the correct perms.
+if [ ! -d "RCS" ]; then
+	$MKDIR RCS
+	$CHMOD 770 RCS
+fi
+
+# Get epoch timestamp information
+timestamp=$($DATE +%s)
+
+# Set default admin and adminname info in case there are none found
+admin="NoneFound"
+# Get correct admin information - hopefully :)
+admin=$($WHOAMI | $AWK {'print $1'})
+# Set defaul admin full name if none is defined on below
+adminname=$admin
+# Example of how to extend this function
+# if [ "$admin" = "johns" ]; then adminname="John Doe"; fi
+
+# Make sure that the rcss script gets at least one argument
+if [ ! "$1" ]; then
+	helpinfo
+	exit 1
+fi
+
+# PARSE the OPTIONS here with CASE and then do stuff.
+case ${args[0]} in
+"-h")
+	helpinfo #Done
+	;;
+"--help")
+	helpinfo #Done
+	;;
+"-l")
+	showlog #Done
+	;;
+"-v")
+	viewversion #Done
+	;;
+"-d")
+	versiondiff #Done
+	;;
+"-p")
+	setperms #Done
+	;;
+"-R")
+	revertversion #Done
+	;;
+"-bash")
+	newbash #Done
+	;;
+"-php")
+	newphp #Done
+	;;
+"-clphp")
+	newclphp #Done
+	;;
+"-perl")
+	newperl #Done
+	;;
+"-python")
+	newpython #Done
+	;;
+esac
+
+# If no special options are found...it just falls through to normal rcss functionality :)
+# If no EDITOR is set in .profile or .bashrc default to vim.
+
+if [ ! $EDITOR ]; then
+	EDITOR=$VIM
+fi
+
+$CO -l ${args[0]}
+$EDITOR ${args[0]}
+$CI -u ${args[0]}
+
+exit 0

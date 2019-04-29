@@ -1,0 +1,11 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Fri Oct  6 02:20:10 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.3 - #_# #@#061017#@# #2#
+#3#::..#####################_/dot/bin/dnstest_#######################..::#3#
+ip_list=(72.139.50.226 216.21.129.22 46.166.170.10)
+for i in ${ip_list[@]}; do
+	ANG "$i"
+	echo
+	p $i
+done

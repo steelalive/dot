@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ffd() { find "$(realpath .)" -type d -iname '*'"$*"'*'; }
+ffd "$@"

@@ -1,0 +1,24 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Wed Oct 18 14:02:17 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.2.7 - #_# #@#181017#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+#set -e
+#grub-mkconfig -o /boot/grub/grub.cfg
+#grub-mkconfig -o /boot/efi/EFI/boot/grub.cfg
+#modprobe dm-mod
+#for i in $(loc "grub.cfg");do
+#	grub-mkconfig -o "$i"
+#done
+exec grub-mkconfig -o /boot/grub/grub.cfg "$@"
+#grub-mkconfig -o /boot/grub/grub.cfg
+# for i in /boot /last/boot /mnt/sda1/efi /mnt/sdb3/EFI; do grub-install --target=x86_64-efi --efi-directory=$i --bootloader-id=grub --recheck --debug;done
+
+#grub-mkconfig -o /boot/efi/EFI/boot/grub.cfg
+#3ANBG grub-mkconfig -o /boot/efi/EFI/boot/grub.cfg
+#[[ $PS1 ]] && exit
+#ANBY "Edit refind.conf?";echo
+#if yorn;then
+#	e /boot/efi/EFI/boot/refind.conf
+#e /mnt/sda3/Boot/EFI/refind.conf
+#	e /mnt/sdb3/EFI/boot/refind.conf
+#fi

@@ -1,0 +1,53 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri May 25 21:26:00 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.4.3 - #_# #@#250518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+son="$*"
+man() {
+	width="$(tput cols)"
+	MANWIDTH="$width" \
+		LESS_TERMCAP_mb=$'\e'"[1;31m" \
+		LESS_TERMCAP_md=$'\e'"[1;31m" \
+		LESS_TERMCAP_me=$'\e'"[0m" \
+		LESS_TERMCAP_se=$'\e'"[0m" \
+		LESS_TERMCAP_so=$'\e'"[1;44;33m" \
+		LESS_TERMCAP_ue=$'\e'"[0m" \
+		LESS_TERMCAP_us=$'\e'"[1;32m" \
+		command \man "$@"
+}
+
+for i in "where" "man" "whatis" "whereis" "which" "apropos"; do
+	hash $i &>/dev/null || continue
+	if $i "${1}" &>/dev/null || [[ $i == 'systemctl status' ]]; then
+		echo
+		ANG "${i} ${1}:\n"
+		echo
+		$i "${1}" 2>/dev/null
+	fi
+done
+for i in 'systemctl status' 'systemctl help'; do
+	ANG "${i} ${1}:\n"
+	echo
+	$i "${1}" 2>/dev/null
+	echo
+done
+
+ANBLUEGREEN "type -a ${1}:\n"
+type -a "$1" 2>/dev/null
+if man -k "$1" &>/dev/null; then
+	echo
+	man -k "$1" 2>/dev/null
+	echo
+fi
+echo
+echo "$1 -h:"
+echo
+$1 -h 2>/dev/null
+echo "$1 --help:"
+echo
+$1 --help 2>/dev/null
+ANLY "CHeat sheet? \n"
+yorn y && curl cheat.sh/~"$1"
+#cheater ~$1
+ANLY '\n cmdfu?\n'
+yorn y && cmdfu $1

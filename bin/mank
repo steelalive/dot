@@ -1,0 +1,33 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Sun Jun 18 07:23:21 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.1.9 - #_# #@#180617#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+LESS_TERMCAP_ZN="$(tput ssubm)"
+LESS_TERMCAP_ZV="$(tput rsubm)"
+LESS_TERMCAP_ZO="$(tput ssupm)"
+LESS_TERMCAP_ZW="$(tput rsupm)"
+export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold
+export LESS_TERMCAP_me=$'\E[0m'           # end mode
+export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
+export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
+export LESS_TERMCAP_ue=$'\E[0m'           # end underline
+export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+export LESS_TERMCAP_ZN LESS_TERMCAP_ZV LESS_TERMCAP_ZO LESS_TERMCAP_ZW
+export LESS='--SILENT --buffers=-1 --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
+export LESSCOLOR="always"
+export LESSCHARSET='utf-8'
+MANPATH=$(manpath 2>/dev/null)
+export MANPATH
+
+size=$(stty size </dev/tty)
+columns=${size##+([0-9])}
+export MANWIDTH="$((columns - 5))"
+if stfu man "$@"; then
+	man -a "$@"
+fi
+man -k "$@"
+exemples "$@"
+cheater "$@"
+cmdfu "$@"

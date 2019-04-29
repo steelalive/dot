@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:30 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+for i in $(echo /mnt/root/*[^aur] /mnt/root/.*[^..]); do
+	[[ -e $i ]]
+	echo $i
+done
+scp -r -c none ETC .bash .cheat bin ETC info nano 10-custom.conf al ex fn qc qqdb sshd_config DIR_COLORS root@10.0.0.12:/mnt/root
+scp -c none ETC root@10.0.0.12:/mnt/root

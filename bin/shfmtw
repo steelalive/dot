@@ -1,0 +1,16 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed Jun 13 12:02:47 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-13#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/shfmtw_#######################..::#3#
+#is_in_path shfmt || exit
+
+shfmtw() {
+	for script; do
+		if is_bash "$script" &>/dev/null; then
+			shfmt -w -s -i 0 "$script" 2>/dev/null && ANORANGE "[$?] -- ${C}$1 ${O}formatting has been optimized.\\n"
+		fi
+	done
+}
+shfmtw "$@"

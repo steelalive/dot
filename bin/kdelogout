@@ -1,0 +1,36 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:29 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+a=$(/usr/bin/cat /root/.config/kdecount)
+counter=/root/.config/kdecount
+
+touch $counter
+systemctl stop asd
+systemctl stop asd-resync
+
+[[ -f /tmp/FIRST ]] && rm /tmp/FIRST
+
+if ((!a)) || ((a > 10)); then
+	rm $counter
+	touch $counter
+	echo 0 >$counter
+	a=0
+fi
+
+a=$((a + 1))
+echo $a >$counter
+
+if [[ $a == 1 ]] || [[ $a == 3 ]] || [[ $a == 5 ]] || [[ $a == 7 ]]; then
+	/bin/rm -rf /root/*/.thumbnails/*
+	/usr/bin/rsync -auRv --exclude=/mnt/root/aur /etc "${dot}" /last/BACKUP/AUTO/"$(date +%Y%m%W)"
+	/usr/bin/rsync -auRv --exclude=/mnt/root/aur /mnt/root/.* /last/BACKUP/AUTO/"$(date +%Y%m%W)"
+else
+	pacman-db-upgrade
+	pacman-optimize
+	mandb
+fi
+if [[ $a == 8 ]] || [[ $a == 4 ]]; then
+	/root/bin/back.sh
+fi
+exit 0

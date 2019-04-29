@@ -1,0 +1,28 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:30 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+LAN=${LAN:-eth0}
+NETMASK=${NETMASK:-255.255.255.0}
+BROADCAST=${BROADCAST:-192.168.1.255}
+set_ip() {
+	ifconfig "$LAN" "$MYIP" netmask "$NETMASK" broadcast "$BROADCAST" up
+}
+test_ip() {
+	if stfu p router; then
+		ANG ${LM}""$LAN" is operationnal."
+	else
+		ANC ""$LAN"${RED} fail to reach router"
+	fi
+}
+
+#if ! stfu p router; then
+#	stfu dhcpcd -x "$LAN"
+#	stfu ifconfig "$LAN" down
+#	[[ -f /run/dhcpcd-eth0.pid ]] && rm /run/dhcpcd-eth0.pid
+#	stfu killall dhcpcd dhclient
+#	ifconfig $LAN $MYIP netmask $NETMASK broadcast $BROADCAST
+#	dhclient "$LAN"
+#fi
+set_ip
+test_ip

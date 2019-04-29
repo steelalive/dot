@@ -1,0 +1,8 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Sun May 27 14:43:31 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.7 - #_# #@#270518#@# #2#
+#3#::..#####################_/dot/bin/+root_#######################..::#3#
+[[ "$1" ]] || exit
+[[ $1 == all ]] && chown 0:0 --changes -c ./* ./.??*
+chown 0:0 --changes -c "$@"

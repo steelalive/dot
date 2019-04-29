@@ -1,0 +1,21 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:31 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+dialog --title "Dialog" \
+	--backtitle "Need comfirmation to continue" \
+	--yesno "Yes to continue and no to stop." 7 60
+
+# Get exit status
+# 0 means user hit [yes] button.
+# 1 means user hit [no] button.
+# 255 means user hit [Esc] key.
+response=$?
+case $response in
+0) exit 0 ;;
+1) exit 1 ;;
+255)
+	echo "Invalid key pressed."
+	exit 255
+	;;
+esac

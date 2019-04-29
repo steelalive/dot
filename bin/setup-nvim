@@ -1,0 +1,87 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu May 17 16:56:54 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.0 - #_# #@#170518#@# #2#
+#3#::..#####################_/dot/bin/nvim-setup_#######################..::#3#
+# vi: ft=sh:noro:
+nvim-config() {
+	cd /
+	HOME=${HOME:-/root}
+	#USER=root
+	unset sudo
+	[[ $USER == root ]] || sudo=sudo
+	#$sudo +master -R /root /dot /tmp
+	if [[ $1 == rm ]]; then
+		cd /
+		$sudo rm -rfv "$HOME"/.config/nvim "$HOME"/.cache/vim /root/.cache/vim
+		$sudo rm -rfv "${XDG_CACHE_HOME}/vim" /root/.cache/venv /root/.cache/pip
+		$sudo rm -rfv "$HOME"/.cache/dein /root/.cache/dein "$HOME"/.cache/dein /root/.local/share/nvim
+	fi
+	mkdir -pv "$HOME"/.config/nvim
+	cd "$HOME"/.config/nvim
+	mkdir -vp "$XDG_CACHE_HOME/vim/"{backup,session,swap,tags,undo}
+	cd "$HOME"/.config/nvim || exit
+	git clone git://github.com/rafi/vim-config.git "$HOME"/.config/nvim
+	gitreset
+	lnr /dot/root/folders/.config/nvim/local.vim $HOME/.config/nvim/config/local.vim
+	lnr /dot/root/folders/.config/nvim/setcolors.vim $HOME/.config/nvim/config/
+	lnr /dot/root/folders/.config/nvim/plugins.yaml $HOME/.config/nvim/config/
+	mkdir -p /root/.local/share/nvim/shada
+	#for SEARCH in '- repo: airblade/vim-gitgutter' '  hook_source: |' '    let g:gitgutter_map_keys = 0' '    let g:gitgutter_sh = $SHELL'; do
+	#	sed -i "s!.*$SEARCH.*!!" /root/.config/nvim/config/plugins.yaml
+	#done
+
+	[[ -e "$HOME"/.vim ]] || ln -s "$HOME"/.config/nvim "$HOME"/.vim
+	for folder in $HOME/.cache/pip $HOME/.cache/pip/http $HOME/.cache/vim/venv $HOME/.cache/venv/pip3 $HOME/.cache/venv/pip; do
+		$sudo mkdir -p "$folder"
+		$sudo chown -R "$USER" "$folder"
+	done
+
+	$sudo bash "$HOME"/.config/nvim/venv.sh
+	$sudo chown "root" /root/.cache/pip /root/.cache/pip/http
+	$sudo chown "$USER" $HOME/.cache/pip $HOME/.cache/pip/http
+	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
+	$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade --upgrade-strategy eager --progress-bar pretty pip
+	$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade-strategy eager --progress-bar pretty --upgrade pip
+	$sudo pip3 install --user --upgrade --upgrade-strategy eager --progress-bar pretty PyYAML
+	grep -q setcolors /root/.config/nvim/.gitignore || echo "/config/setcolors.vim
+/config/plugins.yaml" >>/root/.config/nvim/.gitignore
+	for install in postcss-html postcss-markdown postcss postcss-syntax jshint jsxhint jsonlint stylelint sass-lint raml-cop markdownlint-cli write-good neovim nomnom; do
+		$sudo npm install -g --upgrade "$install"
+	done
+	for pipinstall in pycodestyle pyflakes flake8 vim-vint proselint yamllint; do
+		#		$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+		$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+		$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+
+	done
+	#$sudo +master -R /root /dot /tmp
+	cd "$HOME"/.config/nvim
+	echo you should launch nvim
+	return
+}
+case "$1" in
+
+\
+	help | h | -h | --help)
+	head -n150 "$HOME"/.config/nvim/README.md | ca
+	echo '$sudo rm -rf $HOME/.config/nvim $HOME/.cache/vim /root/.cache/vim
+	$sudo rm -rf $HOME/.cache/dein /root/.cache/dein $HOME/.cache/pip
+	mkdir $HOME/.config/nvim
+	mkdir -vp "$XDG_CACHE_HOME/vim/"{backup,session,swap,tags,undo}
+	cd $HOME/.config/nvim
+	git clone git://github.com/rafi/vim-config.git $HOME/.config/nvim
+	ln -s $HOME/.config/nvim $HOME/.vim
+	lnr /dot/root/folders/.config/nvim/local.vim "$XDG_CONFIG_HOME"/nvim/config/local.vim
+$sudo	npm -g install --upgrade postcss-html postcss-markdown postcss-syntax
+$sudo	npm -g install --upgrade jshint jsxhint jsonlint stylelint sass-lint
+$sudo	npm -g install --upgrade raml-cop markdownlint-cli write-good
+$sudo	npm -g install --upgrade tern
+$sudo	pip install --upgrade pycodestyle pyflakes flake8 vim-vint proselint yamllint
+	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim3/bin/pip" install -U pip --upgrade pip;venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim2/bin/pip" install -U pip --upgrade pip' | ca
+
+	;;
+*)
+	nvim-config "$@"
+	;;
+esac

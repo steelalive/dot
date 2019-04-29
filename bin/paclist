@@ -1,0 +1,22 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Oct 10 00:04:29 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.3 - #_# #@#101017#@# #2#
+#3#::..#####################_/dot/bin/paslist_#######################..::#3#
+ANW "List explicitly installed packages that are not in the base or base-devel groups"
+if yorn; then
+	expac -H M "%011m\t%-20n\t%10d" $(comm -23 <(pacman -Qqe | sort) <(pacman -Qqg base base-devel | sort)) | sort -n
+	ANY "Sort by name?"
+	if yorn; then
+		comm -23 <(pacman -Qqe | sort) <(pacman -Qqg base base-devel | sort) | sort -n
+	fi
+fi
+ANW "List packages that are optional dependencies and not installed explicitly"
+if yorn; then
+	comm -13 <(pacman -Qdtq | sort) <(pacman -Qdttq | sort)
+fi
+
+ANW "List packages by their install date"
+if yorn; then
+	expac --timefmt="%F %T" "%l %w %n" | grep explicit | cut -d ' ' -f 1-2,4- | sort -n
+fi

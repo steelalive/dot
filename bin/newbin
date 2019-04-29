@@ -1,0 +1,52 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Tue Jun 20 20:26:50 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.1.7 - #_# #@#200617#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+bindir="${dot}"/bin
+f="$1"
+if ! echo "${f}" | grep "/" &>/dev/null; then
+	f=${bindir}/${f}
+fi
+[[ -e /tmp/compare.delete ]] && rm /tmp/compare.delete
+#ANBY "Do you want to create a bash template file named ${C}${f}${Y}?\n"
+#if ! yorn;then
+#	ANBY "Create plain new file in $PWD named ${1}?";echo;
+#	yornq || exit;edsc $1; exit;
+#fi
+real_path=$(realpath ${f})
+base_name=$(basename ${f})
+for where in "${f}" /tmp/compare.delete; do
+	template.bash "$real_path" >>"${where}"
+done
+f="$real_path"
+if hash "${base_name}" &>/dev/null; then
+	wat ${base_name}
+	ANC "${base_name}${RED} is in use"
+	yornq
+fi
+edsc "${f}" +6
+chmod +x "${f}"
+if diff "${f}" /tmp/compare.delete; then
+	ca "${f}"
+	ANBR "ERROR! Delete${R} ${C}${real_path}?"
+	echo
+	if yorn yes; then
+		rm -v "${f}"
+		[[ -e /tmp/compare.delete ]] && rm /tmp/compare.delete
+
+		exit
+	fi
+fi
+
+#ANY Append to e editor command?
+#echo "#"${f}")f="${real_path}"; edscv;;"
+#if yorn; then
+#	echo "#"${f}")f="${real_path}"; edscv;;" >> /root/bin/e
+#	e e
+#fi
+[[ -e /tmp/compare.delete ]] && rm /tmp/compare.delete
+ANBY "Execute${R} ${C}${base_name}${Y}?"
+echo
+yorn && "${real_path}"
+ANC "${base_name} ${G} creation in ${C}${real_path}${G} COMPLETED!"
+echo

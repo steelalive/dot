@@ -1,0 +1,15 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri Sep 30 16:36:37 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.6 - #_# #@#300916#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+linerl() {
+	arg1="$2"
+	[[ $arg1 == 0 ]] || arg1="$RED$arg1"
+	[[ $arg1 == 0 ]] || col="$RED"
+	#[[ $1 ]] && arg1="$1"
+	line='----------------------------------------'
+	printf "$Y%s $LC%s $W%s[$arg1$W]$col${1} ${line:${#1}}"
+	echo
+}
+linerl "$@"

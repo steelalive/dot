@@ -1,0 +1,411 @@
+#!/bin/env bash
+
+# ##############################################################################
+# Terminal 256 Color Table
+#
+# Version 1.8
+#
+# (c) 2016, SkriptUser alias Dr. Peter Netz
+#
+# Script Name:
+#
+#     terminal_256color_table_verXX.bash
+#
+# Script call:
+#
+#     terminal_256color_table_verXX.bash [options]
+#
+#     -s ${text-string}
+#     -c ${foreground-color}
+#     -a ${text-attribute}
+#     -l ${left-spaces}
+#     -r ${right-spaces}
+#     -i ${ON|OFF}
+#
+# Description:
+#
+#     The script generates an 8 bit color table (equal to 256 colors) using
+#     the so called ANSI escape sequences for demonstration purposes [2].
+#
+# Usage of the 256 color mode:
+#
+#     The CSI is followed by a sequence of parameters which is called SGR. The
+#     sequence of parameters are decimal numbers separated by semicolons. An
+#     empty or an absent parameter is taken to be zero [1].
+#
+#     CSI = ESC[
+#     SGR = ${attribute};38;5;${fg-color};48;5;${bg-color}m  ->  FG/BG color
+#     SGR = [0m                                              ->  Reset color
+#
+#     The foreground color (FG) is introduced by '38;5' and the background
+#     color (BG) is introduced by '48;5':
+#         SGR_FG = 38;5;${fg-color}m
+#         SGR_BG = 48;5;${bg-color}m
+#
+# Possible Attributes:
+#
+#     parameter -> result
+#     0            Reset all attributes to their defaults
+#     1            Bold/Bright
+#     2            Half-bright
+#     3            Italic
+#     4            Underlined
+#     5            Blink
+#     7            Reverse video
+#     8            Hidden
+#     21           Bold/Bright off
+#     22           Half-bright off
+#     23           Italic off
+#     24           Underline off
+#     25           Blink off
+#     27           Reverse video off
+#     28           Hidden off
+#
+# Development:
+#
+#     The script was developed and tested under Linux Mint 18 Cinnamon. The
+#     installed Bash version was 4.3.42(1)-release. The shell script analysis
+#     tool 'shellcheck' was used for checking the script [3].
+#
+# Abbreviations:
+#
+#     CSI = Control Sequence Introducer
+#     SGR = Select Graphic Rendition
+#
+# References:
+#
+#     [1] http://man7.org/linux/man-pages/man4/console_codes.4.html
+#     [2] https://en.wikipedia.org/wiki/ANSI_escape_code
+#     [3] https://www.shellcheck.net/
+#
+# Other Helpful Informations:
+#
+#     [4]  http://misc.flogisoft.com/bash/tip_colors_and_formatting
+#     [5]  http://wiki.bash-hackers.org/commands/builtin/printf
+#     [6]  http://www.asciitable.com/
+#     [7]  https://en.wikipedia.org/wiki/Box-drawing_character
+#     [8]  https://sarata.com/linux_bash.html
+#     [9]  https://wiki.archlinux.org/index.php/Color_Bash_Prompt
+#
+# Copyright Notice:
+# -----------------
+#
+# The software is for private use of natural persons only. The use of the
+# software by authorities, institutions, enterprises and profit as well as
+# non-profit organisations etc. is explicitly prohibited.
+#
+# The permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files, to deal in the
+# software without restriction, including without limitation the rights to
+# use, to copy, to modify, to merge, to publish, to distribute, to sublicense,
+# and to permit persons to whom the software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the software.
+#
+# Warranty:
+# ---------
+#
+# The software is provided "as is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall the
+# authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other dealings
+# in the software.
+# ##############################################################################
+
+# Set the script variables.
+TITLE="Terminal 256 Color Table"
+VERSION="Version 1.8"
+COPYRIGHT="(c) 2016, SkriptUser"
+
+# Set the header variables as unicode character.
+CHAR_TB=$(printf "%b" "\U2550") # Top-Bottom
+CHAR_LR=$(printf "%b" "\U2551") # Left-Right
+CHAR_TL=$(printf "%b" "\U2554") # Top-Left
+CHAR_TR=$(printf "%b" "\U2557") # Top-Right
+CHAR_BL=$(printf "%b" "\U255A") # Bottom-Left
+CHAR_BR=$(printf "%b" "\U255D") # Bottom-Right
+
+# Set the outer length of the header.
+OLEN=80
+
+# Set the inner length of the header.
+ILEN=$((OLEN - 2))
+
+# Set the space variable.
+SPC="\040"
+
+# Set the new line variable.
+NL="\n\r"
+
+# Set foreground/background init strings.
+FG_INIT="38;5"
+BG_INIT="48;5"
+
+# Set the control sequence introducer variable.
+# CSI="\x1B["
+# CSI="\e["
+CSI="\033["
+
+# Set the variable for the reset of all attributes.
+CRA="0m"
+
+# Default color.
+DEFAULT="${CSI}${CRA}"
+
+# Initialising command line parameter.
+STRING="\040"
+COLOR="0"
+ATTR="0"
+LT="2"
+RT="2"
+INVERSE="OFF"
+
+# Set the Bash version of the script developer.
+DEV_VER="4.3.42(1)-release"
+
+# ==============================================================================
+# Function check_bash_version
+# ==============================================================================
+function check_bash_version() {
+	# Set message string.
+	local str=''
+	str+="Please note: The current Bash version '${DEV_VER}' is different "
+	str+="from ${NL}the Bash version '${BASH_VERSION}' with which the script "
+	str+="was developed!"
+	# Compare current Bash version with Bash version of the script developer.
+	if [[ $DEV_VER != "$BASH_VERSION" ]]; then
+		# Write message into the terminal window.
+		printf "%b%b%b" "${NL}" "${str}" "${NL}"
+	fi
+	# Return 0.
+	return 0
+}
+
+# ==============================================================================
+# Function head_line
+# ==============================================================================
+function head_line() {
+	# Assign function parameter to local string.
+	local s=$1
+	# Calculate the length of the string.
+	local slen=${#s}
+	# Calculate the length of the substrings.
+	local l=$(((ILEN - slen) / 2))
+	local r=$((ILEN - l - slen))
+	# Return the head line string.
+	printf "%s%-${l}b%s%-${r}b%s%b" "${CHAR_LR}" "${SPC}" "${s}" \
+		"${SPC}" "${CHAR_LR}"
+	# Return the exit status 0.
+	return 0
+}
+
+# ==============================================================================
+# Function write_header
+# ==============================================================================
+function write_header() {
+	# Make top line.
+	local t=${CHAR_TL}
+	for _ in $(seq 1 $ILEN); do t+="${CHAR_TB}"; done
+	t+=${CHAR_TR}
+	# Make bottom line.
+	local b=${CHAR_BL}
+	for _ in $(seq 1 $ILEN); do b+="${CHAR_TB}"; done
+	b+=${CHAR_BR}
+	# Write the header into the terminal window.
+	printf "%s%b" "${t}" "${NL}"
+	printf "%s%${ILEN}b%s%b" "${CHAR_LR}" "${SPC}" "${CHAR_LR}" "${NL}"
+	printf "%s%b" "$(head_line "${TITLE}")" "${NL}"
+	printf "%s%b" "$(head_line "${VERSION}")" "${NL}"
+	printf "%s%b" "$(head_line "${COPYRIGHT}")" "${NL}"
+	printf "%s%${ILEN}b%s%b" "${CHAR_LR}" "${SPC}" "${CHAR_LR}" "${NL}"
+	printf "%s%b" "${b}" "${NL}"
+	# Return the exit status 0.
+	return 0
+}
+
+# ==============================================================================
+# Function error_message
+# ==============================================================================
+function error_message() {
+	# Write an error message into the terminal window.
+	printf "%b%s%b" "${NL}" "$1" "${NL}${NL}"
+	# Exit the script.
+	exit 1
+}
+
+# ==============================================================================
+# Function check_param
+# ==============================================================================
+function evaluate_parameter() {
+	# Set the local regular expression variables.
+	local re='^-?[0-9]+$'
+	# Set the error message stings.
+	local str0="Error: No valid value in the option"
+	local str1='${value}'
+	# Check if the value of the parameter is a number.
+	if ! [[ $COLOR =~ $re ]]; then
+		# Write an error message into the terminal window.
+		error_message "${str0} -c ${str1}"
+	else
+		if ((COLOR < 0)) || ((COLOR > 255)); then
+			# Write an error message into the terminal window.
+			error_message "${str0} -c ${str1}"
+		fi
+	fi
+	# Check if the value of the parameter is a number.
+	if ! [[ $ATTR =~ $re ]]; then
+		# Write an error message into the terminal window.
+		error_message "${str0} -a ${str1}"
+	fi
+	# Check if the value of the parameter is a number.
+	if ! [[ $LT =~ $re ]]; then
+		# Write an error message into the terminal window.
+		error_message "${str0} -l ${str1}"
+	fi
+	# Check if the value of the parameter is a number.
+	if ! [[ $RT =~ $re ]]; then
+		# Write an error message into the terminal window.
+		error_message "${str0} -r ${str1}"
+	fi
+	# Check if the value of the option is valid.
+	INVERSE=$(echo $INVERSE | awk '{print toupper($0)}')
+	if [[ $INVERSE != "ON" ]] && [[ $INVERSE != "OFF" ]]; then
+		# Write an error message into the terminal window.
+		error_message "${str0} -i ${str1}"
+	fi
+
+	# Return exit status 0.
+	return 0
+}
+
+# ==============================================================================
+# Function command_line_parameter
+# ==============================================================================
+function command_line_parameter() {
+	# Set local variable.
+	# shellcheck disable=SC2124
+	local opt=$@
+	# Loop over the command line parameter.
+	while getopts s:c:a:l:r:i: opt 2>/dev/null; do
+		case $opt in
+		s) STRING=$OPTARG ;;
+		c) COLOR=$OPTARG ;;
+		a) ATTR=$OPTARG ;;
+		l) LT=$OPTARG ;;
+		r) RT=$OPTARG ;;
+		i) INVERSE=$OPTARG ;;
+		# ?) echo "$0: Error in the command line options";;
+		esac
+	done
+	# Return exit status 0.
+	return 0
+}
+
+# ==============================================================================
+# Function invert_color
+# ==============================================================================
+function invert_color() {
+	# Assign the function parameter to the variable color.
+	local color=$1
+	# Initialise the variable invert_color.
+	local invert_color=0
+	# Invert the given color.
+	if ((color < 128)); then
+		invert_color=$((color + 128))
+	elif ((color >= 128)); then
+		invert_color=$((color - 128))
+	fi
+	# Output the value of the variable invert_color.
+	echo -n "$invert_color"
+	# Return the exit status 0.
+	return 0
+}
+
+# ==============================================================================
+# Function get_fg_color
+# ==============================================================================
+function get_fg_color() {
+	# Assign the function parameter to the variable bg_color.
+	local bg_color=$1
+	# Set the local variable fg_color.
+	local fg_color=""
+	# Invert the color depending on the command line option.
+	if [ "$INVERSE" == "ON" ]; then
+		# Invert the background color.
+		fg_color=$(invert_color "${bg_color}")
+	elif [ "$INVERSE" == "OFF" ]; then
+		# Do not change the color.
+		fg_color=$COLOR
+	fi
+	# Output the value of the variable invert_color.
+	echo -n "${fg_color}"
+	# Return the exit status 0.
+	return 0
+}
+
+# ==============================================================================
+# Function print_color_table
+# ==============================================================================
+function print_color_table() {
+	# Initialise the local variables.
+	local bg_color=''
+	local col_seq=''
+	# Loop over 32 rows.
+	for row in $(seq 0 8 255); do
+		# Loop over 8 columns.
+		for col in $(seq 0 7); do
+			# Calculate the background color.
+			bg_color=$((row + col))
+			# Set the foreground color.
+			fg_color=$(get_fg_color "${bg_color}")
+			# Set the color sequence.
+			col_seq="${CSI}"
+			col_seq+="${ATTR};${FG_INIT};${fg_color};${BG_INIT};${bg_color}m"
+			# Print the color into the terminal window.
+			printf "%b%3u%b%b%-${LT}s%-b%-${RT}s%b" "${SPC}" "${bg_color}" \
+				"${SPC}" "${col_seq}" \
+				"" "${STRING}" \
+				"" "${DEFAULT}"
+		done
+		# Apply a line break.
+		printf "%b" "${NL}"
+	done
+	# Return the exit status 0.
+	return 0
+}
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Main script section
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Read the command line parameter.
+# shellcheck disable=SC2068
+command_line_parameter $@
+
+# Reset the terminal window.
+reset
+
+# Write a header into the terminal window.
+write_header
+
+# Check the running Bash version.
+check_bash_version
+
+# Evaluate the command line parameter.
+evaluate_parameter
+
+# Write an empty line into the terminal window.
+printf "%b" "${NL}"
+
+# Print the color table.
+print_color_table
+
+# Write an empty line into the terminal window.
+printf "%b" "${NL}"
+
+# Exit the script.
+exit 0

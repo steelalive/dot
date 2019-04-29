@@ -1,0 +1,13 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri Sep 30 16:36:59 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.6 - #_# #@#300916#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+[[ $1 =~ [0-9]* ]] || exit 1
+i=0 arg1="$1"
+shift
+while ((i != arg1)); do
+	"$@" || break
+	((i++))
+	((i <= 1000)) || break
+done

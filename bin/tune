@@ -1,0 +1,9 @@
+#!/bin/bash
+
+tune() { 
+for i; do
+	e2fsck "$i"
+	tune2fs -l -e remount-ro -c 30 -m 2 -O ^has_journal -o journal_data_writeback,nobarrier "$i"
+done; 
+}
+tune "$@"

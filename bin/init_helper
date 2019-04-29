@@ -1,0 +1,56 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:29 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+parent_path="$(realpath "${BASH_SOURCE[0]}")"
+parent_name="$(ps -o comm= $PPID)"
+cmd_path=${cmd_path:-$parent_path}
+cmd_name=${cmd_name:-$parent_name}
+print_help() {
+	if [[ -v help ]]; then
+		ANLB "$cmd_name${G} ${help}\n"
+	fi
+}
+
+arg_needed() {
+	if (($# < 0)); then
+		ANW "${_5}${LB}$cmd_name${W}${_5}${RED} expect at least $arg_needed argument.${RES}\n"
+		print_help
+	fi
+}
+
+get_script_dir() {
+	SOURCE="$parent_path"
+	# While $SOURCE is a symlink, resolve it
+	while [ -h "$SOURCE" ]; do
+		DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+		SOURCE="$(readlink "$SOURCE")"
+		# If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
+		[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+	done
+	DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+	echo "$DIR"
+}
+
+debug() {
+	if [[ -v debug ]]; then
+		ANG cmd_name="${C}$cmd_name ${G}cmd_path=${C}$cmd_path${RES} ${G}cmd_dir=$(get_script_dir)\n"
+	fi
+}
+
+case "$@" in
+h | help | usage | -h | --help)
+	print_help
+	;;
+debug)
+	debug=1
+	debug
+	unset debug
+	;;
+arg_needed)
+	arg_needed
+	help
+	;;
+esac
+#arg_needed
+#debug

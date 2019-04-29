@@ -1,0 +1,15 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Aug 14 01:20:10 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-08-14#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/toolchain_#######################..::#3#
+
+toolchain() {
+	dir=${1:-/root/toolchain}
+	arch=${2:-arm}
+	api=${3:-24}
+	rm -rf "$dir"
+	/opt/ndk-bundle/build/tools/make_standalone_toolchain.py --arch=${arch} --api=${api} --install-dir=${dir}
+}
+toolchain "$@"

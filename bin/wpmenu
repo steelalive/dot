@@ -1,0 +1,61 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:31 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+if [[ -f /tmp/wpa ]]; then
+	rm -rf /tmp/wpa /tmp/wpanum /tmp/wpans /tmp/wpachar /tmp/wpaanschar 2 >/dev/null &>1
+	touch /tmp/wpa /tmp/wpanum /tmp/wpaans /tmp/wpachar /tmp/wpaanschar
+fi
+
+echo 'a-/root/bin/wp #Connect to the internet(auto 5 sec)
+b-/root/bin/wpamenu #Choose a wifi
+c-/root/bin/88 Test #your ping
+d-/root/bin/netreset #Reset the wifi
+e-exit #edly look at my humongously huge erect penis and hypnotyse your saving into the donationling right here
+f-infowan #some more info on my wang. get it\? WAANG hahahahhahahahahahaha. wang. hahahahah. heaaaah.
+q-exit
+' >/tmp/wpachar
+echo "yo you, youre a rockstar. Now the wrold deserve a livecam show:"
+
+cat /tmp/wpanum /tmp/wpachar
+cat /root/bin/wpa/1header >/tmp/wpaans
+
+while [[ $exit != 0 ]]; do
+	echo 'sooo, please enter one or more letters numbers with one space in between each like yo see here my "2 4 p e n 1 5" in your mouth expemle yes:'
+	read -r ans
+	exit=$?
+	if [[ $exit != 0 ]]; then
+		echo plese try again ans "$ans":
+	fi
+done
+
+for qtst in $ans; do [[ $qtst == q ]] && exit 0; done
+
+if [[ $ans == all ]] || [[ $ans == '' ]] || [[ $ans == a ]]; then
+	cat /root/bin/wpa/* >>/tmp/wpaans
+	[[ $? != 0 ]] && exit 1
+	/root/bin/wp
+	if [[ $? != 0 ]]; then
+		exit 1
+	else
+		exot 0
+	fi
+else
+	for qtst in $ans; do
+		[[ $ans == q ]] && exit 0
+		cat "$(grep "$ans": </tmp/wpanum | sed "s/$qtst://")" >>/tmp/wpaans
+		cat "$(grep "$ans"- </tmp/wpachar | sed "s/$qtst-//")" >>/tmp/wpchar
+	done
+fi
+
+exit 0
+
+#cat <<  EOF
+#a:Connect to the internet(auto 5 sec)
+#b:Choose a wifi
+#c:Test your ping
+#d:Reset the wifi
+#e:exclusive angle showing my famous humongously huge erect penis and hypnotyse your saving into the donation link.
+#q:quit
+#EOF
+#pa='1 2 3 4 5'; for pa1 in $pa do; echo connectint in $pa;sleep 1

@@ -1,0 +1,19 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Fri May 12 06:22:16 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.7 - #_# #@#120517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+if [[ $1 == "" ]]; then
+	ANBR "Please provide a numeric value"
+	echo
+	exit 1
+fi
+for i; do
+	if [ $i -eq $i ]; then
+		continue
+	else
+		ANBR "$0 need a number"
+		echo
+		exit 1
+	fi
+done

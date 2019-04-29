@@ -1,0 +1,32 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:29 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# prepend.sh: Add text at beginning of file.
+#
+#  Example contributed by Kenny Stauffer,
+#+ and slightly modified by document author.
+
+E_NOSUCHFILE=85
+file="$1"
+shift
+read -r title <<<"$*"
+# -p arg to 'read' displays prompt.
+if [ ! -e "$file" ]; then
+	read -r -p "File: " file
+	if [ ! -e "$file" ]; then
+		echo "File $file not found."
+		exit $E_NOSUCHFILE
+	fi
+fi
+if [[ ! $title ]]; then
+	read -r -p "Text to prepend: " title
+fi
+[[ ! $title ]] && exit 1
+cat - "$file" <<<"$title" >"$file.new"
+cp "$file.new" "$file"
+rm "$file.new"
+echo "Modified file $file"
+ca "$file"
+
+exit # Ends script execution.

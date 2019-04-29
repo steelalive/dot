@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed Feb 28 20:06:10 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.3 - #_# #@#280218#@# #2#
+#3#::..#####################_/dot/bin/is_alphanum_#######################..::#3
+if [[ $1 != *[!0-9a-zA-Z]* ]]; then
+	#success an alpha numeric string
+	exit 0
+fi
+exit 1

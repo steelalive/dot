@@ -1,0 +1,85 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Tue May  8 23:36:20 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.7.5 - #_# #@#080518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+#if [[ $HOST = hp ]]; then
+#mount -o remount,noatime,barrier=0,commit=40 LABEL=ROOT-HP /mnt/root >/dev/null 2>&1
+#mount -o remount,rw,noatime,barrier=0,commit=40 >/dev/null 2>&1
+#swapon /var/swap &>/dev/null
+[[ $UID == 0 ]] || exit
+#[[ -d /android ]] && mount /android &>/dev/null
+
+#for i in $(blkid | grep ext4 | cut -d':' -f1); do
+#	umount $i
+#	e2fsck -f $i; tune2fs -O ^has_journal -o journal_data_writeback,nobarrier $i &>/dev/null
+#done
+mount_opt='remount,noatime,noauto_da_alloc,delalloc,barrier=0,commit=30,nodiscard'
+sync
+mount -o "$mount_opt" / && ANG "mount -o \"$mount_opt\" /\n"
+(
+	IFS=""
+	for i in $(mount | grep relatime); do
+		mount -o remount,noatime $(echo $i | awk '{print $0;}')
+	done
+)
+unset IFS
+#remount,defaults,commit=900,nodiscard,barrier=0,nobh,nobarrier,noatime /
+echo 1152 >>/sys/block/sda/queue/read_ahead_kb
+echo 0 >>/sys/block/sda/queue/iostats
+for k in $(mount | grep ext4 | cut -d " " -f3); do
+	sync
+	mount -o "$mount_opt" "$k"
+	[[ $? == 0 ]] && ANG mount -o "$mount_opt" "$k\n"
+	#remount,barrier=0,noatime,nobarrier,barrier=0,commit=900,nobh $k
+done
+#for i in {a..z};do
+#	[[ -e /sys/block/sd${i}/queue/scheduler ]] || continue
+#	echo deadline >> /sys/block/sd${i}/queue/scheduler
+#done
+#for init_mnt in $(echo /dev/sd[a-z][0-9]* | sed 's|/dev/sda2||');do
+#[[ $init_mnt = /dev/sda1 ]] && mnt_point=/mnt/sda1
+#[[ $init_mnt = /dev/sda3 ]] && mnt_point=/boot/efi
+#[[ $init_mnt = /dev/sdb1 ]] && mnt_point=/mnt/efi
+#[[ $init_mnt = /dev/sdb3 ]] && mnt_point=/mnt/sdb3
+#mount -o lazytime,umask=000,uid=$UID,gid=users $init_mnt $mnt_point
+#	[[ -e /dev/sda1 ]] && { fsck.vfat -p /dev/sda1; mount /dev/sda1 /boot; }
+#	[[ -e /dev/sda3 ]] && { fsck /dev/sda3; mount /dev/sda3 /mnt/sda3; }
+#	[[ -e /dev/sdb1 ]] && { fsck /dev/sdb1; mount -o lazytime,nodiscard,umask=077,uid=$UID,gid=users /dev/sdb1 /mnt/sdb1; }
+#	[[ -e /dev/sdb3 ]] && { fsck.vfat -p /dev/sdb3; mount /dev/sdb3 /mnt/sdb3; }
+#	[[ -e /dev/sda2 ]] && { fsck /dev/sda2; mount /dev/sda2 /last; }
+#	[[ -e /swap ]] && swapon /swap
+#[[ -e /dev/sdb7 ]] && { fsck /dev/sdb7; mount /dev/sdb7 /last; }
+if ! findmnt /last &>/dev/null; then
+	mkdir /last &>/dev/null
+	mount LABEL=LAST-GA /last &>/dev/null
+fi
+[[ -e /var/swap ]] && swapon /var/swap &>/dev/null
+swapon -a &>/dev/null
+add=
+for add in {0..3}; do
+	full_path="/sys/devices/system/cpu/cpu${add}/cpufreq/scaling_governor"
+	[[ -e $full_path ]] || continue
+	echo performance >>"${full_path}"
+	ANG "echo performance >> \"${full_path}\"\n"
+done
+unset add full_path
+#shellcheck disable=SC2034
+mount_opt='noatime,remount,rw,noauto_da_alloc,delalloc'
+for init_mnt in $(mount | awk '{print $3}' | grep -v -E '/mnt|^/$'); do
+	[[ -e $init_mnt ]] || continue
+	mount -o "$mount_opt" "$init_mnt" 2>/dev/null
+	[[ $? == 0 ]] && ANG "mount -o "$mount_opt" "$init_mnt" 2>/dev/null\n"
+done
+mount -o remount,nodiscard /
+mount -o remount,nobarrier /
+mount -o remount,barrier=0 /
+mount -o remount,commit=30 /
+unset init_mnt mount_opt
+for i in /sys/block/*/queue; do
+	echo 512 >$i/nr_requests
+	echo 512 >$i/read_ahead_kb
+	echo 2 >$i/rq_affinity
+	echo 0 >$i/nomerges
+	echo 0 >$i/add_random
+	echo 0 >$i/rotational
+done

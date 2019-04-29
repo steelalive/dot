@@ -1,0 +1,7 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Oct 31 20:42:38 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.2 - #_# #@#311017#@# #2#
+#3#::..#####################_/dot/bin/pacmirror_#######################..::#3#
+reflector --verbose --country 'Canada' --sort rate --save /etc/pacman.d/mirrorlist
+ca /etc/pacman.d/mirrorlist

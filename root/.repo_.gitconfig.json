@@ -1,0 +1,149 @@
+{
+  "core.pager": [
+    "diff-so-fancy | less --tabs=4 -RFX"
+  ], 
+  "branch.autosetuprebase": [
+    "always"
+  ], 
+  "credential.helper": [
+    "cache --timeout=86400"
+  ], 
+  "alias.fpush": [
+    "push --force-with-lease"
+  ], 
+  "core.autocrl": [
+    "input"
+  ], 
+  "color.diff.meta": [
+    "yellow bold"
+  ], 
+  "log.decorate": [
+    "full"
+  ], 
+  "rerere.enabled": [
+    "true"
+  ], 
+  "push.followtags": [
+    "true"
+  ], 
+  "advice.statushints": [
+    "true"
+  ], 
+  "core.excludesfile": [
+    "/root/.gitignore_global"
+  ], 
+  "color.branch.local": [
+    "yellow"
+  ], 
+  "color.diff": [
+    "auto"
+  ], 
+  "rerere.autoupdate": [
+    "true"
+  ], 
+  "color.ui": [
+    "true"
+  ], 
+  "url.git@github.com.insteadof": [
+    "github:"
+  ], 
+  "user.email": [
+    "demers.francis@hotmail.com"
+  ], 
+  "color.interactive": [
+    "auto"
+  ], 
+  "alias.merge-pr": [
+    "!f() { git fetch $1 $2; git branch _FETCH_HEAD FETCH_HEAD && git rebase HEAD _FETCH_HEAD && git checkout master && git merge --ff-only _FETCH_HEAD; git branch -d _FETCH_HEAD; }; f"
+  ], 
+  "color.status": [
+    "auto"
+  ], 
+  "color.branch.remote": [
+    "green"
+  ], 
+  "user.name": [
+    "steelalive"
+  ], 
+  "stash.showpatch": [
+    "true"
+  ], 
+  "github.user": [
+    "steelalive", 
+  ], 
+  "alias.l": [
+    "log --pretty=format:%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn] --decorate --date=short"
+  ], 
+  "core.legacyheaders": [
+    "false"
+  ], 
+  "alias.lg": [
+    "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+  ], 
+  "core.filemode": [
+    "true"
+  ], 
+  "alias.la": [
+    "!git config -l | grep alias | cut -c 7-"
+  ], 
+  "repack.usedeltabaseoffset": [
+    "true"
+  ], 
+  "tar.tar.xz.command": [
+    "xz -c"
+  ], 
+  "alias.clog": [
+    "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
+  ], 
+  "alias.st": [
+    "status"
+  ], 
+  "help.autocorrect": [
+    "10"
+  ], 
+  "color.status.changed": [
+    "green"
+  ], 
+  "color.diff.frag": [
+    "magenta bold"
+  ], 
+  "color.diff.new": [
+    "green bold"
+  ], 
+  "color.branch": [
+    "auto"
+  ], 
+  "color.grep": [
+    "auto"
+  ], 
+  "alias.lol": [
+    "log --oneline --graph --decorate --all"
+  ], 
+  "color.diff.old": [
+    "red bold"
+  ], 
+  "format.pretty": [
+    "oneline"
+  ], 
+  "push.default": [
+    "simple"
+  ], 
+  "interactive.singlekey": [
+    "true"
+  ], 
+  "alias.change-commits": [
+    "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ $`echo $VAR` = \\\"$OLD\\\" ]]; then export $VAR=\\\"$NEW\\\"; fi\" $@; }; f "
+  ], 
+  "color.status.added": [
+    "yellow"
+  ], 
+  "color.branch.current": [
+    "yellow reverse"
+  ], 
+  "color.status.untracked": [
+    "cyan"
+  ], 
+  "http.sslverify": [
+    "false"
+  ]
+}

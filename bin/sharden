@@ -1,0 +1,17 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Mon Jun 18 07:14:08 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-18#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/sharden_#######################..::#3#
+exit
+is_in_path shellharden &>/dev/null || exit 3
+grep -q 'for .* in .*$.*' "$1" &>/dev/null && exit 4
+grep -q '$endif' "$1" &>/dev/null && exit 5
+grep -q "noharden" "$1" &>/dev/null && exit 7
+is_bash "$1" || exit 10
+shellharden --check "$1" &>/dev/null && exit 2
+is_bash "$1" && {
+	shellharden --replace "$1"
+	ANG ANO "[$?] -- ${C}$1 ${O}script has been hardened.\\n"
+}

@@ -1,0 +1,15 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Fri Feb 16 12:59:55 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.6 - #_# #@#160218#@# #2#
+#3#::..#####################_/dot/bin/chother_#######################..::#3#
+[[ $1 ]] || {
+	printf "%b" "a command to clone the user/group ownership and permissions on a file from another file\n"
+	exit
+}
+command \ls -l --color $1
+command \ls -l --color $2
+command \chown --reference="$1" "$2"
+command \chmod --reference="$1" "$2"
+command \ls -l --color $1
+command \ls -l --color $2

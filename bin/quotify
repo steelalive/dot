@@ -1,0 +1,6 @@
+#!/bin/bash
+if [[ $1 != save ]]; then
+	for i; do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/'/"; done
+else
+	for i; do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/"; done
+fi

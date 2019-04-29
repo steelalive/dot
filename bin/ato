@@ -1,0 +1,41 @@
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Wed May  9 00:12:29 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.9 - #_# #@#090518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+case $1 in
+al) f="${dot}"/al.sh ;;
+ex) f="${dot}"/ex.sh ;;
+fn) f="${dot}"/fn.sh ;;
+init) f="${dot}"/init.sh ;;
+ps1) f="${dot}"/ps1.sh ;;
+tst) f=/tst ;;
+tst2) f=/tst2 ;;
+*) if on silent "$1" echo; then
+	f="$(on silent $1 echo)"
+else
+	f="$@"
+fi
+	;;
+esac
+if ! [[ -e $f ]]; then
+	ANC "${C}${f} ${RED}does not exist!${R}\n"
+	exit 1
+fi
+touch /tmp/ato.delete
+builtin \fc -ln -2 | head -n -1 >>/tmp/ato.delete
+sc /tmp/ato.delete
+is_in_path shfmt && shfmt -w -s /tmp/ato.delete
+ca /tmp/ato.delete
+ANW "Formatted and error checked. 
+Paste it like this?"
+yorn yes || e /tmp/ato.delete
+cat /tmp/ato.delete >>"$f"
+liner
+tail -5 "$f" | ca
+liner
+rm /tmp/ato.delete
+echo
+ANG "String appended to ${C}${f}${G} succesfully!\\n"
+ANY "Edit ${C}${f}${Y}?\n"
+last_line="$(awk '{print $1}' <<<$(wc -l $f))"
+yorn && edsc ${f:-$1} $last_line

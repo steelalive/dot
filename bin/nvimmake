@@ -1,0 +1,9 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed Oct  3 03:11:41 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-10-03#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/nvimmake_#######################..::#3#
+cd ~/.config/nvim || exit
+XDG_CACHE_HOME=$HOME/.cache
+nvim --cmd 'set t_ti= t_te= nomore' -N -U NONE -i NONE -c "qall!"

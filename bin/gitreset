@@ -1,0 +1,6 @@
+#!/bin/bash
+git reset --hard HEAD
+git clean -ffdx
+git fetch -p
+git pull
+git status

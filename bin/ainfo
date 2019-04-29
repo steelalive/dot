@@ -1,0 +1,7 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri Sep 30 16:33:05 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.6 - #_# #@#300916#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+quoted="$(aquote $1)"
+ANG "aname=$quoted\ndeclare -a | grep $1\n"

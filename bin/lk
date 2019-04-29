@@ -1,0 +1,61 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Fri May 11 01:36:27 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.7.4 - #_# #@#110518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# search="$(${dot}/bin/on silent $1 echo)" &>/dev/null;
+#[[ -e $search ]] || d LK "$@"
+## search="${search:-./}"
+#	set -- "${search}"
+#[[ -e ${dot}/LS_COLORS ]] && eval "$(dircolors --sh ${dot}/LS_COLORS)"
+search="$1"
+file_count="$(echo $1/* | wc -w)"
+for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
+for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
+for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath execfail lithist; do
+	builtin shopt -s "$shopt_opt" &>/dev/null
+done
+eval $(dircolors --sh $dot/.dir_colors)
+LS_OPTIONS="-v --color=auto --ignore-backups --group-directories-first --classify --ignore-backups --quote-name --quoting-style=shell-escape --indicator-style=slash --escape --human-readable -L"
+if [[ $1 ]]; then
+	for opt; do
+		case $opt in
+		--* | -*)
+			LS_OPTIONS+=" $opt"
+			lsopt+=" $opt"
+			shift
+			;;
+		*'*'*)
+			wild='*'
+			;;
+		esac
+	done
+fi
+arg1="$1"
+unset search
+[[ $wild ]] || {
+	if [[ ! -e $arg1 ]]; then
+		[[ $1 ]] && search=$(on -s "$1" echo)
+		{ [[ $arg1 == "" ]] || [[ ! $1 ]]; } && search="$(pwd)"
+		file_count=$(echo "$search"/.??* "$search"/* | wc -w)
+	else
+		search="${1:-$(pwd)}"
+		{ [[ $arg1 == "" ]] || [[ ! $arg1 ]]; } && search="$(pwd)"
+	fi
+	search="$(realpath $search)"
+	file_count="$(echo "$search"/.??* "$search"/* | wc -w)"
+	eval "$(dircolors --sh /dot/.dir_colors)"
+}
+if [[ $file_count -le $((LINES - 3)) ]]; then
+	if command -v exa &>/dev/null; then
+		exa -Fb --git --long --all --group-directories-first --color=auto --color-scale $lsopt "$@"
+	elif command -v lsd &>/dev/null; then
+		command \lsd --date relative --group-dirs first --all --classify --long "$@"
+	else
+		command \ls $LS_OPTIONS -AlL "$@"
+	fi
+	#for i in $search/* $search/.??*; do [[ -L "$i" ]] && /bin/ls $LS_OPTIONS -lH "$i"; done
+else
+	command \ls --group-directories-first -ApFChHbC --color=always --quote-name --quoting-style=shell-escape -L $lsopt "$@"
+fi
+unset file_count search

@@ -1,0 +1,23 @@
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Sun Jun  4 23:09:57 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.2 - #_# #@#040617#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+params=$#              # Number of command-line parameters.
+param=1                # Start at first command-line param.
+echo -en "Command-line parameter: "
+while [ "$param" -le "$params" ]
+do
+  echo -en \$$param     #  Gives only the *name* of variable.
+#         ^^^          #  $1, $2, $3, etc.
+                       #  Why?
+                       #  \$ escapes the first "$"
+                       #+ so it echoes literally,
+                       #+ and $param dereferences "$param" . . .
+                       #+ . . . as expected.
+  echo -en "="
+  eval echo \$$param   #  Gives the *value* of variable.
+# ^^^^      ^^^        #  The "eval" forces the *evaluation*
+                       #+ of \$$
+                       #+ as an indirect variable reference.
+	echo -en " "
+(( param ++ ))         # On to the next.
+done

@@ -1,0 +1,21 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed May  9 10:10:47 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.2 - #_# #@#090518#@# #2#
+#3#::..#####################_/dot/bin/tog4_#######################..::#3#
+tog4() {
+	if [[ $1 == twrp ]]; then
+		exdo=/external_sd/Download/
+		shift
+	fi
+	[[ $exdo ]] || {
+		if [[ $ex ]]; then
+			exdo=$ex/Download/
+		else
+			ANO "Copy to /sdcard???"
+			yornq && exdo=/sdcard/
+		fi
+	}
+	adb push "$@" $exdo
+}
+tog4 "$@"

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+pacq() {
+	pacman -Fy
+	pkgfile --update
+	pkgfile -s "$@"
+	pacman -Fo "$@"
+	pacman -Fs "$@"
+	unbuffer pacman -Qii "$@" | grep "$@"
+	unbuffer pacman -Ql "$@" | grep "$@"
+}
+pacq "$@"

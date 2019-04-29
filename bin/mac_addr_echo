@@ -1,0 +1,9 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue May  8 05:52:14 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.3 - #_# #@#080518#@# #2#
+#3#::..#####################_/dot/bin/macadd_#######################..::#3#
+[[ $1 ]] || set -- $NET
+for i; do
+	ip link show $i | grep -o '..:..:..:..:..' | head -n 1 2>/dev/null
+done

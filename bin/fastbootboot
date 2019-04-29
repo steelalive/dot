@@ -1,0 +1,3 @@
+ad usb
+adbde reboot-bootloader
+fastboot --disable-verity --disable-verification boot /last/G4/fastboot_boot.img

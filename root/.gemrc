@@ -1,0 +1,13 @@
+install: --no-rdoc --no-ri --no-document
+update:  --no-rdoc --no-ri --no-document
+---
+:verbose: true
+:sources:
+- http://gems.github.com
+- http://rubygems.org
+- http://gems.rubyforge.org
+:update_sources: true
+:backtrace: false
+:bulk_threshold: 1000
+:benchmark: false
+:no-document: true

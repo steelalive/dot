@@ -1,0 +1,8 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Sun Jan 21 08:09:50 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.3 - #_# #@#210118#@# #2#
+#3#::..#####################_/dot/bin/lns_#######################..::#3#
+ln -sv "$1" "$2"
+chmod 644 "$2"
+chown 0:0 "$2"

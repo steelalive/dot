@@ -1,0 +1,58 @@
+# /etc/profile
+
+# Set our umask
+umask 022
+
+export TERM=xterm-256color
+
+# Append our default paths
+appendpath () {
+    case ":$PATH:" in
+        *:"$1":*)
+            ;;
+        *)
+            PATH="${PATH:+$PATH:}$1"
+    esac
+}
+
+appendpath '/usr/local/sbin'
+appendpath '/usr/local/bin'
+appendpath '/usr/bin'
+appendpath '/dot/bin'
+appendpath '/dot/bin/final'
+export PATH
+
+# Load profiles from /etc/profile.d
+if test -d /etc/profile.d/; then
+	for profile in /etc/profile.d/*.sh; do
+		test -r "$profile" && . "$profile"
+	done
+	unset profile
+fi
+
+# Source global bash config
+if test "$PS1" && test "$BASH" && test -z ${POSIXLY_CORRECT+x} && test -r /etc/bash.bashrc; then
+	. /etc/bash.bashrc
+fi
+
+# Termcap is outdated, old, and crusty, kill it.
+unset TERMCAP
+
+# Man is much better than us at figuring this out
+unset MANPATH
+export QT_QPA_PLATFORMTHEME="qt5ct"
+src(){ 
+appendpath '/dot/bin'
+appendpath '/dot/bin/final'
+[[ $1 = bare ]] && return
+[[ $USER = shell ]] && return
+[[ $USER = root ]] || exec sudo su - --shell /usr/local/bin/bash 
+[[ $USER = root ]] && . /dot/init.sh
+}
+[[ $USER = shell ]] && return
+if grep -q tty <<<$(tty);then
+	[[ $USER == root ]] || exec sudo su root -c "/bin/bash -il"
+fi
+
+[[ $USER = root ]] && [[ -e /dot/init.sh ]] && [[ $0 = *bash* ]] && . /dot/init.sh
+

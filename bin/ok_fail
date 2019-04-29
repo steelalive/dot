@@ -1,0 +1,16 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Thu Jun  1 10:27:49 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.1.0 - #_# #@#010617#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+exit_code=$1
+shift
+if [[ $exit_code == 0 ]]; then
+	printf "\r  [ \033[00;32mOK\033[0m ]"
+	printf "%b" "${W} $*"
+	printf "\n"
+else
+	printf "${exit_code}[\033[0;31mFAIL\033[0m] "
+	printf "%b" "${W} $*"
+	printf "\n"
+fi

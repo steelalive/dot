@@ -1,0 +1,43 @@
+#!/bin/bash
+while :; do
+	cmd >>o.txt && [[ $(wc -l <o.txt) -eq 720 ]] && mv o.txt $(date +%F).o.txt
+	sleep 3600
+done
+#function backtolatest () {
+unset latest
+filename=$1
+filename2=$2
+filename3=$3
+filename4=$4
+filename5=$5
+filename6=$6
+filename7=$7
+filename8=$8
+filename9=$9
+#laTMP=/last/BACKUP/LATEST
+#ansi Files will be backed-up in "$laTMP" unless you specify a folder\(No trailing backslash\) after the beep. beeeep.
+#read -r latest
+#[[ -v latest ]] || latest=$laTMP
+#ansi -n backing up into "$latest" in 5 sec
+export latest=/last/BACKUP/LATEST/
+
+filetime="$latest$(date +%Y%m%d_%H%M%S)"
+filetime2="$latest$(date +%Y%m%d_%H%M%S)"
+filetime3="$latest$(date +%Y%m%d_%H%M%S)"
+filetime4="$latest$(date +%Y%m%d_%H%M%S)"
+filetime5="$latest$(date +%Y%m%d_%H%M%S)"
+filetime6="$latest$(date +%Y%m%d_%H%M%S)"
+filetime7="$latest$(date +%Y%m%d_%H%M%S)"
+filetime8="$latest$(date +%Y%m%d_%H%M%S)"
+filetime9="$latest$(date +%Y%m%d_%H%M%S)"
+
+echo "${filename}" "${filetime}${filename}"
+echo "${filename2}" "${filetime2}${filename2}"
+echo "${filename3}" "${filetime3}${filename3}"
+echo "${filename4}" "${filetime4}${filename4}"
+echo "${filename5}" "${filetime5}${filename5}"
+echo "${filename6}" "${filetime6}${filename6}"
+echo "${filename7}" "${filetime7}${filename7}"
+echo "${filename8}" "${filetime8}${filename8}"
+[[ -z $filname2 ]] && echo "${filename2}" "${filetime2}${filename2}"
+#}

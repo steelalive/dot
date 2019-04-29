@@ -1,0 +1,16 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Thu Oct 19 08:55:19 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.2.9 - #_# #@#191017#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: #
+#cmd_pwd=$(pwd) cmd="$0" cmd_dir="$(cd "$(dirname "$CMD")" && pwd -P)"; setx || true; vexec || true
+command \rsync --archive --human-readable --recursive \
+	--stats --progress --info=progress2 --delete --hard-links --update --itemize-changes \
+	--exclude=.gvfs --exclude=.local/share/Trash/ --exclude="*baloo/" --exclude="*.cpan/" \
+	--exclude=.thumbnails --exclude=transient-items --exclude=aur --exclude=/dot/.config/ \
+	--exclude="*.gem/" --exclude="*.cache/" --exclude="*.ccache/" \
+	--exclude="*trash*" --exclude=/dot/root/.local \
+	--exclude="*aur/*" --exclude="*.pip/" --exclude="*.bundle/" --exclude="*~" \
+	--exclude=".*~" --exclude="temp*" \
+	--exclude="*.git" --exclude="chromium-back*" --exclude="/dot/root/.config/chromium*" \
+	"$@"

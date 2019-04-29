@@ -1,0 +1,23 @@
+#!/bin/bash
+exit
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Sun Apr 22 06:16:47 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.1.5 - #_# #@#220418#@# #2#
+#3#::..#####################_/dot/bin/R777_#######################..::#3#i
+[[ $1 ]] || exit
+case $1 in
+-r | r | -R | R | --recursive | recursive | lickmypussy)
+	shift
+	[[ $1 ]] || exit
+	echo -en "${O}"
+	find "$@" -type f -exec command chmod -c 644 {} +
+	echo -en "${LO}"
+	find "$@" -type d -exec command chmod -c 755 {} +
+	;;
+*)
+	for file in "$@"; do
+		[[ -f $file ]] && echo -en "${LY}" && command \chmod -c 644 "$file"
+		[[ -d $file ]] && echo -en "${LO}" && command \chmod -c 755 "$file"
+	done
+	;;
+esac

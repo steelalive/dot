@@ -1,0 +1,13 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Mon May 28 03:37:23 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.1.7 - #_# #@#280518#@# #2#
+#3#::..#####################_/dot/bin/ond_#######################..::#3#
+# vi: ft=sh:noro:
+im_here="$(realpath $(pwd))"
+on_test=$(on dir $1 echo 2>/dev/null) && [[ -d $on_test ]] && echo "$on_test" && exit
+on_test=$(on dir $1 echo 2>/dev/null) && [[ -e $on_test ]] && dirname "$on_test" && exit
+
+for keyword; do
+	find $im_here /dot /etc /prog /sdk /opt /root /usr/share /last /bin /system /data -maxdepth 3 -xdev -type d -iname '*'"$keyword"'*' -print -quit 2>/dev/null
+done

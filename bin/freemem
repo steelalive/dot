@@ -1,0 +1,22 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Mon Jun 19 03:08:53 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.9 - #_# #@#190617#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+is_android && exit
+
+mem="$(free -h | awk '/Mem/ { print $3 }')"
+ANBB "Cache maintenance. Used mem before:$mem"
+sync
+/sbin/sysctl -w vm.drop_caches=3 &>/dev/null
+mem="$(free -h | awk '/Mem/ { print $3 }')"
+ANBG "After-->:${R}${W}$mem"
+echo
+updatedb &
+disown
+mandb &>/dev/null &
+disown
+nl "$HISTFILE" | sort -k2 -k 1,1nr | uniq -f1 | sort -n | cut -f2 >/tmp/.histfile
+cp /tmp/.histfile $HISTFILE &>/dev/null &
+disown
+clr

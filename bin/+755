@@ -1,0 +1,21 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Mon May 28 00:49:38 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.1.9 - #_# #@#280518#@# #2#
+#3#::..#####################_/dot/bin/R777_#######################..::#3#i
+[[ $1 ]] || set -- ./* ./.??*
+case $1 in
+-r | r | -R | R | --recursive | recursive | lickmypussy)
+	shift
+	echo -en "${LO}"
+	find "$@" -type d -exec \chmod --preserve-root -c 0755 {} +
+	exit
+	;;
+*)
+	for file in "$@"; do
+		[[ -d $file ]] && echo -en "${LO}" && command \chmod -c --preserve-root 0755 "$file"
+	done
+	ANY "-R if you want to  recursvly do this thing"
+	;;
+esac
+fixdot

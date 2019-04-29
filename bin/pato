@@ -1,0 +1,5 @@
+pato() {
+	xclip -selection clipboard -o >>"$1"
+	ca "$1"
+}
+pato "$@"

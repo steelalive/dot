@@ -1,0 +1,46 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Wed May  9 08:55:54 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.4 - #_# #@#090518#@# #2#
+#3#::..#####################_/dot/bin/umnt_#######################..::#3#
+drive_mapper() {
+	/usr/bin/grc -es --colour=auto lsblk
+	/usr/bin/grc -es --colour=auto blkid
+	"${dot}"/bin/lk /mnt
+}
+
+if (($# == 0)); then
+	drive_mapper
+	exit
+fi
+if [[ $1 == all || $1 == "-a" ]]; then
+	for i in $(echo /mnt/*); do
+		grep -o last <<<"$i" &>/dev/null && continue
+		umount $i
+		rmdir -v $i
+	done
+	umount /mnt/iso &>/dev/null
+	ANO "Umount LAST?"
+	stfu mountpoint /last && yorn && umount /last
+	drive_mapper
+	exit
+fi
+if [[ $1 == last ]]; then
+	umount LABEL=LAST-GA
+	drive_mapper
+	exit
+fi
+if [[ $1 == iso ]]; then
+	umount /mnt/iso
+	drive_mapper
+	exit
+fi
+for input_mnt; do
+	dev_path=/dev/sd${input_mnt}
+	mnt_path=/mnt/${input_mnt}
+	umount -v $dev_path
+	sh_exit $? "umount $dev_path"
+	rmdir -v $mnt_path | /bin/fuser -vm $mnt_path
+	sh_exit $? "rmdir $mnt_path"
+done
+drive_mapper

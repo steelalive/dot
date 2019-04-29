@@ -1,0 +1,12 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Sat Jul  8 01:31:32 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.1.4 - #_# #@#080717#@# #2#
+#3#::..#####################_/dot/bin/sshpi_#######################..::#3
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/*
+ga=${ga:-192.168.0.100}
+/usr/lib/cw/arp -a
+ssh root@$ga
+
+#rsync -e "/usr/bin/ssh -p22" -a --progress --stats --delete -l -z -v -r -p /root

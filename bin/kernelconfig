@@ -1,0 +1,14 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Aug 14 01:15:44 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-08-14#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/kernelconfig_#######################..::#3#
+
+kernelconfig() {
+
+	conf1=${1}
+	conf2=$(2:-arch/arm/configs/jf_can_defconfig)
+	ARCH=arm scripts/kconfig/merge_config.sh $conf1 $conf2 android/configs/android-base.cfg android/configs/android-recommended.cfg $3 $4
+}
+kernelconfig "$@"

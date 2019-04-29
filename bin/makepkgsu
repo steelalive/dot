@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu May 31 12:32:12 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.1.3 - #_# #@#310518#@# #2#
+#3#::..#####################_/dot/bin/makepkgsu_#######################..::#3#
+#chmod 755 -R $BUILDDIR $HOME/.cache
+#chown master:wheel -R $BUILDDIR $HOME/.cache
+#is_pi && sed -i 's/arch=.*/arch=("armv7h")/' PKGBUILD
++user -R /tmp/makepkg $BUILDDIR
+suuser "command \makepkg -i --syncdeps --skippgpcheck --skipinteg $*"

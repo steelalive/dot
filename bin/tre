@@ -1,0 +1,7 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Thu Jun 15 02:51:34 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.2 - #_# #@#150617#@# #2#
+#3#::..#####################_/dot/bin/tre_#######################..::#3#
+(($# == 0)) && set -- "."
+tree -Cha -I '.git|node_modules|bower_components|.sass-cache|__pycache__' --dirsfirst "$@" | less -iFNQRX

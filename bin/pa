@@ -1,0 +1,26 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri May 12 16:18:30 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.5 - #_# #@#120517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Linux version
+# Use this script to pipe in/out of the clipboard
+#
+# Usage: someapp | clipboard     # Pipe someapp's output into clipboard
+#        clipboard | someapp     # Pipe clipboard's content into someapp
+#
+
+if command -v xclip 1>/dev/null; then
+	if [[ -p /dev/stdin ]]; then
+		# stdin is a pipe
+		# stdin -> clipboard
+		xclip -i 
+		ANBG "Saved to clipboard"
+		echo
+	else
+		# stdin is not a pipe
+		# clipboard -> stdout
+		xclip -o
+	fi
+else
+	echo "Remember to install xclip"
+fi

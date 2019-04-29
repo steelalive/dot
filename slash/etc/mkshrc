@@ -1,0 +1,23 @@
+# Copyright (c) 2010, 2012, 2013, 2014
+#	Thorsten Glaser <tg@mirbsd.org>
+# This file is provided under the same terms as mksh.
+#-
+# Minimal /system/etc/mkshrc for Android
+#
+# Support: https://launchpad.net/mksh
+
+: ${HOSTNAME:=$(getprop ro.cm.device)}
+: ${HOSTNAME:=$(getprop ro.product.device)}
+: ${HOSTNAME:=android}
+: ${TMPDIR:=/data/local/tmp}
+[[ -e /data/dot/root ]] && HOME=/data/dot/root
+export HOSTNAME TMPDIR HOME
+
+if ((USER_ID)); then PS1='$'; else PS1='#'; fi
+[[ -e /system/etc/mk ]] && . /system/etc/mk
+if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
+	hash resize 2>/dev/null && resize
+fi
+
+[[ -e /data/dot/slash/etc/mk ]] && . /data/dot/slash/etc/mk
+#export PATH=/system/xbin:/system/bin:/vendor/bin:/bin:/sbin:/system/sbin:/data/dot/slash/sbin:/data/dot/bin:/data/dot/bin/final:/data/dot

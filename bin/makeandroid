@@ -1,0 +1,6 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu Mar  1 00:49:35 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.2 - #_# #@#010318#@# #2#
+#3#::..#####################_/dot/bin/makeandroid_#######################..::#3#
+export CC="/opt/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc --sysroot=/opt/android-ndk/platforms/android-24/arch-arm"

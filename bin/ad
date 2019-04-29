@@ -1,0 +1,378 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive  vi: set noro
+#2#::.. Last edit: - Thu May 31 04:40:17 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.4.9.3 - #_# #@#310518#@# #2#
+#3#::..#####################_/dot/bin/ad_#######################..::#3#
+[[ -e /oem ]] && return
+[[ $HOSTNAME != PC ]] && exit
+files_to_copy="/dot/*.sh /dot/bin /dot/slash"
+adb=/usr/bin/adb
+
+tmp_serial=/tmp/adbserial
+[[ -e $tmp_serial ]] || touch /tmp/adbserial
+#eval $(<$tmp_serial)
+#if grep 5555 /tmp/adbserial; then
+#	adbconnect
+#fi
+if ! adb devices | grep 'device$' &>/dev/null; then
+	[[ $1 ]] || return
+fi
+
+sutest() {
+	$adb shell su -c "ls $1 &>/dev/null && echo $1" | grep $1 &>/dev/null
+
+}
+remnt() {
+	adbsu "busybox mount -o rw,remount,rw /"
+	adbsu "busybox mount -o rw,remount,rw /system"
+	adbsu "/data/dot/bin/remnt"
+	$adb remount 2>/dev/null
+}
+export -f remnt
+
+adbconnect() {
+	liner
+	ANG "Connecting to ${ANDROID_SERIAL}\\n"
+	$adb connect "${ANDROID_SERIAL}"
+	adb_info
+	liner
+}
+export -f adbconnect
+adbsyncdot() {
+	liner
+	adb_read
+	adb-sync --two-way $files_to_copy /data/dot
+	ANG 'Sync completed!\\n'
+    +777 -R /dot
+	liner
+}
+export -f adbsyncdot
+adbde() {
+	$adb -s $ANDROID_SERIAL "$@"
+}
+export -f adbde
+sync_both_ways() {
+	liner
+	adb_read
+	ANG "Now syncing ${*}...\\n"
+	adb-sync --two-way "${@}"
+	ANORANGE 'Done!\n'
+	liner
+	printf '\n'
+}
+sync_delete() {
+	liner
+	adb_read
+	ANY "$1 content will be the same in recusively in ${2}\\n"
+	adb-sync --delete "$@"
+	ANORANGE 'Completed!\n'
+	liner
+}
+apk_to_() {
+	[[ $1 ]] || return 2
+	folder="$1/$(pmname $2)"
+	apk="$folder/base.apk"
+	adbsu /data/dot/slash/sbin/remnt
+	adbsu mkdir -pv "$folder"
+	adbsu chmod -v 755 "$folder"
+	adbde push "$2" "$apk"
+	adbsu chmod -v 644 "$apk"
+	adbsu chown -Rc root:root "$folder"
+	adbsu pm install -r -g "$apk"
+	return
+}
+adbsu() { adb shell $su_bin -c "$@"; }
+export -f adbsu
+adb_read() {
+	adbsu /data/dot/bin/remnt && return 0
+	#	[[ $1 ]] && {
+	#		adbsu chmod -R 0777 "$@" 2>/dev/null
+	#		adbsu chown -R 2000:2000 "$@" 2>/dev/null
+	#	}
+	#	[[ $1 ]] || adbsu chmod 0777 -R /data/dot &>/dev/null
+}
+export -f adb_read
+push_key() {
+	adbsu 'ls /data/misc/adb/adb_keys' | grep adb_keys &>/dev/null && return
+	adbde push ~/.android/adbkey.pub /data/misc/adb/adb_keys
+	adbsu "chmod 2750 /data/misc/adb/adb_keys"
+	adbsu "chown 1000:2000 /data/misc/adb/adb_keys"
+}
+echo_adbconnect() {
+	liner
+	ANW "
+	adb root
+	adb connect $ANDROID_SERIAL
+	adb remount
+	adb connect $ANDROID_SERIAL
+	adb shell\\n"
+	adbde devices -l
+	liner
+}
+adb_info() {
+	ANW "Connected to
+serial:		$ANDROID_SERIAL
+ex:		$ex\\n"
+	adbde shell '[[ -e $ex ]]' && ANG "$ex exist.\\n"
+	adbde devices -l
+}
+export -f adb_info
+
+[[ $su_bin ]] && { sutest $su_bin &>/dev/null || unset su_bin; }
+[[ $su_bin ]] || su_bin="$($adb shell command -v su 2>/dev/null)"
+
+if [[ ! $su_bin ]]; then
+	sutest /sbin/su && su_bin=/sbin/su
+	[[ ! $su_bin ]] && sutest /su/bin/su &>/dev/null && su_bin=/su/bin/su
+	[[ ! $su_bin ]] && su_bin=$($adb shell su -c "command -v su")
+	[[ ! $su_bin ]] && grep -q "/usr/bin" <<<$su_bin && su_bin=su
+
+	export su_bin
+fi
+
+if ! { ex=$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null) && sutest $ex; }; then
+	if $adb devices | grep -q recovery &>/dev/null; then
+		adbde shell '[[ -d /external_sd ]]' 2>/dev/null && export ex=/external_sd
+	elif adbde shell '[[ -d "$(echo /mnt/media_rw/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
+		ex="$(adbde shell 'echo /mnt/media_rw/????-????' 2>/dev/null)" 2>/dev/null
+	elif adbde shell '[[ -d "$(echo /storage/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
+		ex="$(adbde shell 'echo /storage/????-????' 2>/dev/null)" 2>/dev/null
+    elif adbde shell '[[ -e /storage/EFEA-A128 ]]' 2>/dev/null;then
+        ex=/storage/EFEA-A128
+    elif adbde shell '[[ -d /storage/extSdCard ]]' 2>/dev/null;then
+        ex='/storage/extSdCard'
+	fi
+fi
+[[ $ex ]] || export ex=/sdcard
+case $1 in
+tv )
+	shift
+	export ANDROID_SERIAL=$tv:5555
+	adbconnect $ANDROID_SERIAL
+	echo_adbconnect
+	echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
+	#	push_key
+	return
+	;;
+s4 |cell )
+	shift
+	export ANDROID_SERIAL=$cell:5555
+	adbconnect "$adb"
+	echo_adbconnect
+	echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
+	push_key
+	return
+	;;
+ tabip | adbtab)                                                                     
+  ▏ shift                                                                         
+  ▏ export ANDROID_SERIAL=192.168.0.9:5555                                                
+  ▏ adbconnect "$adb"                                                             
+  ▏ echo_adbconnect                                                               
+  ▏ echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial                       
+  ▏ push_key                                                                       
+  ▏ return                                                                        
+  ▏ ;;                 
+
+g4u* | g4_* | usb)
+	shift
+	export ANDROID_SERIAL=1015fa08983d3602
+	ANG "Connected to usb adb\n"
+	if ! grep -q "$ANDROID_SERIAL" <<<"$($adb devices 2>/dev/null)" &>/dev/null; then
+		$adb usb
+	fi
+
+	echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
+        ex='/sdcard'
+	return
+	;;
+esac
+
+
+export exsd=$ex exdo="$ex/Download" ex
+[[ $ex == /sdcard ]] && ANBO '$ex is /sdcard. This is a problem?'
+case $1 in
+rmnt | remnt)
+	shift
+	adbsu setenforce 0
+	remnt "$@"
+	return
+	;;
+connect)
+	shift
+	adbconnect $1
+	return
+	;;
+misc*)
+	[[ $ex ]] && adb-sync /last/misc-android $ex
+	return
+	;;
+ex)
+	echo $ex
+	return
+	;;
+ls)
+	shift
+	adbsu 'command /system/xbin/busybox ls --color -AHhpFlLZ' "$@"
+	return
+	;;
+priv)
+	shift
+	apk_to_ /system/priv-app "$@"
+	return
+
+	;;
+sys | app)
+	shift
+	apk_to_ /system/app "$@"
+	return
+	;;
+var)
+	shift
+	$adb shell . /etc/rc && echo \$$1
+	return
+	;;
+i | install | /data/app)
+	shift
+	for i; do
+		adbde install -g "$i"
+	done
+	return
+	;;
+pullapk | apkpull)
+	for i in $(adbsu '. /data/dot/slash/etc/rc; for i in $(find $ex -name "*.apk" 2>/dev/null); do realpath "$i";done'); do echo 'adb-sync -2 -R '\"$i\"' /last/APK;'; done
+	return
+	;;
+e | vim)
+	shift
+	text_file="$1"
+	basename="$(basename $1)"
+	spiritual_path="/data/dot/slash/etc/$basename"
+	adbsu [[ -e "$@" ]] && spiritual_path="$*"
+	mkdir -p /tmp/nvim &>/dev/null
+	$adb pull "$spiritual_path" /tmp/nvim/"$basename" ||
+		{ $adb pull $(adbsu /data/dot/bin/on $basename echo) /tmp/nvim/$basename &&
+			spiritual_path=$(adbsu /data/dot/bin/on $basename echo); }
+	edsc /tmp/nvim/"$basename"
+	ANORANGE "Push $1 back where it came from?\n"
+	yorn y &&
+		$adb push /tmp/nvim/"$basename" "$spiritual_path"
+	return
+	;;
+push)
+	shift
+    download=$ex
+    [[ $ex ]] || ANRED "$ex \$ex is not defined.\n"
+	echo $adb push "$@" $ex
+	$adb push "$@" $ex
+	return
+	;;
+pull)
+	shift
+	adbde pull "$@"
+	return
+	;;
+return)
+	return
+	;;
+cmd)
+	shift
+	yorn adbsync
+	adbde shell "$@"
+	adbsync
+	return
+	;;
+pushdot)
+	shift
+	adbsu "setenforce 0"
+	ANLO "/Dot sync in progress...\n"
+	adbsu 'mkdir -p /data/dot'
+	adbsu 'chmod -R 0777 /data/dot'
+	adbsu mkdir -p /data/dot
+	adbsu chmod 0777 /data/dot
+	adb shell su 0 -c "mkdir /data/dot"
+	adb shell su 0 -c "chmod 0777 -R /data/dot"
+	adbde shell "[[ -e /external_sd ]]" || {
+		sync_delete $files_to_copy /data/dot
+		push_key
+		adbde push /last/dot.zip $ex
+	}
+	if adbde shell "[[ -e /external_sd ]]"; then
+		adbde mount /system
+		$adb push /dot/* /data/dot/
+		adbde shell /data/dot/slash/sbin/bash /data/dot/slash/pushthem
+        abdde /data/dot/slash/Busybox-Installer.bin
+		adbde shell bash /system/etc/mkshrc init
+		adbde push /last/dot.zip $ex
+	fi
+	return
+	;;
+pushall | sync-delete)
+	adbsu "setenforce 0"
+	ANLO "Full sync in progress...\n"
+	adbsu 'mkdir -p /data/dot'
+	adbsu 'chmod -R 0777 /data/dot'
+	sync_delete $files_to_copy /data/dot
+	sync_delete /last/misc-android $ex
+	adbde push /last/dot.zip $ex
+	#	sync_delete -R /last/Magisk $ex
+	adbsu "/data/dot/slash/sbin/bash /data/dot/slash/pushthem"
+	adbsu ". /data/dot/slash/etc/mk"
+	ANG "Sync completed! \n"
+	return
+	;;
+syncdot)
+	sync_both_ways /dot /data
+	return
+	;;
+syncall)
+	shift
+	sync_both_ways /dot/* /data/dot/
+	sync_both_ways /last/misc-android $ex
+	adbde push /last/dot.zip $ex
+	return
+	;;
+syncmisc)
+	shift
+	sync_both_ways /last/misc-android $ex
+	adbde push /last/dot.zip $ex
+	return
+	;;
+ota)
+	adbde push  $O/debug/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/debug/target/product/harpia | tail -1) /sdcard/Download/lineage.zip ||
+	adbde push  $O/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/target/product/harpia | tail -1) /sdcard/Download/lineage.zip
+	echo "Reboot recovery?"
+	yorn && adb reboot recovery
+	;;
+log)
+	shift
+	adbde shell setenforce 0
+	adbde logcat -C "$@"
+	return
+	;;
+shell)
+	shift
+	adbde shell "$@"
+	return
+	;;
+adbkey* | pushkey*)
+	push_key
+	return
+	;;
+skip)
+	shift
+	adbde shell "$@"
+	return
+	;;
+*)
+
+	[[ $1 ]] && echo "execute $adb shell $*?"
+	[[ $1 ]] && {
+		yorn y && adbde shell "$*"
+		return
+	}
+	adbsyncdot
+	adbde shell "$@"
+	adbsyncdot
+    +user -R /dot
+	;;
+esac

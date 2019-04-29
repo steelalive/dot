@@ -1,0 +1,20 @@
+#!/bin/bash
+for_sed(){
+[[ $1 ]] || ANORANGE "for_sed '/path/arm-dir/old_patern-arm-exec-' '/path/arm-dir/mew_patern2-arm-exec-' '/path/file-with-pattern' '/path/second_file_with_pattern...'\n";
+[[ $1 ]] || realpath -P /opt/gcc-arm-none-eabi-7-2018-q2-update/bin/arm-none-eabi- /opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi/bin/arm-eabi- /opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+
+    old_pattern="${1:-$CROSS_COMPILE}" 
+    new_pattern="${2:-/ext/opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi/bin/arm-eabi-}";
+    shift && shift;
+    for file in "$@";
+    do
+        if [[ -e $file ]]; then
+        liner
+        LANG=C command \grep --color=auto "$old_pattern" "$file" && ANW ":\n $file\n";
+        sed "s|$old_pattern|$new_pattern|" -i "$file";
+        LANG=C command \grep --color=auto "$new_pattern" "$file" && ANW ":\n $file\n";
+        liner
+    fi
+    done
+}
+for_sed "$@"

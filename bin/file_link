@@ -1,0 +1,20 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Mon Jun 19 22:55:22 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.2 - #_# #@#190617#@# #2#
+#3#::..#####################_/dot/bin/file_symlink_#######################..::#3#
+target="$1"
+link="$2"
+
+if [ ! -e "$link" ]; then
+	ln -s "$target" "$link"
+elif [ -L "$link" ]; then
+	# Correct target?
+	if [ "$(readlink "$link")" != "$target" ]; then
+		echo "~/$link points to a wrong target :("
+		exit 1
+	fi
+else
+	echo "There is something wrong with ~/$link :/"
+	exit 1
+fi

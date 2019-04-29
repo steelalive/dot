@@ -1,0 +1,61 @@
+[[ $dot ]] || exit 2
+[[ $1 == fix ]] && shift || exit 2
+((UID == 0)) || exit 2
+#exit
+#for sudo_file in /usr/bin/sudo /usr/bin/su;do
+#pkexec \chmod  --preserve-root --changes 4755 "$sudo_file"
+#pkexec \chown --preserve-root --changes root:root "$sudo_file"
+#done
+. $dot/ex.sh
+homef=$HOME
+[[ -e $homef ]] || exit 2
+is_root || sup=sudo
+chmoder(){
+    printf "%b" "$Y"
+    $sup command \chmod --preserve-root --changes "$@" &>/dev/null
+}
+chowner(){
+    printf "%b" "$LR"
+    [[ $1 ]] || return
+    $sup command \chown --preserve-root --changes "$@" &>/dev/null
+}
+
+for folder in /etc /usr /usr/bin /usr/lib /usr/sbin /usr/share /var /var/cache/samba/msg.lock /etc/profile.d /etc "${homef}";do
+    [[ -d $folder ]] || continue
+chmoder 755 "$folder"
+done
+for file in "${homef}"/.ssh "${homef}"/.gnupg /dot/root/.gnupg;do
+    [[ -e $file ]] || continue
+chmoder 700 "$file"
+done
+for root in "${homef}"/.cache/pip "${homef}"/.cache/pip/http "${homef}"/.ssh/config /etc/sudoers.d /dot/etc/sudoers.d /etc/sudoers;do
+	[[ -e $root ]] || continue
+	chowner root:root "$root"
+done
+
+mkdir -p "${homef}"/.cache/pip/http
+    chmoder 600 "${homef}"/.ssh/*
+    chmoder 644 "${homef}"/.ssh/*.pub
+    chmoder go-w $dot/bin $dot/bin/final /dot
+    chmoder 600 "${homef}"/.gnupg/* /dot/root/.gnupg/*
+	chmoder 0440 /etc/sudoers
+	chmoder 0700 /var/lib/samba/private/msg.sock /etc/sudoers
+chmoder 644 /etc/depmod.d/ /etc/modprobe.d/
+chmoder 644 /etc/pulse
+chmoder 750 /usr/share/polkit-1/rules.d/ /etc/sudoers.d/;
+chmoder 711 /var/db/sudo/;
+chmoder 700 /var/db/sudo/lectured/
+chmoder o-w /var/log/faillog /etc/shells
+chmoder 644 /etc/profile.d/*
+for y in $(journalctl -xe --no-pager | grep -o "Configuration file .* is marked world-writable." | sed -e 's/Configuration file //' -e 's/ is marked.*//'); do
+	[[ -e $y ]] || continue
+	chmoder o-w "$y" && stat "$y"
+done
+for y in $(journalctl -xe --no-pager | grep -o "Configuration file .* is marked executable." | sed -e 's/Configuration file //' -e 's/ is marked.*//'); do
+	[[ -e $y ]] || continue
+	chmoder -x "$y" && stat "$y"
+done
+## These should be run at the end
+cd /etc
+chmoder 0755 X11 binfmt.d kernel modules-load.d pam.d sysctl.d systemd tmpfiles.d udev xdg /etc/pulse /etc/modprobe.d/ /etc/depmod.d/
+# vi: set ft=sh: set noro:

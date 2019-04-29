@@ -1,0 +1,74 @@
+#$if Bash
+#$if mode=emacs
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\e[1~": beginning-of-line
+"\e[2~": quoted-insert
+"\e[2~": yank # Insert
+"\e[3~": delete-char
+"\e[4~": end-of-line
+"\e[5~": beginning-of-history
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e[6~": end-of-history
+"\e[7~": beginning-of-line
+"\e[8~": end-of-line
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e\C-d": possible-completions
+"\e\C-l": complete
+"\eD": shell-kill-word
+"\e\e[C": forward-word
+"\e\e[C": shell-forward-word
+"\e\e[D": backward-word
+"\e\e[D": shell-backward-word
+"\eH": shell-backward-kill-word
+"\C-u": universal-argument
+"\C-xq": "\eb\"\ef\"" # Quote the current or previous word
+"\eOF": end-of-line
+"\eOH": beginning-of-line
+"\es": menu-complete
+"\eS": menu-complete-backward
+"\M-r": forward-search-history
+#set bell-style audible
+set bind-tty-special-chars on
+set blink-matching-paren on
+set colored-completion-prefix on
+set colored-stats on
+set completion-ignore-case on
+set completion-map-case on
+set completion-query-items 1000
+set completion-prefix-display-length 3
+set convert-meta off
+set disable-completion off
+set echo-control-characters off
+set editing-mode emacs
+set emacs-mode-string '@'
+set enable-bracketed-paste on
+set enable-keypad off
+set expand-tilde off
+set history-preserve-point on
+set history-size 32000
+set horizontal-scroll-mode off
+set input-meta on
+set keyseq-timeout 500
+set keymap emacs
+set mark-directories on
+set mark-modified-lines off
+set mark-symlinked-directories on
+set match-hidden-files on
+set menu-complete-display-prefix on
+#->off
+set meta-flag off
+set output-meta on
+set page-completions off
+set print-completions-horizontally off
+set revert-all-at-newline off
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set show-mode-in-prompt off
+set skip-completed-text on
+set visible-stats on
+Space: magic-space
+#$endif
+#$endif

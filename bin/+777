@@ -1,0 +1,34 @@
+#!/bin/bash
+[[ $1 ]] || exit
+[[ $1 == '/' ]] && exit 2
+
+#find "$@" -type d -exec \chmod --preserve-root -c 755 {} +
+#find "$@" -type f -exec \chmod --preserve-root -c 777 {} +
+#exit
+
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Tue May  1 03:21:37 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.1.8 - #_# #@#010518#@# #2#
+#3#::..#####################_/dot/bin/R777_#######################..::#3#i
+#[[ $1 ]] || set -- ./* ./.??*
+[[ $1 == '/' ]] && exit 2
+
+case $1 in
+-r | r | -R | R | --recursive | recursive | lickmypussy)
+	shift
+	[[ -e $1 ]] || exit
+	echo -en "${LO}"
+	find "$@" -type d -exec \chmod --preserve-root -c 755 {} +
+	echo -en "${LY}"
+	find "$@" -type f -exec \chmod --preserve-root -c 777 {} +
+	exit
+	;;
+*)
+	for file in "$@"; do
+		[[ -e $1 ]] || exit
+		[[ -f $file ]] && echo -en "${LY}" && command \chmod -c --preserve-root 777 "$file"
+		[[ -d $file ]] && echo -en "${LO}" && command \chmod -c --preserve-root 755 "$file"
+	done
+	ANY "-R if you want to  recursvly do this thing"
+	;;
+esac

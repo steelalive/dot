@@ -1,0 +1,41 @@
+#!/data/dot/slash/sbin/bash
+pmu com.droidlogic.appinstall \
+com.droidlogic.BluetoothRemote \
+com.android.provision com.android.statementservice com.android.camera2 \
+com.xynotec.andboost com.droidlogic.mediacenter com.ghisler.android.TotalCommander \
+com.droidlogic.PPPoE cm.aptoide.pt com.android.music \
+com.android.vpndialogs com.droidlogic.imageplayer com.google.android.youtube.tv com.android.cts.ctsshim \
+com.droidlogic.miracast com.android.dreams.phototable com.google.android.feedback \
+com.android.inputmethod.latin com.netflix.mediaclient org.xbmc.ftmc \
+com.google.android.partnersetup com.droidlogic.videoplayer com.android.gallery3d com.android.keychain \
+com.android.musicfx com.android.smspush com.android.frameworks.telresources \
+com.android.calllogbackup com.android.carrierconfig com.example.a62000435.box_fix com.droidlogic.SubTitleService \
+org.xbmc.kodi jp.co.omronsoft.openwnn
+
+pmu com.android.providers.downloads.ui com.android.contacts com.android.nfc com.cyanogenmod.trebuchet org.cyanogenmod.weatherservice
+
+pmu com.android.cellbroadcastreceiver com.android.egg com.android.mms.service com.android.phone com.android.printspooler \
+com.android.providers.telephony
+
+pmu com.example.a62000435.box_fix com.droidlogic.SubTitleService org.xbmc.kodi jp.co.omronsoft.openwnn \
+com.lonelycatgames.Xplore com.example.a62000435.box_fix com.droidlogic.SubTitleService \
+com.droidlogic.FileBrower \
+com.droidlogic.dig com.android.wallpaper.holospiral com.android.wallpapercropper \
+com.android.soundrecorder com.android.server.telecom com.android.noisefield com.android.phasebeam
+
+pmu org.lineageos.trebuchet org.lineageos.audiofx com.android.messaging com.android.email com.android.dreams.basic
+
+for dir in /data/app /system/app /system/priv-app; do
+	cd $dir
+	for crap in org.xbmc.ftmc com.xynotec.andboost com.google.android.youtube.tv \
+		Browser FileBrowser LatinIME Miracast Music PPPoE PhotoTable RemoteIME SubTitle VideoPlayer \
+		WAPPushManager WallpaperBackup WebViewGoogle Browser FileBrowser HTMLViewer LatinIME Miracast Music PPPoE \
+		PhotoTable RemoteIME SubTitle VideoPlayer WAPPushManager WallpaperBackup GoogleFeedback \
+		GooglePartnerSetup MusicFX ProxyHandler VpnDialogs DLNA PrintSpooler telresources GoogleTTS EasterEgg AntHalService \
+		BlockedNumberProvider CarrierConfig CellBroadcastReceiver Dialer EmergencyInfo MmsService TeleService Telecom \
+		TelephonyProvider; do
+		full=./*${crap}*
+		[[ -e $full ]] && rm -rf ${full}
+		rm -rf ${dir}/${crap}*
+	done
+done

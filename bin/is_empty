@@ -1,0 +1,25 @@
+
+
+FILENAME="$1"
+
+if [ -f ${FILENAME} ]
+then
+    if [ -s ${FILENAME} ]
+    then
+        echo "File exists and not empty"
+				exit 0
+    else
+			nb_line=$(cat $1 | hexdump -C | wc -l)
+if [[ $nb_line -lt 3 ]];then
+	echo "IS EMPTY";
+	else 
+		echo "HAS SOMETHING";
+		exit 4
+fi
+	echo "File exists but empty"
+	exit 2
+    fi
+else
+    echo "File not exists"
+		exit 3
+fi

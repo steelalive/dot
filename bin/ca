@@ -1,0 +1,31 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Tue May 15 20:37:34 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.6.9 - #_# #@#150518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+#highlight_fn() { highlight --quiet --out-format=truecolor --style=candy --stdout --plug-in=bash_functions --plug-in=comment_links --syntax=bash --pretty-symbols --validate-input "$@"; }
+if is_in_path highlight; then
+	highlight_fn() { highlight --quiet --out-format=truecolor --style=zmrok --stdout --plug-in=comment_links --syntax=bash --plug-in=bash_functions --plug-in=bash_ref_man7_org --pretty-symbols --validate-input "$@"; }
+else
+    is_in_path bat && highlight_fn(){ bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
+	is_in_path bat || highlight_fn() { cat "$@"; }
+fi
+export -f highlight_fn
+if [[ $1 == show ]]; then
+	cd /usr/share/highlight/themes || exit
+	for i in ./*; do
+		li "${i%.*}"
+		highlight --out-format=truecolor --style="${i%.*}" --stdout --force --plug-in=bash_functions --plug-in=comment_links --plug-in=mark_lines --syntax=sh --pretty-symbols /tst
+		li "${i%.*}"
+	done
+	exit
+fi
+if [[ ! -t 0 ]]; then
+	highlight_fn "$1"
+	exit
+fi
+if [[ ! -e $1 ]]; then
+	search="$(on "$1" echo)"
+	is_text "$search" && highlight_fn "$search" && exit
+fi
+highlight_fn "$1"

@@ -1,0 +1,16 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu Mar 29 23:29:15 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.9 - #_# #@#290318#@# #2#
+#3#::..#####################_/dot/bin/cp-ref_#######################..::#3#
+ref="$1"
+[[ -e /system ]] && system=/system
+[[ $1 == etc ]] && [[ -e /etc/clatd.conf ]] && ref=/etc/clatd.conf
+[[ $1 == bin ]] && ref=${system}/bin/sh
+
+shift
+num_args=$#
+array=("${@}")
+last_arg="${array[$# - 1]}"
+chmod --changes --reference="$ref" "$@" 2>/dev/null
+chown --changes --reference="$ref" "$@" 2>/dev/null

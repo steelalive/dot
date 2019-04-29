@@ -1,0 +1,48 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Thu Oct 19 02:37:46 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.1.2 - #_# #@#191017#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+arg1="${arg1:-$1}"
+if realpath "${arg1}" &>/dev/null; then
+	arg1="$(realpath ${arg1})"
+else
+	ANRED "$arg1 is not valid\\n"
+	exit 1
+fi
+unset i a CNTR part new
+replaces() {
+	[[ $# == 3 ]] || return 1
+	local in="$1" out="$2"
+	shift 2
+	realpath "$@" &>/dev/null && file="$(realpath "$@")" || return
+	in="$in" out="$out" perl -p ${1+-i} -e 's/\Q$ENV{"in"}/$ENV{"out"}/g' "$file"
+}
+fn_increment_version() {
+	declare -a part=(${1//\./ })
+	declare new
+	declare -i carry=1
+	for ((CNTR = ${#part[@]} - 1; CNTR >= 0; CNTR -= 1)); do
+		len=${#part[CNTR]}
+		new=$((part[CNTR] + carry))
+		[ ${#new} -gt $len ] && carry=1 || carry=0
+		[ $CNTR -gt 0 ] && part[CNTR]=${new: -len} || part[CNTR]=${new}
+	done
+	new="${part[*]}"
+	echo -e "${new// /.}"
+}
+
+string='#_# - VERSION=[0-9].* - #_#'
+if [[ -r ${arg1} ]] && grep -m 1 "${string}" "${arg1}" &>/dev/null; then
+	version="$(grep -m1 -o "${string}" "${arg1}" | grep -m1 -o "${string}" "${arg1}" | grep -o '[0-9.]*')"
+	this="$(grep -m 1 "${string}" "${arg1}")"
+	new_version="$(fn_increment_version $version)"
+	[[ -n ${new_version} ]] || exit 1
+	with_that="#2#::.. Last edit: - $(command date) - by: - $PACKAGER - ..::## #_# - VERSION=${new_version} - #_# #@#$(command date +%d%m%y)#@# #2#"
+	if [[ -n ${this} ]] && [[ ${with_that} =~ $string ]]; then
+		replaces "${this}" "${with_that}" "${arg1}"
+	fi
+	ANW "File ${C}${arg1} ${W}string:\n"
+	ANG "${LY}${this}${RES}\n"
+	ANW "updated succesfully to:\n"
+	ANG "${with_that}\n"
+fi

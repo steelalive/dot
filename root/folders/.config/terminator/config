@@ -1,0 +1,177 @@
+[global_config]
+  always_split_with_profile = True
+  broadcast_default = off
+  enabled_plugins = TerminatorThemes,
+  focus = mouse
+  suppress_multiple_term_dialog = True
+  title_hide_sizetext = True
+  title_inactive_bg_color = "#a40000"
+  title_transmit_bg_color = "#4e9a06"
+  window_state = maximise
+[keybindings]
+  next_tab = <Primary>Tab
+  prev_tab = <Primary>Tab
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = LiquidCarbon
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_color = "#282828"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#aaaaaa"
+    custom_command = exec sudo   /bin/bash -il
+    font = RobotoMono Nerd Font Mono 12
+    foreground_color = "#ebdbb2"
+    login_shell = True
+    palette = "#2a2e33:#b84d51:#b3bf5a:#e4b55e:#6e90b0:#a17eac:#7fbfb4:#b5b9b6:#1d1f22:#8d2e32:#798431:#e58a50:#4b6b88:#6e5079:#4d7b74:#5a626a"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"
+  [[Atom]]
+    background_color = "#161719"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#d0d0d0"
+    custom_command = exec sudo   /bin/bash -il
+    font = SauceCodePro Nerd Font Mono 14
+    foreground_color = "#c5c8c6"
+    login_shell = True
+    palette = "#000000:#fd5ff1:#87c38a:#ffd7b1:#85befd:#b9b6fc:#85befd:#e0e0e0:#000000:#fd5ff1:#94fa36:#f5ffa8:#96cbfe:#b9b6fc:#85befd:#e0e0e0"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"
+  [[Darkside]]
+    background_color = "#222324"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#bbbbbb"
+    custom_command = exec sudo   /bin/bash -il
+    font = SauceCodePro Nerd Font Mono 14
+    foreground_color = "#bababa"
+    login_shell = True
+    palette = "#000000:#e8341c:#68c256:#f2d42c:#1c98e8:#8e69c9:#1c98e8:#bababa:#000000:#e05a4f:#77b869:#efd64b:#387cd3:#957bbe:#3d97e2:#bababa"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"
+  [[Gruvbox Dark]]
+    background_color = "#1e1e1e"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#bbbbbb"
+    custom_command = exec sudo   /bin/bash -il
+    font = SauceCodePro Nerd Font Mono 14
+    foreground_color = "#e6d4a3"
+    login_shell = True
+    palette = "#161819:#f73028:#aab01e:#f7b125:#719586:#c77089:#7db669:#faefbb:#7f7061:#be0f17:#868715:#cc881a:#377375:#a04b73:#578e57:#e6d4a3"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"
+  [[Hybrid]]
+    background_color = "#161719"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#b7bcba"
+    custom_command = exec sudo   /bin/bash -il
+    font = SauceCodePro Nerd Font Mono 14
+    foreground_color = "#b7bcba"
+    login_shell = True
+    palette = "#2a2e33:#b84d51:#b3bf5a:#e4b55e:#6e90b0:#a17eac:#7fbfb4:#b5b9b6:#1d1f22:#8d2e32:#798431:#e58a50:#4b6b88:#6e5079:#4d7b74:#5a626a"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"
+  [[LiquidCarbon]]
+    background_color = "#303030"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#ffffff"
+    custom_command = exec sudo   /bin/bash -il
+    font = RobotoMono Nerd Font Mono 12
+    foreground_color = "#afc2c2"
+    login_shell = True
+    palette = "#000000:#ff3030:#559a70:#ccac00:#0099cc:#cc69c8:#7ac4cc:#bccccc:#888a85:#ff3030:#559a70:#ccac00:#0099cc:#cc69c8:#7ac4cc:#bccccc"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    scrollback_lines = 10000
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"
+  [[Material]]
+    background_color = "#282828"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#16afca"
+    custom_command = exec sudo   /bin/bash -il
+    font = SauceCodePro Nerd Font Mono 14
+    foreground_color = "#ebdbb2"
+    login_shell = True
+    palette = "#282828:#cc241d:#98971a:#d79921:#458588:#b16286:#689d6a:#a89984:#928374:#fb4934:#b8bb26:#fabd2f:#83a598:#d3869b:#8ec07c:#ebdbb2"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"
+  [[MaterialDark]]
+    background_color = "#232322"
+    background_darkness = 0.95
+    background_type = transparent
+    copy_on_selection = True
+    cursor_color = "#16afca"
+    custom_command = exec sudo   /bin/bash -il
+    font = SauceCodePro Nerd Font Mono 14
+    foreground_color = "#e5e5e5"
+    login_shell = True
+    palette = "#212121:#b7141f:#457b24:#f6981e:#134eb2:#560088:#0e717c:#efefef:#424242:#e83b3f:#7aba3a:#ffea2e:#54a4f3:#aa4dbc:#26bbd1:#d9d9d9"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    show_titlebar = False
+    urgent_bell = True
+    use_custom_command = True
+    use_system_font = False
+    visible_bell = True
+    word_chars = "-,.?%&#_"

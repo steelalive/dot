@@ -1,0 +1,93 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon May 28 01:24:54 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.2.0.9 - #_# #@#280518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+dot=${dot:-/dot}
+[[ $1 ]] || { $dot/bin/p www.google.ca && exit; }
+[[ $1 ]] && { stfu $dot/bin/p www.google.ca && exit; }
+#exit
+dot_dir="${dot:-/dot}"
+rfkill unblock all
+[[ -e /oem ]] && exit
+ANW 2>/dev/null || { . "${dot}"/anset.sh && shinit; }
+s1() {
+	if [[ $1 -lt 256 ]] && is_numeric $1; then
+		local color="$1"
+		shift
+		echo -en "\x1b[1;38;5;${color}m${*}${R}"
+	else
+		ANBR "${UNDER}${FUNCNAME[*]} need a number under 256"
+		echo
+		return
+	fi
+}
+center_string "${G}📶${RED}${UNDER}WIFI SETUP v0.45${R}${G}📶"
+printf "\n"
+CUNT=0
+GOOG=1
+REPEAT=1
+WPCONF=${WPCONF:-"${dot}/bin/wpa_supplicant.conf"}
+which_network() {
+	case $1 in
+	5G | 5g | n)
+		shift
+		sed 's/.*#41E-5G/        disabled=0 #41E-5G/' -i $WPCONF
+		sed 's/.*#2.4/        disabled=1 #2.4/' -i $WPCONF
+		ANBLINK "${DARKGREEN}5G${R}\\n"
+		;;
+	2.4* | g)
+		shift
+		sed 's/.*#41E-5G/        disabled=1 #41E-5G/' -i $WPCONF
+		sed 's/.*#2.4/        disabled=0 #2.4/' -i $WPCONF
+		ANBLINK "${DARKGREEN}2.4Mhz${R}\\n"
+		;;
+	esac
+}
+which_network $1
+TXPOWER=${TXPOWER:-20}
+NET=${NET:-wlan0}
+#case $(ip link | command grep -o -E "wlan[0-9]" | wc -l) in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac
+#if ip link | grep -o "wlp.*:" &>/dev/null; then NET=$(ip link | grep -o "wlp.*:" | sed "s/://"); fi
+#if ip link | grep "24:05:0f:ea:36:6c" &>/dev/null; then
+#	NET=$(ip link | grep "24:05:0f:ea:36:6c" --before-context=1 | head -n1 | awk '{print $2}' | sed 's/://')
+	#which_network 5G
+#fi
+
+if [[ $1 =~ wlan ]]; then NET=$1; fi
+export WPCONF NET
+echo $WPCONF
+#######################################
+while ((GOOG != 0)) && ((CUNT < REPEAT)); do
+	((CUNT > 4)) && CUNT=0
+	((CUNT > 0)) && ANB "This is attempt $CUNT on $WPCONF"
+	CUNT=$((CUNT + 1))
+	"${dot}/bin/netreset"
+	center_string "${RED}${UNDER}WPA_SUPPLICANT${R}"
+	echo
+	ANG "$NET${W} on ${G}$WPCONF"
+	ip link set "$NET" up
+	s1 222
+	wpa_supplicant -Dnl80211 -B -i"$NET" -c"$WPCONF"
+	s1 133
+	center_string "${RED}${UNDER}DHCPCD${R}\\n"
+	s1 189
+	dhcpcd "$NET"
+	center_string "${RED}${UNDER}PING TEST AND ROUTE SETUP${R}\\n"
+	"${dot}"/bin/88
+	NET_AP=$(iwgetid -r $NET)
+	[[ $NET_AP ]] && GOOG=0
+	sleep 1
+	p || GOOG=1
+done
+#######################################
+if ((GOOG != 0)); then
+	ANORANGE "Please try again."
+	unset PINGFAIL GDNS d CUNT
+	ANORANGE "$NET_AP${R}\\n"
+else
+	ANLG "Operation successful! You are now connected to: ${RES}"
+	ANBG "${NET_AP}${R}\\n"
+	is_in_path synergy && synergy.sh
+fi
+unset PINGFAIL GDNS d CUNT NET_AP
+exit 0

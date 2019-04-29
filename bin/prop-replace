@@ -1,0 +1,26 @@
+proper-replace() {
+	[[ -e /system ]] && mount -o remount,rw /system
+	local source target work
+	[[ $3 ]] || {
+		echo "replace text between ##!!${string}[source]!!## ##!!${string}[target]!!##
+\$1=source \$2=string \$3=target"
+		read -p 'source=' source
+		read -p 'string=' string
+		read -p 'target=' target
+	}
+	source="$1"
+	string="$2"
+	string_end="##!!${string}_END!!##"
+	string="##!!${string}!!##"
+	target="$3"
+	work="${TMP:-/tmp}/work"
+	if ! grep -q "$string" "$target"; then
+		cat $source >>$target
+		return
+	fi
+	head -n"$(grep -m 1 -n "$string" "$target" | cut -d: -f1)" "$target" >"$work" || return
+	cat "$source" >>"$work" || return
+	cp "$work" "$target" || return
+	rm "$work"
+}
+proper-replace "$@"

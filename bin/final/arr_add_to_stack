@@ -1,0 +1,16 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Wed Mar  7 19:00:56 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.6 - #_# #@#070318#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__# 
+arr_add_to_stack(){
+if [ -z "$1" ]    # Nothing to push?
+then
+  return
+fi
+let "SP += 1"     # Bump stack pointer.
+stack[$SP]=$1
+echo "stack[$SP]=" ${stack[$SP]}
+return; }
+arr_add_to_stack "$@"
+

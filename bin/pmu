@@ -1,0 +1,20 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Mon Aug 13 14:25:17 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-08-13#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/pmu_#######################..::#3#
+
+pmu() {
+	pm list packages | cut -d: -f2 >$TMP/pmu
+	[[ ! $1 ]] && sort $TMP/pmu && return
+	for i; do
+		unset find_in_list
+		find_in_list="$(grep "${i}" "$TMP/pmu")" || continue
+		echo "uninstalling ${find_in_list}..."
+		pm uninstall "${find_in_list}"
+		pm uninstall --user 0 "${find_in_list}"
+	done
+}
+pmu "$@"
+

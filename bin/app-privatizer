@@ -1,0 +1,35 @@
+for apk; do
+
+	if [[ -f $apk ]]; then
+		basename="$(basename -- $apk)"
+		filename="${basename%.*}"
+		echo $filename
+		folder="/system/priv-app/$filename"
+		mkdir -pv "$folder"
+		chown -v 0:0 "$folder"
+		chmod -v 755 "$folder"
+		cp -av "$apk" "$folder/"
+		chmod -v 644 "$folder/$basename"
+		chown -v 0.0 "$folder/$basename"
+	elif [[ -d $apk ]]; then
+		read -p "Please provide a name for $apk.
+" apkname
+		[[ $apkname ]] || apkname=$apk
+		mv $apk/base.apk $apk/${apkname}.apk
+		mv $apk $apkname
+		chown 0.0 -R $apkname
+		chmod 644 -R $apkname/*
+		basename="$(basename -- $apkname)"
+		filename="${basename%.*}"
+		folder="/system/priv-app/$filename"
+		mkdir -p "$folder"
+		chown 0:0 "$folder"
+		chmod 755 "$folder"
+		cp -av "$apk" "$folder"
+		chmod 644 "$folder/$basename"
+		chown 0.0 "$folder/$basename"
+	fi
+
+	echo "Delete $apk ?"
+	yorn && rm -rf $apk
+done

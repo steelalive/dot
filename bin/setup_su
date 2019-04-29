@@ -1,0 +1,73 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Mon Dec 11 05:34:05 EST 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.6 - #_# #@#111217#@# #2#
+#3#::..#####################_/dot/bin/setup_su_#######################..::#3#
+[[ -n $1 ]] || set -- "$tv"
+adb connect "$1"
+adb root
+adb remount
+adb connect "$1"
+cd /ext/supersu
+arch=armv7
+adb shell "mount -o remount,rw /system"
+
+adb push common/Superuser.apk /system/app/SuperSU/SuperSU.apk
+adb shell chmod -v 0644 /system/app/SuperSU/SuperSU.apk
+adb shell chcon u:object_r:system_file:s0 /system/app/SuperSU/SuperSU.apk
+
+adb push common/install-recovery.sh /system/etc/install-recovery.sh
+adb shell chmod -v 0755 /system/etc/install-recovery.sh
+adb shell chcon u:object_r:toolbox_exec:s0 /system/etc/install-recovery.sh
+
+adb push "$arch"/su /system/bin/.ext/.su
+adb shell chmod -v 0755 /system/bin/.ext/.su
+adb shell chcon u:object_r:system_file:s0 /system/bin/.ext/.su
+
+adb push "$arch"/su /system/bin/.ext/.su
+adb shell chmod -v 0755 /system/bin/.ext/.su
+adb shell chcon u:object_r:system_file:s0 /system/bin/.ext/.su
+adb push "$arch"/su /system/xbin/su
+
+adb shell chmod -v 0755 /system/xbin/su
+adb shell chcon u:object_r:system_file:s0 /system/xbin/su
+adb push "$arch"/su /system/xbin/daemonsu
+adb shell chmod -v 0755 /system/xbin/daemonsu
+adb shell chcon u:object_r:system_file:s0 /system/xbin/daemonsu
+
+adb push "$arch"/su /system/xbin/sugote
+adb shell chmod -v 0755 /system/xbin/sugote
+adb shell chcon u:object_r:zygote_exec:s0 /system/xbin/sugote
+
+adb push "$arch"/supolicy /system/xbin/supolicy
+adb shell chmod -v 0755 /system/xbin/supolicy
+adb shell chcon u:object_r:system_file:s0 /system/xbin/supolicy
+
+adb push "$arch"/libsupol.so /system/lib64/libsupol.so
+adb shell chmod -v 0755 /system/lib64/libsupol.so
+adb shell chcon u:object_r:system_file:s0 /system/lib64/libsupol.so
+
+adb shell touch /system/etc/.installed_su_daemon
+adb shell chmod -v 0644 /system/etc/.installed_su_daemon
+adb shell chcon u:object_r:system_file:s0 /system/etc/.installed_su_daemon
+
+adb shell cp -v /system/bin/sh /system/xbin/sugote-mksh
+adb shell chmod -v 0755 /system/xbin/sugote-mksh
+adb shell chcon u:object_r:system_file:s0 /system/xbin/sugote-mksh
+
+adb shell cp -v /system/bin/app_process32 /system/bin/app_process32_original
+adb shell chmod -v 0755 /system/bin/app_process32_original
+adb shell chcon u:object_r:zygote_exec:s0 /system/bin/app_process32_original
+
+adb shell mv -v /system/bin/app_process /system/bin/app_process_original
+adb shell chmod -v 0755 /system/bin/app_process_original
+adb shell chcon u:object_r:zygote_exec:s0 /system/bin/app_process_original
+
+adb shell mv -v /system/bin/app_process32 /system/bin/app_process_init
+adb shell chmod -v 0755 /system/bin/app_process_init
+adb shell chcon u:object_r:system_file:s0 /system/bin/app_process_init
+
+adb shell ln -sv /system/xbin/daemonsu /system/bin/app_process
+adb shell ln -sv /system/xbin/daemonsu /system/bin/app_process32
+
+adb shell ln -sv /system/etc/install-recovery.sh /system/bin/install-recovery.sh

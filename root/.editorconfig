@@ -1,0 +1,25 @@
+root = true
+
+[*]
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 4
+[*.{c,cc,cpp,h,hpp,hh}]
+indent_style = tab
+
+[*.{rs,toml}]
+indent_style = space
+indent_size = 4
+
+[*.{s,S}]
+indent_size = 4
+indent_style = space
+
+[{Makefile,makefile,*.mk}]
+indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 4

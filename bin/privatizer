@@ -1,0 +1,15 @@
+#!/bin/bash
+
+select app in /data/app/*; do
+	applist=($app $applist)
+	echo "Done?"
+	yorn n && break
+done
+echo ${applist[@]}
+for selection in ${applist[@]}; do
+	folder="/system/priv-app/$selection"
+	mkdir -pv $folder
+	mv -v $selection $folder
+	chmod 644 -v $folder/*.apk
+	chmod 755 -v $folder
+done

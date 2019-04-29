@@ -1,0 +1,40 @@
+#!/bin/bash
+# For LS_COLORS, print color, type, and, if available, description.
+eval $(dircolors --sh $dot/.dir_colors)
+IFS=:
+for ls_color in $LS_COLORS; do
+	color=${ls_color#*=}
+	type=${ls_color%=*}
+
+	case "$type" in
+	bd) type+=" (block device)" ;;
+	ca) type+=" (file with capability)" ;;
+	cd) type+=" (character device)" ;;
+	di) type+=" (directory)" ;;
+	'do') type+=" (door)" ;;
+	ex) type+=" (executable)" ;;
+	'fi') type+=" (normal file)" ;;
+	ln) type+=" (symbolic link)" ;;
+	mh) type+=" (multi-hardlink)" ;;
+	mi) type+=" (missing file)" ;;
+	no) type+=" (global default)" ;;
+	or) type+=" (orphan symlink)" ;;
+	ow) type+=" (other writable)" ;;
+	pi) type+=" (named pipe)" ;;
+	rs) type+=" (reset to normal color)" ;;
+	sg) type+=" (set gid)" ;;
+	so) type+=" (socket)" ;;
+	st) type+=" (sticky)" ;;
+	su) type+=" (set uid)" ;;
+	tw) type+=" (sticky other writable)" ;;
+	*) ;;
+	esac
+
+	printf "\e[%sm%s\e[m " "$color" "$type"
+done
+echo
+lscolor() {
+	eval "$(dircolors --sh ${dot}/LS_COLORS 2>/dev/null)"
+	echo "$LS_COLORS" | tr : '\n' | sed 's/\(.*\)=\(.*\)/\x1b[\2m\1\t\2\x1b[0m/'
+	eval "$(dircolors --sh ${dot}/LS_COLORS 2>/dev/null)"
+}

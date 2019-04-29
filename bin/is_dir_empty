@@ -1,0 +1,17 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Wed Feb 28 20:11:25 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.3 - #_# #@#280218#@# #2#
+#3#::..#####################_/dot/bin/is_dir_empty_#######################..::#3#
+if [ -d "$1" ]; then
+	# the directory exists
+	checkVar=0
+	checkVar=$(find "$1" -mindepth 1 -print | wc -l)
+	if [ "$checkVar" == 0 ]; then
+		exit 0 #not empty
+	else
+		exit 2 #empty
+	fi
+else #dir does not exist
+	exit 3
+fi

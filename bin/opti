@@ -1,0 +1,17 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Wed Apr 12 06:59:40 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.7 - #_# #@#120417#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: #
+#   clean__up(){
+#      [[ -e /var/lib/pacman/local/local.new ]] && rm -rf /var/lib/pacman/local/local.new
+#      [[ -e /var/lib/pacman/local/local.old ]] && rm -rf /var/lib/pacman/local/local.old
+#      [[ -e /var/lib/pacman/local.old/local ]] && rm -rf /var/lib/pacman/local.old/local
+#     [[ -e /var/lib/pacman/local.new ]] && rm -rf /var/lib/pacman/local.new
+# }
+# clean__up
+# pacman-db-upgrade;
+# clean__up
+# env -i pacman-optimize;
+mandb
+# clean__up

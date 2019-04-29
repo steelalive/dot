@@ -1,0 +1,8 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Thu May 11 23:28:28 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.3 - #_# #@#110517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+hexcolor=$1
+shift
+rgb "$(hextorgb $hexcolor)" "$*"

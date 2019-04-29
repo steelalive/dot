@@ -1,0 +1,62 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Fri May 11 09:35:51 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.3.5 - #_# #@#110518#@# #2#
+# vi: ft=sh
+#::..#####################_/dot/bin/mnt_#######################..::#3#
+[[ $USER == root ]] || exit
+part_mapper() {
+	if is_in_path grc; then
+		/usr/bin/grc -es --colour=auto blkid
+		/usr/bin/grc -es --colour=auto lsblk
+	else
+		blkid
+		is_in_path lsblk && lsblk
+	fi
+	"$dot"/bin/lk /mnt/
+}
+if (($# == 0)); then
+	part_mapper
+	exit
+fi
+if [[ $1 == last ]]; then
+	fsck LABEL=LAST-GA
+	mount LABEL=LAST-GA /last
+	part_mapper
+	exit
+fi
+if [[ $1 == loop ]] || [[ $1 == iso ]]; then
+	[[ $2 ]] || select iso in ./*.iso ./*.img; do
+		echo $iso;break
+	done
+	[[ $iso ]] || iso="$2"
+	mkdir -p /mnt/iso
+	mount -o loop "$iso" /mnt/iso
+	part_mapper
+	exit
+fi
+if [[ $1 == dot ]]; then
+	mv /dot /dottmp
+	mkdir /dot
+	sshfs -p 22 root@192.168.0.100:/dot /dot/ -o allow_root
+	exit
+fi
+
+for i; do
+	dev_path="/dev/sd$i"
+	mnt_path="/mnt/$i"
+	if [[ -e /oem ]]; then
+		dev_path="/dev/block/mmcblk$i"
+		mnt_path=/"$i"
+	fi
+	fsck -fp "$dev_path" 2>/dev/null
+	fsck.exfat "$dev_path" 2>/dev/null
+	e2fsck "$dev_path" 2>/dev/null
+	mkdir -vp "$mnt_path" 2>/dev/null
+	sh_exit $?
+	mount -v "$dev_path" "$mnt_path"
+	sh_exit $?
+	cd "$mnt_path" || true
+	part_mapper
+	lk "$mnt_path"
+done

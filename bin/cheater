@@ -1,0 +1,14 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Sat May 27 02:10:36 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.1.0 - #_# #@#270517#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
+	curl cheat.sh/:help
+	exit
+fi
+if [[ $1 == "-a" ]] || [[ $1 == "a" ]]; then
+	curl cheat.sh/~"$2"/ir
+	exit
+fi
+curl cheat.sh/~"$*"

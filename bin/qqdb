@@ -1,0 +1,84 @@
+#!/bin/bash
+posset() {
+	echo 1:'"${1}"'
+	echo 2:'"${2}"'
+	echo 3:"${3}"
+	echo 4:"${4}"
+	echo 5:"${5}"
+	echo 6:"${6}"
+	echo 7:"${7}"
+	echo 8:"${8}"
+	echo 9:"${9}"
+	echo '@:'"${@}"
+}
+export ARGS10='arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9 arg10'
+posecho() {
+	echo '"$POS0"'
+	echo "$POS1"
+	echo "$POS2"
+	echo "$POS3"
+	echo "$POS4"
+	echo "$POS5"
+	echo "$POS6"
+	echo "$POS7"
+	echo "$POS8"
+	echo "$POS9"
+}
+
+export POS_NUM='export POS0="${@}"
+export POS1="$1"
+export POS2="$2"
+export POS3="$3"
+export POS4="$4"
+export POS5="$5"
+export POS6="$6"
+export POS7="$7"
+export POS8="$8"
+export POS9="$9"'
+pos() {
+	export POS0="${@}"
+	export POS1="${1}"
+	export POS2="${2}"
+	export POS3="${3}"
+	export POS4="${4}"
+	export POS5="${5}"
+	export POS6="${6}"
+	export POS7="${7}"
+	export POS8="${8}"
+	export POS9="${9}"
+	export POS="${#}"
+}
+alias pos_alt='export posglob="${@)"
+export posun="$1"
+export posdeux="$2"
+export postrois="$3"
+export posquatre="$4"
+export poscinq="$5"
+export possix="$6"
+export possept="$7"
+export poshuit="$8"
+export posneuf="$9"
+export poswhatever="$*"'
+
+alias ansih='echo -e "\033[1;37m" ANW;\
+echo -e "\033[0;37m" ANLG;\
+echo -e "\033[1;30m" ANG;\
+echo -e "\033[0;30m" ANBL;\
+echo -e "\033[0;31m" ANR;\
+echo -e "\033[1;31m" ANLG;\
+echo -e "\033[0;32m" ANG;\
+echo -e "\033[1;32m" ANLG;\
+echo -e "\033[0;33m" ANBR;\
+echo -e "\033[1;33m" ANY;\
+echo -e "\033[0;34m" ANB;\
+echo -e "\033[1;34m" ANLB;\
+echo -e "\033[0;35m" ANM;\
+echo -e "\033[1;35m" ANLM;\
+echo -e "\033[0;36m" ANC;\
+echo -e "\033[1;36m" ANLC;\
+echo -e "\033[0m" ANBGRES;\
+echo -e "\e[41m" ANBGR;\
+echo -e "\e[44m" ANBGM;\
+echo -e "\e[45m" ANBGG;\
+echo -e "\e[42m" ANBGC;\
+echo -e "\e[46m" ANBGRES;'

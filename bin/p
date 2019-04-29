@@ -1,0 +1,125 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri May 11 00:02:37 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.5.3 - #_# #@#110518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+arg1="$1"
+args="$@"
+#if [[ "$1" = silent ]];then
+ping() { if [[ -x /usr/bin/grc ]]; then
+	/usr/bin/grc -es --colour=auto /bin/ping "$@"
+else
+	command \ping "$@"
+fi
+}
+export -f ping
+suppress() { "$@" >/dev/null 2>&1; }
+ping_address() {
+	[[ $1 == long ]] && {
+		shift
+		relentless_ping "$@"
+		return "$?"
+	}
+	[[ $1 == long ]] || ping -A -b -c1 -i0.2 -W1 -q -l3 -I "$NET" "$1"
+	return $?
+}
+relentless_ping() {
+	ping -c 100 -i 1 -A -I "$NET" "$@"
+}
+export -f relentless_ping
+#if hash prettyping; then ping_address(){ /usr/bin/prettyping -A -b -c1 -i0.2 -n -W1 -l3 "$1"; }; fi
+ping_router() {
+	ping_address "$router_ip"
+}
+ping_10() {
+	ping_address 10.0.0.1
+	return $?
+}
+ping_google() {
+	ping_address 8.8.8.8 &>/dev/null || return 1
+}
+ping_pi() {
+	ping_address "$pi"
+}
+ping_hp() {
+	ping_address "$hp"
+}
+ping_ga() {
+	ping_address "$ga"
+}
+ping_g4() {
+	ping_address "$g4"
+}
+ping_tv() {
+	ping_address "$tv"
+}
+#if [[ $@ =~ " s " ]]; then
+#suppress="exec &>/dev/null"
+#exec 1>/dev/null
+#exec &>/dev/null
+#fi
+
+case "$args" in
+router)
+	ping_router
+	exit $?
+	EXIT=$?
+	;;
+10)
+	ping_10
+	exit $?
+	;;
+88 | google)
+	ping_google "$@"
+	exit $?
+	EXIT=$?
+	;;
+pi)
+	ping_pi
+	exit $?
+	EXIT=$?
+	;;
+hp)
+	ping_hp
+	exit $?
+	EXIT=$?
+	;;
+ga)
+	ping_ga
+	exit $?
+	EXIT=$?
+	;;
+g4)
+	ping_g4
+	exit $?
+	EXIT=$?
+	;;
+tv)
+	ping_tv
+	exit $?
+	EXIT=$?
+	;;
+*)
+	[[ "$1" ]] || set -- 8.8.8.8 www.google.ca
+	EXIT2=0 EXIT=0
+	ping_address "$1"
+	EXIT=$?
+	[[ "$2" ]] && {
+		ping_address "$2"
+		EXIT2=$?
+	}
+	[[ "$2" ]] || {
+		((EXIT == 0)) && exit 0
+		exit 1
+	}
+	((EXIT == 0)) || ANLO "8.8.8.8 ${ORANGE}is not responding...\n"
+	((EXIT2 == 0)) || ANLO "Google.ca ${ORANGE}is not responding...\n"
+	((EXIT == 0)) && ANG 'We are online.\n'
+	#{ (( EXIT != 0 )) || (( EXIT2 != 0 )); } && exit 1
+
+	((EXIT == 0)) && ((EXIT2 == 0)) && ANBG "Network is fully operational.$R\\n" && exit 0
+	{ ((EXIT == 0)) || ((EXIT2 == 0)); } && ANG "Network is ${Y}somewhat$G operational.$R\\n" && exit 0
+	ANBR "There is NO internet.${R}\\n"
+	exit 1
+
+	;;
+esac

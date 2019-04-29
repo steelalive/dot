@@ -1,0 +1,14 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue May  8 05:50:44 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.3 - #_# #@#080518#@# #2#
+#3#::..#####################_/dot/bin/+gimme_#######################..::#3#
+[[ $1 ]] || exit 2
+[[ $1 == "R" ]] && shift
+[[ $1 == "r" ]] && shift
+[[ $1 == "-R" ]] && shift
+[[ $1 == "-r" ]] && shift
+[[ -e $1 ]] || exit
++user "$@"
++777 "$@"
+fixdot fix 

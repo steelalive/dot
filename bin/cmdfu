@@ -1,0 +1,8 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Tue May 15 20:03:43 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.1.3 - #_# #@#150518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: #
+
+curl "https://www.commandlinefu.com/commands/matching/google/Z29vZ2xl/plaintext/$*/$(echo -n "$*" | openssl base64)/plaintext" --silent | sed "s/\(^#.*\)/\x1b[32m\1\x1b[0m/g"
+exemples "$@"

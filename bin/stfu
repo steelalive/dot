@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Mon Feb 26 13:59:26 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.4 - #_# #@#260218#@# #2#
+#3#::..#####################_/dot/bin/stfu_#######################..::#3#
+[[ $1 ]] || {
+	echo needs a command to exectue silently
+	exit
+}
+("$@") &>/dev/null

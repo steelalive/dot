@@ -1,0 +1,6 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Fri Sep 30 16:32:45 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.6 - #_# #@#300916#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+declare -a | grep 'declare -ax '"$1" 2>/dev/null || declare -a | grep -m1 'declare -a '"$1"

@@ -1,0 +1,14 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Fri Sep 28 14:56:34 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-09-28#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/roomer_#######################..::#3#
+roomer() {
+[[ $1 ]] || local room="$src/.repo/manifests/default.xml"
+[[ $1 ]] &&  local room="$1"
+	printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<manifest>'
+	LANG=C command \grep --color=auto darwin "${room}" | sed -e 's|<project.* name=|<remove-project name=|' -e 's| groups.*| />|'
+	printf '%s\n' '</manifest>'
+}
+roomer "$@"

@@ -1,0 +1,12 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Jul  4 03:42:07 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.1.1 - #_# #@#040717#@# #2#
+#3#::..#####################_/dot/bin/wptest_#######################..::#3#
+#. /dot/shinit.sh && shinit
+if ! ping 8.8.8.8 -c 1 &>/dev/null; then
+	{
+		[[ $UID -gt 0 ]] && sudo "${dot}/bin/wp"
+		[[ $UID -eq 0 ]] && "${dot}/bin/wp"
+	}
+fi

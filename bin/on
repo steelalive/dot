@@ -1,0 +1,223 @@
+#!/bin/bash
+#shellcheck disable=SC2119
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu May 31 11:56:56 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.9 - #_# #@#310518#@# #2#
+#3#vi ft=fsee ::..#####################_/dot/bin/on_#######################..::#3#
+#!/bin/bash
+for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
+for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
+for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath; do
+	builtin shopt -s "$shopt_opt" &>/dev/null
+done
+unset shopt_opt set_minus set_plus
+
+if [[ ${!#} == echo ]]; then
+	export silence=1
+elif [[ ${!#} == rm ]]; then
+	shift -1
+	set -- "$@" echo
+else
+	[[ $# -lt 2 ]] && {
+		ANY 'Need -s or silent for first argument if you want quiet output. Next is file then the command.'
+		exit "${LINENO}"
+	}
+fi
+if [[ $1 == "-s" ]] || [[ $1 == "silent" ]]; then
+	shift
+	export silence=1
+fi
+if [[ $1 == "dir" ]]; then
+	shift
+	export skip_search=1 silence=1
+fi
+arg1_untouched="${1}"
+arg1="${1}"
+execute="${2}"
+#execute_test="$(which "${execute}" 2>/dev/null)" && execute="$(realpath -q "$execute_test" 2>/dev/null)"
+if [[ -e $arg1 ]]; then
+	"${execute}" "${arg1}" $2
+	exit
+fi
+
+case "$arg1" in
+amlogic) arg1="/mnt/win/Program Files (x86)/Amlogic/CustomizationTool" ;;
+journal) arg1=/etc/systemd/journald.conf.d/journal.conf ;;
+kdelogout) arg1=${dot}/bin/kdelogout ;;
+loss) arg1=/src/.repo/local_manifests/loss.xml ;;
+manifest) arg1=/src/.repo/manifest.xml ;;
+cron) arg1=${dot}/etc/cron.daily/daily.sh ;;
+mk) arg1=/system/etc/mkshrc ;;
+g4init | initg4) arg1=/system/etc/init.d/init_mnt.sh ;;
+g4 | G4) arg1=$dot/g4.sh ;;
+bprop) /system/build.prop ;;
+sh) arg1="${dot}/root/.nano/sh.nanorc" ;;
+sshd) arg1=/etc/ssh/sshd ;;
+synergy) arg1="${dot_dir}/bin/synergy.sh" ;;
+xinitex) arg1=$HOME/.extend.xinitrc ;;
+yaourt) arg1=/etc/yaourtrc ;;
+.xres* | xres* | Xres* | .Xres*) arg1=~/.Xresources ;;
+ad) arg1=$dot/bin/ad ;;
+88) arg1=${dot}/bin/88 ;;
+harpia) arg1=${O:-/src/out}/debug/target/product/harpia ;;
+local) arg1="$src/.repo/local_manifests/local.xml" ;;
+amlimg) arg1=${dot}/bin/amlimg ;;
+al) arg1="${dot}/al.sh" ;;
+AIK) arg1="/prog/AIK-Linux" ;;
+s10) arg1="/last/s10" ;;
+anset) arg1="${dot}/anset.sh" ;;
+bashlogout | bash.bash_logout) arg1=/etc/bash.bash_logout ;;
+bashprofile | .bash_*) arg1=~/.bash_profile ;;
+slash) arg1=$slash ;;
+bashrc) arg1=/etc/bash.bashrc ;;
+rc) arg1=$slash/etc/rc ;;
+boot) arg1=/boot/menu.lst ;;
+cheat) arg1=$HOME/.cheat/bash ;;
+chrome) arg1=$dot/root/.config/chromium-flags.conf ;;
+cmd | cmdline)
+	arg1=/boot/cmdline.txt
+	[[ -e $arg1 ]] || arg1="${1}"
+	;;
+config) arg1=/boot/config.txt ;;
+dhcpcd) arg1=/etc/dhcpcd.conf ;;
+e) arg1="${dot}/bin/e" ;;
+etcnanorc) arg1=/etc/nanorc ;;
+PKG*) arg1=$HOME/.cache/PKGDEST ;;
+AUR*) arg1=$HOME/.cache/AURDEST ;;
+ex) arg1="${dot}/ex.sh" ;;
+fn)
+	shopt -s extdebug
+	if declare -qF ${2} &>/dev/null; then
+		arg1="$(
+			shopt -s extdebug
+			declare -F ${2} | awk '{print $3}'
+		)"
+		arg2="$(
+			shopt -s extdebug
+			declare -F ${2} | awk '{print $2}'
+		)"
+	else
+		arg1="${dot}/fn.sh"
+	fi
+	shopt -u extdebug
+	;;
+fstab) arg1=/etc/fstab ;;
+getty) arg1=/etc/systemd/system/getty.target.wants/getty@tty1.service ;;
+grub) arg1=/etc/default/grub ;;
+kernel) arg1=$src/kernel/motorola/msm8916 ;;
+hist | histfile) arg1="$HISTFILE" ;;
+hosts) arg1=/etc/hosts ;;
+inc) arg1="${dot}/bin/increment_version" ;;
+input)
+	arg1=$INPUTRC
+	edsc "$arg1"
+	src
+	exit
+	;;
+ipython | ipy) arg1=$HOME/.ipython/profile_default/ipython_config.py ;;
+kkexec) arg1=${dot}/bin/kkexec ;;
+ls_col* | lscol* | LS_COLORS)
+	touch /tmp/ex.sh
+	arg1="/dot/.dir_colors"
+	;;
+make | makepkg) arg1=/etc/makepkg.conf ;;
+mkinit*)
+	arg1="$(grep _config /etc/mkinitcpio.d/linux.preset | tail -n1 | cut -d= -f2)"
+	;;
+
+nanorc) arg1="${dot}/root/.nanorc" ;;
+netreset) arg1=${dot}/bin/netreset ;;
+newbin) arg1=${dot}/bin/newbin ;;
+nano) arg1=${dot}/root/.nano/bash.nanorc ;;
+nvim) arg1=${dot}/root/folders/.config/nvim/local.vim ;;
+pacman) arg1=/etc/pacman.conf ;;
+refind) arg1=/boot/refind_linux.conf ;;
+profile) arg1=/etc/profile ;;
+ps1) arg1="${dot}/ps1.sh" ;;
+ps1bg) arg1="${dot}/ps1bg.sh" ;;
+ps4) arg1="${dot}/ps4.sh" ;;
+roomservice) arg1=${TOP:-/src}/.repo/local_manifests/roomservice.xml ;;
+init | init.sh) arg1=${dot}/init.sh ;;
+pwr | power) arg1="${dot}"/bin/powerline_simple ;;
+qqlan) arg1=${dot}/bin/qqlan ;;
+script) arg1=${dot}/bin/script.bash ;;
+setup) arg1="${dot}/bin/setup_arch.sh" ;;
+shell.nanorc | nanosyntax)
+	arg1="${dot}/root/.nano/shell.nanorc"
+	;;
+show) arg1=${dot}/bin/show.bash ;;
+smb* | samba) arg1=/etc/samba/smb.conf ;;
+misc) arg1=/last/misc-android ;;
+source) arg1=${dot}/bin/source.bash ;;
+src_*) arg1="${dot}"/bin/src_post.bash ;;
+ssh | sshd_config) arg1=/etc/ssh/sshd_config ;;
+sysctl) arg1=$dot/etc/sysctl.d/98-sysctl.conf ;;
+i3) arg1=$HOME/.config/i3/config ;;
+setpath | setpath.sh) arg1=$dot/setpath.sh ;;
+terminator) arg1=$HOME/.config/terminator/config ;;
+tmux | tmux.conf) arg1=~/.tmux.conf ;;
+today)
+	arg1=/last/Acreation/Today.txt
+	printf '\n%s\n' "$(date)" >>$arg1
+	;;
+tst) arg1=/tst ;;
+toolkit) arg1=/prog/linux-amlogic-toolkit ;;
+tst2) arg1=/tst2 ;;
+vim | vimrc) arg1=~/.vim_runtime/my_configs.vim ;;
+yay) arg1=$HOME/.cache/yay ;;
+wp) arg1=${dot}/bin/wp ;;
+wpa) arg1=${dot}/bin/wpa ;;
+wpreconf) arg1=${dot}/bin/wpreconf ;;
+wpconf)
+	eval "$(grep 'WPCONF=' -i ${dot}/bin/wp)"
+	arg1="$WPCONF"
+	;;
+wpmenu) arg1=${dot}/bin/wpmenu ;;
+xinit) arg1=$HOME/.xinitrc ;;
+zsh) arg1=$HOME/.zshrc ;;
+esac
+
+[[ $file_path ]] || file_path="$arg1"
+if [[ -e $arg1 ]]; then
+	"${execute}" "${arg1}" $arg2
+	exit
+fi
+[[ $skip_search ]] && exit 2
+#shopt -s globstar extglob extquote
+
+#[[ -e ${file_path} ]] || for i in ${dot}/**/ /last/**/ /etc/**/ $dot/slash/**/ $HOME/.config/**/ /system/**/ $HOME/.cache/**/ /data/local/**/ /bin/**/ /usr/share/**/; do        file_path="${i}${arg1_untouched}";echo file_path="${i}${arg1_untouched}";  [[ -e ${file_path} ]] && break; done
+#	file_path="${i}${arg1_untouched}"
+#	[[ -e ${file_path} ]] && break
+#done
+findtmp=/tmp/find.tmp
+[[ -e $findtmp ]] || {
+	find /dot -type d -printf '"%p"\n' 2>/dev/null >"$findtmp"
+	find /etc /prog /last /home /root /mnt /prog /opt /usr /tmp -maxdepth 5 -type d -printf '"%p"\n' 2>/dev/null >>"$findtmp" &
+	disown
+}
+for dir in $(<${findtmp:-/tmp/find.tmp}); do
+	[[ -e "$dir/$arg1_untouched" ]] && file_path="$dir/$arg1_untouched" && break
+done
+#file_path=$(grep -m1 "$arg1_untouched$" /tmp/find.tmp 2>/dev/null)
+
+#for i in /*; do [[ -d $i ]] && [[ ! -h $i ]] && printf "%s " "$i"/;done
+#/BACKUP/ /boot/ /dev/ /dot/ /etc/ /home/ /last/ /lineage/ /lost+found/ /mnt/ /opt/ /out/ /proc/ /prog/ /root/ /run/ /sdk/ /srv/ /sys/ /tmp/ /usr/ /var/
+#[[ -e ${file_path} ]] || file_path=${fzf}
+[[ -e ${file_path} ]] ||
+	{ file_path="$(locate --basename --nofollow --quiet --existing --limit=1 $arg1_untouched 2>/dev/null)" ||
+		exit "${LINENO}"; }
+if ((silence == 1)); then
+	"${execute}" "${file_path}" $arg2
+	exit
+else
+	is_text "${file_path}" || ANBR "${UNDER}${file_path} IS NOT TEXT!!!"
+	echo
+	ANBR "EXECUTE?${R} ${RED}${UNDER}${execute}${RES} ${C}${file_path}"
+	echo
+
+	if yorn y; then
+		${execute} "${file_path}" || exit "${LINENO}"
+		exit
+	fi
+
+fi

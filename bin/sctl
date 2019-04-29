@@ -1,0 +1,30 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1#
+#2#::.. Last edit: - Thu Jul  6 00:55:08 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.1.1 - #_# #@#060717#@# #2#
+#3#::..#####################_/dot/bin/sctl_#######################..::#3#
+input=$1
+shift
+case $input in
+sto*) systemctl stop "$@" ;;
+sta*) systemctl start "$@" ;;
+re* | er*) systemctl restart "$@" ;;
+en*) systemctl enable "$@" ;;
+es* | se*)
+	systemctl enable "$@"
+	systemctl start "$@"
+	;;
+di*) systemctl disable "$@" ;;
+sd | ds)
+	systemctl stop "$@"
+	systemctl disable "$@"
+	;;
+*)
+	ANO "sto=stop sta=start re=restart en=enable es=enable and start di=disable ds=disable and stop"
+	systemctl "$@"
+	;;
+esac
+for arg in "$@";do
+systemctl help "$arg"
+systemctl status "$arg"
+done

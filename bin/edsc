@@ -1,0 +1,128 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Thu May 31 14:23:19 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.1.2.2 - #_# #@#310518#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# vi:ft=sh:noro:
+
+arg1="${1}"
+arg2="${2}"
+arg3="${3}"
+readl="$(realpath ${arg1})"
+basename="$(basename "${arg1}")"
+export arg1 basename
+EDITOR=${EDITOR:-nvim}
+congrats() {
+	ANBG 'CONGRATULATION!'" File${R}${C} $arg1 ${BG}is error free."
+	echo
+}
+if [[ $USER == master ]]; then
+	sudo +master -R /tmp/delete "${HOME:-/root}"
+else
+	#+master -R /tmp/delete "${HOME:-/root}"
+	true
+fi
+[[ -d /tmp/delete ]] || mkdir /tmp/delete
+export tmp_copy="/tmp/delete/${basename}.delete"
+[[ -e ${tmp_copy} ]] && rm "${tmp_copy}"
+if [[ $arg2 =~ [0-9] ]]; then
+	nano_line="$arg2"
+else
+	if [[ $arg2 =~ [[:alnum:]?[:alnum:].*] ]]; then
+		grep_line() { grep -n "${1}" "${2}" | tail -1 | cut --delimiter=':' --fields=1; }
+		if grep -n --silent ^"${arg2}()" "${arg1}"; then
+			nano_line=$(grep_line ^"${arg2}()" "${arg1}")
+		elif grep -n --silent ^"${arg2} ()" "${arg1}"; then
+			nano_line=$(grep_line ^"${arg2} ()" "${arg1}")
+		elif grep -n --silent ^"alias ${arg2}=" "${arg1}"; then
+			nano_line=$(grep_line ^"alias ${arg2}=" "${arg1}")
+		elif grep -n --silent ^"export ${arg2}=" "${arg1}"; then
+			nano_line=$(grep_line ^"export ${arg2}=" "${arg1}")
+		elif grep -n --silent ^"${arg2}" "${arg1}"; then
+			nano_line=$(grep_line ^"${arg2}" "${arg1}")
+		elif grep -n --silent "${arg2}" "${arg1}"; then
+			nano_line=$(grep_line "${arg2}" "${arg1}")
+		fi
+	fi
+fi
+
+[[ $nano_line =~ ^[0-9] ]] && nano_line='+'"${nano_line}"
+[[ $nano_line =~ ^[+][0-9] ]] || unset nano_line
+
+shell_edit_check() {
+	if [[ 500 -gt $(wc -l $readl | cut -d' ' -f1) ]]; then
+		return 1
+	fi
+	is_in_path shellcheck || return
+	tmp_copy="${tmp_copy:-$3}"
+	if ! diff "${arg1}" "${tmp_copy}" &>/dev/null; then
+		if grep -o -m1 '#_# - VERSION=[0-9].* - #_#' "${arg1}" &>/dev/null; then
+			"${dot}/bin/increment_version" "${readl}"
+			export version_incremented=1
+		fi
+		sc_ret="$(sc "$arg1" | grep 'In .*:' | tail -1 | sed 's/[^0-9]*//' | sed 's/://' | cut -d' ' --fields=3)"
+		if [[ $sc_ret =~ [0-9] ]]; then
+			export sc_ret
+			sc "$arg1" | grep --after-context=16 "line $sc_ret"
+			ANBW TERM=xterm-color /bin/nano '+'"$sc_ret" "${arg1}" "${arg2}" "${arg3}" && lk
+		else
+			lk
+			congrats "$arg1"
+		fi
+
+	fi
+}
+gui_ed_sc() {
+	sc_ret="$(sc "$arg1" | grep 'In .*:' | tail -1 | sed 's/[^0-9]*//' | sed 's/://' | cut -d' ' --fields=3)"
+	if [[ $sc_ret =~ [0-9] ]]; then
+		export sc_ret
+		sc "$arg1"
+		fork kdevelop "$arg1"
+		disown
+	else
+		fork kdevelop "$arg1"
+		disown
+	fi
+}
+cp "${arg1}" "${tmp_copy}"
+if [[ $EUID == 0 ]]; then
+	[[ $arg2 =~ [-.*] ]] || unset arg2
+	eval ${EDITOR} $nano_line $arg2 $arg3 "$arg1"
+else
+	sudo sh -c "eval ${EDITOR} $arg2 $arg3 $arg1"
+fi
+shell_edit_check "$readl" "$arg2" "$arg3"
+echo
+if diff "${arg1}" "${tmp_copy}" &>/dev/null; then
+	ANG "No change detected in ${C}${readl}${RES}"
+	echo
+else
+	#	if [[ $HOSTNAME == PC ]]; then
+	#		ANLB "Backup for the luck..."
+	#		day_folder="${last:-/last}/BACKUP/$(date +%d)"
+	#		day_file="${basename}_$(/bin/date "+%a-%B-%d-%Y")"
+	#		mkdir -p "${day_folder}/${day_file}"
+	#		rs "${arg1}" "${day_folder}/${day_file}" &>/dev/null
+	#		rs /dot "${day_folder}_dot" &>/dev/null
+	#		ANLG 'The luck is with you. \n'
+	#	fi
+	ANG "Done editing ${C}${readl}${RES}\\n"
+	for file in ${source_files}; do
+		if [[ $file =~ $basename ]]; then
+			touch "/tmp/$file" && break
+		fi
+	done
+fi
+echo
+#if [[ $readl == *.xml ]]; then
+#	xmllint "$readl" --format --nsclean --noblanks --xmlout --valid --output /tmp/xml.tmp
+#	cat /tmp/xml.tmp >"$readl"
+#	ANLG 'Document was formated with xmllint. \n'
+#fi
+if [[ $basename =~ "fstab" ]]; then
+	is_in_path column && column -t "$readl" >/tmp/fstab || exit
+	is_empty /tmp/fstab || exit
+	cat /tmp/fstab >"$readl" || exit
+	rm /tmp/fstab
+	ca "$readl"
+	ANG "$readl formatted with column -t \\n"
+fi

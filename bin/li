@@ -1,0 +1,14 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Thu Mar 29 23:17:50 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.0 - #_# #@#290318#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# Author: __INDNYALL__#
+li() {
+	for i in $1; do
+		unset success
+		[[ $2 == 0 ]] && success='\x1b[1;38;2;0;255;0mOK!' || success=FAIL
+		printf "%b" "\x1b[1;38;2;0;255;255m${i}\x1b[1;38;2;30;144;255m $(printf '\055%.0s' {1..80})" | head -c 140
+		printf "%b" "\x1b[0m[\x1b[1;38;2;255;0;0m$success\x1b[0m]\\n"
+	done
+}
+li "$@"

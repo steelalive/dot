@@ -1,0 +1,22 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Mon Jun  6 18:54:29 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+get_script_dir() {
+	SOURCE="${BASH_SOURCE[0]}"
+	# While $SOURCE is a symlink, resolve it
+	while [ -h "$SOURCE" ]; do
+		DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+		SOURCE="$(readlink "$SOURCE")"
+		# If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
+		[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+	done
+	DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+	echo "$DIR"
+}
+
+if [[ -v $1 ]]; then
+	ANG "Sourced ${W}$(get_script_dir)${RES}"
+else
+	get_script_dir
+fi

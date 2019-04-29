@@ -1,0 +1,110 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#2#::.. Last edit: - Thu Apr 20 21:32:17 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.4 - #_# #@#200417#@# #2#
+#3#::..#####################_MAIN_#######################..::#3#
+# ---------------------------------------------------------------------------
+# fortunes - Print funny uotes
+
+# Copyright 2016, root <root@hp>
+# All rights reserved.
+
+# Usage: fortunes [-h|--help]
+
+# Revision history:
+# 2016-05-30 Created by new_script ver. 3.3
+# ---------------------------------------------------------------------------
+
+PROGNAME=${0##*/}
+VERSION="0.1"
+
+clean_up() { # Perform pre-exit housekeeping
+	return
+}
+
+error_exit() {
+	echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
+	clean_up
+	exit 1
+}
+
+graceful_exit() {
+	clean_up
+	exit
+}
+
+signal_exit() { # Handle trapped signals
+	case $1 in
+	INT)
+		error_exit "Program interrupted by user"
+		;;
+	TERM)
+		echo -e "\n$PROGNAME: Program terminated" >&2
+		graceful_exit
+		;;
+	*)
+		error_exit "$PROGNAME: Terminating on unknown signal"
+		;;
+	esac
+}
+
+usage() {
+	echo -e "Usage: $PROGNAME [-h|--help]"
+}
+
+help_message() {
+	cat <<-_EOF_
+		  $PROGNAME ver. $VERSION
+		  Print funny quotes
+		
+		  $(usage)
+		
+		  Options:
+		  -h, --help  Display this help message and exit.
+		
+	_EOF_
+	return
+}
+
+# Trap signals
+trap "signal_exit TERM" TERM HUP
+trap "signal_exit INT" INT
+
+# Parse command-line
+while [[ -n $1 ]]; do
+	case $1 in
+	-h | --help)
+		help_message
+		graceful_exit
+		;;
+	-* | --*)
+		usage
+		error_exit "Unknown option $1"
+		;;
+	*)
+		echo "Argument $1 to process..."
+		;;
+	esac
+	shift
+done
+
+# Main logic
+if type -p fortune >/dev/null; then
+	fortune=$(fortune)
+	longest=$(printf '%s\n' "$fortune" | awk 'BEGIN {L=0}{if (length > L){L=length}}END{print L}')
+	header='=== Fortune Cookie ==='
+	unset footer
+	((${#header} > longest)) && longest=${#header}
+	for ((n = 0; n < longest; n++)); do
+		footer+='='
+	done
+	if ((${#header} < longest)); then
+		longest=$((longest - ${#header}))
+		for ((n = 0; n < longest; n++)); do
+			header+='='
+		done
+	fi
+
+	printf "\n${C}${header}${G}\n%s\n${C}${footer}${LG}\n\n" \
+		"$fortune"
+fi
+graceful_exit
