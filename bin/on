@@ -182,6 +182,13 @@ if [[ -e $arg1 ]]; then
 	"${execute}" "${arg1}" $arg2
 	exit
 fi
+type -P "${arg1}" &>/dev/null || file_path="${type -P ${arg1}}"
+  if [[ -e $file_path ]]; then
+  ▏   "${execute}" "${file_path}" $arg2
+  ▏   exit
+  fi
+
+
 [[ $skip_search ]] && exit 2
 #shopt -s globstar extglob extquote
 

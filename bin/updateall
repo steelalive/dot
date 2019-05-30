@@ -4,16 +4,14 @@
 #3#::..#####################_MAIN_#######################..::#3#
 # Author: #noharden
 wp || exit
+
 [[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR
-is_in_path() { command -v "$@" &>/dev/null; }
+
 suuser "yay -Syu --devel --needed --noconfirm"
 paccache --keep 1 --verbose --remove
-if is_in_path cpanm && is_in_path cpanm-outdated; then
-	cpanm --self-upgrade
-	cpan-outdated -p | cpanm
-fi
-suuser -c "yay -S --with-deps --needed --noconfirm --noedit -ua"
+suuser -c "yay -S --needed --noconfirm -ua"
 is_in_path go && go get -u all
+
 for i in /root/.gem/ruby/*/bin /root/.gem/ruby/*/ /root/.gem/ruby /root/.gem /root /root/.vim_runtime /ext/opt/diet/bin /ext/opt/diet /ext/opt /ext /ext/opt/gcc-UBERTC/bin ; do
 	[[ -e $i ]] && chmod go-w "$i"
 done
@@ -22,32 +20,17 @@ for i in updateRuby update_rubygems update-pciids update-ca-trust update-desktop
 	is_in_path "$i" && ANORANGE "Executing ${i}...\\n" && "$i"
 done
 ### Back to relative sanity.
-[[ $1 ]] && sdkmanager --update
-if is_in_path gem; then
-	gem update --system --no-document
-	gem cleanup
-fi
 
-### Neovim setup ###
-cd /root/.config/nvim && {
-    gitreset
-local="$dot/root/folders/.config/nvim/local.vim"
-init="$HOME/.config/nvim/init.vim"
-if ! grep -q "$local" $init; then
-	echo "source $local" >>"$init"
-	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
-fi
-unset local init
-nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | qall! | endtry" -V1 -es
-if cd /ext/.dotfiles2;then
-    make update
-fi
-}
-### END Neovim setup ###
+[[ $1 ]] && sdkmanager --update
+
 is_in_path bundle && bundle update
+
 ### this line may not fit your config. All the previous lines as well.:
+
 [[ -d "$HOME"/.cache/pip ]] && chown root:root "$HOME"/.cache/pip "$HOME"/.cache/pip/http
+
 pacman -Q | awk '{print $1}' >/packages.list
+
 rm -rf /tmp/makepkg
 ncu -g
 npm doctor
@@ -64,14 +47,36 @@ npm install --global npm@latest
 		pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$i"
 	done
 
-	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
-	$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
-	$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
-	$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
-	for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
-		$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-		$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-		$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-	done
-    }
+#	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
+#	$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
+##	$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
+#	$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
+##	for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
+#		$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+##		$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+#		$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+#	done
+
+if is_in_path cpanm && is_in_path cpanm-outdated; then
+	cpanm --self-upgrade
+	cpan-outdated -p | cpanm
+fi
 #+user -R /root /shell /home /dot &>/dev/null
+### Neovim setup ###
+cd /root/.config/nvim && {
+    gitreset
+local="$dot/root/folders/.config/nvim/local.vim"
+init="$HOME/.config/nvim/init.vim"
+if ! grep -q "$local" $init; then
+	echo "source $local" >>"$init"
+	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
+fi
+unset local init
+nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | qall! | endtry" -V1 -es
+if cd /ext/.dotfiles2;then
+    make update
+fi
+}
+}
+### END Neovim setup ###
+

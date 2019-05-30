@@ -12,7 +12,6 @@ for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build
 		-e "s/ro.build.type=.*/ro.build.type=eng/" \
 		-e "s/=user$/=eng/" \
 		-e "s/ro.debuggable=0$/ro.debuggable=1/" \
-		-e "s/ro.carrier=.*/ro.carrier=wifi-only/" \
 		-e "s/MM-dd-yyyy/dd-MM-yyyy/" \
 		-e "s/=en-US$/=en-CA/" \
 		-e "s|persist.sys.timezone=.*|persist.sys.timezone=America/Toronto|" \
@@ -20,9 +19,19 @@ for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build
 		-e "s/ro.platform.keepbackground.app=.*/#ro.platform.keepbackground.app=/" \
 		-e "s/ro.net.pppoe=true/ro.net.pppoe=false/" \
 		-e "s/ro.platform.has.pppoe.*/ro.platform.has.pppoe=false/" \
-		-e "s/jfltexx$/jfltecan/" \
+		-e "s/ro.build.product=.*/ro.build.product=zerofltecan/" \
+		-e "s/ro.product.name=.*/ro.product.name=zerofltecan/" \
+		-e "s/ro.product.device=.*/ro.product.device=zeroflte/" \
+		-e "s/ro.product.locale=.*/ro.product.locale=en-CA/" \
+		-e "s/ro.build.flavor=.*/ro.build.flavor=zerofltecan-user/" \
 		-e "s/=US$/=CA/" \
+		-e "s/ro.sf.lcd_density=640/ro.sf.lcd_density=640/" \
+		-e "s/ro.product.model=.*/ro.product.model=SM-G920W8/" \
+		-e "s/ro.sf.lcd_density=.*/ro.sf.lcd_density=640/" \
 		-e "s|=q201$|=S912|" \
+		-e "s|zerofltexx|zerofltecan|" \
+		-e "s|zeroflte???$|zerofltecan|" \
+		-e "s|zeroflte??$|zerofltecan|" \
 		-e "s|=q9377$|=S912|" \
 		-e "s/=cortex-a7$/=cortex-a53/" \
 		-e "s/ro.platform.has.pppoe=true$/ro.platform.has.pppoe=false/" \

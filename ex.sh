@@ -28,6 +28,7 @@ is_android && {
 set -a
 eval "$(dircolors --sh $dot/.dir_colors)"
 if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
+#	export NET=eth0
 	$dot/bin/wp
 	touch /tmp/INIT
 	mkdir -p /tmp &>/dev/null
@@ -164,8 +165,6 @@ REPO_OS_OVERRIDE='linux'
 DBUS_SYSTEM_BUS_ADDRESS='unix:path=/run/dbus/system_bus_socket'
 DMENU_OPTIONS='-nb white -nf black -sb #AAAAAA -sf white'
 EXTRACT_UNSAFE_SYMLINKS=1
-extv='/mnt/media_rw/EFEA-A128'
-extab='/storage/98A6-9561'
 tmp_serial='/tmp/adbserial'
 src=${src:-/src}
 O=${O:-$src/out}
@@ -240,7 +239,6 @@ TERM_COLOR=16m
 TERM_FONT=full
 TERM_ENHANCED=enabled
 TERM_IMAGE=enabled
-#TERM_PROGRAM=MacTerm
 TMOUT=90000
 TZ=:/etc/localtime
 USECOLOR=1
@@ -259,7 +257,7 @@ alias more='less'
 XDG_CACHE_HOME="$HOME/.cache"
 auto_resume=1
 broadcast='192.168.0.1'
-ccache -M 50G &>/dev/null
+ccache -M 8G &>/dev/null
 chmod 777 /tmp/loadcpu /tmp/prompt /tmp/START.1 2>/dev/null
 chromium="/usr/bin/chromium --disk-cache-dir=/tmp/profile-sync-daemon --scroll-pixels=600 --disk-cache-size=629145600 --memory-model=high --password-store=basic --no-proxy-server --user-data-dir=/root/.config/chromium %U"
 force_color_prompt=yes
@@ -298,7 +296,7 @@ if [[ $HOSTNAME == PC ]]; then
 		#which_network 5G
 	fi
 fi
-export NET
+#export NET=eth0
 # vi: set noro: ft=sh
 # Check for interactive bash and that we haven't already been sourced.
 if [ -n "${BASH_VERSION-}" -a -n "${PS1-}" -a -z "${BASH_COMPLETION_COMPAT_DIR-}" ]; then

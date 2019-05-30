@@ -127,8 +127,7 @@ STICKY 4	# dir with the sticky bit set (+t) and not other-writable
 #* 48;5;;38;5;
 #* 48;5;;38;5;
 #*.*.log	38;5;190
-*- 1;48;5;238;38;5;0
-*.*~	38;5;69
+*- 1;48;5;231;38;5;0
 *.0	38;5;101
 *.1	38;5;102
 *.1p	38;5;7
@@ -670,7 +669,7 @@ STICKY 4	# dir with the sticky bit set (+t) and not other-writable
 *nanorc	1;38;5;0;48;5;76
 *passwd	48;5;126
 *pm_to_blib	38;5;240
-*rc 1;48;5;4;38;5;46
+*rc 38;5;122
 *services	1;38;5;0;48;5;159
 *shadow	1;38;5;0;48;5;75
 *shells 1;48;5;123;38;5;0

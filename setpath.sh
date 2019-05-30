@@ -26,6 +26,7 @@ if [[ $1 == aosp ]]; then
 /sbin
 /usr/local/bin
 /usr/local/sbin
+/opt/aarch64-linux-android-gcc/bin
 /ext/opt/gcc-linaro-7.4.1-2018.05-x86_64_arm-linux-gnueabi/bin
 /opt/aarch64-linux-android-gcc/bin
 /root/toolchain/bin

@@ -1,6 +1,8 @@
+#!/bin/bash
 blobber(){
 for i in $(for extract in $(find $src -name extract-files.sh); do dirname $extract;done);do
-▎ cd "$i";blobs="./extract-files.sh";·
-▎ [[ -e $blobs ]] &&·
-▎ ▏   $blobs /ext/s6;done
+cd "$i";blobs="./extract-files.sh";·
+[[ -e $blobs ]] &&·bash $blobs /ext/s6;
+done
 }
+blobber "$@"

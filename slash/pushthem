@@ -22,6 +22,7 @@ cp -a $slash/etc/terminfo /system/etc/
 ln -sf $slash/EST5EDT /system/etc/localtime
 ln -sf $slash/etc/gps.conf /system/etc/gps.conf
 ln -sf $slash/etc/gps.conf /system/vendor/etc/gps.conf
+ln -sf $slash/etc/nfsinjector/service.sh /system/etc/init.d/
 mkdir -p /system/etc/ssh
 [ -e /system/etc/ssh/sshd_config ] || ln -s /dot/etc/folders/ssh/sshd_config /system/etc/ssh/sshd_config
 [ -e /system/etc/highlight ] || ln -s $slash/etc/highlight /system/etc
@@ -47,7 +48,7 @@ if ! grep -q "/system/etc/mk" /system/etc/mkshrc; then
 	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
 	chmod -R 0777 /data/dot
 fi
-if [ ! -e /external_sd ] && ! settings list system | grep 'en-US,fr-CA' &>/dev/null; then
+if [ ! -e /external_sd ] && ! settings list system | grep 'en-US,fr-CA'; then
 	echo "Some defaults settings applied..."
 	set -x
 	settings put global policy_control immersive.full=
@@ -85,6 +86,6 @@ if [[ -e $core ]]; then
 	done
 	[ -e /data/adb/magisk.img ] && busybox cp -avu /data/adb/magisk.* $ex/
 fi
-
+rm_empty_dir /system/app/* /system/priv-app/*
 echo "Done!"
 # vi: ft=sh

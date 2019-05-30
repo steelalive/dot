@@ -4,9 +4,9 @@ if &compatible
   set nocompatible
 endif
 " Add the dein installation directory into runtimepath
-set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
-if dein#load_state('~/.cache/dein')
-call dein#begin('~/.cache/dein')
+set runtimepath+=~/.cache/vim/dein/repos/github.com/Shougo/dein.vim
+if dein#load_state('~/.cache/vim/dein')
+call dein#begin('~/.cache/vim/dein')
 call dein#add('Shougo/neoinclude.vim')
 call dein#add('Valloric/YouCompleteMe')
 call dein#add('Zabanaa/neuromancer.vim')

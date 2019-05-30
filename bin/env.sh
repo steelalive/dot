@@ -3,7 +3,7 @@
 #vi:set noro
 PS1='ANDROID\$ '
 if [[ $1 == clear ]]; then
-i	#unalias -a
+	#unalias -a
 
 	for func in $(declare -f | grep ".* ()" | cut -d' ' -f1); do unset $func; done
 	# get USER, HOME and DISPLAY and then completely clear environment
@@ -39,22 +39,26 @@ elif [[ $PWD == /ext ]]; then
 else
 	return
 fi
-unset CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE
+unset CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE ROM_LUNCH
+
 O=/ext/out
 OUT_DIR=$O
 #abi=soft
+#CFLAGS="-Wnoerror -march=armv7 -mandroid -marm -O3 -mtune=cortex-a9 -w32 -fPIC -O2 -pipe -fno-plt"
+#	LDFLAGS="-march=armv7"
 #APP_CFLAGS='-O3 -mcpu=cortex-a9'
 #CFLAGS='=Wnoerror'
 #CXXFLAGS='-Wnoerror'
 #rom=zerojflt
-CFLAGS='-march= -mandroid -mabi=lp64 -marm -Ofast -w64 -fPIE -fPIC -mfpu=neon-vfpv4 -pipe -fno-plt'
+#CFLAGS='-march=armv7-a+neon-vfpv4 -mandroid -marm -O3 -w32 -fPIE -fPIC -mfpu=neon-vfpv4 -pipe -fno-plt'
+#CFLAGS='-march=armv7-a -mtune=cortex-a53 -O3 -w32 -fPIE -fPIC -mfloat-abi=hard -mfpu=neon -pipe -fno-plt'
 #LDFLAGS='-march=armv7-a -mfpu=neon-vfpv4 -pie'
-LDFLAGS='-Ofast'
+#LDFLAGS='-march=armv7 -mfpu=netdev_max_backlogn -mfloat-abi=hard -pie -Wl,--fix-cortex-a7'
 rom='zerofltecan'
 DEVICE_COMMON='zero-common'
 VENDOR=samsung
 DEVICE=zerofltecan
-ARCH='arm64'
+#ARCH='arm'
 #CARCH='armv7'
 CC='zapcc'
 CCACHE_DIR='/var/.ccache'
@@ -64,11 +68,15 @@ CCACHE_TEMPDIR='/tmp/.ccache'
 #CROSS_COMPILE='/ext/opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-'
 #CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-'
 #CROSS_COMPILE='/ext/opt/gcc-from_source_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-'
-CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
+#CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
+#CROSS_COMPILE="aarch64-linux-android-"
+#CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
+ARCH="arm64"
 #CROSS_COMPILE='/src/prebuilts/gcc/linux-x86/arm/arm-eabi-7.3/bin/arm-eabi-'
 #CROSS_COMPILE='/usr/bin/arm-none-eabi-'
 #CROSS_COMPILE='/opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-'
-CONFIG_CROSS_COMPILE="$CROSS_COMPILE"
+#CONFIG_CROSS_COMPILE="/opt/aarch64-linux-android-gcc/bin/aarch64-linux-android-"
+#CONFIG_CROSS_COMPILE="$CROSS_COMPILE"
 #TARGET_TOOLS_PREFIX="$CROSS_COMPILE"
 NDK_DEBUG=0
 GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01;33:quote=01;34'
@@ -103,7 +111,7 @@ WITH_SU='true'
 _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Xmx5g'
 ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx5G"
 JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m"
-ROM_LUNCH='lineage'
+#ROM_LUNCH='lineage'
 BREAKFAST_DEVICE="$rom"
 REPO_INIT_OPTS='--depth=1 --no-clone-bundle'
 REPO_SYNC_OPTS='--force-sync --force-broken --current-branch --no-tags --no-clone-bundle --optimized-fetch --prune'
@@ -112,10 +120,12 @@ KCONFIG_NOTIMESTAMP=true
 #TARGET_PREBUILT_KERNEL="$O/kernel.prebuilt"
 ccache -M 50G
 cd "$src" || return
+[[ $1 == here ]] && src="$PWD"
+[[ "$PS1" ]] || PS1="$(tput setaf 1)#\\u$(tput setaf 2)@$(tput setaf 3)\h:$(tput setaf 2)\w$(tput setaf 6)#$(tput setaf 5)~~$(tput setaf 6)\d$(tput setaf 5)~~$(tput setaf 6)\@$(tput setaf 5)~$(tput setaf 2)\t$(tput setaf 5)~HIST:\!~CMD:$(tput sgr0)\n\#\$ "
 sysctl -w net.ipv4.tcp_window_scaling=0
 alias jacksetup='killall java;cd $src; rm -rf /root/.jack-se*;  $src/prebuilts/sdk/tools/jack-admin install-server $src/prebuilts/sdk/tools/jack-launcher.jar $src/prebuilts/sdk/tools/jack-server-*.ALPHA.jar; jackstart'
 alias jackstart='$src/prebuilts/sdk/tools/jack-admin start-server '
-alias mclobber='cd $src; m clobber; choosecombo 2 lineage_$DEVICE eng'
+alias makeclean='cd $src; m clobber; choosecombo 2 lineage_$DEVICE eng'
 alias lsconfig='ls $kernel/arch/arm64/configs'
 set +a
 combo() { choosecombo 2 lineage_$VENDOR eng; }
@@ -139,10 +149,11 @@ fi
 #[[ -e $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip ]] || {
 #	cp /last/misc-android/BOOTANIMS/Pixel_2_Dark_No_Text/bootanimation.zip $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip 2 &>/dev/null
 #}
-#[[ -e kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig ]] || cp kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltexx_defconfig kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
+[[ -e kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig ]] || cp kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltexx_defconfig kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
 . $src/build/envsetup.sh
+export -f add_lunch_combo
 unset reposync
-breakfast $rom
+lunch 
 croot
 #combo
 #ln -s /usr/bin/python2.7 $O/host/linux-x86/bin/python 2>/dev/null

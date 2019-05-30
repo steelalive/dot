@@ -2,10 +2,16 @@
 #-*- coding: utf-8 -*-
 #2#::.. Last edit: - Mon May 28 01:24:54 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.2.0.9 - #_# #@#280518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
+
 dot=${dot:-/dot}
 [[ $1 ]] || { $dot/bin/p www.google.ca && exit; }
 [[ $1 ]] && { stfu $dot/bin/p www.google.ca && exit; }
 #exit
+if [[ $NET = eth0 ]]; then
+	dhcpcd eth0
+	exit
+fi
+
 dot_dir="${dot:-/dot}"
 rfkill unblock all
 [[ -e /oem ]] && exit

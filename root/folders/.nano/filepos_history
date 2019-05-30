@@ -1,9 +1,3 @@
-/root/.bashrc 137 1
-/tmp/aml/output/system/etc/wifi/wpa_supplicant.conf 24 19
-/tmp/aml/output/META-INF/com/google/android/updater-script 60 1
-/last/s10/R-TV_S10_20171213/level2/system/build.prop 116 1
-/prog/superrs-kitchen/superr 8 1
-/prog/superrs-kitchen/tools/open_bump.py 163 10
 /prog/AIK-Linux/_ZY2242NPXP_boot/split_img/boot.img-cmdline 1 513
 /prog/AIK-Linux/ramdisk/sbin/mkshrc 1 11
 /prog/AIK-Linux/_ZY2242NPXP_boot/ramdisk/fstab.qcom 2 64
@@ -136,7 +130,6 @@
 /usr/share/vim/vimfiles/plugin/bufexplorer.vim 1327 1
 /out/target/product/espresso/obj/KERNEL_OBJ/.config 48 28
 /src/kernel/ti/omap4/.config 39 1
-/src/.repo/local_manifests/local.xml 3 121
 /src/.repo/manifests/devices/omap4.xml 6 169
 /last/BACKUP/police.txt 57 1
 /dot/root/folders/.config/yay/config.json 21 16
@@ -175,7 +168,6 @@
 /dot/bin/makepkgsu 9 14
 /etc/pacman.conf 20 2
 /etc/sddm.conf 119 1
-/ext/yay/neovim-youcompleteme-core-git/PKGBUILD 68 16
 /dot/bin/build.prop 712 1
 /etc/grub.d/40_custom 88 1
 /etc/mkinitcpio.d/linux.preset 4 17
@@ -199,3 +191,10 @@
 /root/.nanorc 63 2
 /ext/yay/yay/PKGBUILD 19 1
 /ext/yay/qt5-webengine-widevine/PKGBUILD 34 2
+/tmp/PKGBUILD 34 2
+/src/.repo/local_manifests-nx-8.1/devices/samsung/klte.xml 18 1
+/src/.repo/local_manifests-nx-8.1/devices/samsung/zero.xml 24 1
+/last/s6/partition.txt 360 1
+/src/.repo/local_manifests/local.xml 8 1
+/src/device/samsung/zerofltecan/device-proprietary-blobs.txt 11 1
+/ext/yay/neovim-youcompleteme-core-git/PKGBUILD 77 45

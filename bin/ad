@@ -7,8 +7,10 @@
 [[ $HOSTNAME != PC ]] && exit
 files_to_copy="/dot/*.sh /dot/bin /dot/slash"
 adb=/usr/bin/adb
-
+ex=/sdcard
+su_bin=/sbin/su
 tmp_serial=/tmp/adbserial
+ex=/sdcard
 [[ -e $tmp_serial ]] || touch /tmp/adbserial
 #eval $(<$tmp_serial)
 #if grep 5555 /tmp/adbserial; then
@@ -81,7 +83,7 @@ apk_to_() {
 	adbsu pm install -r -g "$apk"
 	return
 }
-adbsu() { adb shell $su_bin -c "$@"; }
+adbsu() { adb shell magisk su -c "$@"; }
 export -f adbsu
 adb_read() {
 	adbsu /data/dot/bin/remnt && return 0
@@ -129,10 +131,10 @@ if [[ ! $su_bin ]]; then
 
 	export su_bin
 fi
-
+if [[ ! $ex ]]; then
 if ! { ex=$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null) && sutest $ex; }; then
 	if $adb devices | grep -q recovery &>/dev/null; then
-		adbde shell '[[ -d /external_sd ]]' 2>/dev/null && export ex=/external_sd
+		adbde shell '[ -d /external_sd ]' 2>/dev/null && export ex=/external_sd
 	elif adbde shell '[[ -d "$(echo /mnt/media_rw/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
 		ex="$(adbde shell 'echo /mnt/media_rw/????-????' 2>/dev/null)" 2>/dev/null
 	elif adbde shell '[[ -d "$(echo /storage/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
@@ -143,7 +145,8 @@ if ! { ex=$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/n
         ex='/storage/extSdCard'
 	fi
 fi
-[[ $ex ]] || export ex=/sdcard
+fi
+export ex=/sdcard
 case $1 in
 tv )
 	shift
@@ -163,15 +166,18 @@ s4 |cell )
 	push_key
 	return
 	;;
- tabip | adbtab)                                                                     
-  ▏ shift                                                                         
-  ▏ export ANDROID_SERIAL=192.168.0.9:5555                                                
-  ▏ adbconnect "$adb"                                                             
-  ▏ echo_adbconnect                                                               
-  ▏ echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial                       
-  ▏ push_key                                                                       
-  ▏ return                                                                        
-  ▏ ;;                 
+ tabip | adbtab)
+     ▏ shift
+  ▏ export ANDROID_SERIAL=192.168.0.9:5555
+  ▏ adbconnect "$adb"
+  ▏ echo_adbconnect
+    ▏ echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
+
+  ▏ push_key
+ ▏ return
+
+  ▏ ;;
+
 
 g4u* | g4_* | usb)
 	shift
@@ -189,7 +195,7 @@ esac
 
 
 export exsd=$ex exdo="$ex/Download" ex
-[[ $ex == /sdcard ]] && ANBO '$ex is /sdcard. This is a problem?'
+#[[ $ex == /sdcard ]] && ANBORANGE '$ex is /sdcard. This is a problem?'
 case $1 in
 rmnt | remnt)
 	shift
@@ -284,14 +290,14 @@ cmd)
 pushdot)
 	shift
 	adbsu "setenforce 0"
-	ANLO "/Dot sync in progress...\n"
+	ANLO "/dot sync in progress...\n"
 	adbsu 'mkdir -p /data/dot'
 	adbsu 'chmod -R 0777 /data/dot'
 	adbsu mkdir -p /data/dot
 	adbsu chmod 0777 /data/dot
-	adb shell su 0 -c "mkdir /data/dot"
+	adb shell su 0 -c "mkdir -p /data/dot"
 	adb shell su 0 -c "chmod 0777 -R /data/dot"
-	adbde shell "[[ -e /external_sd ]]" || {
+	adbde shell "test -e /external_sd &>/dev/null" || {
 		sync_delete $files_to_copy /data/dot
 		push_key
 		adbde push /last/dot.zip $ex
@@ -310,7 +316,7 @@ pushall | sync-delete)
 	adbsu "setenforce 0"
 	ANLO "Full sync in progress...\n"
 	adbsu 'mkdir -p /data/dot'
-	adbsu 'chmod -R 0777 /data/dot'
+	adbsu 'chmod -R 777 /data/dot'
 	sync_delete $files_to_copy /data/dot
 	sync_delete /last/misc-android $ex
 	adbde push /last/dot.zip $ex
@@ -346,7 +352,11 @@ ota)
 log)
 	shift
 	adbde shell setenforce 0
-	adbde logcat -C "$@"
+	if adb logcat --help | grep -q '\--format='; then adb logcat --format=color;
+	else
+	  adbde logcat -C "$@"
+	fi
+
 	return
 	;;
 shell)

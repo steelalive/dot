@@ -4,6 +4,7 @@
 #2#::.. Last edit: - Fri May 25 06:36:02 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.6.4 - #_# #@#250518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 #print_args "$@"
+. $dot/anset.sh
 from_process=($(ps -o comm=$PPID))
 #echo "${from_process[@]}"
 from_process3="${from_process[2]}"

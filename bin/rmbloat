@@ -1,41 +1,160 @@
 #!/data/dot/slash/sbin/bash
-pmu com.droidlogic.appinstall \
-com.droidlogic.BluetoothRemote \
-com.android.provision com.android.statementservice com.android.camera2 \
-com.xynotec.andboost com.droidlogic.mediacenter com.ghisler.android.TotalCommander \
-com.droidlogic.PPPoE cm.aptoide.pt com.android.music \
-com.android.vpndialogs com.droidlogic.imageplayer com.google.android.youtube.tv com.android.cts.ctsshim \
-com.droidlogic.miracast com.android.dreams.phototable com.google.android.feedback \
-com.android.inputmethod.latin com.netflix.mediaclient org.xbmc.ftmc \
-com.google.android.partnersetup com.droidlogic.videoplayer com.android.gallery3d com.android.keychain \
-com.android.musicfx com.android.smspush com.android.frameworks.telresources \
-com.android.calllogbackup com.android.carrierconfig com.example.a62000435.box_fix com.droidlogic.SubTitleService \
+PMU="com.sec.android.emergencylauncher 
+com.sec.android.emergencymode.service 
+com.sec.android.easyonehand 
+com.sec.android.emergencymode.service 
+com.samsung.storyse
+com.sec.android.emergencylauncher 
+com.sec.android.emergencymode.service 
+com.sec.android.easyonehand 
+com.sec.android.emergencymode.service 
+com.samsung.storyservice 
+com.samsung.svoice.sync 
+com.samsung.fresco.logging 
+com.samsung.safetyinformation 
+com.samsung.clipboardsaveservice 
+com.samsung.android.widgetapp.yahooedge.sport 
+com.samsung.android.widgetapp.yahooedge.finance 
+com.samsung.android.weather 
+com.samsung.android.video 
+com.samsung.android.soundassistant 
+com.samsung.android.smartmirroring 
+com.samsung.android.service.livedrawing 
+com.samsung.android.service.peoplestripe 
+com.samsung.android.sdk.professionalaudio.utility.jammonitor 
+com.samsung.android.sdk.professionalaudio.app.audioconnectionservice 
+com.samsung.android.sdk.handwriting 
+com.samsung.android.server.iris 
+com.samsung.android.fingerprint.service 
+com.samsung.android.game.gamehome 
+com.samsung.android.game.gametools 
+com.samsung.android.intelligenceservice2 
+com.samsung.android.dqagent 
+com.samsung.android.da.daagent 
+com.samsung.android.app.sbrowseredge 
+com.samsung.android.app.colorblind 
+com.google.vr.vrcore 
+com.android.emergency 
+com.android.bookmarkprovider
+service.odtcfactory.sec.com.odtcfactoryservice 
+com.test.LTEfunctionality 
+com.sec.factory.iris.usercamera 
+com.sec.hearingadjust 
+com.sec.enterprise.mdm.vpn 
+com.sec.enterprise.mdm.services.simpin 
+com.sec.android.app.music
+com.droidlogic.appinstall
+com.droidlogic.BluetoothRemote
+com.android.provision 
+com.android.statementservice 
+com.android.camera2 
+com.xynotec.andboost 
+com.droidlogic.mediacenter 
+com.ghisler.android.TotalCommander
+com.droidlogic.PPPoE 
+cm.aptoide.pt 
+com.android.music 
+com.android.vpndialogs 
+com.droidlogic.imageplayer 
+com.google.android.youtube.tv 
+com.android.cts.ctsshim
+com.droidlogic.miracast 
+com.android.dreams.phototable 
+com.google.android.feedback
+com.android.inputmethod.latin 
+com.netflix.mediaclient 
+org.xbmc.ftmc
+com.google.android.partnersetup 
+com.droidlogic.videoplayer 
+com.android.gallery3d 
+com.android.keychain
+com.android.musicfx 
+com.android.frameworks.telresources
+com.android.calllogbackup 
+com.example.a62000435.box_fix 
+com.droidlogic.SubTitleService
 org.xbmc.kodi jp.co.omronsoft.openwnn
+com.android.providers.downloads.ui 
+com.android.contacts 
+com.android.nfc 
+com.cyanogenmod.trebuchet 
+org.cyanogenmod.weatherservice    
+com.android.egg 
+com.android.printspooler 
+com.example.a62000435.box_fix 
+com.droidlogic.SubTitleService 
+org.xbmc.kodi jp.co.omronsoft.openwnn
+com.lonelycatgames.Xplore 
+com.example.a62000435.box_fix 
+com.droidlogic.SubTitleService
+com.droidlogic.FileBrower
+com.droidlogic.dig 
+com.android.wallpaper.holospiral 
+com.android.wallpapercropper
+com.android.soundrecorder 
+com.android.noisefield 
+com.android.phasebeam
+org.lineageos.trebuchet 
+org.lineageos.audiofx 
+com.android.email 
+com.android.dreams.basic"
 
-pmu com.android.providers.downloads.ui com.android.contacts com.android.nfc com.cyanogenmod.trebuchet org.cyanogenmod.weatherservice
+DELETE="/system/app/BCService
+/system/app/BasicDreams
+/system/app/EasterEgg
+/system/app/ShareLink
+/system/app/CatchFavorites_Zero
+/system/app/USBSettings
+/system/app/TasksProvider
+/system/app/SplitSoundService
+/system/app/SafetyInformation
+/system/app/PhotoTable
+/system/app/SBrowserEdge
+/system/priv-app/Tag
+/system/priv-app/smartfaceservice
+/system/priv-app/SetupWizard
+/system/priv-app/SecSetupWizard2015
+/system/priv-app/OmaCP
+/system/priv-app/KeyguardWallpaperUpdator
+/system/priv-app/LogsProvider
+/system/priv-app/GalaxyAppsWidget_Phone
+/system/priv-app/TaskEdgePanel
+/system/priv-app/EmergencyInfo
+/system/priv-app/Crane" 
 
-pmu com.android.cellbroadcastreceiver com.android.egg com.android.mms.service com.android.phone com.android.printspooler \
+if [[ $1 ]]; then
+PHONE="com.android.smspush 
+com.android.mms.service 
+com.android.server.telecom 
+com.android.cellbroadcastreceiver 
 com.android.providers.telephony
+com.android.messaging 
+com.android.phone 
+com.android.CarrierConfigerconfig"
+PHONEFOLDERS="telresources
+DialerReceiver
+CarrierConfig
+Dialer
+BlockedNumberProvider
+MmsService
+TeleService
+Telecom
+TelephonyProvider
+VpnDialogs"
+fi
 
-pmu com.example.a62000435.box_fix com.droidlogic.SubTitleService org.xbmc.kodi jp.co.omronsoft.openwnn \
-com.lonelycatgames.Xplore com.example.a62000435.box_fix com.droidlogic.SubTitleService \
-com.droidlogic.FileBrower \
-com.droidlogic.dig com.android.wallpaper.holospiral com.android.wallpapercropper \
-com.android.soundrecorder com.android.server.telecom com.android.noisefield com.android.phasebeam
+pmu $PMU $PHONE
 
-pmu org.lineageos.trebuchet org.lineageos.audiofx com.android.messaging com.android.email com.android.dreams.basic
 
-for dir in /data/app /system/app /system/priv-app; do
-	cd $dir
-	for crap in org.xbmc.ftmc com.xynotec.andboost com.google.android.youtube.tv \
-		Browser FileBrowser LatinIME Miracast Music PPPoE PhotoTable RemoteIME SubTitle VideoPlayer \
+for dir in '/' /data/app /system/app /system/priv-app; do
+	cd "$dir"
+	for crap in $DELETE $PMU $PHONEFOLDERS org.xbmc.ftmc com.xynotec.andboost com.google.android.youtube.tv \
+		Browser FileBrowser LatinIME Music PPPoE PhotoTable RemoteIME SubTitle VideoPlayer \
 		WAPPushManager WallpaperBackup WebViewGoogle Browser FileBrowser HTMLViewer LatinIME Miracast Music PPPoE \
 		PhotoTable RemoteIME SubTitle VideoPlayer WAPPushManager WallpaperBackup GoogleFeedback \
-		GooglePartnerSetup MusicFX ProxyHandler VpnDialogs DLNA PrintSpooler telresources GoogleTTS EasterEgg AntHalService \
-		BlockedNumberProvider CarrierConfig CellBroadcastReceiver Dialer EmergencyInfo MmsService TeleService Telecom \
-		TelephonyProvider; do
-		full=./*${crap}*
-		[[ -e $full ]] && rm -rf ${full}
-		rm -rf ${dir}/${crap}*
+		GooglePartnerSetup MusicFX ProxyHandler DLNA PrintSpooler EasterEgg AntHalService
+		do full=*"$dir/$crap"*
+		[[ -e "$full" ]] && rm -rfv *"${full}"* && ANG "Remover full $full\n"
+		[[ -e "${dir}/${crap}"* ]] && rm -rfv "${dir}/${crap}"* && ANG "Removed ${dir}/${crap}\n"
 	done
 done

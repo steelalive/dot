@@ -1,60 +1,3 @@
-src
-src
-systemctl restart sddm
-systemctl start sddm
-systemctl restart sddm
-mkinitcpio --all
-exit
-ls
-mount /dev/sda1 /boot
-mkinitcpio --all
-mkinitcpio --all
-ls /etc/mkinitcpio.d
-ls /boot
-nano /etc/mkinitcpio.d/linux.preset 
-mkinitcpio --all
-exit
-ls
-ls
-passwd 
-lsblk
-exit
-lsblk
-umount /sdk
-nano /etc/fstab
-mount -av
-exit
-nano /etc/profile
-src
-nano /etc/profile
-. /etc/profile
-src
-sudo su
-su root
-su root
-ls
-sudo su
-sudo root
-su root
-su root
-userctl
-loginctl
-loginctl kill-user master
-sudo su
-which su
-sudo root
-su root
-su root
-sudo su
-su root
-su root
-sudo su
-su root
-su root
-su root
-su root
-sudo systemctl start sddm
-sudo systemctl enable sddm
 pas pulseaudio
 sudo su
 src
@@ -497,4 +440,61 @@ chmod a+x /usr/local/bin/shfmt
 echo '**Enjoy shellscript!**'
 echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
 ls
+. env.sh
+rm -rf /tmp/makepkg
+ls
+env
+makepkgsu
+ls
+makepkgsu
+cd /tmp/makepkg/qt4/src/
+ls
+cd qt-everywhere-opensource-src-4.8.7
+ls
+cd /ext/yay/qt4
+gitreset
+rm -rf /tmp/makepkg
+ls
+makepkgsu
+ls
+makepkgsu
+cd /tmp/makepkg/qt4/src
+ls
+ca /ext/yay/qt4/PKGBUILD 
+pkgname=qt4
+pkgver=4.8.7
+pkgrel=28
+arch=('x86_64')
+url='https://www.qt.io'
+license=('GPL3' 'LGPL' 'FDL' 'custom')
+pkgdesc='A cross-platform application and UI framework'
+depends=('sqlite' 'ca-certificates' 'fontconfig' 'libgl' 'libxrandr' 'libxv' 'libxi' 'alsa-lib'         'xdg-utils' 'hicolor-icon-theme' 'desktop-file-utils' 'libmng' 'dbus')
+makedepends=('postgresql-libs' 'mariadb-libs' 'unixodbc' 'cups' 'gtk2' 'libfbclient'              'mesa')
+optdepends=('postgresql-libs: PostgreSQL driver'             'mariadb-libs: MariaDB driver'             'unixodbc: ODBC driver'             'libfbclient: Firebird/iBase driver'             'libxinerama: Xinerama support'             'libxcursor: Xcursor support'             'libxfixes: Xfixes support'             'icu: Unicode support'             'sni-qt: StatusNotifierItem (AppIndicators) support')
+replaces=('qt<=4.8.4')
+conflicts=('qt')
+_pkgfqn="qt-everywhere-opensource-src-${pkgver}"
+source=("https://download.qt.io/archive/qt/4.8/${pkgver}/${_pkgfqn}.tar.gz"         'qtconfig-qt4.desktop' 'assistant-qt4.desktop' 'designer-qt4.desktop'         'linguist-qt4.desktop' 'qdbusviewer-qt4.desktop'         'improve-cups-support.patch'         'moc-boost-workaround.patch'         'kubuntu_14_systemtrayicon.diff'         'kde4-settings.patch'         'glib-honor-ExcludeSocketNotifiers-flag.diff'         'disable-sslv3.patch'         'l-qclipboard_fix_recursive.patch'         'l-qclipboard_delay.patch'         'qt4-gcc6.patch' 'qt4-glibc-2.25.patch' 'qt4-icu59.patch' 'qt4-openssl-1.1.patch')
+sha256sums=('e2882295097e47fe089f8ac741a95fef47e0a73a3f3cdf21b56990638f626ea0'             '157eb47865f0b43e4717819783823c569127a2e9fc48309982ca0f2b753517a1'             'd63f22858174489068c30a12b9115d1b4e23ade00c31c117513212e9a225c1ce'             'c154de65da1b81564fa68f29c773b5f1751e0ee821e858ee8f0684b8d027da58'             '22bd69ee3ba986448a63e41f529a7d28d0f2e6d83d6114e763eba761db302e01'             '915a1cb0f7328840cac742c03f5121dc6e19498952c082b46c0bf7263bf6676d'             '3ccfefb432015e4a4ea967b030c51b10dcdfb1f63445557908ddae5e75012d33'             '876c681ef8fbcc25f28cd4ad6c697abf8a4165d540bae37433bc40256dbf9d62'             '9fad22674c5eec835613a7f16c11b865aa793b448e90974c0f804105284a548b'             'ce97da195445f145d9f82df8f8e5d8716128e869ec6632db66c7125be663d813'             'e7f8d1c906640b836454e8202a48602352609d8e44a33a3de05dc1d20f5b1a8a'             '829b02ba10f208c2beba8e8a0110b6d10c63932612dabc08d536f099b9f66101'             '5db36cbb0686b8a503941779c821febc4a0330dc260e51d603f7aa1e4d8860ad'             'af3648ddb2372333b0e428788fd2ffbcfe571653fb46f898a55ae5a202f7e242'             '51da49e41edac66559d3ec8dd0a152995a51a53e5d1f63f09fa089a8af7e3112'             'e6555f4a681227447e94e9f14e11626d50b7e5108aad06088311e87063bc0347'             '61d6bf45649c728dec5f8d22be5b496ed9d40f52c2c70102696d07133cd1750d'             'ff3ddb5428cd2ff243558dc0c75b35f470077e9204bbc989ddcba04c866c1b68')
+export pkgdir=/ext/yay/qt4
+export pkgsrc=/tmp/makepkg/qt4/src
+ls
+ca /ext/yay/qt4/PKGBUILD 
+  export QT4DIR="${srcdir}"/${_pkgfqn}
+  export LD_LIBRARY_PATH=${QT4DIR}/lib:${LD_LIBRARY_PATH}
+  cd ${_pkgfqn}
+  ./configure -confirm-license -opensource     -prefix /usr     -bindir /usr/lib/qt4/bin     -headerdir /usr/include/qt4     -docdir /usr/share/doc/qt4     -plugindir /usr/lib/qt4/plugins     -importdir /usr/lib/qt4/imports     -datadir /usr/share/qt4     -translationdir /usr/share/qt4/translations     -sysconfdir /etc/xdg     -examplesdir /usr/share/doc/qt4/examples     -demosdir /usr/share/doc/qt4/demos     -plugin-sql-{psql,mysql,sqlite,odbc,ibase}     -system-sqlite     -no-phonon     -no-phonon-backend     -no-webkit     -graphicssystem raster     -openssl-linked     -nomake demos     -nomake examples     -nomake docs     -silent     -no-rpath     -optimized-qmake     -no-reduce-relocations     -dbus-linked     -no-openvg
+make
+env
+ls
+export QT4DIR=/tmp/makepkg/qt4/src/qt-everywhere-opensource-src-4.8.7
+export LD_LIBRARY_PATH=/tmp/makepkg/qt4/src/qt-everywhere-opensource-src-4.8.7/lib
+  ./configure -confirm-license -opensource     -prefix /usr     -bindir /usr/lib/qt4/bin     -headerdir /usr/include/qt4     -docdir /usr/share/doc/qt4     -plugindir /usr/lib/qt4/plugins     -importdir /usr/lib/qt4/imports     -datadir /usr/share/qt4     -translationdir /usr/share/qt4/translations     -sysconfdir /etc/xdg     -examplesdir /usr/share/doc/qt4/examples     -demosdir /usr/share/doc/qt4/demos     -plugin-sql-{psql,mysql,sqlite,odbc,ibase}     -system-sqlite     -no-phonon     -no-phonon-backend     -no-webkit     -graphicssystem raster     -openssl-linked     -nomake demos     -nomake examples     -nomake docs     -silent     -no-rpath     -optimized-qmake     -no-reduce-relocations     -dbus-linked     -no-openvg
+make
+  ./configure -confirm-license -opensource     -prefix /usr     -bindir /usr/lib/qt4/bin     -headerdir /usr/include/qt4     -docdir /usr/share/doc/qt4     -plugindir /usr/lib/qt4/plugins     -importdir /usr/lib/qt4/imports     -datadir /usr/share/qt4     -translationdir /usr/share/qt4/translations     -sysconfdir /etc/xdg     -examplesdir /usr/share/doc/qt4/examples     -demosdir /usr/share/doc/qt4/demos     -plugin-sql-{psql,mysql,sqlite,odbc,ibase}     -system-sqlite     -no-phonon     -no-phonon-backend     -no-webkit     -graphicssystem raster     -openssl-linked     -nomake demos     -nomake examples     -nomake docs     -silent     -no-rpath     -optimized-qmake     -no-reduce-relocations     -dbus-linked     -no-openvg
+make
+make confclean
+  ./configure -confirm-license -opensource     -prefix /usr     -bindir /usr/lib/qt4/bin     -headerdir /usr/include/qt4     -docdir /usr/share/doc/qt4     -plugindir /usr/lib/qt4/plugins     -importdir /usr/lib/qt4/imports     -datadir /usr/share/qt4     -translationdir /usr/share/qt4/translations     -sysconfdir /etc/xdg     -examplesdir /usr/share/doc/qt4/examples     -demosdir /usr/share/doc/qt4/demos     -plugin-sql-{psql,mysql,sqlite,odbc,ibase}     -system-sqlite     -no-phonon     -no-phonon-backend     -no-webkit     -graphicssystem raster     -openssl-linked     -nomake demos     -nomake examples     -nomake docs     -silent     -no-rpath     -optimized-qmake     -no-reduce-relocations     -dbus-linked     -no-openvg
+make
+exit
 . env.sh
