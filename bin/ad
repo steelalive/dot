@@ -83,7 +83,7 @@ apk_to_() {
 	adbsu pm install -r -g "$apk"
 	return
 }
-adbsu() { adb shell magisk su -c "$@"; }
+adbsu() { adb shell su -c "$@"; }
 export -f adbsu
 adb_read() {
 	adbsu /data/dot/bin/remnt && return 0
@@ -320,9 +320,8 @@ pushall | sync-delete)
 	sync_delete $files_to_copy /data/dot
 	sync_delete /last/misc-android $ex
 	adbde push /last/dot.zip $ex
-	#	sync_delete -R /last/Magisk $ex
-	adbsu "/data/dot/slash/sbin/bash /data/dot/slash/pushthem"
-	adbsu ". /data/dot/slash/etc/mk"
+	adbsu "/data/dot/slash/sbin/bash -c /data/dot/slash/pushthem"
+	adbsu "source /data/dot/slash/etc/mk"
 	ANG "Sync completed! \n"
 	return
 	;;

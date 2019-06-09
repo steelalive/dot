@@ -82,3 +82,5 @@ appendpath '/dot/bin/final'
 [[ "$USER" = root ]] && . /dot/init.sh
 }
 
+
+export ANDROID_HOME=~/Android/Sdk

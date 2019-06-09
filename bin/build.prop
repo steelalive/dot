@@ -872,5 +872,5 @@ vidc.debug.perf.mode=2
 video.accelerate.hw=1
 video.accelerate.hw=wifi.supplicant_scan_interval=30
 wlan.wfd.hdcp=disable
-
+qemu.hw.mainkeys=1
 ###!!PROPER_SYS_END!!##

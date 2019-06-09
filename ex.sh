@@ -16,7 +16,7 @@ if [[ $SHELL = *bash* ]]; then
 fi
 is_pc && is_root && {
 	#zip -urq /last/BACKUP/etc.zip /etc &>/dev/null
-	#zip -urq /last/BACKUP/dot.zip /dot &>/dev/null
+	#zip -urq /last/BACKUP/dot.zip /dot &>/dev/nullglob
 	if tty | grep 1 &>/dev/null; then
 		zip -rq -FS /last/dot.zip /dot
 	fi
@@ -28,7 +28,8 @@ is_android && {
 set -a
 eval "$(dircolors --sh $dot/.dir_colors)"
 if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
-#	export NET=eth0
+	
+	export NET=eth0
 	$dot/bin/wp
 	touch /tmp/INIT
 	mkdir -p /tmp &>/dev/null
@@ -266,7 +267,7 @@ netmask='255.255.255.0'
 no_proxy='localhost,127.0.0.1,localaddress,.localdomain.com'
 pc='192.168.0.20'
 tv='192.168.0.9'
-cell='192.168.0.8'
+cell='192.168.2.24'
 #[[ ! -e /oem ]] && ex="$(ad ex 2>/dev/null)"
 [[ -e "$dot"/slash ]] && export slash="$dot"/slash
 [[ -e "$dot"/bin/wp ]] && eval "$(grep -m1 'WPCONF' "$dot"/bin/wp | sed 's/\[\[.*&& //')"

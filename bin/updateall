@@ -8,8 +8,8 @@ wp || exit
 [[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR
 
 suuser "yay -Syu --devel --needed --noconfirm"
-paccache --keep 1 --verbose --remove
 suuser -c "yay -S --needed --noconfirm -ua"
+paccache --keep 1 --verbose --remove
 is_in_path go && go get -u all
 
 for i in /root/.gem/ruby/*/bin /root/.gem/ruby/*/ /root/.gem/ruby /root/.gem /root /root/.vim_runtime /ext/opt/diet/bin /ext/opt/diet /ext/opt /ext /ext/opt/gcc-UBERTC/bin ; do
@@ -32,8 +32,8 @@ is_in_path bundle && bundle update
 pacman -Q | awk '{print $1}' >/packages.list
 
 rm -rf /tmp/makepkg
-ncu -g
-npm doctor
+$(ncu -g | grep 'npm -g install ')
+npm doctor 
 
 [[ $1 ]] && {
 npm install --global npm@latest

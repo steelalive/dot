@@ -39,7 +39,7 @@ elif [[ $PWD == /ext ]]; then
 else
 	return
 fi
-unset CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE ROM_LUNCH
+unset O OUT_DIR CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE ROM_LUNCH
 
 O=/ext/out
 OUT_DIR=$O
@@ -49,6 +49,7 @@ OUT_DIR=$O
 #APP_CFLAGS='-O3 -mcpu=cortex-a9'
 #CFLAGS='=Wnoerror'
 #CXXFLAGS='-Wnoerror'
+#LDFLAGS='-Wnoerror'
 #rom=zerojflt
 #CFLAGS='-march=armv7-a+neon-vfpv4 -mandroid -marm -O3 -w32 -fPIE -fPIC -mfpu=neon-vfpv4 -pipe -fno-plt'
 #CFLAGS='-march=armv7-a -mtune=cortex-a53 -O3 -w32 -fPIE -fPIC -mfloat-abi=hard -mfpu=neon -pipe -fno-plt'
@@ -78,6 +79,7 @@ ARCH="arm64"
 #CONFIG_CROSS_COMPILE="/opt/aarch64-linux-android-gcc/bin/aarch64-linux-android-"
 #CONFIG_CROSS_COMPILE="$CROSS_COMPILE"
 #TARGET_TOOLS_PREFIX="$CROSS_COMPILE"
+CM_ROOT=$O
 NDK_DEBUG=0
 GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01;33:quote=01;34'
 CXX='zapcc++'
@@ -106,17 +108,18 @@ TOPDIR="$TOP/"
 USER='root'
 OVERRIDE_RUNTIMES=runtime_libart_default
 USE_CCACHE=1
-USE_NINJA='true'
+#USE_NINJA='true'
 WITH_SU='true'
 _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Xmx5g'
 ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx5G"
 JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m"
 #ROM_LUNCH='lineage'
-BREAKFAST_DEVICE="$rom"
+#BREAKFAST_DEVICE="$rom"
 REPO_INIT_OPTS='--depth=1 --no-clone-bundle'
 REPO_SYNC_OPTS='--force-sync --force-broken --current-branch --no-tags --no-clone-bundle --optimized-fetch --prune'
 REPO_SYNC_THREADS="$(nproc --all)"
 KCONFIG_NOTIMESTAMP=true
+BUILD_WITH_COLORS=1
 #TARGET_PREBUILT_KERNEL="$O/kernel.prebuilt"
 ccache -M 50G
 cd "$src" || return
@@ -131,7 +134,7 @@ set +a
 combo() { choosecombo 2 lineage_$VENDOR eng; }
 srcenv() {
 	killall java zapccs
-	rmrf "/tmp/jack-"
+	rmrf "/tmp/jack-" /tmp/*.log
 	. /dot/setpath.sh aosp
 	mka otapackage -j$(nproc --all)
 	#mka updatepackage -j$(nproc --all)
@@ -150,13 +153,16 @@ fi
 #	cp /last/misc-android/BOOTANIMS/Pixel_2_Dark_No_Text/bootanimation.zip $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip 2 &>/dev/null
 #}
 [[ -e kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig ]] || cp kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltexx_defconfig kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
-. $src/build/envsetup.sh
+. build/envsetup.sh
 export -f add_lunch_combo
 unset reposync
-lunch 
+lunch lineage_zerofltecan-userdebug
+#lunch rr_zerofltecan-userdebug
 croot
 #combo
 #ln -s /usr/bin/python2.7 $O/host/linux-x86/bin/python 2>/dev/null
+
+#cp -av /dot/info/.config /src/kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
 ln -sf /usr/bin/python2.7 /usr/androbin/python 2>/dev/null
 #[[ -e /dot/info/harpia_defconfig ]] && cp -av /dot/info/harpia_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/harpia_defconfig
 #cp -av /dot/info/msm8916_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/
@@ -167,7 +173,6 @@ ln -sf /usr/bin/python2.7 /usr/androbin/python 2>/dev/null
 
 echo "hmm?"
 . /dot/setpath.sh aosp
-/dot/bin/yorn && {
-	ln -s "$(command -v adb)" /usr/androbin 2>/dev/null
+#/dot/bin/yorn && {
+	#ln -s "$(command -v adb)" /usr/androbin 2>/dev/null
 	srcenv
-}

@@ -22,11 +22,11 @@ if [[ $1 = t ]]; then
 	return
 	exit
 else
-	if [ -e /external_sd ]; then
-		[ $- != *i* ] || {
+	if [[ -e /external_sd ]]; then
+		[[ $- != *i* ]] || {
 			mkdir -p /bin
 			cp -av /sbin/bash /bin/
-			[ -e /sbin/rc ] && . /sbin/rc few
+			[[ -e /sbin/rc ]] && . /sbin/rc few
 		}
 	fi
 fi

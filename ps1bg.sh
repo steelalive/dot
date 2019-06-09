@@ -14,7 +14,7 @@ export cpu_freq_max cpu_temp_max mem_total
 load_cpu() {
 	({
 		cat /proc/stat
-		sleep 4
+		sleep 10
 		cat /proc/stat
 	} |
 		awk '/^cpu / {usr=$2-usr; sys=$4-sys; idle=$5-idle; iow=$6-iow} END {total=usr+sys+idle+iow; printf "%.f\n", (total-idle)*100/total}' 2>/dev/null) 2>/dev/null 1>>/tmp/loadcpu
@@ -159,7 +159,7 @@ sys_color() {
 		esac
 		l_sep="\u2768"
 		r_sep="\u2769"
-		printf "%b" "$R\x1b[1;38;2;${color}m$l_sep$echo_out$r_sep$R"
+		printf "%b" "${R}\x1b[1;38;2;${color}m${l_sep}${echo_out}${r_sep}${R}"
 	done
 }
 
@@ -172,11 +172,10 @@ limit_ps1="${limit_ps1:-400}"
 touch /tmp/prompt /tmp/loadcpu /tmp/START.1
 ((UID > 0)) && sudo chmod 777 /tmp/prompt /tmp/loadcpu /tmp/START*.* "$dot"
 count_bg=0
-ps1_writer() {
-    printf "%b" '\n\n\n\r\t\t\n'
+ps1_writer() 
+{
 	while ((count_bg < limit_ps1)); do
-		{
-			count_bg=$((count_bg + 1))
+		{ count_bg=$((count_bg + 1))
 			load_cpu &
 			sys_color $sys_color_options
 			[[ $count_bg -gt $((limit_ps1 - 20)) ]] && ANBR "|$count_bg|" && echo "1" >/tmp/prompt_restart

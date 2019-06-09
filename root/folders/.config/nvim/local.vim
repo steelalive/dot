@@ -14,13 +14,11 @@ call dein#add('abudden/EasyColour')
 call dein#add('altercation/vim-colors-solarized')
 call dein#add('autozimu/LanguageClient-neovim', { 'build': 'bash install.sh' })
 call dein#add('bounceme/base.vim')
-call dein#add('chriskempson/base16-vim')
 call dein#add('crusoexia/vim-dream')
 call dein#add('dracula/vim')
 call dein#add('dylanaraps/wal.vim')
 call dein#add('exitface/synthwave.vim')
 call dein#add('farmergreg/vim-lastplace')
-call dein#add('flazz/vim-colorschemes')
 call dein#add('fmoralesc/molokayo')
 call dein#add('fortes/vim-escuro')
 call dein#add('godlygeek/tabular')
@@ -48,7 +46,7 @@ call dein#add('w0rp/ale')
 call dein#add('wokalski/autocomplete-flow')
 call dein#add('wsdjeg/dein-ui.vim')
 call dein#add('yuttie/hydrangea-vim')
-"call dein#add('')
+call dein#add('tomasiser/vim-code-dark')
 "call dein#add('')
 "call dein#add('')
 "call dein#add('')
@@ -97,7 +95,7 @@ let g:ycm_filetype_blacklist = {
 	let g:airline_symbols.spell = 'Ꞩ'
 	let g:airline_symbols.whitespace = 'Ξ'
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-let g:AirlineTheme = 'papercolor'
+let g:AirlineTheme = 'codedark'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#show_buffers = 0
@@ -141,7 +139,7 @@ set iskeyword+=-      " Treat dash separated words as word text objects (for ciw
 set modeline
 set more
 set nobackup          " most files are in git anyways
-set nobackup nowb noswf noudf nobackup nowritebackup noswapfile noundofile
+set nowb noswf noudf nobackup nowritebackup noswapfile noundofile
 set noerrorbells      " don't beep
 set nofoldenable
 set nonumber
@@ -166,10 +164,16 @@ set termguicolors
 set textwidth=0       " disable automatic word wrapping (newlines)
 set title             " change the title of the terminal
 set ttyfast           " faster redraws
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='10,\"100,:20,%,n~/.viminfo
 set undolevels=1000   " save more levels of undo
 set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc,*.class
 set wildmenu          " visual autocomplete for command menu
-set wildmode=list,full
+"set wildmode=list,full
 syntax enable         " enables syntax highlighting
 
 if (empty($TMUX))
@@ -205,8 +209,12 @@ let g:colorminder_scheme_default_term = 'jellybeans'
 let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
 let s:swcolors = map(paths, 'fnamemodify(v:val, ":t:r")')
 let s:swskip = [ '256-jungle', '3dglasses', 'calmar256-light', 'coots-beauty-256', 'grb256' ]
-let s:swback = 0    " background variants light/dark was not yet switched
+let s:swback = 1    " background variants light/dark was not yet switched
 let s:swindex = 0
+
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
 
 function! SwitchColor(swinc)
 
@@ -1276,5 +1284,17 @@ endfunction
 autocmd Syntax * call AddQtSyntax()
 autocmd CursorHold * call UpdateMocFiles()
 autocmd BufNewFile,BufRead * call SetCodingStyle()
+"Restore cursor position
+function! ResCur()
+  if line("'\"") <= line("$")
+    normal! g`"
+    return 1
+  endif
+endfunction
 
+augroup resCur
+  autocmd!
+  autocmd BufWinEnter * call ResCur()
+augroup END
+"End
 " vim: sw=4 sts=4 et

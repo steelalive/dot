@@ -19,7 +19,7 @@ ping_address() {
 		relentless_ping "$@"
 		return "$?"
 	}
-	[[ $1 == long ]] || ping -A -b -c1 -i0.2 -W1 -q -l3 -I "$NET" "$1"
+	[[ $1 == long ]] || ping -A -b -c1 -i0.2 -W1 -q -l3 "$1"
 	return $?
 }
 relentless_ping() {

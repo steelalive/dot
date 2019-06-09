@@ -5,7 +5,7 @@
 export cmd=' androidboot.selinux=permissive buildvariant=eng threadirqs nowatchdog fsck.repair=yes commit=30 errors=remount-ro rootfstype=ext4 raid=noautodetect plymouth.enable=0 smsc95xx.turbo_mode=N net.ifnames=0 noatime libahci.ignore_sss=1 cgroup_disable=memory sysrq_always_enabled'
 
 [[ -e /system ]] && mount -o remount,rw /system
-for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build.prop /system/build.prop /default.prop default.prop build.prop "$@"; do
+for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build.prop /system/build.prop /default.prop default.prop build.prop /vendor/build.prop "$@"; do
 	[[ -r $i ]] || continue
 	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
 		-e "s/ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
@@ -25,13 +25,13 @@ for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build
 		-e "s/ro.product.locale=.*/ro.product.locale=en-CA/" \
 		-e "s/ro.build.flavor=.*/ro.build.flavor=zerofltecan-user/" \
 		-e "s/=US$/=CA/" \
-		-e "s/ro.sf.lcd_density=640/ro.sf.lcd_density=640/" \
+		-e "s/ro.sf.lcd_density=.*/ro.sf.lcd_density=640/" \
 		-e "s/ro.product.model=.*/ro.product.model=SM-G920W8/" \
 		-e "s/ro.sf.lcd_density=.*/ro.sf.lcd_density=640/" \
 		-e "s|=q201$|=S912|" \
-		-e "s|zerofltexx|zerofltecan|" \
-		-e "s|zeroflte???$|zerofltecan|" \
-		-e "s|zeroflte??$|zerofltecan|" \
+		-e "s|zerofltexx|zerofltecan|g" \
+		-e "s|zeroflte???$|zerofltecan|g" \
+		-e "s|zeroflte??$|zerofltecan|g" \
 		-e "s|=q9377$|=S912|" \
 		-e "s/=cortex-a7$/=cortex-a53/" \
 		-e "s/ro.platform.has.pppoe=true$/ro.platform.has.pppoe=false/" \

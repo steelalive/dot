@@ -23,6 +23,7 @@ ln -sf $slash/EST5EDT /system/etc/localtime
 ln -sf $slash/etc/gps.conf /system/etc/gps.conf
 ln -sf $slash/etc/gps.conf /system/vendor/etc/gps.conf
 ln -sf $slash/etc/nfsinjector/service.sh /system/etc/init.d/
+cat $ex/kernel.sh >/system/etc/init.d/kernel.sh
 mkdir -p /system/etc/ssh
 [ -e /system/etc/ssh/sshd_config ] || ln -s /dot/etc/folders/ssh/sshd_config /system/etc/ssh/sshd_config
 [ -e /system/etc/highlight ] || ln -s $slash/etc/highlight /system/etc
@@ -37,7 +38,6 @@ echo "Initialize system..."
 [ -e /external_sd ] || . /system/etc/mkshrc
 busybox mount -o rw,remount /system
 /data/dot/bin/remnt
-cat $ex/kernel.sh >/system/etc/init.d/kernel.sh
 chmod 777 /system/etc/init.d/kernel.sh
 echo "System init completed!"
 cat $dot/bin/build.prop >/data/local.prop
@@ -68,24 +68,25 @@ if [ ! -e /external_sd ] && ! settings list system | grep 'en-US,fr-CA'; then
 	settings put secure lockscreen.disabled 1
 	set +x
 fi
-nocopy=' -e KitanaTweak -e MidnightCore -e PXM -e terminal_debloater -e terminal_systemizer -e xposed'
-core=/sbin/.core/img
-[ -e /data/adb/magisk.img ] || { [ -e $ex/magisk.img ] && cp $ex/magisk.* /data/adb/; }
-if [ ! -e $core ]; then
-	mkdir -p /magisk
-	mount $ex/magisk.img /magisk
-	core=/magisk
-fi
-if [[ -e $core ]]; then
-	cd $core || exit
-	for i in "$core"/*; do
-		grep -o $nocopy <<<$i &>/dev/null || continue
-		folder="$i/system"
-		[ -e $folder ] || continue
-		toybox cp -a --preserve=a "$folder" / || busybox cp -au "$folder" /
-	done
-	[ -e /data/adb/magisk.img ] && busybox cp -avu /data/adb/magisk.* $ex/
-fi
-rm_empty_dir /system/app/* /system/priv-app/*
+#nocopy=' -e KitanaTweak -e MidnightCore -e PXM -e terminal_debloater -e terminal_systemizer -e xposed'
+#core=/sbin/.core/img
+#[ -e /data/adb/magisk.img ] || { [ -e $ex/magisk.img ] && cp $ex/magisk.* /data/adb/; }
+#if [ ! -e $core ]; then
+#	mkdir -p /magisk
+#	mount $ex/magisk.img /magisk
+#	core=/magisk
+#fi
+#if [[ -e $core ]]; then
+#	cd $core || exit
+#	for i in "$core"/*; do
+#		grep -o $nocopy <<<$i &>/dev/null || continue
+#		folder="$i/system"
+#		[ -e $folder ] || continue
+#		toybox cp -a --preserve=a "$folder" / || busybox cp -au "$folder" /
+#	done
+#	[ -e /data/adb/magisk.img ] && busybox cp -avu /data/adb/magisk.* $ex/
+#fi
+rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
+proper && echo "Proper executed sucessfully"
 echo "Done!"
 # vi: ft=sh

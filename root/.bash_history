@@ -1,11 +1,3 @@
-pas pulseaudio
-sudo su
-src
-sudo reboot
-src
-mount
-e fstab
-nano /etc/fstab
 exit
 lsblk
 exit
@@ -498,3 +490,11 @@ make confclean
 make
 exit
 . env.sh
+. build/envsetup.sh 
+srcenv
+. build/envsetup.sh 
+lunch
+brunch
+breakfast
+mka otapackage
+exit

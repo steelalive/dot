@@ -182,10 +182,11 @@ if [[ -e $arg1 ]]; then
 	"${execute}" "${arg1}" $arg2
 	exit
 fi
-type -P "${arg1}" &>/dev/null || file_path="${type -P ${arg1}}"
-  if [[ -e $file_path ]]; then
+type -P "${arg1}" &>/dev/null || file_path="$(type -P "${arg1}" | head -n1)"
+  if [[ -e "$file_path" ]]; then
   ▏   "${execute}" "${file_path}" $arg2
   ▏   exit
+      exit
   fi
 
 

@@ -1,4 +1,3 @@
-/prog/AIK-Linux/_ZY2242NPXP_boot/split_img/boot.img-cmdline 1 513
 /prog/AIK-Linux/ramdisk/sbin/mkshrc 1 11
 /prog/AIK-Linux/_ZY2242NPXP_boot/ramdisk/fstab.qcom 2 64
 /last/G4/HARPIA_NPI26.48-43_cid50_subsidy-DEFAULT_regulatory-DEFAULT_CFC.xml/flashfile.xml 31 23
@@ -198,3 +197,4 @@
 /src/.repo/local_manifests/local.xml 8 1
 /src/device/samsung/zerofltecan/device-proprietary-blobs.txt 11 1
 /ext/yay/neovim-youcompleteme-core-git/PKGBUILD 77 45
+/src/device/samsung/zerofltecan/AndroidProducts.mk 2 22
