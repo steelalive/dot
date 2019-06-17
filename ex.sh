@@ -29,7 +29,7 @@ set -a
 eval "$(dircolors --sh $dot/.dir_colors)"
 if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	
-	export NET=eth0
+	NET=eth0
 	$dot/bin/wp
 	touch /tmp/INIT
 	mkdir -p /tmp &>/dev/null
@@ -56,6 +56,7 @@ fi
 if [[ -d /last/dot ]]; then
 	VERSION_CONTROL=numbered cp -av --dereference --strip-trailing-slashes --update --context --backup /dot /last/ &>/dev/null
 fi
+
 pgrep ssh-agent &>/dev/null || ssh-agent >/tmp/ssh-agent 2>/dev/null
 
 if [[ $HOSTNAME == PC ]]; then
@@ -180,8 +181,18 @@ GIT_PS1_HIDE_IF_PWD_IGNORED='true'
 GIT_PS1_SHOWCOLORHINTS='true'
 GIT_PS1_SHOWDIRTYSTATE='true'
 GIT_PS1_SHOWUPSTREAM='auto'
-CFLAGS="-march=native -O3 -pipe -fno-plt --param=ssp-buffer-size=4"
-CXXFLAGS="$CFLAGS"
+CGO_CFLAGS="-g -Ofast -O3 -O2"
+CGO_CXXFLAGS="-g -Ofast -O3 -O2"
+CGO_FFLAGS="-g -Ofast -O3 -O2"
+CGO_LDFLAGS="-g -Ofast -O3 -O2"
+GIT_PROMPT_COMMAND_FAIL="😠 ${Red}✘ "
+GIT_PROMPT_COMMAND_OK="😊 ${Green}✔  "
+CHARSET=UTF-8
+CPPFLAGS="-O3"
+FCFLAGS="-g -O3"
+FFLAGS="-g -O3"
+CFLAGS="-march=native -O3 -pipe -m64 -fno-plt --param=ssp-buffer-size=4 "
+CXXFLAGS="$CFLAGS -ftree-vectorize"
 LDFLAGS="-Wl,-O3,--sort-common,--as-needed,-z,relro,-z,now"
 CC='zapcc'
 CXX='zapcc++'
@@ -249,6 +260,7 @@ QT_X11_NO_MITSHM=1
 USE_PREBUILT_CHROMIUM=1
 VISUAL="$EDITOR"
 WIRELESS_REGDOM='DE'
+kernel="${kernel:-$src/kernel/samsung/exynos7420}"
 WPCONF="$dot/bin/wpa_supplicant.conf"
 WWW_HOME='http://www.google.com/ncr'
 XZ_OPT='-T 0'

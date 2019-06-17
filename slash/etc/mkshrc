@@ -1,23 +1,49 @@
-# Copyright (c) 2010, 2012, 2013, 2014
-#	Thorsten Glaser <tg@mirbsd.org>
+# Copyright (c) 2010
+#	Thorsten Glaser <t.glaser@tarent.de>
 # This file is provided under the same terms as mksh.
 #-
 # Minimal /system/etc/mkshrc for Android
-#
-# Support: https://launchpad.net/mksh
 
-: ${HOSTNAME:=$(getprop ro.cm.device)}
-: ${HOSTNAME:=$(getprop ro.product.device)}
-: ${HOSTNAME:=android}
-: ${TMPDIR:=/data/local/tmp}
-[[ -e /data/dot/root ]] && HOME=/data/dot/root
-export HOSTNAME TMPDIR HOME
+: ${TERM:=xterm-256color} ${HOME:=/sdcard} ${MKSH:=/system/bin/sh} ${HOSTNAME:=S6}
+: ${SHELL:=$MKSH} ${USER:=$(getprop ro.product.device)}
+if (( USER_ID )); then PS1='$'; else PS1='#'; fi
 
-if ((USER_ID)); then PS1='$'; else PS1='#'; fi
-[[ -e /system/etc/mk ]] && . /system/etc/mk
-if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
-	hash resize 2>/dev/null && resize
+if test -x /data/dot/slash/sbin/bash; then 
+  MKSH=/data/dot/slash/sbin/bash
+  SHELL=$MKSH
 fi
 
-[[ -e /data/dot/slash/etc/mk ]] && . /data/dot/slash/etc/mk
-#export PATH=/system/xbin:/system/bin:/vendor/bin:/bin:/sbin:/system/sbin:/data/dot/slash/sbin:/data/dot/bin:/data/dot/bin/final:/data/dot
+PS1='$USER@$HOSTNAME:${PWD:-?} '"$PS1 "
+if [ -d "/sbin/.magisk/busybox" ]; then
+  BBDIR="/sbin/.magisk/busybox"
+elif [ -d "/sbin/.core/busybox" ]; then
+  BBDIR="/sbin/.core/busybox"
+fi
+PATH=$PATH:/sbin:$BBDIR:.
+export TERM HOME MKSH HOSTNAME SHELL USER PATH
+# Place your own aliases in /sdcard/.aliases for ease.
+
+for p in ~/.bin; do
+	[[ -d $p/. ]] || continue
+	[[ :$PATH: = *:$p:* ]] || PATH=$p:$PATH
+done
+
+unset p
+
+#if [ -f "/sdcard/.aliases" ]; then
+#  . "/sdcard/.aliases"
+#fi
+
+########## -INIT-  ##########y
+
+#mount -o remount,hidepid=0 /proc
+busybox mount -o remount,rw / 2>/dev/null
+busybox mount -o remount,rw /system 2>/dev/null
+/data/dot/slash/sbin/remnt 2>/dev/null
+ln -s /data/dot/slash/etc/mk / 2>/dev/null
+ln -s /data/dot/slash/etc/rc / 2>/dev/null
+ln -s /data/dot/slash / 2>/dev/null
+chmod 777 -R /data/dot 2>/dev/null
+########## _INIT_ ###########
+. /data/dot/slash/etc/mk
+

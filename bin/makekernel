@@ -5,18 +5,36 @@
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/makekernel_#######################..::#3#
 
-KERNEL_DIR=$kernel
+KERNEL_DIR=$src$kernel
 OUT_DIR=$KERNEL_DIR
+cd $src
 
-	make -j4  CFLAGS_MODULE="-fno-pic" -C kernel/samsung/exynos7420 O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 \
-	CROSS_COMPILE="/usr/bin/ccache aarch64-linux-android-" Image && 
-	(if grep -q '^CONFIG_OF=y' /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ/.config; then
-		echo \"Building DTBs\"; 			
-		make -j4  CFLAGS_MODULE=\"-fno-pic\" -C kernel/samsung/exynos7420 O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 \
-		CROSS_COMPILE=\"/usr/bin/ccache aarch64-linux-android-\" dtbs; 		fi ) && 
-		(if grep -q '^CONFIG_MODULES=y' /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ/.config; then
-			echo \"Building Kernel Modules\"; 			
-			make -j4  CFLAGS_MODULE=\"-fno-pic\" -C kernel/samsung/exynos7420 O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 
-			CROSS_COMPILE=\"/usr/bin/ccache aarch64-linux-android-\" modules; 		
-		fi )
-
+#	make -j4  CFLAGS_MODULE="-fno-pic" -C kernel/samsung/exynos7420 O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 \
+#	CROSS_COMPILE="/usr/bin/ccache aarch64-linux-android-" Image && 
+#	(if grep -q '^CONFIG_OF=y' /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ/.config; then
+#		echo \"Building DTBs\"; 			
+#		make -j4  CFLAGS_MODULE=\"-fno-pic\" -C kernel/samsung/exynos7420 O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 \
+#		CROSS_COMPILE=\"/usr/bin/ccache aarch64-linux-android-\" dtbs; 		fi ) && 
+#		(if grep -q '^CONFIG_MODULES=y' /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ/.config; then
+#			echo \"Building Kernel Modules\"; 			
+#			make -j4  CFLAGS_MODULE=\"-fno-pic\" -C kernel/samsung/exynos7420 O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 
+#			CROSS_COMPILE=\"/usr/bin/ccache aarch64-linux-android-\" modules; 		
+#		fi )
+mkdir -pv $O/target/product/zerofltecan/obj/KERNEL_OBJ
+		 ( make -j2 -C kernel/samsung/exynos7420 \
+			O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 \
+			CROSS_COMPILE="/usr/bin/ccache $CROSS_COMPILE" \
+			CROSS_COMPILE_ARM32="$CROSS_COMPILE_ARM32"   Image ) && \
+			(if grep -q '^CONFIG_OF=y' /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ/.config; then 
+			echo "Building DTBs"; 			 
+			make -j2 -C kernel/samsung/exynos7420 \
+			O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ \
+			ARCH=arm64 CROSS_COMPILE="/usr/bin/ccache $CROSS_COMPILE" \
+					CROSS_COMPILE_ARM32="$CROSS_COMPILE_ARM32"   dtbs; 		fi ) && 
+			(if grep -q '=m' /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ/.config; then 			
+						echo "Building Kernel Modules"; 			 
+						make -j2 -C kernel/samsung/exynos7420 \
+							O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 \
+							CROSS_COMPILE="/usr/bin/ccache $CROSS_COMPILE" \
+							CROSS_COMPILE_ARM32="$CROSS_COMPILE_ARM32"   modules
+												fi )

@@ -40,9 +40,8 @@ else
 	return
 fi
 unset O OUT_DIR CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE ROM_LUNCH
-
-O=/ext/out
-OUT_DIR=$O
+O='/ext/out'
+OUT_DIR="$O"
 #abi=soft
 #CFLAGS="-Wnoerror -march=armv7 -mandroid -marm -O3 -mtune=cortex-a9 -w32 -fPIC -O2 -pipe -fno-plt"
 #	LDFLAGS="-march=armv7"
@@ -57,8 +56,8 @@ OUT_DIR=$O
 #LDFLAGS='-march=armv7 -mfpu=netdev_max_backlogn -mfloat-abi=hard -pie -Wl,--fix-cortex-a7'
 rom='zerofltecan'
 DEVICE_COMMON='zero-common'
-VENDOR=samsung
-DEVICE=zerofltecan
+VENDOR='samsung'
+DEVICE='zerofltecan'
 #ARCH='arm'
 #CARCH='armv7'
 CC='zapcc'
@@ -73,29 +72,40 @@ CCACHE_TEMPDIR='/tmp/.ccache'
 #CROSS_COMPILE="aarch64-linux-android-"
 #CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
 ARCH="arm64"
-#CROSS_COMPILE='/src/prebuilts/gcc/linux-x86/arm/arm-eabi-7.3/bin/arm-eabi-'
+CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
+CROSS_COMPILE_ARM32='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
+#CROSS_COMPILE=/src/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+#CROSS_COMPILE_ARM32=/src/preb
+#CROSS_COMPILE=/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+#CROSS_COMPILE_ARM32=/src/prebuilts/linaro/linux
 #CROSS_COMPILE='/usr/bin/arm-none-eabi-'
-#CROSS_COMPILE='/opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-'
 #CONFIG_CROSS_COMPILE="/opt/aarch64-linux-android-gcc/bin/aarch64-linux-android-"
-#CONFIG_CROSS_COMPILE="$CROSS_COMPILE"
+CONFIG_CROSS_COMPILE="$CROSS_COMPILE"
 #TARGET_TOOLS_PREFIX="$CROSS_COMPILE"
 CM_ROOT=$O
 NDK_DEBUG=0
-GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01;33:quote=01;34'
 CXX='zapcc++'
-CXXFLAGS="$CFLAGS"
+#CXXFLAGS="$CFLAGS"
 #TARGET_USE_SDCLANG='true'
 #SDCLANG_PATH='prebuilts/clang/linux-x86/host/sdclang-3.8/bin'
 #SDCLANG_LTO_DEFS='device/qcom/common/sdllvm-lto-defs.mk'
 dot='/dot'
-kernel=$src/kernel/samsung/exynos7420
+kernel="$src/kernel/samsung/exynos7420"
 LANG='C'
 LC_ALL='C'
 LC_COLLATE='C'
-LC_TIME=C
+LC_TIME='C'
 MAKEFLAGS='-j4'
 NDK='/ext/opt/ndk-bundle'
 OUT_DIR=$O
+ANDROID_NDK_ROOT='/ext/opt/ndk-bundle'
+ANDROID_API="android-28"
+ANDROID_ARCH="arm64"
+ANDROID_SYSROOT="$ANDROID_NDK_ROOT/platforms/$_ANDROID_API/$ANDROID_ARCH"
+ANDROID_DEV="$ANDROID_NDK_ROOT/platforms/$_ANDROID_API/$ANDROID_ARCH/usr"
+HOSTCC="$CC"
+ANDROID_TOOLCHAIN="$CROSS_COMPILE"
+
 #OUT_DIR_COMMON_BASE=$O
 #SHELL="${SHELL:-"$(command -v bash 2>/dev/null || command -v sh 2>/dev/null)"}"
 #JAVA_HOME='/usr/lib/jvm/default'
@@ -108,18 +118,21 @@ TOPDIR="$TOP/"
 USER='root'
 OVERRIDE_RUNTIMES=runtime_libart_default
 USE_CCACHE=1
-#USE_NINJA='true'
+USE_NINJA='true'
 WITH_SU='true'
 _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Xmx5g'
 ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx5G"
 JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m"
 #ROM_LUNCH='lineage'
 #BREAKFAST_DEVICE="$rom"
+result="$(printf "%s" $O/target/product/*)"
 REPO_INIT_OPTS='--depth=1 --no-clone-bundle'
 REPO_SYNC_OPTS='--force-sync --force-broken --current-branch --no-tags --no-clone-bundle --optimized-fetch --prune'
 REPO_SYNC_THREADS="$(nproc --all)"
 KCONFIG_NOTIMESTAMP=true
 BUILD_WITH_COLORS=1
+ANDROID_MAJOR_VERSION=28
+LLVM_ENABLE_THREADS=1
 #TARGET_PREBUILT_KERNEL="$O/kernel.prebuilt"
 ccache -M 50G
 cd "$src" || return
@@ -135,10 +148,8 @@ combo() { choosecombo 2 lineage_$VENDOR eng; }
 srcenv() {
 	killall java zapccs
 	rmrf "/tmp/jack-" /tmp/*.log
-	. /dot/setpath.sh aosp
-	mka otapackage -j$(nproc --all)
+	mka otapackage -j$(nproc --all) || beep.sh
 	#mka updatepackage -j$(nproc --all)
-	beep.sh
 }
 
 cd "$src" || return
@@ -152,7 +163,7 @@ fi
 #[[ -e $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip ]] || {
 #	cp /last/misc-android/BOOTANIMS/Pixel_2_Dark_No_Text/bootanimation.zip $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip 2 &>/dev/null
 #}
-[[ -e kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig ]] || cp kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltexx_defconfig kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
+#[[ -e kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig ]] || cp kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltexx_defconfig kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
 . build/envsetup.sh
 export -f add_lunch_combo
 unset reposync
@@ -161,9 +172,10 @@ lunch lineage_zerofltecan-userdebug
 croot
 #combo
 #ln -s /usr/bin/python2.7 $O/host/linux-x86/bin/python 2>/dev/null
-
+[[ -e $src/buildspec.mk ]] || cp -av $src/build/make/buildspec.mk.default $src/buildspec.mk
 #cp -av /dot/info/.config /src/kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
 ln -sf /usr/bin/python2.7 /usr/androbin/python 2>/dev/null
+sed "s|/cm/|/lineage/|" -i $src/device/samsung/zero-common/*.sh $src/device/samsung/zerofltecan/*.sh
 #[[ -e /dot/info/harpia_defconfig ]] && cp -av /dot/info/harpia_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/harpia_defconfig
 #cp -av /dot/info/msm8916_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/
 #for_sed 'CONFIG_CROSS_COMPILE=.*' 'CONFIG_CROSS_COMPILE='"\"$CROSS_COMPILE\"" $(echo $kernel/arch/arm/configs/*) $src/kernel/motorola/msm8916/arch/arm/configs/harpia_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/msm8916_defconfig /dot/info/msm8916_defconfig $src/kernel/ti/omap4/arch/arm/configs/espresso_defconfig $src/kernel/ti/omap4/arch/arm/configs/espresso_kitkat_defconfig
@@ -175,4 +187,4 @@ echo "hmm?"
 . /dot/setpath.sh aosp
 #/dot/bin/yorn && {
 	#ln -s "$(command -v adb)" /usr/androbin 2>/dev/null
-	srcenv
+	yorn &&	srcenv

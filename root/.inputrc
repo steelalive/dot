@@ -58,7 +58,6 @@ set mark-modified-lines off
 set mark-symlinked-directories on
 set match-hidden-files on
 set menu-complete-display-prefix on
-#->off
 set meta-flag off
 set output-meta on
 set page-completions off

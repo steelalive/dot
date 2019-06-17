@@ -1,13 +1,3 @@
-exit
-lsblk
-exit
-systemctl
-nano /etc/fstab
-exit
-src
-src
-src
-src
 src
 src
 src
@@ -497,4 +487,19 @@ lunch
 brunch
 breakfast
 mka otapackage
+exit
+exit
+su
+exit
+makekernel
+export src=/src
+makekernel
+. /dot/setpath.sh aosp
+makekernel
+gitreset
+. env.sh
+make C=2 V=1 W=2 ARCcH=arm64
+make C=2 V=1 W=2 ARCcH=arm64 CROSS_COMPILE=aarch64-linux-android-
+make C=2 V=1 W=2 ARCcH=arm64 CROSS_COMPILE=aarch64-linux-android- 
+ls
 exit

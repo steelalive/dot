@@ -31,13 +31,13 @@ mkdir -p /system/etc/ssh
 cp -av $slash/sbin/bash /system/xbin/
 cp -av $slash/sbin/bash /system/bin/
 ln -sf /proc/self/mounts /system/etc/mtab
-ln -sf $lux/etc/pam.d /system/etc/
+#ln -sf $lux/etc/pam.d /system/etc/
 echo EST5EDT >/system/etc/timezone
 cd /data/dot/slash || exit
 echo "Initialize system..."
 [ -e /external_sd ] || . /system/etc/mkshrc
 busybox mount -o rw,remount /system
-/data/dot/bin/remnt
+sh /data/dot/bin/remnt
 chmod 777 /system/etc/init.d/kernel.sh
 echo "System init completed!"
 cat $dot/bin/build.prop >/data/local.prop
@@ -59,10 +59,55 @@ if [ ! -e /external_sd ] && ! settings list system | grep 'en-US,fr-CA'; then
 	settings put secure lockscreen.disabled 1
 	settings put secure night_display_activated 1
 	settings put global development_settings_enabled 1
+	settings put system accelerometer_rotation 0
+	settings put system blur_quicksettings_enabled 1
+	settings put system blur_quicksettings_percentage 60
+	settings put system com.android.onehand.onehanded_mode 0
+	settings put system enable_suggestions 0
+	settings put system force_expanded_notifications 1
+	settings put system lockscreen_battery_info 1
+	settings put system network_traffic_autohide_threshold 10
+	settings put system network_traffic_state 1
+	settings put system toast_icon 1
+	settings put global adb_enabled 1
+	settings put global aggressive_battery_saver 1
+	settings put global animator_duration_scale 0.5
+	settings put global auto_time_zone 0
+	settings put global autofill_compat_mode_allowed_packages com.android.chrome[url_bar]:com.brave.browser[url_bar]:com.chrome.beta[url_bar]:com.chrome.dev[url_bar]:com.chrome.canary[url_bar]:com.microsoft.emmx[url_bar]:com.opera.browser[url_field]:com.opera.browser.beta[url_bar]:com.opera.mini.native[url_bar]:com.opera.mini.native.beta[url_bar]:com.sec.android.app.sbrowser[location_bar_edit_text]:com.sec.android.app.sbrowser.beta[location_bar_edit_text]:org.mozilla.fennec_aurora[url_bar]:org.mozilla.firefox[url_bar]:org.mozilla.firefox_beta[url_bar]
+	settings put global wifi_max_dhcp_retry_count 3
+	settings put global zram_enabled 0
+	settings put secure	advanced_reboot 1
+	settings put secure autofill_field_classification 1
+	settings put secure lock_screen_lock_after_timeout 600000
+	settings put secure lock_screen_owner_info_enabled 1
+	settings put secure quick_settings_vibrate 1
+	settings put secure sysui_volume_down_silent 1
+	settings put secure sysui_volume_up_silent 1
+	settings put secure ui_night_mode 2
 	if settings list --cm system &>/dev/null; then
 		settings put --cm system systemui_burnin_protection 1 2>/dev/null
 		settings put --cm secure stats_collection 0
 		settings put --cm secure feature_touch_hovering 0
+	fi
+	if settings list --lineage; then
+		settings put --lineage system double_tap_sleep_gesture 0
+		settings put --lineage system increasing_ring 1
+		settings put --lineage system qs_quick_pulldown 1
+		settings put --lineage system status_bar_battery_style 2
+		settings put --lineage system system_profiles_enabled 0
+		settings put --lineage system torch_long_press_power_gesture 1
+		settings put --lineage system trust_interface_hinted 1
+		settings put --lineage global weather_temperature_unit 2
+		settings put --lineage secure adb_port 5555
+		settings put --lineage secure advanced_mode 1
+		settings put --lineage secure advanced_reboot 1
+		settings put --lineage secure device_hostname S6
+		settings put --lineage secure feature_touch_hovering 0
+		settings put --lineage secure kill_app_longpress_back 1
+		settings put --lineage secure qs_show_auto_brightness 1
+		settings put --lineage secure qs_show_brightness_slider 1
+		settings put --lineage secure stats_collection 0
+		settings put --lineage secure trust_warnings 2
 	fi
 	settings put secure install_non_market_apps 1
 	settings put secure lockscreen.disabled 1

@@ -10,7 +10,7 @@ from_process=($(ps -o comm=$PPID))
 from_process3="${from_process[2]}"
 from_func=${FUNCNAME[1]}
 ANW "Default to"
-[[ $1 =~ y ]] && ANG " YES!\n"
+[[ $1 =~ y ]] && ANG " YES!\\n"
 { [[ $1 =~ n ]] || [[ ! $1 ]]; } && ANBR " NO!${R}\\n"
 
 ANW "${G}Yes${W}(0)${W} or ${RED}No${W}(1)${W} ------------------------->${DG}from ${W}${from_process3[*]} ${from_func[*]}${W}?${R}\\n"
@@ -20,12 +20,12 @@ case $REPLY in
 Y | y)
 	ANG "\U2714 Resuming${W} \"${RED}$(ps -o comm= $PPID)${W}\"${W}(0)${R} ${G}\U2714${R}\\n"
 	echo
-	exit 0
+	exit 
 	;;
 N | n)
 	ANBR "\U26D4 You choose no \U26D4 ${W}(1)${R}\\n"
 	echo
-	exit 2
+	exit 2 
 	;;
 Q | q)
 	ANR 'QUIT!\n'

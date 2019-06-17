@@ -1,4 +1,3 @@
-/prog/AIK-Linux/ramdisk/sbin/mkshrc 1 11
 /prog/AIK-Linux/_ZY2242NPXP_boot/ramdisk/fstab.qcom 2 64
 /last/G4/HARPIA_NPI26.48-43_cid50_subsidy-DEFAULT_regulatory-DEFAULT_CFC.xml/flashfile.xml 31 23
 /src/device/motorola/harpia/device.mk 44 1
@@ -106,7 +105,6 @@
 /src/.repo/local_manifests/loss.xml 6 120
 /src/kernel/motorola/msm8916/build.sh 8 23
 /dot/etc/fstab 8 1
-/dot/slash/etc/mk 75 1
 /dot/bin/forall 5 1
 /prog/build/manifest.txt 232 1
 /dot/etc/folders/udev/60-ioschedulers.rules 4 1
@@ -184,7 +182,6 @@
 /dot/bin/err 9 8
 /src/kernel/samsung/jf/make_defconfig.sh 27 2
 /dot/bin/updateall 38 79
-/root/.config/nvim/config/plugins.yaml 2 1
 /ext/AIK-Linux/ramdisk/default.prop 106 39
 /last/wifi.txt 1 14
 /root/.nanorc 63 2
@@ -194,7 +191,10 @@
 /src/.repo/local_manifests-nx-8.1/devices/samsung/klte.xml 18 1
 /src/.repo/local_manifests-nx-8.1/devices/samsung/zero.xml 24 1
 /last/s6/partition.txt 360 1
-/src/.repo/local_manifests/local.xml 8 1
 /src/device/samsung/zerofltecan/device-proprietary-blobs.txt 11 1
 /ext/yay/neovim-youcompleteme-core-git/PKGBUILD 77 45
 /src/device/samsung/zerofltecan/AndroidProducts.mk 2 22
+/dot/slash/etc/mk 101 4
+/src/kernel/samsung/exynos7420/Makefile 1485 1
+/src/.repo/local_manifests/local.xml 12 65
+/root/.config/nvim/config/plugins.yaml 537 1

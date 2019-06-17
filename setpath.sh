@@ -26,10 +26,12 @@ if [[ $1 == aosp ]]; then
 /sbin
 /usr/local/bin
 /usr/local/sbin
+/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin
+#/ext/opt/gcc-linaro-7.4.1-2018.05-x86_64_arm-linux-gnueabi/bin
+/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin
+/ext/opt/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabi/bin
 /opt/aarch64-linux-android-gcc/bin
-/ext/opt/gcc-linaro-7.4.1-2018.05-x86_64_arm-linux-gnueabi/bin
-/opt/aarch64-linux-android-gcc/bin
-/root/toolchain/bin
+#/root/toolchain/bin
 $src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin
 $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin
 $src/prebuilts/gcc/linux-x86
@@ -44,7 +46,8 @@ $O/debug/host/linux-x86/bin
 $O/host/linux-x86/bin
 /ext/opt/prebuilt/linux-x86_64/bin"
 fi
-allpath+="/sbin/supersu/xbin
+allpath+="/usr/lib/cw
+/sbin/supersu/xbin
 /sbin/supersu/bin
 /data/adb/su/xbin
 /data/adb/su/bin
@@ -61,7 +64,6 @@ allpath+="/sbin/supersu/xbin
 /vendor/bin
 /vendor/xbin
 /usr/bin
-/usr/lib/cw
 /usr/sbin
 /bin
 /sbin
@@ -85,7 +87,7 @@ $HOME/toolchain/bin
 /ext/opt/android-ndk/build/tools
 /system/sbin
 /data/dot/slash/sbin
-$(printf /ext/opt/build-tools/*)
+$(printf "%s\n" /ext/opt/build-tools/*)
 $lux/usr/bin
 $dot/bin
 $dot/bin/final

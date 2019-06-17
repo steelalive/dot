@@ -1,5 +1,5 @@
 if [[ $1 = t ]]; then
-	[ -e /data/app ] && echo SYSTEMLESS=true >/data/.supersu
+	test -e /data/app  && echo SYSTEMLESS=true >/data/.supersu
 	for i in $(blkid | grep ext4 | cut -d: -f1); do
 		echo "##############################---${i}---#######################################"
 		umount $i 2>/dev/null
@@ -22,11 +22,11 @@ if [[ $1 = t ]]; then
 	return
 	exit
 else
-	if [[ -e /external_sd ]]; then
-		[[ $- != *i* ]] || {
+	if test -e /external_sd ; then
+		test $- != *i*  || {
 			mkdir -p /bin
 			cp -av /sbin/bash /bin/
-			[[ -e /sbin/rc ]] && . /sbin/rc few
+			test -e /sbin/rc && . /sbin/rc few
 		}
 	fi
 fi
@@ -47,23 +47,12 @@ export HOME=/data/dot/root
 alias src='. /etc/mk '
 setenforce 0 &>/dev/null
 
-#[[ $1 ]] || return
-case $- in
-*i*) ;;
-*) exit 0 ;;
-esac
-
-#shopt &>/dev/null || return 0
-
 if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 	umask 002
 else
 	umask 022
 fi
 
-#[[ -x /bin/ls ]] && [[ -e /lib ]] && export PATH=$lux/usr/bin:$PATH &&
-#	echo "ArchLinux is fully operational"
-if [[ $USER_ID ]]; then PS1='$'; else PS1='#'; fi
 unset LD_PRELOAD
 shopt -u execfail &>/dev/null
 su_bin=/sbin/su
@@ -93,15 +82,15 @@ toybox mount -o rw,remount,rw / &>/dev/null
 toybox mount -o rw,remount,rw /system &>/dev/null
 toolbox mount -o rw,remount,rw / &>/dev/null
 toolbox mount -o rw,remount,rw /system &>/dev/null
-[[ -f /root/histfile ]] || {
+test -f /root/histfile || {
 	chmod 755 /root
 	mount -o rbind $dot/root /root
 }
-[[ -f /dot/init.sh ]] || {
+test -f /dot/init.sh || {
 	mkdir -p /dot
 	mount -o rbind $dot /dot
 }
-[[ -x /bin/bash ]] || {
+test -x /bin/bash || {
 	mkdir -p /bin
 	ln -s /data/dot/slash/sbin/bash /bin/
 }
@@ -119,7 +108,8 @@ export PATH="/sbin:/system/xbin:/system/bin:/vendor/bin:/bin:/system/sbin:/data/
 
 unset use_color safe_term match_lhs
 
-[[ ! -e /data/misc/adb/adb_keys ]] && cp -av $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
+test ! -e /data/misc/adb/adb_keys && cp -av $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
+
 hash dircolors &>/dev/null && eval $(dircolors --sh /data/dot/.dir_colors 2>/dev/null)
 if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
 	hash resize &>/dev/null && resize

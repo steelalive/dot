@@ -91,6 +91,15 @@ service.odtcfactory.sec.com.odtcfactoryservice"
 
 DELETE="BCService
 BasicDreams
+EasterEgg 
+LatinIME 
+PrintSpooler 
+Traceur 
+BookmarkProvider 
+GoogleFeedback 
+GooglePartnerSetup 
+DownloadProviderUi 
+Dialer
 Browser
 CatchFavorites_Zero
 Crane
@@ -159,7 +168,7 @@ for dir in '/' /data/app /system/app /system/priv-app; do
 	cd "$dir"
 	for crap in $DELETE
 		do full=*"${dir}/${crap}"*
-		[[ -e "$full" ]] && rm -rfv *"${full}"* && ANRED "UNINSTALLED ${Y}$full${R} ...\n"
+		[[ -e "$full" ]] && rm -rfv "${full}"* && ANRED "UNINSTALLED ${Y}$full${R} ...\n"
 		rm -rfv "${dir}/${crap}"* && ANRED "UNINSTALLED ${Y}${dir}/${crap}${R} ...\n"
 	done
 done

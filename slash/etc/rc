@@ -38,17 +38,17 @@ bb() { command "$bb" "$@"; }
 
 if hash bb &>/dev/null; then unset bb; fi
 
-for i in /ex $(echo /mnt/media_rw/????-????) $(echo /storage/????-????) /external_sd; do
-	[[ -e $i/misc-android ]] || continue
-	export ex=$i
-done
-[[ $ex ]] || ex=/sdcard
+#for i in /ex $(echo /mnt/media_rw/????-????) $(echo /storage/????-????) /external_sd; do
+#	[[ -e $i/misc-android ]] || continue
+#	export ex=$i
+#done
+ex=/sdcard
 
 echo /init.* | grep amlogic && export HOSTNAME=TV
 { echo /* | grep exyn || grep w8 /default.prop ; } && export HOSTNAME=S6
 [[ $HOSTNAME ]] || { getprop ro.product.device && export HOSTNAME="$(getprop ro.product.device)"; }
 [[ -d $dot/root ]] && HOME=$dot/root
-[[ -e $HOME ]] || HOME=$ex
+#[[ -e $HOME ]] || HOME=$ex
 [[ -e $HOME ]] || HOME=/sdcard
 
 [[ -e /etc/terminfo ]] && TERMINFO=/etc/terminfo
@@ -66,7 +66,7 @@ mkdir -p /tmp
 [[ -d /data/local/tmp ]] && TMP=/data/local/tmp
 [[ -d /tmp ]] && TMP=/tmp
 
-[[ $USER ]] || USER=$(whoami 2 &>/dev/null) || USER=$(logname 2 &>/dev/null)
+#[[ $USER ]] || USER=$(whoami 2 &>/dev/null) || USER=$(logname 2 &>/dev/null)
 
 [[ -x /bin/nano ]] && export EDITOR="/bin/nano" VISUAL="$EDITOR"
 [[ HOSTNAME == PC ]] && lux=/data/lux
@@ -79,30 +79,17 @@ recovery="$(find /dev/block -iname recovery | tail -1)"
 #fi
 
 export TMP TMPDIR=$TMP BASH SHELL=$BASH HISTFILE="${dot}/root/histfile" HISTSIZE=50000 USER slash
-hostname $HOSTNAME
+test $HOSTNAME && hostname $HOSTNAME
 alias e='. $dot/bin/e'
-cmdpackage() {
+cmdcompile() {
 	cmd package compile -a -m everything
-}
-remntf() {
-	bb mount -o rw,remount,rw / &>/dev/null || mount -o rw,remount,rw / &>/dev/null
-	bb mount -o rw,remount,rw /system &>/dev/null || mount -o rw,remount,rw /system &>/dev/null
-}
-remntf
-chrootlux() {
-	chroot $lux /usr/bin/bash
+	fstrim /system; fstrim /data
 }
 
 hash remnt &>/dev/null && remnt
 
 unalias src 2>/dev/null
 
-src() {
-	if [[ -x $lux/usr/bin/bash ]]; then
-		export SHELL=$lux/usr/bin/bash BASH=$SHELL
-	fi
-	. $dot/init.sh || echo "Problem while executing command exec $BASH"
-}
 
 pminstall() {
 	[[ $1 ]] || command \ls *.apk
@@ -145,6 +132,8 @@ if ! busybox | grep '1.29.2' ; then
 		bash ./Busybox-installer-arm.bin
 fi
 
+[[ -e /system/bin/logd ]] && mv /system/bin/logd /system/bin/logd.bak
+
 [[ -d $ex ]] && rm_empty_dir /sdcard/* $ex/*
 
 for bin_dir in /system/bin /system/xbin; do
@@ -176,19 +165,10 @@ chmod 777 -R /data/dot
 
 if ! grep "/data/dot/slash" /system/etc/init.d/90userinit; then
 	echo "$init_incantation" >>/system/etc/init.d/90userinit
-	echo "$init_incantation
-
-########### -MK- ###########
-
-TERMINFO=/data/dot/slash/etc/terminfo
-TERM=xterm-256color
-[[ -e /data/dot/slash/etc/mk ]] && . /data/dot/slash/etc/mk
-
-########### _MK_ ###########
-" >>/system/etc/mkshrc
 fi
+#####################################################################################################################
 hash resize &>/dev/null && eval $(resize) &>/dev/null
-return 0
+
 #rm /sdcard; ln -s $ex /sdcard
 # vi: ft=sh
 #export PATH=/system/xbin:/system/bin:/vendor/bin:/bin:/sbin:/system/sbin:/data/dot/slash/sbin:/data/dot/bin:/data/dot/bin/final:/data/dot
@@ -203,16 +183,16 @@ unalias nano
                 ${swff} ${zram_dev} && zram_reset ${zram}
         } done
 
-        setprop vnswap.enabled false
-        setprop ro.config.zram false
-        setprop ro.config.zram.support false
-        setprop zram.disksize 0
+#        setprop vnswap.enabled 0
+ #       setprop ro.config.zram 0
+  #      setprop ro.config.zram.support 0
+   #     setprop zram.disksize 0
       #  write /proc/sys/vm/swappiness 0
 
 
 
 
-
+return 0
 
 
 
@@ -223,15 +203,15 @@ unalias nano
 # Copyright (C) 2017-2019, VR25 @ xda-developers
 # License: GPL V3+
 
-modId=acc
+#modId=acc
 
 # don't run more than once per boot session
-[ -d /dev/$modId ] || { mkdir -p /dev/modId
+#[ -d /dev/$modId ] || { mkdir -p /dev/modId
 
-modPath=/system/etc/$modId
-[ -f $modPath/module.prop ] || modPath=$slash/sbin/$modId
-[ -f $modPath/module.prop ] || modPath=/sbin/.core/img/$modId
-unset modId
+#modPath=/system/etc/$modId
+#[ -f $modPath/module.prop ] || modPath=$slash/sbin/$modId
+#[ -f $modPath/module.prop ] || modPath=/sbin/.core/img/$modId
+#unset modId
 
-(sh $modPath/accd &) &
-}
+#(sh $modPath/accd &) &
+#}

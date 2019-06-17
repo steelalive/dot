@@ -34,6 +34,10 @@ pacman -Q | awk '{print $1}' >/packages.list
 rm -rf /tmp/makepkg
 $(ncu -g | grep 'npm -g install ')
 npm doctor 
+python2 -m pip_review --auto && pip-check -c pip2 -rfHu
+python3 -m pip_review --auto && pip-check -c pip3 -rfHu
+
+
 
 [[ $1 ]] && {
 npm install --global npm@latest

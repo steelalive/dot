@@ -108,14 +108,20 @@
     let g:go_highlight_chan_whitespace_error = 0
     let g:go_highlight_space_tab_error = 0
     let g:go_highlight_trailing_whitespace_error = 0
+    let g:go_highlight_extra_types = 1
     let g:go_highlight_build_constraints = 1
     let g:go_highlight_extra_types = 1
-    let g:go_highlight_fields = 0
+    let g:go_highlight_fields = 1
     let g:go_highlight_format_strings = 1
     let g:go_highlight_functions = 1
+    let g:go_highlight_function_calls = 1
+    let g:go_highlight_function_parameters = 1
+    let g:go_highlight_types = 1
     let g:go_highlight_generate_tags = 1
     let g:go_highlight_operators = 1
     let g:go_highlight_string_spellcheck = 0
+    let g:go_highlight_variable_declarations = 0
+    let g:go_highlight_variable_assignments = 0
 
 - { repo: vim-python/python-syntax, on_ft: python }
 - { repo: Vimjas/vim-python-pep8-indent, on_ft: python }
@@ -129,6 +135,7 @@
 - { repo: tbastos/vim-lua, on_ft: lua }
 - { repo: osyo-manga/vim-monster, on_ft: ruby }
 - { repo: toyamarinyon/vim-swift, on_ft: swift }
+- { repo: rust-lang/rust.vim, on_ft: rust }
 - { repo: vim-jp/syntax-vim-ex, on_ft: vim }
 
 - { repo: chrisbra/csv.vim, on_ft: csv }
@@ -160,12 +167,12 @@
 
 - repo: kristijanhusak/defx-git
   on_source: defx.nvim
-  hook_source: |
-   let g:defx_git#raw_mode = 1
-   let g:defx_git#show_ignored = 1
 
 - repo: kristijanhusak/defx-icons
   on_source: defx.nvim
+  hook_source: |
+    let g:defx_icons_column_length = 2
+    let g:defx_icons_mark_icon = '✓'
 
 - repo: scrooloose/nerdtree
   on_map: { n: <Plug> }
@@ -412,12 +419,12 @@
     let g:jedi#quickfix_window_height = 10
     let g:jedi#use_splits_not_buffers = 'right'
 
-- repo: zchee/deoplete-go
+- repo: deoplete-plugins/deoplete-go
   build: make
   on_ft: go
   on_event: InsertEnter
 
-- repo: zchee/deoplete-jedi
+- repo: deoplete-plugins/deoplete-jedi
   on_ft: python
   on_event: InsertEnter
   hook_source: autocmd MyAutoCmd FileType python setlocal omnifunc=

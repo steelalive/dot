@@ -14,11 +14,11 @@ arg3="${3}"
 mkdir -p $HOME/.local/share/nano
 if [[ $SHELL == *zsh* ]] || [[ -e /oem ]]; then
 	#hash nvim &>/dev/null && EDITOR=${EDITOR:-nvim}
-	export EDITOR="nano --syntax sh"
+	export EDITOR="nano"
 	true
 fi
 if [[ -d /oem ]]; then
-	export EDITOR="nano --syntax sh"
+	export EDITOR="nano"
 	#[[ -x $lux/usr/bin/nano ]] && export EDITOR=$lux/usr/bin/nano
 fi
 
@@ -80,7 +80,7 @@ else
 		ANBY "Do you want to create a bash template file named$R $C$arg_maybe$Y?"
 		echo
 		if yorn; then
-			newbin "$arg_maybe"
+			newbin "$arg1"
 		fi
 	fi
 fi
