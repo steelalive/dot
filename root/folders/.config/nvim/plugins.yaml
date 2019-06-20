@@ -253,6 +253,7 @@
 - { repo: t9md/vim-quickhl, on_map: { nv: <Plug> }}
 - { repo: rafi/vim-sidemenu, on_map: { nv: <Plug> }}
 
+
 - repo: nathanaelkane/vim-indent-guides
   on_cmd: [ IndentGuidesEnable, IndentGuidesDisable, IndentGuidesToggle ]
   hook_post_source: |

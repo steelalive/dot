@@ -127,7 +127,6 @@ mkcd() {
 	lk .
 }
 
-
 src() {
 	echo
 	if ps1bg="$(jobs -l | awk '{print $2}' 2>/dev/null)"; then
@@ -206,7 +205,7 @@ s1() {
 
 title "$(uname -rnsm)"
 bashnorc() {
-	exec env -i O=/out OUT_DIR=/out TOP=/src LC_ALL=C PS1="\$ " PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
+	exec env -i kernel="$src/kernel/samsung/exynos7420" O=/ext/out OUT_DIR=/ext/out TOP=/src src=/src LC_ALL=C PS1="\$ " PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
 }
 path_default() {
 	unset PATH

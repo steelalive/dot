@@ -1,97 +1,3 @@
-src
-src
-src
-ls
-cd /
-ls
-lsblk
-iwconfig
-sudo su
-su
-su
-su
-su
-sudo su
-su
-sudo su
-su
-sudo su
-sudo su
-su
-sudo su
-sudo sy
-sudo su
-mount -av
-nano /etc/fstab
-e2fsck /dev/sdc2
-mount -av
-nano /etc/fstab
-ls /ext
-ls /
-ls / -l
-chown arch:root
-chown arch:root /ext -R
-exit
-mount /dev/sdc2 /exrt
-mount /dev/sdc2 /ext
-mount
-nano /etc/fstab
-blkid
-nano /etc/fstab
-exit
-ls
-/prog/abe/abe.sh --target arm-linux-gnueabihf --build all --help
-/prog/abe/abe.sh --target arm-linux-gnueabihf --build all --disable update --checkout all 
-make
-exit
-make install
-env
-e ex YAOURT
-e ex YAOURT
-exit
-/prog/bash/configure 
-make
-make clean
-ls
-rm -rf *
-/prog/bash/configure 
-make
-ls
-./bash
-exit
-ls
-exit'
-exit
-exit
-yay
-yay heimdall
-sudo pacman -R heimdall-git
-yay heimdall
-heimdall
-exit
-e fstab
-nano /etc/fstab
-mount -av
-modprobe fuse
-mkinitcpio --all
-nano /etc/fstab
-ls
-exit
-archon-exec $(realpath 2ndline.apk)
-sudo rm -rf /tmp/archon
-archon-exec $(realpath 2ndline.apk)
-archon-exec $(realpath 2ndline.apk) --help
-archon-exec 
-ls
-cd 2ndline/
-ls
-archon-exec $(realpath AndroidManifest.xml)
-exit)
-exit
-ls
-cd Documents/
-ls
-archon-exec 2ndline.apk
 archon-exec $(realpath 2ndline.apk) 
 su arch
 exit
@@ -503,3 +409,92 @@ make C=2 V=1 W=2 ARCcH=arm64 CROSS_COMPILE=aarch64-linux-android-
 make C=2 V=1 W=2 ARCcH=arm64 CROSS_COMPILE=aarch64-linux-android- 
 ls
 exit
+makekernel
+export src=/src
+makekernel
+makekernel
+mkdir -p /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ
+makekernel
+ca env.sh
+#CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-'; 
+export CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
+makekernel
+export CC=aarch64-linux-gnu-gcc
+makekernel
+cd $kernel
+ls
+ls -a
+ca env.shj
+ca env.sh
+export kernel="$src/kernel/samsung/exynos7420"
+e bashnorc
+e fn bashnorc
+export kernel="$src/kernel/samsung/exynos7420" dot=/dot
+env
+e fn bashnorc
+e fn bashnorc
+ls
+env
+cd $kernel
+ls
+e Makefile 
+makekernel
+e Makefile 
+makekernel
+ls /src/prebuilts/linaro/linux-x86/aarch64/bin/aarch64-linux-gnu-gcc
+e makekernel
+makeconfig
+makekernel
+ls
+ls arch/arm64/configs
+make ARCH=arm64 lineageos_zerofltecan_defconfig
+make
+make mrproper
+cd /src
+m otapackage
+. build/envsetup.sh 
+lunch
+brunch
+m otapackage
+ls
+rm -rf *
+resync
+. build/envsetup.sh 
+lunch
+m otapackage
+echo $O
+echo $OUT_DIR/
+e fn bashnorc
+export O=/ext/out OUT_DIR=/ext/out
+m otapackage
+e $kernel/Makefile 
+e env.sh
+ca env.sh
+sed "s|CROSS_COMPILE  := .*|\$($CROSS_COMPILE)|" $kernel/Makefile
+sed "s|CROSS_COMPILE.*|\$($CROSS_COMPILE)|" $kernel/Makefile
+sed "s|CROSS_COMPILE   :=|\$($CROSS_COMPILE)|" $kernel/Makefile
+ca $kernel/Makefile
+sed -e "s|CROSS_COMPILE   ?=.*| \$($CROSS_COMPILE)|" -e "s|CROSS_COMPILE	:=| \$($CROSS_COMPILE)" $kernel/Makefile
+sed -e "s|CROSS_COMPILE   ?=.*| \$($CROSS_COMPILE)|" -e "s|CROSS_COMPILE	:=| \$($CROSS_COMPILE)|" $kernel/Makefile
+sed -e "s|CROSS_COMPILE   ?=.*|CROSS_COMPILE   ?= $CROSS_COMPILE|" -e "s|CROSS_COMPILE	:=|CROSS_COMPILE      := $CROSS_COMPILE|" $kernel/Makefile
+sed -e "s|CROSS_COMPILE   ?=.*|CROSS_COMPILE   ?= $CROSS_COMPILE|" -e "s|CROSS_COMPILE	:=.*|CROSS_COMPILE      := $CROSS_COMPILE|" -i $kernel/Makefile
+e env.sh
+e env.sh
+sed -e "s|CROSS_COMPILE   ?=.*|CROSS_COMPILE   ?= $CROSS_COMPILE|" -e "s|CROSS_COMPILE	:=.*|CROSS_COMPILE      := $CROSS_COMPILE|" -i $kernel/Makefile
+m otapackage
+ca env.sh
+cp -av /last/misc-android/Pixel2MOD-Dark.zip $O/target/product/*/obj/BOOTANIMATION/bootanimation.zip
+cp -av /last/misc-android/Pixel2MOD-Dark.zip $O/target/product/zerofltecan/obj/BOOTANIMATION/bootanimation.zip
+e env.sh
+m otapackage
+e device/samsung/zero-common/shims/libbauthtzcommon/libbauthtzcommon.c
+e device/samsung/zero-common/shims/libbauthtzcommon/libbauthtzcommon.c
+ca device/samsung/zero-common
+ls
+ls -a
+ca device/samsung/zero-common
+cd device/samsung/zero-common
+ls
+gitreset
+cd /src
+m otapackage
