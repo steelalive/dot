@@ -1,9 +1,3 @@
-
-
-
-
-
-
 ##!!PROPER!!##
 bluetooth.force_pm_timer=2000
 cgroup_disable=memory

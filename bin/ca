@@ -7,7 +7,7 @@
 if is_in_path highlight; then
 	highlight_fn() { highlight --quiet --out-format=truecolor --style=zmrok --stdout --plug-in=comment_links --syntax=bash --plug-in=bash_functions --plug-in=bash_ref_man7_org --pretty-symbols --validate-input "$@"; }
 else
-    is_in_path bat && highlight_fn(){ bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
+	is_in_path bat && highlight_fn() { bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
 	is_in_path bat || highlight_fn() { cat "$@"; }
 fi
 export -f highlight_fn

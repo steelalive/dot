@@ -33,4 +33,42 @@ pmi() {
 		pm install --user 0 -r -g "$i"
 	done
 }
-pmi "$@"
+pminstall() {
+        [[ $1 ]] || command \ls *.apk
+        for apk; do
+                ANLO "Installing $apk ...\n"
+                pm install --user 0 -r -g "$apk"
+        done
+}
+
+ToInstall="yarolegovich.materialterminal*.apk 
+ru.whatau.cpl*.apk 
+nu.home.button*.apk 
+ninja.sesame.app.edge*.apk 
+net.sourceforge.opencamera*.apk 
+com.ustwo.lwp*.apk 
+com.slash.batterychargelimit*.apk 
+com.pof.android*.apk 
+com.oasisfeng.greenify*.apk 
+com.mixplorer.addon*.apk 
+com.lavendrapp.lavendr*.apk 
+com.keramidas.TitaniumBackup*.apk 
+com.jumobile.manager.systemapp*.apk 
+com.google.android.googlequicksearchbox*.apk 
+com.facebook.orca*.apk 
+com.enflick.android.tn2ndLine*.apk 
+com.easilydo.mail*.apk 
+com.ceco.pie.gravitybox*.apk 
+com.breel.wallpapers18*.apk 
+com.badoo.mobile*.apk 
+com.appspot.scruffapp*.apk 
+com.android.vending.billing.InAppBillingService*.apk 
+com.android.phone*.apk 
+com.android.chrome*.apk
+com.google.android.googlequicksearchbox-*.apk"
+
+if [[ $1 = backup ]] || [[ $1 = titanium ]];then
+cd /sdcard/TitaniumBackup || exit
+pminstall $ToInstall
+fi
+#pmi "$@"

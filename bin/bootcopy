@@ -32,8 +32,8 @@ fi
 $adb shell su 0 -c "mount -o remount,rw /"
 $adb shell su 0 -c "mount -o remount,rw /system"
 export img_orig="${work_path}/${imgtoedit}"
-	[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
-	[[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="$boot"
+[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
+[[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="$boot"
 
 case $1 in
 repack*)

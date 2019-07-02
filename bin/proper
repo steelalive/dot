@@ -108,13 +108,13 @@ for target in ramdisk/system/build.prop /system/build.prop system/build.prop bui
 	[[ -r $target ]] || continue
 	#	grep -q "$string" "$build" && continue
 	prop-replace "$dot/bin/build.prop" "$string" "$target"
-#	if grep fingerprint=motorola $target &>/dev/null; then
-#		echo "dalvik.vm.image-dex2oat-threads=6
-#dev.ip.address=192.168.0.9" >>$target
-#	else
-#		echo "dalvik.vm.image-dex2oat-threads=10
-#dev.ip.address=192.168.0.5
-#ro.sf.lcd_density=240
-#" >>$target
-#	fi
+	#	if grep fingerprint=motorola $target &>/dev/null; then
+	#		echo "dalvik.vm.image-dex2oat-threads=6
+	#dev.ip.address=192.168.0.9" >>$target
+	#	else
+	#		echo "dalvik.vm.image-dex2oat-threads=10
+	#dev.ip.address=192.168.0.5
+	#ro.sf.lcd_density=240
+	#" >>$target
+	#	fi
 done

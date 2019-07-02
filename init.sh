@@ -38,12 +38,10 @@ src() {
 
 setenv() { export "$1=$2"; }
 export -f setenv
-unsetenv() { unset "$1"; }
-export -f unsetenv
 for i in $(command \ps aux | command \grep ps1bg.sh | command \grep -v grep | command \awk '{print $2}'); do kill -9 "$i"; done
 
-export source_files="ps1.sh ps4.sh fn.sh init.sh ex.sh al.sh anset.sh setpath.sh"
-export dot_files="$dot/anset.sh $dot/ex.sh /etc/profile.d/*.sh $dot/al.sh $dot/fn.sh $dot/completion.bash $dot/LESS_TERMCAP.sh $dot/ps1.sh" # $dot/ps4.sh  #$dot/bin/goto.sh
+export source_files="ps1.sh al.sh ps4.sh fn.sh init.sh ex.sh anset.sh setpath.sh"
+export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh $dot/ps1.sh $dot/ps1bg.sh" # $dot/ps4.sh  #$dot/bin/goto.sh
 [[ -e /oem ]] && dot_files="$dot_files $dot/g4.sh $dot/anset.sh"
 [[ -e /oem ]] || dot_files="$dot_files $dot/ps1bg.sh"
 echo

@@ -7,7 +7,7 @@ dot=${dot:-/dot}
 [[ $1 ]] || { $dot/bin/p www.google.ca && exit; }
 [[ $1 ]] && { stfu $dot/bin/p www.google.ca && exit; }
 #exit
-if [[ $NET = eth0 ]]; then
+if [[ $NET == eth0 ]]; then
 	rfkill block wlan
 	dhcpcd eth0
 	exit
@@ -57,7 +57,7 @@ NET=${NET:-wlan0}
 #if ip link | grep -o "wlp.*:" &>/dev/null; then NET=$(ip link | grep -o "wlp.*:" | sed "s/://"); fi
 #if ip link | grep "24:05:0f:ea:36:6c" &>/dev/null; then
 #	NET=$(ip link | grep "24:05:0f:ea:36:6c" --before-context=1 | head -n1 | awk '{print $2}' | sed 's/://')
-	#which_network 5G
+#which_network 5G
 #fi
 
 if [[ $1 =~ wlan ]]; then NET=$1; fi

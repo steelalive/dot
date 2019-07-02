@@ -1,5 +1,4 @@
-
-i#!/bin/bash
+#!/bin/bash
 #-*- coding: utf-8 -*-
 #2#::.. Last edit: - Wed May 30 08:24:14 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.5.8 - #_# #@#300518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
@@ -13,7 +12,7 @@ suuser -c "yay -S --needed --noconfirm -ua"
 paccache --keep 1 --verbose --remove
 is_in_path go && go get -u all
 
-for i in /root/.gem/ruby/*/bin /root/.gem/ruby/*/ /root/.gem/ruby /root/.gem /root /root/.vim_runtime /ext/opt/diet/bin /ext/opt/diet /ext/opt /ext /ext/opt/gcc-UBERTC/bin ; do
+for i in /root/.gem/ruby/*/bin /root/.gem/ruby/*/ /root/.gem/ruby /root/.gem /root /root/.vim_runtime /ext/opt/diet/bin /ext/opt/diet /ext/opt /ext /ext/opt/gcc-UBERTC/bin; do
 	[[ -e $i ]] && chmod go-w "$i"
 done
 
@@ -34,14 +33,12 @@ pacman -Q | awk '{print $1}' >/packages.list
 
 rm -rf /tmp/makepkg
 $(ncu -g | grep 'npm -g install ')
-npm doctor 
+npm doctor
 python2 -m pip_review --auto && pip-check -c pip2 -rfHu
 python3 -m pip_review --auto && pip-check -c pip3 -rfHu
 
-
-
 [[ $1 ]] && {
-npm install --global npm@latest
+	npm install --global npm@latest
 	for i in /usr/lib/node_modules/*; do
 		cd "$i" || continue
 		ncu --newest --greatest --upgrade
@@ -52,36 +49,36 @@ npm install --global npm@latest
 		pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$i"
 	done
 
-#	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
-#	$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
-##	$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
-#	$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
-##	for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
-#		$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-##		$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-#		$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-#	done
+	#	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
+	#	$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
+	##	$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
+	#	$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
+	##	for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
+	#		$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+	##		$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+	#		$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+	#	done
 
-if is_in_path cpanm && is_in_path cpanm-outdated; then
-	cpanm --self-upgrade
-	cpan-outdated -p | cpanm
-fi
-#+user -R /root /shell /home /dot &>/dev/null
-### Neovim setup ###
-cd /root/.config/nvim && {
-    gitreset
-local="$dot/root/folders/.config/nvim/local.vim"
-init="$HOME/.config/nvim/init.vim"
-if ! grep -q "$local" $init; then
-	echo "source $local" >>"$init"
-#	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
-fi
-unset local init
-nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | qall! | endtry" -V1 -es
-if cd /ext/.dotfiles2;then
-    make update
-fi
-}
+	if is_in_path cpanm && is_in_path cpanm-outdated; then
+		cpanm --self-upgrade
+		cpan-outdated -p | cpanm
+	fi
+	#+user -R /root /shell /home /dot &>/dev/null
+    cpan -u
+	### Neovim setup ###
+	cd /root/.config/nvim && {
+		gitreset
+		local="$dot/root/folders/.config/nvim/local.vim"
+		init="$HOME/.config/nvim/init.vim"
+		if ! grep -q "$local" $init; then
+			echo "source $local" >>"$init"
+		#	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
+		fi
+		unset local init
+		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | qall! | endtry" -V1 -es
+		if cd /ext/.dotfiles2; then
+			make update
+		fi
+	}
 }
 ### END Neovim setup ###
-

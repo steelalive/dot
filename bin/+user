@@ -8,7 +8,7 @@
 [[ $1 == '/' ]] && exit
 #    find "$@" -type d -exec \chown master:users --preserve-root --changes {} +
 #   find "$@" -type f -exec \chown master:users --preserve-root --changes {} +
-unset sudo recurse chowned 
+unset sudo recurse chowned
 #exit
 case $1 in
 -r | r | -R | R | --recursive | recursive | lickmypussy)

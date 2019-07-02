@@ -41,26 +41,45 @@ if [[ $1 != all ]]; then
 	exit
 fi
 groupadd -r -g 2000 shell
-useradd -m -d /shell -g root -G wheel,video,users,shell shell 
+useradd -m -d /shell -g root -G wheel,video,users,shell shell
 mkdir -p /shell
 chown -cR shell:root /root /tmp $dot /shell
-usermod -a -G video sddm 
+usermod -a -G video sddm
 ################_Link dot_############################
-(cd $dot/root || exit 1; for files in .??*;do lnr "$files" /root/"$files"; lnr "$files" /shell/"$files";done)
-(cd $dot/root/folders || exit 1;  lnr .android .dotfiles2 .nano .SpaceVim .SpaceVim.d .ssh /shell/ )
-(cd $dot/root/folders || exit 1;  lnr .android .dotfiles2 .nano .SpaceVim .SpaceVim.d .ssh /root/ )
-(cd $dot/root/folders/.config || exit 1; mkdir -p /root/.config; lnr * /root/.config/)
-(cd $dot/root/folders/.config || exit 1; mkdir -p /shell/.config; lnr * /shell/.config/)
-(cd $dot/etc/folders || exit 1; for folders in *; do lnr $folders/* /etc/$folders/;done)
+(
+	cd $dot/root || exit 1
+	for files in .??*; do
+		lnr "$files" /root/"$files"
+		lnr "$files" /shell/"$files"
+	done
+)
+(
+	cd $dot/root/folders || exit 1
+	lnr .android .dotfiles2 .nano .SpaceVim .SpaceVim.d .ssh /shell/
+)
+(
+	cd $dot/root/folders || exit 1
+	lnr .android .dotfiles2 .nano .SpaceVim .SpaceVim.d .ssh /root/
+)
+(
+	cd $dot/root/folders/.config || exit 1
+	mkdir -p /root/.config
+	lnr * /root/.config/
+)
+(
+	cd $dot/root/folders/.config || exit 1
+	mkdir -p /shell/.config
+	lnr * /shell/.config/
+)
+(
+	cd $dot/etc/folders || exit 1
+	for folders in *; do lnr $folders/* /etc/$folders/; done
+)
 lnr $dot/root/.??* /shell/
 lnr $dot/root/.??* /root/
 lnr $dot/root/folders/.SpaceVim /shell/.config/nvim
 lnr $dot/root/folders/.SpaceVim /root/.config/nvim
 ###############_link_dot_############################
-
-
-
-
 
 #ln -s /dot/root/.??* /home/
 #ln -s /dot/root/.??* /root/

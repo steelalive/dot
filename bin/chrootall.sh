@@ -18,7 +18,6 @@ mount -v -o rbind /run "${place}run"
 mount -v -o rbind /tmp "${place}tmp"
 exit
 
-
 mount proc "${place}proc" -t proc -o nosuid,noexec,nodev
 mount sys "${place}sys" -t sysfs -o nosuid,noexec,nodev,ro
 mount udev "${place}dev" -t devtmpfs -o mode=0755,nosuid

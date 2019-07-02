@@ -5,9 +5,9 @@
 [[ -e /oem ]] || return 1 || exit
 remnt() {
 	unset arg fs
-sys_block=$(find /dev/block -name system | tail -n1)
-busybox mount -o rw,remount,rw "$sys_block" "/system" &>/dev/null ||
-	mount -o rw,remount /system &>/dev/null 
+	sys_block=$(find /dev/block -name system | tail -n1)
+	busybox mount -o rw,remount,rw "$sys_block" "/system" &>/dev/null ||
+		mount -o rw,remount /system &>/dev/null
 
 	[[ $1 ]] && arg="$*"
 	for fs in "/" "/system" $arg; do
@@ -19,6 +19,6 @@ busybox mount -o rw,remount,rw "$sys_block" "/system" &>/dev/null ||
 			hash busybox &>/dev/null && busybox mount -o remount,rw "$fs" &>/dev/null ||
 			echo "WTF is wrong with this system!"
 	done
-chmod 777 -R /data/dot
+	chmod 777 -R /data/dot
 }
 remnt "$@"

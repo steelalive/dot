@@ -1,6 +1,6 @@
 #<filesystem>       <dir>      <type>  <options>                                            <dump>  <pass>
 /dev/sda7           /          ext4    rw,noatime,barrier=0,commit=60,nodiscard             0       1
-LABEL=SSDBOOT           /boot      auto    defaults                                             0       0
+LABEL=SSDBOOT       /boot      auto    defaults                                             0       0
 LABEL="LAST-PC"     /last      auto    defaults                                             0       0
 #LABEL="PROG"       /prog      auto    rw,noatime,barrier=0,nofail                          0       2
 #LABEL="OUT"        /src/out   ext3    rw,suid,dev,exec,noauto,noatime,barrier=0,commit=60  0       0

@@ -11,7 +11,5 @@ grep -q '$endif' "$1" &>/dev/null && exit 5
 grep -q "noharden" "$1" &>/dev/null && exit 7
 is_bash "$1" || exit 10
 shellharden --check "$1" &>/dev/null && exit 2
-is_bash "$1" && {
-	shellharden --replace "$1"
-	ANG ANO "[$?] -- ${C}$1 ${O}script has been hardened.\\n"
-}
+shellharden --replace "$1"
+ANG ANO "[$?] -- ${C}$1 ${O}script has been hardened.\\n"

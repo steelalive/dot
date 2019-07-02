@@ -1,7 +1,7 @@
-		for i; do
-			if [[ "$i" != *[!0-9]* ]]; then
-			#success an integer
+for i; do
+	if [[ $i != *[!0-9]* ]]; then
+		#success an integer
 		exit 0
-		fi
-		done
-		exit 1
+	fi
+done
+exit 1

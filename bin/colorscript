@@ -298,7 +298,7 @@ function command_line_parameter() {
 		l) LT=$OPTARG ;;
 		r) RT=$OPTARG ;;
 		i) INVERSE=$OPTARG ;;
-		# ?) echo "$0: Error in the command line options";;
+			# ?) echo "$0: Error in the command line options";;
 		esac
 	done
 	# Return exit status 0.

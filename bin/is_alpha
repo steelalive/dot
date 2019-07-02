@@ -1,6 +1,5 @@
-		if [[ "$1" != *[!a-zA-Z]* ]]; 
-			then
-			#success an alpha string
-			exit 0
-		fi
-		exit 1
+if [[ $1 != *[!a-zA-Z]* ]]; then
+	#success an alpha string
+	exit 0
+fi
+exit 1

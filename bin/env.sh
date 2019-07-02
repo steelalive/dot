@@ -28,17 +28,18 @@ else
 	shift
 fi
 set -a
-src=/src
+src=/ext/src
 cd $src || return
-if [[ $PWD == /src ]]; then
+if [[ $PWD == $src ]]; then
 	src="$PWD"
-	PS1='/src-ANDROID-\W-\$ '
+	PS1="$P{src}-ANDROID-\W-\$ "
 elif [[ $PWD == /ext ]]; then
 	src="$PWD"
 	PS1='/ext-ANDROID\-W-\$ '
 else
 	return
 fi
+. $dot/ex.sh
 unset JAVA_HOME ANDROID_JAVA_HOME ANDROID_TOOLCHAIN ANDROID_JAVA_TOOLCHAIN O OUT_DIR CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE ROM_LUNCH
 O='/ext/out'
 OUT_DIR="$O"
@@ -58,7 +59,7 @@ rom='zerofltecan'
 DEVICE_COMMON='zero-common'
 VENDOR='samsung'
 DEVICE='zerofltecan'
-#ARCH='arm'
+ARCH='arm64'
 #CARCH='armv7'
 CC='zapcc'
 CCACHE_DIR='/var/.ccache'
@@ -73,7 +74,7 @@ CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aa
 #CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
 ARCH="arm64"
 #CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
-#CROSS_COMPILE_ARM32='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
+CROSS_COMPILE_ARM32='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
 #CROSS_COMPILE=/src/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-
 #CROSS_COMPILE_ARM32=/src/preb
 #CROSS_COMPILE=/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
@@ -84,12 +85,11 @@ ARCH="arm64"
 #TARGET_TOOLS_PREFIX="$CROSS_COMPILE"
 CM_ROOT=$O
 NDK_DEBUG=0
-#CXX='zapcc++'
 #CXXFLAGS="$CFLAGS"
 #TARGET_USE_SDCLANG='true'
 #SDCLANG_PATH='prebuilts/clang/linux-x86/host/sdclang-3.8/bin'
 #SDCLANG_LTO_DEFS='device/qcom/common/sdllvm-lto-defs.mk'
-CXX="$CC"
+CXX="zapcc++"
 dot='/dot'
 kernel="$src/kernel/samsung/exynos7420"
 LANG='C'
@@ -102,14 +102,13 @@ OUT_DIR=$O
 ANDROID_NDK_ROOT='/ext/opt/ndk-bundle'
 ANDROID_API="android-28"
 ANDROID_ARCH="arm64"
-ANDROID_SYSROOT="$ANDROID_NDK_ROOT/platforms/$_ANDROID_API/$ANDROID_ARCH"
-ANDROID_DEV="$ANDROID_NDK_ROOT/platforms/$_ANDROID_API/$ANDROID_ARCH/usr"
+ANDROID_SYSROOT="$ANDROID_NDK_ROOT/platforms/$ANDROID_API/$ANDROID_ARCH"
+ANDROID_DEV="$ANDROID_NDK_ROOT/platforms/$ANDROID_API/$ANDROID_ARCH/usr"
 HOSTCC="$CC"
 ANDROID_TOOLCHAIN="$CROSS_COMPILE"
-
 #OUT_DIR_COMMON_BASE=$O
 #SHELL="${SHELL:-"$(command -v bash 2>/dev/null || command -v sh 2>/dev/null)"}"
-JAVA_HOME='/usr/lib/jvm/default'
+#JAVA_HOME='/usr/lib/jvm/default'
 SUBARCH='arm64'
 #TARGET_BUILD_TYPE='debug'
 #TARGET_BUILD_VARIANT='eng'
@@ -144,12 +143,14 @@ alias jacksetup='killall java;cd $src; rm -rf /root/.jack-se*;  $src/prebuilts/s
 alias jackstart='$src/prebuilts/sdk/tools/jack-admin start-server '
 alias makeclean='cd $src; m clobber; choosecombo 2 lineage_$DEVICE eng'
 alias lsconfig='ls $kernel/arch/arm64/configs'
+alias cdresult='cd $result'
 set +a
 combo() { choosecombo 2 lineage_$VENDOR eng; }
 srcenv() {
 	killall java zapccs
-	rmrf "/tmp/jack-" /tmp/*.log
-	mka otapackage -j$(nproc --all) || beep.sh
+	rm -rfv /tmp/jack-* /tmp/*.log
+	croot
+	m -j$(nproc --all) || beep.sh
 	#mka updatepackage -j$(nproc --all)
 }
 
@@ -161,9 +162,9 @@ if sed -r "s|:+|:|g" <<<$PATH &>/dev/null; then
 fi
 
 [[ $1 == quit ]] && return
-[[ -e $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip ]] || {
-	cp -av /last/misc-android/Pixel2MOD-Dark.zip $O/target/product/zerofltecan/obj/BOOTANIMATION/bootanimation.zip
-}
+#[[ -e $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip ]] || {
+#	cp -av /last/misc-android/Pixel2MOD-Dark.zip $O/target/product/zerofltecan/obj/BOOTANIMATION/bootanimation.zip
+#}
 #[[ -e kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig ]] || cp kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltexx_defconfig kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
 . build/envsetup.sh
 export -f add_lunch_combo
@@ -183,9 +184,9 @@ sed "s|/cm/|/lineage/|" -i $src/device/samsung/zero-common/*.sh $src/device/sams
 #for_sed 'CROSS_COMPILE=.*' 'CROSS_COMPILE='"\"$CROSS_COMPILE\""  $(echo $kernel/arch/arm/configs/*) src/kernel/motorola/msm8916/arch/arm/configs/harpia_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/msm8916_defconfig /dot/info/msm8916_defconfig $src/kernel/ti/omap4/arch/arm/configs/espresso_defconfig $src/kernel/ti/omap4/arch/arm/configs/espresso_kitkat_defconfig
 #for_sed 'TARGET_TOOLS_PREFIX.*' 'TARGET_TOOLS_PREFIX:='"$CROSS_COMPILE" $src/buildspec.mk
 #for_sed 'CONFIG_DEFAULT_HOSTNAME="(none)"' 'CONFIG_DEFAULT_HOSTNAME='"\"s4\"" $(echo $kernel/arch/arm/configs/*) $src/kernel/motorola/msm8916/arch/arm/configs/_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/msm8916_defconfig /dot/info/msm8916_defconfig $src/kernel/ti/omap4/arch/arm/configs/espresso_defconfig $src/kernel/ti/omap4/arch/arm/configs/espresso_kitkat_defconfig
-sed -e "s|CROSS_COMPILE   ?=.*|CROSS_COMPILE   ?= $CROSS_COMPILE|" -e "s|CROSS_COMPILE        :=.*|CROSS_COMPILE      := $CROSS_COMPILE|" -i $kernel/Makefile
+#sed -e "s|CROSS_COMPILE   ?=.*|CROSS_COMPILE   ?= $CROSS_COMPILE|" -e "s|CROSS_COMPILE        :=.*|CROSS_COMPILE      := $CROSS_COMPILE|" -i $kernel/Makefile
+cp -av /dot/info/Makefile $kernel/
 echo "hmm?"
-. /dot/setpath.sh aosp
 #/dot/bin/yorn && {
 #ln -s "$(command -v adb)" /usr/androbin 2>/dev/null
 yorn y && srcenv

@@ -1,21 +1,20 @@
 #!/bin/bash
 
-usage () {
+usage() {
 	echo "usage:" $@
 	exit 127
 }
 
-die () {
+die() {
 	echo $@
 	exit 128
 }
 
-failed () {
+failed() {
 	die "unable to create new workdir '$new_workdir'!"
 }
 
-if test $# -lt 2 || test $# -gt 3
-then
+if test $# -lt 2 || test $# -gt 3; then
 	usage "$0 <repository> <new_workdir> [<branch>]"
 fi
 
@@ -25,8 +24,8 @@ branch=$3
 
 # want to make sure that what is pointed to has a .git directory ...
 git_dir=$(cd "$orig_git" 2>/dev/null &&
-  git rev-parse --git-dir 2>/dev/null) ||
-  die "Not a git repository: \"$orig_git\""
+	git rev-parse --git-dir 2>/dev/null) ||
+	die "Not a git repository: \"$orig_git\""
 
 case "$git_dir" in
 .git)
@@ -39,15 +38,13 @@ esac
 
 # don't link to a configured bare repository
 isbare=$(git --git-dir="$git_dir" config --bool --get core.bare)
-if test ztrue = "z$isbare"
-then
+if test ztrue = "z$isbare"; then
 	die "\"$git_dir\" has core.bare set to true," \
 		" remove from \"$git_dir/config\" to use $0"
 fi
 
 # don't link to a workdir
-if test -h "$git_dir/config"
-then
+if test -h "$git_dir/config"; then
 	die "\"$orig_git\" is a working directory only, please specify" \
 		"a complete repository."
 fi
@@ -56,10 +53,8 @@ fi
 git_dir=$(cd "$git_dir" && pwd) || exit 1
 
 # don't recreate a workdir over an existing directory, unless it's empty
-if test -d "$new_workdir"
-then
-	if test $(ls -a1 "$new_workdir/." | wc -l) -ne 2
-	then
+if test -d "$new_workdir"; then
+	if test $(ls -a1 "$new_workdir/." | wc -l) -ne 2; then
 		die "destination directory '$new_workdir' is not empty."
 	fi
 	cleandir="$new_workdir/.git"
@@ -70,7 +65,7 @@ fi
 mkdir -p "$new_workdir/.git" || failed
 cleandir=$(cd "$cleandir" && pwd) || failed
 
-cleanup () {
+cleanup() {
 	rm -rf "$cleandir"
 }
 siglist="0 1 2 15"
@@ -79,8 +74,7 @@ trap cleanup $siglist
 # create the links to the original repo.  explicitly exclude index, HEAD and
 # logs/HEAD from the list since they are purely related to the current working
 # directory, and should not be shared.
-for x in config refs logs/refs objects info hooks packed-refs remotes rr-cache svn
-do
+for x in config refs logs/refs objects info hooks packed-refs remotes rr-cache svn; do
 	# create a containing directory if needed
 	case $x in
 	*/*)

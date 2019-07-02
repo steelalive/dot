@@ -2,7 +2,7 @@
 
 lsr() {
 	if is_in_path tree; then
-		command \tree --dirsfirst -pshF -C 
+		command \tree --dirsfirst -pshF -C
 	else
 		command \ls "$LS_OPTIONS" -R "$@"
 	fi

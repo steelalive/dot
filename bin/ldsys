@@ -2,9 +2,8 @@
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Tue Feb  6 06:11:31 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.2 - #_# #@#060218#@# #2#
 #3#::..#####################_/dot/bin/ldsys_#######################..::#3#
-if [[ -e /system/lib64 ]];then 
-LD_LIBRARY_PATH=/system/lib64 "$@"
+if [[ -e /system/lib64 ]]; then
+	LD_LIBRARY_PATH=/system/lib64 "$@"
 else
-LD_LIBRARY_PATH=/system/lib "$@"
+	LD_LIBRARY_PATH=/system/lib "$@"
 fi
-

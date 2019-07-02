@@ -53,9 +53,6 @@ if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	#+all /dot
 	ANBG "One-time init completed.$R\\n"
 fi
-if [[ -d /last/dot ]]; then
-	VERSION_CONTROL=numbered cp -av --dereference --strip-trailing-slashes --update --context --backup /dot /last/ &>/dev/null
-fi
 
 pgrep ssh-agent &>/dev/null || ssh-agent >/tmp/ssh-agent 2>/dev/null
 
@@ -169,7 +166,7 @@ DMENU_OPTIONS='-nb white -nf black -sb #AAAAAA -sf white'
 EXTRACT_UNSAFE_SYMLINKS=1
 tmp_serial='/tmp/adbserial'
 src=${src:-/src}
-O=${O:-$src/out}
+O=${O:-/ext/out}
 FCEDIT='nano'
 FORCE_UNSAFE_CONFIGURE=1
 FREEOPERTIES='truetype:interpreter-version=38'
@@ -188,6 +185,7 @@ CGO_LDFLAGS="-g -Ofast -O3 -O2"
 GIT_PROMPT_COMMAND_FAIL="😠 ${Red}✘ "
 GIT_PROMPT_COMMAND_OK="😊 ${Green}✔  "
 CHARSET=UTF-8
+result="$(printf "%s" $O/target/product/*)"
 CPPFLAGS="-O3"
 FCFLAGS="-g -O3"
 FFLAGS="-g -O3"
@@ -199,8 +197,6 @@ CXX='zapcc++'
 MAKEFLAGS="-j$(nproc --all)"
 DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
-GOBIN="$GOROOT"/bin
-GOPATH="$HOME"/go
 GREP_COLORS='ms=38;5;226:mc=02;33:sl=01;37:cx=01;36:fn=35:ln=32:bn=32:se=36'
 JAVA_HOME=/usr/lib/jvm/default
 HH_CONFIG='hicolor'
@@ -226,7 +222,8 @@ LESSHISTFILE=-
 LESSOPEN="| $(command -v highlight) %s --quit-if-one-screen --out-format truecolor --quiet --force --style candy --syntax bash"
 LOGDEST="$BUILDDIR"
 LS_COLLATE='C'
-LD_LIBRARY_PATH='/usr/lib:/usr/local/lib'; ldconfig
+LD_LIBRARY_PATH='/usr/lib:/usr/local/lib' 
+ldconfig
 [[ $HOSTNAME == PC ]] && LS_OPTIONS=' -l --color=auto --quoting-style=shell-escape --ignore-backups --group-directories-first --file-type --almost-all --human-readable -L'
 MALLOC_CHECK_=3
 MALLOC_PERTURB_=$((RANDOM % 255 + 1))

@@ -1,135 +1,3 @@
-archon-exec $(realpath 2ndline.apk) 
-su arch
-exit
-i3
-startx
-pas startx
-yay startx
-sx
-sudo sx
-su
-mount -av
-nano /etc/fstab
-exit
-nano /etc/fstab
-mount-av
-mount -av
-nano /etc/fstab
-mount /dev/sda4 /boot
-exit
-su
-. /dot/setpath.sh 
-. /dot/fn.sh 
-. /dot/al.sh 
-ls
-lsblk
-mount /dev/sda4 /boot
-ls
-adb shell
-ad pushdot
-adb shell
-sudo su
-sudo su
-sudo su
-sudo su
-sudo su
-sudo su
-ls
-. /etc/profile
-nano /etc/profile
-echo $HOME
-ls /root
-nano /root/.bashrc
-exec sudo /bin/bash -il
-nano /etc/profile
-sudo nano /etc/profile
-. /etc/profile
-tty
-echo $USER
-if ! grep -q tty <<<$(tty);then     [[ $USER == root ]] || exec su 0 -c /bin/bash -il; fi
-if ! grep -q tty <<<$(tty);then     [[ $USER == root ]] || exec su 0 -c /bin/bash -il; fi
-grep -q tty <<<$(tty)
-sudo nano /etc/profile
-. /etc/profile
-su 0 -c /bin/bash -il
-su 0 -c /bin/bash -i -l
-su 0 -c /bin/bash
-su root -c /bin/bash
-exec su root -c /bin/bash
-exit
-exec su root -c "bash -il"
-exec su root -c "bash -l"
-exec su root -c "bash -l"
-ls
-exec sudo su root -c "/bin/bash -il"
-sudo su bash
-sudo su 0 bash
-sudo su root bash
-sudo su root -c bash
-systemctl stop sddm
-systemctl disable sddm
-. /etc/profile
-su root -c "bash -l"
-ls /home
-nano /dot/bin/setup-arch.sh
-useradd
-useradd -m -d /shell -g root -G wheel,users,shell shell && chown -cR shell:root /root /tmp $dot 
-usermod -m -d /shell -g root -G wheel,users,shell shell && chown -cR shell:root /root /tmp $dot 
-nano /dot/bin/setup-arch.sh
-nano /dot/bin/setup-arch.sh
-lsd
-ls
-ls
-. /etc/profile
-sudo systemctl start sddm
-dmesg
-manc sddm
-exit
-sudo su
-sudo su
-sudo su
-. /etc/profile
-src
-sudo su
-sudo su
-ls
-cd /
-sudo su
-ls
-sudo su
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
 echo '**Enjoy shellscript!**'
 echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
 journalctl -xe
@@ -498,3 +366,135 @@ ls
 gitreset
 cd /src
 m otapackage
+. build/envsetup.sh 
+lunch
+env
+m otapackage
+ca env.sh
+cd /ext/out/target/product/zerofltecan/
+ls
+ls
+. env.sh
+killjobs
+ls
+path
+env
+e setpath
+e setpath
+resync
+. env.sh
+resync
+. env.sh
+cd /tmp
+ls
+rm -rf *
+ls
+. env.sh
+ls
+makeconfig
+e makeconfig
+e makeconfig
+makeconfig
+echo $kernel
+cd $kernel
+makeconfig
+ca makekernel
+ca makeconfig
+make ARCH=arm64 lineageos_zerofltecan_defconfig
+make xconfig
+echo $CROSS_COMPILE
+. env.sh
+rm /dot/info/.config
+resync
+ls
+. env.sh
+. env.sh
+cp -av  /ext/out/target/product/zerofltecan/lineage_zerofltecan-ota-eng.root.zip /last/s6/
+m clobber
+ls
+m help
+reporeset
+resync
+ls
+. env.sh
+ls
+su
+. env.sh
+ ls
+srcenv
+adb push /ext/out/target/product/zerofltecan/lineage_zerofltecan-ota-eng.root.zip /sdcard/Download/
+resync
+ls
+rm -rf *
+repo sync
+ls
+. env.sh
+ mm SystemUI
+m
+. env.sh
+m
+mm android_system_stubs_current
+ls
+ls
+. env.sh
+ls
+ls
+ updateall
+resync
+. env.sh
+e env.sh
+e env.sh
+e env.sh
+. env.sh
+. env.sh
+cd Ã/ext/last/
+ls
+cd /ext
+ls
+cd last/
+ls
+rm -rf BACKUP BACKUP.zip DCIM PortableApps winbackup pacman Winpse
+df
+df -h
+df -h --color
+df -h --help
+cd /src
+srcenv
+. env.sh
+m clobber
+. env.sh
+resync
+. env.sh
+rm -rf /tmp/*
+ls /tmp
+srcenv
+. env.sh
+mm core-libart
+srcenv
+mm Backgrounds 
+srcenv
+env
+srcenv
+mm Email
+m
+m clobber
+srcenv
+ls
+. env.sh
+mm Backgrounds
+srcenv
+mm Bluetooth
+export LLVM_ENABLE_THREADS=1
+srcenv
+mm CaptivePortalLogin
+m
+mm DeskClock
+m
+mm Email
+m
+m clobber
+reporeset
+resync
+. env.sh
+. env.sh
+resync

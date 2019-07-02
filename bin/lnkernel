@@ -4,15 +4,14 @@
 #3#::..#####################_MAIN_#######################..::#3#
 # Author: __INDNYALL__#
 realpath -P /prog/gcc-arm-none-eabi-7-2018-q2-update/bin/arm-none-eabi- /prog/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi/bin/arm-eabi- /prog/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-lnkernel () 
-{ 
-    [[ $1 ]] && local prefix=$1 && for exec in ar as cpp gcc ld nm objcopy objdump size strip;
-    do
-        ln -sfv ${prefix}${exec} arm-linux-androidkernel-${exec};
-    done
-     [[ $1 ]] && { ln -sfv $PWD/arm-linux-androidkernel-* /usr/androbin/;
-     ln -sfv $PWD/${prefix}* /usr/androbin/
-     ln -sfv /usr/bin/python2.7 /usr/androbin/python
- }
+lnkernel() {
+	[[ $1 ]] && local prefix=$1 && for exec in ar as cpp gcc ld nm objcopy objdump size strip; do
+		ln -sfv ${prefix}${exec} arm-linux-androidkernel-${exec}
+	done
+	[[ $1 ]] && {
+		ln -sfv $PWD/arm-linux-androidkernel-* /usr/androbin/
+		ln -sfv $PWD/${prefix}* /usr/androbin/
+		ln -sfv /usr/bin/python2.7 /usr/androbin/python
+	}
 }
 lnkernel "$@"

@@ -27,9 +27,9 @@ esac
 
 center_string "${RED}${UNDER}Network service and wifi adapter reset v0.13 ${PACKAGER}${R}\n"
 if is_in_path macchanger; then
-    macchanger wlan0 --show | grep Current | grep -i CA:91:5E:71:72:E7 || ip link set $NET down;macchanger wlan0 --mac=CA:91:5E:71:72:E7
+	macchanger wlan0 --show | grep Current | grep -i CA:91:5E:71:72:E7 || ip link set $NET down
+	macchanger wlan0 --mac=CA:91:5E:71:72:E7
 fi
-
 
 dhcpcd -k -x "$NET" >/dev/null 2>&1
 dhcpcd -k -x >/dev/null 2>&1
@@ -84,10 +84,11 @@ for service in NetworkManager.service \
 	kea-idhcp4.service \
 	kea-dhcp6.service \
 	wpa_supplicant \
-	dhclient; do case $1 in
+	dhclient; do
+	case $1 in
 	reverse | enable)
-	#	rm /etc/resolv.conf
-	#	ln -sF /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+		#	rm /etc/resolv.conf
+		#	ln -sF /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 		systemctl enable $service &>/dev/null &
 		disown
 		systemctl start $service &>/dev/null &

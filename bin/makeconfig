@@ -1,12 +1,12 @@
 #!/bin/bash
-cd $kernel 
-if [[ $1 = merge ]]; then
-ARCH=arm64 scripts/kconfig/merge_config.sh arch/arm64/configs/lineageos_zerofltecan_defconfig android/configs/android-base.cfg android/configs/android-recommended.cfg
+cd $kernel
+if [[ $1 == merge ]]; then
+	ARCH=arm64 scripts/kconfig/merge_config.sh arch/arm64/configs/lineageos_zerofltecan_defconfig android/configs/android-base.cfg android/configs/android-recommended.cfg
 else
-make ARCH=arm64 lineageos_zerofltecan_defconfig 
-make xconfig
-cp .config $dot/info
-cp .config $kernel/arch/arm64/configs/lineageos_zerofltecan_defconfig
-make distclean
+	cd $kernel
+	make ARCH=arm64 lineageos_zerofltecan_defconfig
+	make xconfig
+	cp .config $dot/info
+	cp .config $kernel/arch/arm64/configs/lineageos_zerofltecan_defconfig
+	make distclean
 fi
-

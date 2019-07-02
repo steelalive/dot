@@ -6,7 +6,7 @@
 #3#::..#####################_/dot/bin/repoinit_#######################..::#3#
 
 repoinit() {
-	[[ -e $src/.repo/manifest.xml ]] &&  roomer >$src/.repo/local_manifests/room.xml
+	[[ -e $src/.repo/manifest.xml ]] && roomer >$src/.repo/local_manifests/room.xml
 	local rep=${1:-"https://github.com/LineageOS/android.git"}
 	local branch=${2:-"cm-14.1"}
 	repo --color=auto init -u "$rep" -b "$branch" --depth=1 --platform=linux $3 $4 $5 #--group=all

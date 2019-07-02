@@ -83,19 +83,20 @@ test $HOSTNAME && hostname $HOSTNAME
 alias e='. $dot/bin/e'
 cmdcompile() {
 	cmd package compile -a -m everything
-	fstrim /system; fstrim /data
+	fstrim /system; 
+fstrim /data;
+fstrim /cache
 }
 
 hash remnt &>/dev/null && remnt
 
 unalias src 2>/dev/null
 
-
 pminstall() {
 	[[ $1 ]] || command \ls *.apk
 	for apk; do
 		ANLO "Installing $apk ...\n"
-		pm install -r -g "$apk"
+		pm install --user 0 -r -g "$apk"
 	done
 }
 
@@ -181,7 +182,8 @@ unalias nano
                 dev_index="$( echo $zram | grep -o "[0-9]*$" )"
        #         write /sys/class/zram-control/hot_remove ${dev_index}
                 ${swff} ${zram_dev} && zram_reset ${zram}
-        } done
+        }
+        done
 
 #        setprop vnswap.enabled 0
  #       setprop ro.config.zram 0

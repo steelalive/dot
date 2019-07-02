@@ -3,11 +3,10 @@
 #2#::.. Last edit: - Thu Jul  5 00:10:03 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-07-05#@# #2#
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/adbootanim_#######################..::#3#
-select anim in $ex/misc-android/BOOTANIM/*.zip;do
-    break
+select anim in $ex/misc-android/BOOTANIM/*.zip; do
+	break
 done
 remnt
 cp -v "$anim" /system/media/bootanimation.zip
 chmod 644 /system/media/bootanimation.zip
 chown 0:0 /system/media/bootanimation.zip
-

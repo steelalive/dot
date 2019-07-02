@@ -86,14 +86,25 @@ org.lineageos.trebuchet
 org.xbmc.ftmc
 org.xbmc.kodi
 jp.co.omronsoft.openwnn
-service.odtcfactory.sec.com.odtcfactoryservice" 
-
+service.odtcfactory.sec.com.odtcfactoryservice"
 
 DELETE="BCService
+Updater 
+StorageManager
 BasicDreams
 EasterEgg 
 LatinIME 
 PrintSpooler 
+Recorder
+VpnDialogs
+WallpaperCropper
+Eleven
+BuiltInPrintService
+Email
+Exchange2
+Jelly
+PrintRecommendationService
+com.google.android.apps.wellbeing
 Traceur 
 BookmarkProvider 
 GoogleFeedback 
@@ -131,6 +142,7 @@ ShareLink
 SplitSoundService
 SubTitle
 Tag
+AudioFX
 TaskEdgePanel
 TasksProvider
 Traceur
@@ -143,14 +155,14 @@ WallpaperBackup
 WebViewGoogle
 smartfaceservice
 webview
-AntHalService" 
+AntHalService"
 
 if [[ $1 ]]; then
-PHONE="com.android.smspush 
+	PHONE="com.android.smspush 
 com.android.mms.service 
 com.android.server.telecom 
 com.android.CarrierConfigerconfig"
-PHONEFOLDERS="telresources
+	PHONEFOLDERS="telresources
 DialerReceiver
 CarrierConfig
 Dialer
@@ -162,14 +174,14 @@ TelephonyProvider
 VpnDialogs"
 fi
 
-
-
 for dir in '/' /data/app /system/app /system/priv-app; do
 	cd "$dir"
-	for crap in $DELETE
-		do full=*"${dir}/${crap}"*
-		[[ -e "$full" ]] && rm -rfv "${full}"* && ANRED "UNINSTALLED ${Y}$full${R} ...\n"
-		rm -rfv "${dir}/${crap}"* && ANRED "UNINSTALLED ${Y}${dir}/${crap}${R} ...\n"
+	for crap in $DELETE $PMU; do
+		full=*"${dir}/${crap}"*
+		[[ -e $full ]] && rm -rfv "${full}"* && ANRED "UNINSTALLED ${Y}$full${R} ...\n"
+		[[ -e "${dir}/${crap}" ]] && rm -rfv "${dir}/${crap}"* && ANRED "UNINSTALLED ${Y}${dir}/${crap}${R} ...\n"
+        [[ -e $crap ]] && rm -rfv *"$crap"* ANRED "UNINSTALLED ${Y}${dir}/${crap}${R} ...\n"
 	done
 done
 pmu $PMU
+rm_empty_dir /system/app/* /system/priv-app/*

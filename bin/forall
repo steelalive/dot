@@ -1,8 +1,7 @@
 #!/bin/bash
 for file in ./* ./.??*; do
 	[[ -r $file ]] || continue
-		ANBB "${file}:\n"
-		"$@" "$file"
-		liner
+	ANBB "${file}:\n"
+	"$@" "$file"
+	liner
 done
-

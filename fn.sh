@@ -94,8 +94,6 @@ h() {
 }
 setenv() { export "$1=$2"; }
 export -f setenv
-unsetenv() { unset "$1"; }
-export -f unsetenv
 lc() { ruby colorls.rb "$@"; }
 function ll() { command ls -l --color=always "$@" | awk '
     {
@@ -182,14 +180,12 @@ wch() {
 		ca "$(command -v "$@")"
 	fi
 }
-title() { # change title of window
-	printf "%b" "\x1b]0;$*\007"
 
+
+setenv () 
+{ 
+    export "$1=$2"
 }
-xv() {
-	case $- in *[xv]*) set +xv ;; *) set -xv ;; esac
-}
-export -f xv
 
 stde() {
 	cat <<<"$@" 1>&2
@@ -203,9 +199,9 @@ s1() {
 
 }
 
-title "$(uname -rnsm)"
+#title "$(uname -rnsm)"
 bashnorc() {
-	exec env -i kernel="$src/kernel/samsung/exynos7420" O=/ext/out OUT_DIR=/ext/out TOP=/src src=/src LC_ALL=C PS1="\$ " PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
+	exec env -i kernel="/src/kernel/samsung/exynos7420" O=/ext/out OUT_DIR=/ext/out TOP=/src src=/src LC_ALL=C PS1="\$ " PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
 }
 path_default() {
 	unset PATH
@@ -221,3 +217,4 @@ path_append() {
 	[ -z "$PATH" ] && PATH=$(gawk 'BEGIN {print ENVIRON["PATH"]}')
 	export PATH="$PATH:$*"
 }
+

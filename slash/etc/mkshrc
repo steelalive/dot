@@ -14,12 +14,12 @@ if test -x /data/dot/slash/sbin/bash; then
 fi
 
 PS1='$USER@$HOSTNAME:${PWD:-?} '"$PS1 "
-if [ -d "/sbin/.magisk/busybox" ]; then
-  BBDIR="/sbin/.magisk/busybox"
-elif [ -d "/sbin/.core/busybox" ]; then
-  BBDIR="/sbin/.core/busybox"
-fi
-PATH=$PATH:/sbin:$BBDIR:.
+#if [ -d "/sbin/.magisk/busybox" ]; then
+#  BBDIR="/sbin/.magisk/busybox"
+#elif [ -d "/sbin/.core/busybox" ]; then
+#  BBDIR="/sbin/.core/busybox"
+#fi
+#PATH=$PATH:/sbin:$BBDIR:.
 export TERM HOME MKSH HOSTNAME SHELL USER PATH
 # Place your own aliases in /sdcard/.aliases for ease.
 

@@ -5,11 +5,12 @@
 arg1="$1"
 args="$@"
 #if [[ "$1" = silent ]];then
-ping() { if [[ -x /usr/bin/grc ]]; then
-	/usr/bin/grc -es --colour=auto /bin/ping "$@"
-else
-	command \ping "$@"
-fi
+ping() {
+	if [[ -x /usr/bin/grc ]]; then
+		/usr/bin/grc -es --colour=auto /bin/ping "$@"
+	else
+		command \ping "$@"
+	fi
 }
 export -f ping
 suppress() { "$@" >/dev/null 2>&1; }

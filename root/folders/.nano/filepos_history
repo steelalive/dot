@@ -198,3 +198,4 @@
 /src/kernel/samsung/exynos7420/Makefile 1485 1
 /src/.repo/local_manifests/local.xml 12 65
 /root/.config/nvim/config/plugins.yaml 256 1
+/shell/.xinitrc 1 14

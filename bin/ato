@@ -10,11 +10,12 @@ init) f="${dot}"/init.sh ;;
 ps1) f="${dot}"/ps1.sh ;;
 tst) f=/tst ;;
 tst2) f=/tst2 ;;
-*) if on silent "$1" echo; then
-	f="$(on silent $1 echo)"
-else
-	f="$@"
-fi
+*)
+	if on silent "$1" echo; then
+		f="$(on silent $1 echo)"
+	else
+		f="$@"
+	fi
 	;;
 esac
 if ! [[ -e $f ]]; then

@@ -45,7 +45,7 @@ adbsyncdot() {
 	adb_read
 	adb-sync --two-way $files_to_copy /data/dot
 	ANG 'Sync completed!\\n'
-    +777 -R /dot
+	+777 -R /dot
 	liner
 }
 export -f adbsyncdot
@@ -132,23 +132,23 @@ if [[ ! $su_bin ]]; then
 	export su_bin
 fi
 if [[ ! $ex ]]; then
-if ! { ex=$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null) && sutest $ex; }; then
-	if $adb devices | grep -q recovery &>/dev/null; then
-		adbde shell '[ -d /external_sd ]' 2>/dev/null && export ex=/external_sd
-	elif adbde shell '[[ -d "$(echo /mnt/media_rw/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
-		ex="$(adbde shell 'echo /mnt/media_rw/????-????' 2>/dev/null)" 2>/dev/null
-	elif adbde shell '[[ -d "$(echo /storage/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
-		ex="$(adbde shell 'echo /storage/????-????' 2>/dev/null)" 2>/dev/null
-    elif adbde shell '[[ -e /storage/EFEA-A128 ]]' 2>/dev/null;then
-        ex=/storage/EFEA-A128
-    elif adbde shell '[[ -d /storage/extSdCard ]]' 2>/dev/null;then
-        ex='/storage/extSdCard'
+	if ! { ex=$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null) && sutest $ex; }; then
+		if $adb devices | grep -q recovery &>/dev/null; then
+			adbde shell '[ -d /external_sd ]' 2>/dev/null && export ex=/external_sd
+		elif adbde shell '[[ -d "$(echo /mnt/media_rw/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
+			ex="$(adbde shell 'echo /mnt/media_rw/????-????' 2>/dev/null)" 2>/dev/null
+		elif adbde shell '[[ -d "$(echo /storage/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
+			ex="$(adbde shell 'echo /storage/????-????' 2>/dev/null)" 2>/dev/null
+		elif adbde shell '[[ -e /storage/EFEA-A128 ]]' 2>/dev/null; then
+			ex=/storage/EFEA-A128
+		elif adbde shell '[[ -d /storage/extSdCard ]]' 2>/dev/null; then
+			ex='/storage/extSdCard'
+		fi
 	fi
-fi
 fi
 export ex=/sdcard
 case $1 in
-tv )
+tv)
 	shift
 	export ANDROID_SERIAL=$tv:5555
 	adbconnect $ANDROID_SERIAL
@@ -157,7 +157,7 @@ tv )
 	#	push_key
 	return
 	;;
-s4 |cell )
+s4 | cell)
 	shift
 	export ANDROID_SERIAL=$cell:5555
 	adbconnect "$adb"
@@ -166,20 +166,21 @@ s4 |cell )
 	push_key
 	return
 	;;
- tabip | adbtab)
-     ▏ shift
-  ▏ export ANDROID_SERIAL=192.168.0.9:5555
-  ▏ adbconnect "$adb"
-  ▏ echo_adbconnect
-    ▏ echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
+tabip | adbtab)
+	▏ shift
+	▏ export ANDROID_SERIAL=192.168.0.9:5555
+	▏ adbconnect "$adb"
+	▏ echo_adbconnect
+	▏ echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
 
-  ▏ push_key
- ▏ return
+	▏ push_key
+	▏ return
 
-  ▏ ;;
+	▏
+	;;
 
-
-g4u* | g4_* | usb)
+\
+	g4u* | g4_* | usb)
 	shift
 	export ANDROID_SERIAL=1015fa08983d3602
 	ANG "Connected to usb adb\n"
@@ -188,11 +189,10 @@ g4u* | g4_* | usb)
 	fi
 
 	echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
-        ex='/sdcard'
+	ex='/sdcard'
 	return
 	;;
 esac
-
 
 export exsd=$ex exdo="$ex/Download" ex
 #[[ $ex == /sdcard ]] && ANBORANGE '$ex is /sdcard. This is a problem?'
@@ -266,8 +266,8 @@ e | vim)
 	;;
 push)
 	shift
-    download=$ex
-    [[ $ex ]] || ANRED "$ex \$ex is not defined.\n"
+	download=$ex
+	[[ $ex ]] || ANRED "$ex \$ex is not defined.\n"
 	echo $adb push "$@" $ex
 	$adb push "$@" $ex
 	return
@@ -306,7 +306,7 @@ pushdot)
 		adbde mount /system
 		$adb push /dot/* /data/dot/
 		adbde shell /data/dot/slash/sbin/bash /data/dot/slash/pushthem
-        abdde /data/dot/slash/Busybox-Installer.bin
+		abdde /data/dot/slash/Busybox-Installer.bin
 		adbde shell bash /system/etc/mkshrc init
 		adbde push /last/dot.zip $ex
 	fi
@@ -343,17 +343,18 @@ syncmisc)
 	return
 	;;
 ota)
-	adbde push  $O/debug/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/debug/target/product/harpia | tail -1) /sdcard/Download/lineage.zip ||
-	adbde push  $O/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/target/product/harpia | tail -1) /sdcard/Download/lineage.zip
+	adbde push $O/debug/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/debug/target/product/harpia | tail -1) /sdcard/Download/lineage.zip ||
+		adbde push $O/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/target/product/harpia | tail -1) /sdcard/Download/lineage.zip
 	echo "Reboot recovery?"
 	yorn && adb reboot recovery
 	;;
 log)
 	shift
 	adbde shell setenforce 0
-	if adb logcat --help | grep -q '\--format='; then adb logcat --format=color;
+	if adb logcat --help | grep -q '\--format='; then
+		adb logcat --format=color
 	else
-	  adbde logcat -C "$@"
+		adbde logcat -C "$@"
 	fi
 
 	return
@@ -382,6 +383,6 @@ skip)
 	adbsyncdot
 	adbde shell "$@"
 	adbsyncdot
-    +user -R /dot
+	+user -R /dot
 	;;
 esac

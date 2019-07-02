@@ -7,10 +7,10 @@
 #is_in_path shfmt || exit
 
 shfmtw() {
-	for script; do
-		if is_bash "$script" &>/dev/null; then
-			shfmt -w -s -i 0 "$script" 2>/dev/null && ANORANGE "[$?] -- ${C}$1 ${O}formatting has been optimized.\\n"
-		fi
-	done
+	if is_bash "$script" &>/dev/null; then
+		shfmt -w -s -i 0 "$script" 2>/dev/null && ANORANGE "[$?] -- ${C}$1 ${O}formatting has been optimized.\\n"
+	fi
 }
-shfmtw "$@"
+for args in "$@"; do
+	shfmtw "$args"
+done

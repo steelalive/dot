@@ -24,7 +24,7 @@ sd | ds)
 	systemctl "$@"
 	;;
 esac
-for arg in "$@";do
-systemctl help "$arg"
-systemctl status "$arg"
+for arg in "$@"; do
+	systemctl help "$arg"
+	systemctl status "$arg"
 done

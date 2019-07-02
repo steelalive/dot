@@ -45,7 +45,6 @@ if [[ ! -e $MKINIT ]]; then
 fi
 export HOME=/data/dot/root
 alias src='. /etc/mk '
-setenforce 0 &>/dev/null
 
 if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 	umask 002

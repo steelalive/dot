@@ -27,7 +27,8 @@ if [[ $1 == last ]]; then
 fi
 if [[ $1 == loop ]] || [[ $1 == iso ]]; then
 	[[ $2 ]] || select iso in ./*.iso ./*.img; do
-		echo $iso;break
+		echo $iso
+		break
 	done
 	[[ $iso ]] || iso="$2"
 	mkdir -p /mnt/iso

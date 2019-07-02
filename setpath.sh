@@ -44,7 +44,8 @@ $src/external/selinux/prebuilts/bin
 $src/prebuilts/android-emulator/linux-x86_64
 $O/debug/host/linux-x86/bin
 $O/host/linux-x86/bin
-/ext/opt/prebuilt/linux-x86_64/bin"
+/ext/opt/prebuilt/linux-x86_64/bin
+$(echo /ext/opt/*/**/bin)"
 fi
 allpath+="/usr/lib/cw
 /sbin/supersu/xbin
@@ -118,4 +119,4 @@ fi
 if sed -r "s|:+|:|g" <<<$PATH &>/dev/null; then
 	PATH="$(sed -r "s|:+|:|g" <<<$PATH)"
 fi
-unset IFS future_path future_path_test
+unset IFS future_path future_path_test cdpath consolidate

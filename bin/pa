@@ -13,7 +13,7 @@ if command -v xclip 1>/dev/null; then
 	if [[ -p /dev/stdin ]]; then
 		# stdin is a pipe
 		# stdin -> clipboard
-		xclip -i 
+		xclip -i
 		ANBG "Saved to clipboard"
 		echo
 	else

@@ -11,4 +11,4 @@
 [[ -e $1 ]] || exit
 +user "$@"
 +777 "$@"
-fixdot fix 
+fixdot fix

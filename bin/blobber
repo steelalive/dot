@@ -1,11 +1,9 @@
 #!/bin/bash
 
-files=$(for extract in $(find /src -name extract-files.sh); do dirname $extract;done)
-blobs="extract-files.sh";
+files=$(for extract in $(find /src -name extract-files.sh); do dirname $extract; done)
+blobs="extract-files.sh"
 echo $files
-for result in $files;
-do
-cd "$result"
-[[ -e $blobs ]] && ./$blobs /ext/s6;
+for result in $files; do
+	cd "$result"
+	[[ -e $blobs ]] && ./$blobs /ext/s6
 done
-
