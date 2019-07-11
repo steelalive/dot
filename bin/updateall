@@ -7,8 +7,8 @@ wp || exit
 
 [[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR
 
-suuser "yay -Syu --devel --needed --noconfirm"
-suuser -c "yay -S --needed --noconfirm -ua"
+suuser "yay -Syu --devel --needed --noconfirm --force"
+suuser "yay -S --needed --noconfirm -ua"
 paccache --keep 1 --verbose --remove
 is_in_path go && go get -u all
 
@@ -65,6 +65,7 @@ python3 -m pip_review --auto && pip-check -c pip3 -rfHu
 	fi
 	#+user -R /root /shell /home /dot &>/dev/null
     cpan -u
+    suuser "yay -Y --gendb"
 	### Neovim setup ###
 	cd /root/.config/nvim && {
 		gitreset

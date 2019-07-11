@@ -1,4 +1,3 @@
-echo '**Enjoy shellscript!**'
 echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
 journalctl -xe
 mount /dev/sdc3 /last
@@ -498,3 +497,4 @@ resync
 . env.sh
 . env.sh
 resync
+su

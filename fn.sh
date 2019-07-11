@@ -218,3 +218,9 @@ path_append() {
 	export PATH="$PATH:$*"
 }
 
+err() {
+	EXIT=$?
+	printf "${W}${0} : $RED""$*""\\n" >&2
+	return $EXIT
+}
+

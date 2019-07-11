@@ -4,7 +4,6 @@
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Thu May 31 11:56:56 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.9 - #_# #@#310518#@# #2#
 #3#vi ft=fsee ::..#####################_/dot/bin/on_#######################..::#3#
-#!/bin/bash
 for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
 for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
 for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath; do

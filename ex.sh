@@ -29,7 +29,7 @@ set -a
 eval "$(dircolors --sh $dot/.dir_colors)"
 if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	
-	NET=eth0
+	NET=wlan0
 	$dot/bin/wp
 	touch /tmp/INIT
 	mkdir -p /tmp &>/dev/null
@@ -151,7 +151,7 @@ ARG10='arg0 Arg1 aRg2 arG3 ARG4 arg5 ArG6 arg7 arg8 arg9 arg10 ARG11'
 BACKUP="/last/BACKUP"
 BASH="${BASH:-$(command -v bash 2>/dev/null)}"
 BROADCAST='192.168.0.1'
-BUILDDIR=/tmp/makepkg
+BUILDDIR='/tmp/makepkg'
 BROWSER='lynx -dump'
 CCACHE_DIR="/var/.ccache"
 CCACHE_TEMPDIR="/tmp/.ccache"
@@ -166,7 +166,7 @@ DMENU_OPTIONS='-nb white -nf black -sb #AAAAAA -sf white'
 EXTRACT_UNSAFE_SYMLINKS=1
 tmp_serial='/tmp/adbserial'
 src=${src:-/src}
-O=${O:-/ext/out}
+O='/ext/out'
 FCEDIT='nano'
 FORCE_UNSAFE_CONFIGURE=1
 FREEOPERTIES='truetype:interpreter-version=38'
@@ -267,7 +267,7 @@ alias more='less'
 XDG_CACHE_HOME="$HOME/.cache"
 auto_resume=1
 broadcast='192.168.0.1'
-ccache -M 8G &>/dev/null
+
 chmod 777 /tmp/loadcpu /tmp/prompt /tmp/START.1 2>/dev/null
 chromium="/usr/bin/chromium --disk-cache-dir=/tmp/profile-sync-daemon --scroll-pixels=600 --disk-cache-size=629145600 --memory-model=high --password-store=basic --no-proxy-server --user-data-dir=/root/.config/chromium %U"
 force_color_prompt=yes

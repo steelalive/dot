@@ -17,6 +17,7 @@ chmod 777 -R /data/dot
 dot=/data/dot
 ln -sf $slash/etc/mkshrc /system/etc/
 ln -sf $dot/root/.nanorc /system/etc/nanorc
+ln -sf $dot/root/.nanorc /sdcard/
 ln -sf $slash/etc/bash /system/etc/ 2>/dev/null
 cp -a $slash/etc/terminfo /system/etc/
 ln -sf $slash/EST5EDT /system/etc/localtime
@@ -26,14 +27,9 @@ ln -sf $slash/etc/nfsinjector/service.sh /system/etc/init.d/
 ln -sf $slash/etc/fde.ai /system/etc
 ln -sf $slash/etc/nfsinjector.sh /system/etc/init.d/
 cat $ex/kernel.sh >/system/etc/init.d/kernel.sh
-mkdir -p /system/etc/ssh
-[ -e /system/etc/ssh/sshd_config ] || ln -s /dot/etc/folders/ssh/sshd_config /system/etc/ssh/sshd_config
-[ -e /system/etc/highlight ] || ln -s $slash/etc/highlight /system/etc
-[ -e /etc/pacman.conf ] || { [ -e $lux/etc/pacman.conf ] && cp -av $lux/etc/pacman.conf /system/etc/; }
 cp -av $slash/sbin/bash /system/xbin/
 cp -av $slash/sbin/bash /system/bin/
 ln -sf /proc/self/mounts /system/etc/mtab
-#ln -sf $lux/etc/pam.d /system/etc/
 echo EST5EDT >/system/etc/timezone
 cd /data/dot/slash || exit
 echo "Initialize system..."
@@ -49,7 +45,7 @@ if ! grep "/system/etc/mk" /system/etc/mkshrc; then
 	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
 	chmod -R 0777 /data/dot
 fi
-if ! settings list system | grep 'en-US,fr-CA'; then
+if ! settings list system | grep 'en-US,fr-CA' || [[ $1 ]]; then
 	echo "Some defaults settings applied..."
 	set -x
 	settings put global policy_control immersive.full=

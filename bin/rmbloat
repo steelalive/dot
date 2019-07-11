@@ -178,10 +178,10 @@ for dir in '/' /data/app /system/app /system/priv-app; do
 	cd "$dir"
 	for crap in $DELETE $PMU; do
 		full=*"${dir}/${crap}"*
-		[[ -e $full ]] && rm -rfv "${full}"* && ANRED "UNINSTALLED ${Y}$full${R} ...\n"
-		[[ -e "${dir}/${crap}" ]] && rm -rfv "${dir}/${crap}"* && ANRED "UNINSTALLED ${Y}${dir}/${crap}${R} ...\n"
-        [[ -e $crap ]] && rm -rfv *"$crap"* ANRED "UNINSTALLED ${Y}${dir}/${crap}${R} ...\n"
+		[[ -e $full ]] && rm -rf "${full}"* && ANRED "UNINSTALLED1 ${Y}$full${R} ...\n"
+		[[ -e "${dir}/${crap}" ]] && rm -rf "${dir}/${crap}"* && ANRED "UNINSTALLED2 ${Y}${dir}/${crap}${R} ...\n"
+        [[ -e $crap ]] && rm -rf *"$crap"* ANRED "UNINSTALLED3 ${Y}${dir}/${crap}${R} ...\n"
 	done
 done
-pmu $PMU
+#pmu $PMU
 rm_empty_dir /system/app/* /system/priv-app/*

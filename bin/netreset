@@ -70,13 +70,11 @@ for service in NetworkManager.service \
 	systemd-networkd-wait-online.service \
 	network.target \
 	systemd-resolved.service \
-	ModemManager.service \
 	dhcpd4.service \
 	dhcpd6.service \
 	systemd-networkd.service \
 	systemd-networkd.socket \
 	systemd-resolved.service \
-	systemd-rfkill.socket \
 	systemd-networkd-wait-online.service \
 	wpa_supplicant-nl80211@wlan0.service \
 	wpa_supplicant.service \

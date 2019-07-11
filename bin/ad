@@ -298,7 +298,7 @@ pushdot)
 	adb shell su 0 -c "mkdir -p /data/dot"
 	adb shell su 0 -c "chmod 0777 -R /data/dot"
 	adbde shell "test -e /external_sd &>/dev/null" || {
-		sync_delete $files_to_copy /data/dot
+		sync_delete /dot /data/dot
 		push_key
 		adbde push /last/dot.zip $ex
 	}

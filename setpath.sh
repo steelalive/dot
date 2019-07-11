@@ -44,8 +44,7 @@ $src/external/selinux/prebuilts/bin
 $src/prebuilts/android-emulator/linux-x86_64
 $O/debug/host/linux-x86/bin
 $O/host/linux-x86/bin
-/ext/opt/prebuilt/linux-x86_64/bin
-$(echo /ext/opt/*/**/bin)"
+/ext/opt/prebuilt/linux-x86_64/bin"
 fi
 allpath+="/usr/lib/cw
 /sbin/supersu/xbin

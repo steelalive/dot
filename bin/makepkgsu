@@ -7,4 +7,5 @@
 #chown master:wheel -R $BUILDDIR $HOME/.cache
 #is_pi && sed -i 's/arch=.*/arch=("armv7h")/' PKGBUILD
 +user -R /tmp/makepkg $BUILDDIR
+rm -rf /tmp/makepkg
 suuser "command \makepkg -i --syncdeps --skippgpcheck --skipinteg $*"

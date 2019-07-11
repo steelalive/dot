@@ -12,7 +12,7 @@ if [[ $1 == clear ]]; then
 	D=$DISPLAY
 
 	for i in $(env | awk -F"=" '{print $1}'); do
-		unset $i
+		unset "$i" 2&>/dev/null
 	done
 
 	# set USER, HOME and DISPLAY and set minimal path.
@@ -29,17 +29,10 @@ else
 fi
 set -a
 src=/ext/src
+dot=/dot
 cd $src || return
-if [[ $PWD == $src ]]; then
-	src="$PWD"
-	PS1="$P{src}-ANDROID-\W-\$ "
-elif [[ $PWD == /ext ]]; then
-	src="$PWD"
-	PS1='/ext-ANDROID\-W-\$ '
-else
-	return
-fi
-. $dot/ex.sh
+		PS1="ANDROID-\W-\$ "
+. /dot/ex.sh
 unset JAVA_HOME ANDROID_JAVA_HOME ANDROID_TOOLCHAIN ANDROID_JAVA_TOOLCHAIN O OUT_DIR CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE ROM_LUNCH
 O='/ext/out'
 OUT_DIR="$O"
@@ -62,6 +55,7 @@ DEVICE='zerofltecan'
 ARCH='arm64'
 #CARCH='armv7'
 CC='zapcc'
+CXX='zapcc++'
 CCACHE_DIR='/var/.ccache'
 CCACHE_TEMPDIR='/tmp/.ccache'
 #CROSS_COMPILE='/ext/opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-'
@@ -90,7 +84,6 @@ NDK_DEBUG=0
 #SDCLANG_PATH='prebuilts/clang/linux-x86/host/sdclang-3.8/bin'
 #SDCLANG_LTO_DEFS='device/qcom/common/sdllvm-lto-defs.mk'
 CXX="zapcc++"
-dot='/dot'
 kernel="$src/kernel/samsung/exynos7420"
 LANG='C'
 LC_ALL='C'
@@ -98,7 +91,6 @@ LC_COLLATE='C'
 LC_TIME='C'
 MAKEFLAGS='-j4'
 NDK='/ext/opt/ndk-bundle'
-OUT_DIR=$O
 ANDROID_NDK_ROOT='/ext/opt/ndk-bundle'
 ANDROID_API="android-28"
 ANDROID_ARCH="arm64"
@@ -150,7 +142,7 @@ srcenv() {
 	killall java zapccs
 	rm -rfv /tmp/jack-* /tmp/*.log
 	croot
-	m -j$(nproc --all) || beep.sh
+	m -j$(nproc --all) otapackage || beep.sh
 	#mka updatepackage -j$(nproc --all)
 }
 
@@ -175,7 +167,7 @@ croot
 #combo
 #ln -s /usr/bin/python2.7 $O/host/linux-x86/bin/python 2>/dev/null
 [[ -e $src/buildspec.mk ]] || cp -av $src/build/make/buildspec.mk.default $src/buildspec.mk
-#cp -av /dot/info/.config /src/kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
+cp -av /dot/info/.config /src/kernel/samsung/exynos7420/arch/arm64/configs/lineageos_zerofltecan_defconfig
 ln -sf /usr/bin/python2.7 /usr/androbin/python 2>/dev/null
 sed "s|/cm/|/lineage/|" -i $src/device/samsung/zero-common/*.sh $src/device/samsung/zerofltecan/*.sh
 #[[ -e /dot/info/harpia_defconfig ]] && cp -av /dot/info/harpia_defconfig $src/kernel/motorola/msm8916/arch/arm/configs/harpia_defconfig
