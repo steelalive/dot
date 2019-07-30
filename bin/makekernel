@@ -8,7 +8,7 @@
 KERNEL_DIR=$src$kernel
 OUT_DIR=$KERNEL_DIR
 cd $src
-
+[[ $O ]] || exit
 #	make -j4  CFLAGS_MODULE="-fno-pic" -C kernel/samsung/exynos7420 O=/ext/out/target/product/zerofltecan/obj/KERNEL_OBJ ARCH=arm64 \
 #	CROSS_COMPILE="/usr/bin/ccache aarch64-linux-android-" Image &&
 #	(if grep -q '^CONFIG_OF=y' /ext/out/target/product/zerofltecan/obj/KERNEL_OBJ/.config; then

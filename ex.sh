@@ -2,6 +2,7 @@
 #2#::.. Last edit: - Thu May 31 13:08:44 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.8.9.1 - #_# #@#310518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 #p || $dot/bin/wp
+dot=${dot:-/dot}
 if [[ $SHELL = *bash* ]]; then
 	#[[ -e /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion
 	complete -d d
@@ -43,7 +44,6 @@ if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 		zip -rq -FS /last/BACKUP/etc.zip /etc &>/dev/null
 		zip -rq -FS /last/BACKUP/dot.zip /dot &>/dev/null
 	fi
-    ntponce
 #	mount /dev/sda4 /boot
 	#for i in /dot/etc/cron.daily/*; do
 	#	ANBB "Daily task $i ...${R}\n"
@@ -165,8 +165,8 @@ DBUS_SYSTEM_BUS_ADDRESS='unix:path=/run/dbus/system_bus_socket'
 DMENU_OPTIONS='-nb white -nf black -sb #AAAAAA -sf white'
 EXTRACT_UNSAFE_SYMLINKS=1
 tmp_serial='/tmp/adbserial'
-src=${src:-/src}
-O='/ext/out'
+src=${src:-/ext/src}
+O=${O:-/ext/out}
 FCEDIT='nano'
 FORCE_UNSAFE_CONFIGURE=1
 FREEOPERTIES='truetype:interpreter-version=38'
@@ -192,8 +192,8 @@ FFLAGS="-g -O3"
 CFLAGS="-march=native -O3 -pipe -m64 -fno-plt --param=ssp-buffer-size=4 "
 CXXFLAGS="$CFLAGS -ftree-vectorize"
 LDFLAGS="-Wl,-O3,--sort-common,--as-needed,-z,relro,-z,now"
-CC='zapcc'
-CXX='zapcc++'
+CC='/usr/bin/zapcc'
+CXX='/usr/bin/zapcc++'
 MAKEFLAGS="-j$(nproc --all)"
 DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
@@ -276,7 +276,7 @@ netmask='255.255.255.0'
 no_proxy='localhost,127.0.0.1,localaddress,.localdomain.com'
 pc='192.168.0.20'
 tv='192.168.0.9'
-cell='192.168.2.24'
+cell='192.168.0.120'
 #[[ ! -e /oem ]] && ex="$(ad ex 2>/dev/null)"
 [[ -e "$dot"/slash ]] && export slash="$dot"/slash
 [[ -e "$dot"/bin/wp ]] && eval "$(grep -m1 'WPCONF' "$dot"/bin/wp | sed 's/\[\[.*&& //')"
@@ -295,8 +295,8 @@ else
 fi
 
 TMP=/tmp
+TMPDIR="$TMP"
 mkdir -p "$TMP" || TMP="$HOME"/tmp
-mkdir -p "$TMP"
 set +a
 if [[ $HOSTNAME == PC ]]; then
 	case "$(ip link | command grep -o -E "wlan[0-9]" | wc -l)" in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac

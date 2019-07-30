@@ -8,7 +8,7 @@ set runtimepath+=~/.cache/vim/dein/repos/github.com/Shougo/dein.vim
 if dein#load_state('~/.cache/vim/dein')
 call dein#begin('~/.cache/vim/dein')
 call dein#add('Shougo/neoinclude.vim')
-call dein#add('Valloric/YouCompleteMe')
+"call dein#add('Valloric/YouCompleteMe')
 call dein#add('Zabanaa/neuromancer.vim')
 call dein#add('abudden/EasyColour')
 call dein#add('altercation/vim-colors-solarized')
@@ -116,62 +116,96 @@ let g:tex_flavor = 'latex'
 let g:ycm_max_num_candidates = 25
 let g:ycm_min_num_of_chars_for_completion = 2
 let g:ycm_use_ultisnips_completer = 1
+
+" vim: set ft=vim :
+set autochdir
 set autochdir         " Change directory to the current buffer when opening files.
 set autoindent
 set autoread          " automatically reread the file if it was changed from the outside without asking first
 set background=dark
+set backupdir=~/.cache/SpaceVim/backup
+set cindent
 set clipboard=unnamedplus " Copy & Paste with the system clipboard (the * register), no need to use the "* prefix when pasting or copying
 set colorcolumn=0
+set completeopt=menuone
+set cpoptions=aAceFs_dB
 set cursorline        " highlight current line
+set directory=~/.cache/SpaceVim/swap
 set encoding=utf-8    " usually the case rather than latin1
 set expandtab         " tabs are converted into spaces
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set fillchars=vert:│,fold:·
 set grepprg=grep\ -nH\ $*
+set guicursor=n-v-c:block-blinkon10,i-ci-ve:ver25-blinkon10,r-cr:hor20,o:hor50
 set guioptions=
+set helplang=en
 set hidden            " preserve buffers by hiding instead of closing them
 set history=1000      " save a much longer history (default 50) of commands and searches
 set hlsearch          " high light search results
+set ignorecase
 set ignorecase        " ignore case when searching
 set incsearch         " display search results while writing
 set iskeyword+=-      " Treat dash separated words as word text objects (for ciw etc)
+set iskeyword=@,48-57,_,192-255,-
+set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
+set makeprg=makeobj
+set matchtime=0
 set modeline
 set more
+set mouse=nv
 set nobackup          " most files are in git anyways
-set nowb noswf noudf nobackup nowritebackup noswapfile noundofile
 set noerrorbells      " don't beep
 set nofoldenable
+set nohlsearch
 set nonumber
 set noreadonly
 set norelativenumber
+set noshelltemp
 set noshowmode        " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 set nospell
 set noswapfile
 set noundofile
+set nowb noswf noudf nobackup nowritebackup noswapfile noundofile
 set nowritebackup
+set path=.,/usr/include,/usr/local/include,,,
+set pumheight=15
 set scrolloff=9       " center coursor
+set shada='10,\"100,:20,%,n~/.viminfo
 set shiftround        " use multiples of shiftwidth when indenting with '<' and '>'
 set shiftwidth=4      " number of spaces used for autoindent, command: <<, >>, == (auto entire doc: gg=G)
+set shortmess=filnxtToOsFc
 set showcmd           " show command in bottom bar
+set showmatch
 set showmatch         " highlight matching {[()]}
 set showtabline=4     " t
+set sidescrolloff=5
 set smartcase         " ignore case if search pattern is all lowercase, otherwise case-sensitive
 set smartindent
 set softtabstop=4     " number of spaces in tab when editing
+set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.lo,.o,.moc,.la,.closure,.loT
+set tabline=%!SpaceVim#layers#core#tabline#get()
+set tabstop=4
 set tabstop=4         " number of visual spaces per tab
 set termguicolors
 set textwidth=0       " disable automatic word wrapping (newlines)
 set title             " change the title of the terminal
 set ttyfast           " faster redraws
+set undodir=~/.cache/SpaceVim/undofile
+set undolevels=1000   " save more levels of undo
+set viminfo='10,\"100,:20,%,n~/.viminfo
+set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc,*.class
+set wildignorecase
+set wildmenu          " visual autocomplete for command menu
+set wildmode=list,full
+set window=57
+syntax enable         " enables syntax highlighting
 "  '10  :  marks will be remembered for up to 10 previously edited files
 "  "100 :  will save up to 100 lines for each register
 "  :20  :  up to 20 lines of command-line history will be remembered
 "  %    :  saves and restores the buffer list
 "  n... :  where to save the viminfo files
 set viminfo='10,\"100,:20,%,n~/.viminfo
-set undolevels=1000   " save more levels of undo
-set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc,*.class
-set wildmenu          " visual autocomplete for command menu
-"set wildmode=list,full
-syntax enable         " enables syntax highlighting
+
 
 if (empty($TMUX))
   if (has('nvim'))
@@ -352,7 +386,7 @@ iab #i <C-R>=SmartInclude()<CR>
 iab DIFF <Esc>:call RunDiff()<CR>
 
 " mark 'misplaced' tab characters
-"""""set listchars=tab:�\ ,trail:�
+"""""set listchars=tab:?\ ,trail:?
 set list
 
 set incsearch

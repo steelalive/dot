@@ -4,6 +4,6 @@
 #2#::.. Last edit: - Fri Jun  8 17:10:44 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-08#@# #2#
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/rep_#######################..::#3#
-
+ANG "Replace text ${Y}${1:-this}${G} with ${Y}${2:-that}${G} in file ${Y}${3:-NameOfFile}${R}\n"
 rep() { [[ -r $3 ]] && perl -i -pe "s/$1/$2/g" "$3"; }
 rep "$@"

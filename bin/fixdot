@@ -10,6 +10,8 @@
 homef=$HOME
 [[ -e $homef ]] || exit 2
 is_root || sup=sudo
+chmod 02750 /bin/ping ; chmod 02750 /sbin/ifconfig
+
 chmoder() {
 	printf "%b" "$Y"
 	$sup command \chmod --preserve-root --changes "$@" &>/dev/null
@@ -34,6 +36,7 @@ for root in "${homef}"/.cache/pip "${homef}"/.cache/pip/http "${homef}"/.ssh/con
 done
 
 mkdir -p "${homef}"/.cache/pip/http
+chown root:root /root/.gnupg
 chmoder 600 "${homef}"/.ssh/*
 chmoder 644 "${homef}"/.ssh/*.pub
 chmoder go-w $dot/bin $dot/bin/final /dot

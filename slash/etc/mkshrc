@@ -4,7 +4,7 @@
 #-
 # Minimal /system/etc/mkshrc for Android
 
-: ${TERM:=xterm-256color} ${HOME:=/sdcard} ${MKSH:=/system/bin/sh} ${HOSTNAME:=S6}
+: ${TERM:=xterm-256color} ${HOME:=/data/dot/root} ${MKSH:=/system/bin/sh} ${HOSTNAME:=S6}
 : ${SHELL:=$MKSH} ${USER:=$(getprop ro.product.device)}
 if (( USER_ID )); then PS1='$'; else PS1='#'; fi
 
@@ -37,12 +37,13 @@ unset p
 ########## -INIT-  ##########y
 
 #mount -o remount,hidepid=0 /proc
-busybox mount -o remount,rw / 2>/dev/null
-busybox mount -o remount,rw /system 2>/dev/null
+busybox mount -o rw,remount,rw / 2>/dev/null
+busybox mount -o rw,remount,rw /system 2>/dev/null
 /data/dot/slash/sbin/remnt 2>/dev/null
 ln -s /data/dot/slash/etc/mk / 2>/dev/null
 ln -s /data/dot/slash/etc/rc / 2>/dev/null
 ln -s /data/dot/slash / 2>/dev/null
+ln -s /data/dot / 2>/dev/null
 chmod 777 -R /data/dot 2>/dev/null
 ########## _INIT_ ###########
 . /data/dot/slash/etc/mk

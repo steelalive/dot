@@ -27,11 +27,9 @@ if [[ $1 == aosp ]]; then
 /usr/local/bin
 /usr/local/sbin
 /ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin
-#/ext/opt/gcc-linaro-7.4.1-2018.05-x86_64_arm-linux-gnueabi/bin
 /ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin
 /ext/opt/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabi/bin
 /opt/aarch64-linux-android-gcc/bin
-#/root/toolchain/bin
 $src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin
 $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin
 $src/prebuilts/gcc/linux-x86

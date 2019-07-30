@@ -102,7 +102,7 @@ if [[ ${EUID} == 0 ]]; then
 else
 	PS1="\[\033[01;32m\]${USER:=$(id \-un)}@${HOSTNAME:=$(hostname)}\[\033[01;34m\] \W \$\[\033[00m\] "
 fi
-export PATH="/sbin:/system/xbin:/system/bin:/vendor/bin:/bin:/system/sbin:/data/dot/slash/sbin:/data/dot/bin:\
+export PATH="/sbin:/data/dot/slash/sbin:/system/xbin:/system/bin:/vendor/bin:/bin:/system/sbin:/data/dot/bin:\
 /data/dot/bin/final:/data/dot"
 
 unset use_color safe_term match_lhs

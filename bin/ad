@@ -16,7 +16,7 @@ ex=/sdcard
 #if grep 5555 /tmp/adbserial; then
 #	adbconnect
 #fi
-if ! adb devices | grep 'device$' &>/dev/null; then
+if ! $adb devices | grep 'device$' &>/dev/null; then
 	[[ $1 ]] || return
 fi
 
@@ -83,7 +83,7 @@ apk_to_() {
 	adbsu pm install -r -g "$apk"
 	return
 }
-adbsu() { adb shell su -c "$@"; }
+adbsu() { $adb shell su -c "$@"; }
 export -f adbsu
 adb_read() {
 	adbsu /data/dot/bin/remnt && return 0
@@ -297,8 +297,8 @@ pushdot)
 	adbsu chmod 0777 /data/dot
 	adb shell su 0 -c "mkdir -p /data/dot"
 	adb shell su 0 -c "chmod 0777 -R /data/dot"
-	adbde shell "test -e /external_sd &>/dev/null" || {
-		sync_delete /dot /data/dot
+	adbde shell "test -e /sdcard &>/dev/null" || {
+		sync_delete /dot /data
 		push_key
 		adbde push /last/dot.zip $ex
 	}
@@ -322,7 +322,8 @@ pushall | sync-delete)
 	adbde push /last/dot.zip $ex
 	adbsu "/data/dot/slash/sbin/bash -c /data/dot/slash/pushthem"
 	adbsu "source /data/dot/slash/etc/mk"
-	ANG "Sync completed! \n"
+    adbsu "bash /data/dot/bin/rmbloat"
+	ANG "Sync completed! \\n"
 	return
 	;;
 syncdot)
@@ -331,7 +332,7 @@ syncdot)
 	;;
 syncall)
 	shift
-	sync_both_ways /dot/* /data/dot/
+	sync_both_ways /dot/* /data/dot
 	sync_both_ways /last/misc-android $ex
 	adbde push /last/dot.zip $ex
 	return
@@ -343,16 +344,17 @@ syncmisc)
 	return
 	;;
 ota)
-	adbde push $O/debug/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/debug/target/product/harpia | tail -1) /sdcard/Download/lineage.zip ||
-		adbde push $O/target/product/harpia/$(command \ls --color=auto -AhHrt1 $O/target/product/harpia | tail -1) /sdcard/Download/lineage.zip
-	echo "Reboot recovery?"
-	yorn && adb reboot recovery
+result="$(printf "%s" $O/target/product/*)"
+    $adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip ||
+	$adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip
+	echo "Reboot recovery?\\n"
+	yorn && $adb reboot recovery
 	;;
 log)
 	shift
 	adbde shell setenforce 0
-	if adb logcat --help | grep -q '\--format='; then
-		adb logcat --format=color
+	if $adb logcat --help | grep -q '\--format='; then
+		$adb logcat --format=color
 	else
 		adbde logcat -C "$@"
 	fi

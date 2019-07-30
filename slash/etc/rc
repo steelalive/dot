@@ -13,7 +13,7 @@ export dot=/data/dot
 export slash=$dot/slash
 export dot_dir=$dot LANG='en_US.UTF-8'
 export pc=192.168.0.20 s4=192.168.0.8 tv=192.168.0.5
-export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
+export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
 result=":"
 IFS=:
 for p in $PATH; do
@@ -34,9 +34,8 @@ fi
 bb=$(command -v busybox 2>/dev/null) || bb="commmand -v "
 export bb
 
-bb() { command "$bb" "$@"; }
+bb() { command \\"$bb" "$@"; }
 
-if hash bb &>/dev/null; then unset bb; fi
 
 #for i in /ex $(echo /mnt/media_rw/????-????) $(echo /storage/????-????) /external_sd; do
 #	[[ -e $i/misc-android ]] || continue
@@ -45,7 +44,7 @@ if hash bb &>/dev/null; then unset bb; fi
 ex=/sdcard
 
 echo /init.* | grep amlogic && export HOSTNAME=TV
-{ echo /* | grep exyn || grep w8 /default.prop ; } && export HOSTNAME=S6
+{ echo /* | grep exyn &>/dev/null || grep zeroflte /default.prop ; } && export HOSTNAME=S6
 [[ $HOSTNAME ]] || { getprop ro.product.device && export HOSTNAME="$(getprop ro.product.device)"; }
 [[ -d $dot/root ]] && HOME=$dot/root
 #[[ -e $HOME ]] || HOME=$ex
@@ -55,7 +54,7 @@ echo /init.* | grep amlogic && export HOSTNAME=TV
 [[ -e $slash/etc/terminfo ]] && TERMINFO=$slash/etc/terminfo
 [[ -e /sbin/terminfo ]] && TERMINFO=/sbin/terminfo
 [[ -e $TERMINFO ]] && export TERMINFO TERM=screen-256color
-export TERM=xterm-256color
+#export TERM=xterm-256color
 
 
 [[ -x $BASH ]] || export BASH=/data/dot/slash/sbin/bash
@@ -68,17 +67,13 @@ mkdir -p /tmp
 
 #[[ $USER ]] || USER=$(whoami 2 &>/dev/null) || USER=$(logname 2 &>/dev/null)
 
-[[ -x /bin/nano ]] && export EDITOR="/bin/nano" VISUAL="$EDITOR"
+[[ -x $slash/sbin/nano ]] && export EDITOR="$slash/sbin/nano" VISUAL="$EDITOR"
 [[ HOSTNAME == PC ]] && lux=/data/lux
 
 boot="$(find /dev/block -iname boot | tail -1 )"
 recovery="$(find /dev/block -iname recovery | tail -1)"
-#if [[ -e /external_sd ]]; theni
-#	boot=$(cat /fstab.* | cut -d '#' -f 1 | grep /boot | grep -o '/dev/[^ ]*' | head -1)
-#	boot=$(cat /fstab.* | cut -d '#' -f 1 | grep /recovery | grep -o '/dev/[^ ]*' | head -1)
-#fi
 
-export TMP TMPDIR=$TMP BASH SHELL=$BASH HISTFILE="${dot}/root/histfile" HISTSIZE=50000 USER slash
+export TMP TMPDIR=$TMP BASH SHELL=$BASH HISTFILE="${dot}/root/histfile_android" HISTSIZE=50000 USER slash
 test $HOSTNAME && hostname $HOSTNAME
 alias e='. $dot/bin/e'
 cmdcompile() {
@@ -103,13 +98,21 @@ pminstall() {
 unalias ls &>/dev/null
 if cp --help 2>&1 | grep -o "\-c" ; then alias cp='cp -c ';fi
 unset ls LS_OPTIONS &>/dev/null
-if busybox ls --help 2>&1 | grep 'Z' ; then LS_OPTIONS=' -Z '; fi
-if busybox ls --help 2>&1 | grep 'group-directories-first' ; then
+if [[ -e $slash/sbin/ls ]]; then
+    LS_BIN="$slash/sbin/ls"
+    elif [[ -e /system/xbin/ls ]]; then
+    LS_BIN="$slash/sbin/ls"
+    else
+    LS_BIN="ls"
+fi
+
+if $LS_BIN --help 2>&1 | grep 'Z' ; then LS_OPTIONS=' -Z '; fi
+if $LS_BIN --help 2>&1 | grep 'group-directories-first' ; then
 	export LS_OPTIONS="$LS_OPTIONS --group-directories-first "
 fi
 export LS_OPTIONS="$LS_OPTIONS -AHhpFl --color "
 
-ls() { busybox ls $LS_OPTIONS "$@"; }
+ls() { "$LS_BIN" $LS_OPTIONS "$@"; }
 if echo $0 | grep bash ; then
 	if [[ ${EUID} == 0 ]]; then
 		PS1='\[\033[01;31m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
@@ -118,11 +121,6 @@ if echo $0 | grep bash ; then
 	fi
 fi
 
-#if ! grep CD00160E541E /data/misc/wifi/wpa_supplicant.conf &>/dev/null; then
-#	mkdir -p /data/misc/wifi
-#	cat $ex/misc-android/wpa_supplicant.conf >>/data/misc/wifi/wpa_supplicant.conf
-#	cat $ex/misc-android/wpa_supplicant.conf >>/system/etc/wifi/wpa_supplicant.conf
-#fi
 remnt
 
 #Check busybox validity and correct.
@@ -138,9 +136,9 @@ fi
 
 for bin_dir in /system/bin /system/xbin; do
 	for fix_bb in su bash; do
-		bin_bb=$bin_dir/$fix_bb
+		bin_bb="$bin_dir/$fix_bb"
 
-		if [[ -e $bin_bb ]] && [[ -L $bin_bb ]]; then
+		if [[ -L $bin_bb ]]; then
 			echo "$bin_bb found delete?"
 
 			mv -v "$bin_bb" "${bin_bb}.back" && echo "Renamed $bin_bb ${bin_bb}.back..."
@@ -155,10 +153,10 @@ done
 
 init_incantation='
 ########## -INIT-  ##########
-#mount -o remount,hidepid=0 /proc
 busybox mount -o remount,rw / 2>/dev/null
 busybox mount -o remount,rw /system 2>/dev/null
 /data/dot/slash/sbin/remnt 2>/dev/null
+ln -s /data/dot /
 ln -s /data/dot/slash/etc/mk / 2>/dev/null
 ln -s /data/dot/slash/etc/rc / 2>/dev/null
 ln -s /data/dot/slash / 2>/dev/null
@@ -172,50 +170,6 @@ fi
 #####################################################################################################################
 hash resize &>/dev/null && eval $(resize) &>/dev/null
 
-#rm /sdcard; ln -s $ex /sdcard
 # vi: ft=sh
-#export PATH=/system/xbin:/system/bin:/vendor/bin:/bin:/sbin:/system/sbin:/data/dot/slash/sbin:/data/dot/bin:/data/dot/bin/final:/data/dot
-unalias nano
+unalias nano 2>/dev/null
 
-
-#############disable Swap #################3333
-    for zram in `blkid | grep swap | awk -F[/:] '{print $4}'`; do {
-                zram_dev="${zram_dev}"
-                dev_index="$( echo $zram | grep -o "[0-9]*$" )"
-       #         write /sys/class/zram-control/hot_remove ${dev_index}
-                ${swff} ${zram_dev} && zram_reset ${zram}
-        }
-        done
-
-#        setprop vnswap.enabled 0
- #       setprop ro.config.zram 0
-  #      setprop ro.config.zram.support 0
-   #     setprop zram.disksize 0
-      #  write /proc/sys/vm/swappiness 0
-
-
-
-
-return 0
-
-
-
-
-
-##########BATTERY MOD#############
-# Advanced Charging Controller Daemon (accd) Starter
-# Copyright (C) 2017-2019, VR25 @ xda-developers
-# License: GPL V3+
-
-#modId=acc
-
-# don't run more than once per boot session
-#[ -d /dev/$modId ] || { mkdir -p /dev/modId
-
-#modPath=/system/etc/$modId
-#[ -f $modPath/module.prop ] || modPath=$slash/sbin/$modId
-#[ -f $modPath/module.prop ] || modPath=/sbin/.core/img/$modId
-#unset modId
-
-#(sh $modPath/accd &) &
-#}

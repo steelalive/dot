@@ -23,7 +23,7 @@ if [[ -d /oem ]]; then
 fi
 
 edit_file() {
-	hash file &>/dev/null && if ! file -L "${1}" | grep -q -e text -e ascii -e link -e script -e data &>/dev/null; then
+	hash $1 &>/dev/null && if ! file -L "${1}" | grep -q -e text -e ascii -e link -e script -e data &>/dev/null; then
 		ANRED "ERROR! ${1} is not text\n"
 		file -L "$1" 2>/dev/null
 		return 2

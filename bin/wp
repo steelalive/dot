@@ -96,5 +96,6 @@ else
 	ANBG "${NET_AP}${R}\\n"
 	is_in_path synergy && synergy.sh
 fi
+ntponce
 unset PINGFAIL GDNS d CUNT NET_AP
 exit 0

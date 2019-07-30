@@ -1,0 +1,4 @@
+#!/bin/bash
+export target_dir=/root/toolchain flags="-m64 -marm -mandroid" script=/ext/opt/ndk-bundle/build/tools/gen-toolchain-wrapper.sh
+rm -rf "$target_dir"
+$script --cflags="$flags" --cxxflags="$flags" --src-prefix=ndk_arm64- --verbose /root/toolchain

@@ -5,4 +5,4 @@
 #3#::..#####################_/dot/bin/netspeed_#######################..::#3#
 # vi: ft=sh:noro:
 
-vnstat -i $NET "$@"
+vnstat -l -i $NET "$@"

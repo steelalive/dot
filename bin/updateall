@@ -10,62 +10,71 @@ wp || exit
 suuser "yay -Syu --devel --needed --noconfirm --force"
 suuser "yay -S --needed --noconfirm -ua"
 paccache --keep 1 --verbose --remove
-is_in_path go && go get -u all
-
-for i in /root/.gem/ruby/*/bin /root/.gem/ruby/*/ /root/.gem/ruby /root/.gem /root /root/.vim_runtime /ext/opt/diet/bin /ext/opt/diet /ext/opt /ext /ext/opt/gcc-UBERTC/bin; do
-	[[ -e $i ]] && chmod go-w "$i"
-done
-
-for i in updateRuby update_rubygems update-pciids update-ca-trust update-desktop-database; do
-	is_in_path "$i" && ANORANGE "Executing ${i}...\\n" && "$i"
-done
-### Back to relative sanity.
-
-[[ $1 ]] && sdkmanager --update
-
-is_in_path bundle && bundle update
-
-### this line may not fit your config. All the previous lines as well.:
-
-[[ -d "$HOME"/.cache/pip ]] && chown root:root "$HOME"/.cache/pip "$HOME"/.cache/pip/http
-
-pacman -Q | awk '{print $1}' >/packages.list
-
-rm -rf /tmp/makepkg
-$(ncu -g | grep 'npm -g install ')
-npm doctor
-python2 -m pip_review --auto && pip-check -c pip2 -rfHu
-python3 -m pip_review --auto && pip-check -c pip3 -rfHu
 
 [[ $1 ]] && {
-	npm install --global npm@latest
-	for i in /usr/lib/node_modules/*; do
-		cd "$i" || continue
-		ncu --newest --greatest --upgrade
-		cd '/usr/lib/node_modules' || cd ..
+	is_in_path go && go get -u all
+
+	for i in /root/.gem/ruby/*/bin /root/.gem/ruby/*/ /root/.gem/ruby /root/.gem /root /root/.vim_runtime /ext/opt/diet/bin /ext/opt/diet /ext/opt /ext /ext/opt/gcc-UBERTC/bin; do
+		[[ -e $i ]] && chmod go-w "$i"
 	done
+
+	for i in updateRuby update_rubygems update-pciids update-ca-trust update-desktop-database; do
+		is_in_path "$i" && ANORANGE "Executing ${i}...\\n" && "$i"
+	done
+	### Back to relative sanity.
+
+	[[ $1 ]] && sdkmanager --update
+
+	is_in_path bundle && bundle update
+
+	### this line may not fit your config. All the previous lines as well.:
+
+	[[ -d "$HOME"/.cache/pip ]] && chown root:root "$HOME"/.cache/pip "$HOME"/.cache/pip/http
+
+	pacman -Q | awk '{print $1}' >/packages.list
+
+	rm -rf /tmp/makepkg
+	$(ncu -g | grep 'npm -g install ')
+	python2 -m pip_review --auto 
+    python3 -m pip_review --auto 
+    $(pip-check -c pip2 -rfHu 2>/dev/null| grep -o "pip.* install -U .*")
+    $(pip-check -c pip3 -rfHu 2>/dev/null| grep -o "pip.* install -U .*")↵
+
+	npm install --global --upgrade npm@latest
+	#for i in /usr/lib/node_modules/*; do
+	#	cd "$i" || continue
+	#	ncu --newest --greatest --upgrade
+	#	cd '/usr/lib/node_modules' || cd ..
+	#done
+    npm-check -g -y
+    npm update -g
 	npm doctor
 	for i in $(pip list | awk '{print $1}'); do
 		pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$i"
 	done
 
-	#	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
-	#	$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
-	##	$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
-	#	$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
-	##	for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
-	#		$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-	##		$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-	#		$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-	#	done
+#cat <<'END' >		venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
+#		$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
+#		$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
+#		$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
+#		for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
+#			$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+#			$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+#	    	$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+#		done 
+#END
+
+    if cd /ext/sexy-bash-prompt; then
+        gitreset
+    fi
 
 	if is_in_path cpanm && is_in_path cpanm-outdated; then
 		cpanm --self-upgrade
 		cpan-outdated -p | cpanm
 	fi
 	#+user -R /root /shell /home /dot &>/dev/null
-    cpan -u
-    suuser "yay -Y --gendb"
+	cpan -u
+	suuser "yay -Y --gendb"
 	### Neovim setup ###
 	cd /root/.config/nvim && {
 		gitreset
@@ -76,7 +85,7 @@ python3 -m pip_review --auto && pip-check -c pip3 -rfHu
 		#	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
 		fi
 		unset local init
-		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | qall! | endtry" -V1 -es
+		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es
 		if cd /ext/.dotfiles2; then
 			make update
 		fi

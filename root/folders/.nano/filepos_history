@@ -1,4 +1,3 @@
-/prog/AIK-Linux/_ZY2242NPXP_boot/ramdisk/fstab.qcom 2 64
 /last/G4/HARPIA_NPI26.48-43_cid50_subsidy-DEFAULT_regulatory-DEFAULT_CFC.xml/flashfile.xml 31 23
 /src/device/motorola/harpia/device.mk 44 1
 /src/device/motorola/msm8916-common/proprietary-files.txt 179 1
@@ -199,3 +198,4 @@
 /src/.repo/local_manifests/local.xml 12 65
 /root/.config/nvim/config/plugins.yaml 256 1
 /shell/.xinitrc 1 14
+/ext/src/lineage/scripts/device-deps-regenerator/token 1 41

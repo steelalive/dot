@@ -201,7 +201,7 @@ s1() {
 
 #title "$(uname -rnsm)"
 bashnorc() {
-	exec env -i kernel="/src/kernel/samsung/exynos7420" O=/ext/out OUT_DIR=/ext/out TOP=/src src=/src LC_ALL=C PS1="\$ " PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
+	env -i kernel='/ext/src/kernel/samsung/exynos7420' O=/ext/out OUT_DIR=/ext/out TOP=/ext/src src=/ext/src PS1='\$ ' PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
 }
 path_default() {
 	unset PATH

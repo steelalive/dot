@@ -67,7 +67,7 @@ for fstab in fstab.amlogic ramdisk/fstab.amlogic initrd/fstab.amlogic ramdisk/fs
 done
 
 if [[ ! -e /sdcard/bbx.conf ]] && [[ -e /sdcard ]]; then
-	cd /external_sd 2>/dev/null || cd $ex || cd /storage/????-???? || echo "Error!"
+	cd /external_sd 2>/dev/null || cd $ex || cd /storage/????-???? || cd /sdcard || echo "Error!"
 	cp -av 2ndLine Open-GApps TWRP XposedInstaller smartbar_configs ssh bbx.conf /sdcard/ 2>/dev/null
 fi
 
@@ -75,7 +75,7 @@ i=boot/bootimg.cfg
 [[ -e $i ]] && {
 	name="$(grep ro.build.fingerprint system/build.prop | cut -d= -f2)"
 	sed -e "s/bootsize = .*/bootsize =/" \
-		-e "s|name =.*|name = $name|" -i $i
+		-e "s|name =.*|name = $name|" -i "$i"
 	sed -e "s|cmdline =.*|cmdline = $cmd|" -i "$i"
 }
 pathfix() {
@@ -106,15 +106,6 @@ fi
 for target in ramdisk/system/build.prop /system/build.prop system/build.prop build.prop "$@"; do
 	string='PROPER_SYS'
 	[[ -r $target ]] || continue
-	#	grep -q "$string" "$build" && continue
-	prop-replace "$dot/bin/build.prop" "$string" "$target"
-	#	if grep fingerprint=motorola $target &>/dev/null; then
-	#		echo "dalvik.vm.image-dex2oat-threads=6
-	#dev.ip.address=192.168.0.9" >>$target
-	#	else
-	#		echo "dalvik.vm.image-dex2oat-threads=10
-	#dev.ip.address=192.168.0.5
-	#ro.sf.lcd_density=240
-	#" >>$target
-	#	fi
+#	prop-replace "$dot/bin/build.prop" "$string" "$target"
+    ANY ""Proper NOT done.: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
 done
