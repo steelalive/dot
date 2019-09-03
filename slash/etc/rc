@@ -96,7 +96,7 @@ pminstall() {
 }
 
 unalias ls &>/dev/null
-if cp --help 2>&1 | grep -o "\-c" ; then alias cp='cp -c ';fi
+#if cp --help 2>&1 | grep -o "\-c" ; then alias cp='cp -c ';fi
 unset ls LS_OPTIONS &>/dev/null
 if [[ -e $slash/sbin/ls ]]; then
     LS_BIN="$slash/sbin/ls"
@@ -124,10 +124,10 @@ fi
 remnt
 
 #Check busybox validity and correct.
-if ! busybox | grep '1.29.2' ; then
+if ! busybox | $bb grep '1.29.2' ; then
 	echo "Setup a newer busybox..."
 		cd $slash
-		bash ./Busybox-installer-arm.bin
+		bash $slash/box
 fi
 
 [[ -e /system/bin/logd ]] && mv /system/bin/logd /system/bin/logd.bak
@@ -164,7 +164,7 @@ chmod 777 -R /data/dot
 ########## _INIT_ ###########
 '
 
-if ! grep "/data/dot/slash" /system/etc/init.d/90userinit; then
+if ! $bb grep "/data/dot/slash" /system/etc/init.d/90userinit; then
 	echo "$init_incantation" >>/system/etc/init.d/90userinit
 fi
 #####################################################################################################################

@@ -1,4 +1,4 @@
 #!/bin/bash
 [[ $1 ]] && command \pacman --force -U "$1"
-command \pacman --force -U *.tar.xz &>/dev/null
-command \pacman --force -U *.pkg.tar &>/dev/null
+command \pacman --force -U *.tar.xz ||
+	command \pacman --force -U *.pkg.tar

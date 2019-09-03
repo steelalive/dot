@@ -61,7 +61,7 @@ CON=`cat /tmp/con.ns`
 rm -f /tmp/con.ns
 while ! [ $CON == 1 ]
 	do
-		clear		
+		clear
 		echo "You are$STILL not connected to the Internet."
 		$ADDED
 		echo If you need to enter a proxy address, type 'proxy' and press enter.
@@ -294,7 +294,7 @@ darrow_color = (GREEN,BLACK,OFF)
 itemhelp_color = (BLACK,WHITE,OFF)
 form_active_text_color = (BLACK,BLUE,OFF)
 form_text_color = (WHITE,BLACK,OFF)
-form_item_readonly_color = (BLACK,WHITE,OFF)' >~/.dialogrc
+                form_item_readonly_color = (BLACK,WHITE,OFF)' >~/.dialogrc
 				echo "0" >~/.adaway/files/config/dialogrc.cfg
 			else
 				echo "1" >~/.adaway/files/config/dialogrc.cfg

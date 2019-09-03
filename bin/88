@@ -3,7 +3,7 @@
 #2#::.. Last edit: - Mon May 28 02:15:34 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.5.6 - #_# #@#280518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 
-center_string "$RED${UNDER}Internet connectivity test and wifi adapter optimisation{R}\n"
+center_string "$RED${UNDER}Internet connectivity test and wifi adapter optimisation${R}\n"
 
 command \rm /etc/resolv.conf
 
@@ -16,10 +16,10 @@ NET_AP="$(\iwgetid -r "$NET")"
 EXIT=$?
 
 if [[ "$NET_AP" ]]; then
-	iwconfig "$NET" | grep --color -o "Bit Rate:.*[0-9] Mb/s\n"
+	command \iwconfig "$NET" | grep --color -o "Bit Rate:.*[0-9] Mb/s\n"
 	echo
-	ANBG "Nameservers corrected.$R 
-${BG}You are on $BW$BLACK$NET_AP$RES\n"
+	ANBG "Nameservers corrected.$R
+    ${BG}You are on $BW$BLACK$NET_AP$RES\n"
 else
 	ANBR "No Wide area network response yet from $BLACK$NET_AP$RES\n"
 	exit 1

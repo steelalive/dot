@@ -36,7 +36,7 @@ Opts:
    -s         use standard cpio (default: uses cpio_set0 if available)
    -g         use gen_init_cpio instead of cpio/cpio_set0 (ignores -s)
    -r         don't reorder initramfs according to the original layout
- 
+
 Debugging:
    -v     verbose (show commands and results as they are executed)
    -x     script debug (set -x)
@@ -47,7 +47,7 @@ Debugging:
    -2     Use original piggy.gz
    -3     Use original piggy
    -4     Use original initramfs(_gz)+part3
-   -5     Use original initramfs_cpio"
+    -5     Use original initramfs_cpio"
 	exit $1
 }
 
@@ -499,7 +499,7 @@ pack() {
 	if ! find >/dev/null 2>&1 "$unpacked" "$unpacked/$ramfs" "$unpacked/$sizes" -maxdepth 0; then
 		fatal "\
 This does not look like a directory where a
-previous unpack has been done."
+        previous unpack has been done."
 	fi
 
 	# create packing direcory
@@ -617,7 +617,7 @@ previous unpack has been done."
 				if [ "$size2" -gt "$target_size" ]; then
 					fatal "\
 piggy.gz too large (gzip -9: +$((size1 - target_size)), gzip -8: +$((size2 - target_size)))
-You might want to try a different combination of the -g, -r and -s options."
+                    You might want to try a different combination of the -g, -r and -s options."
 				fi
 			fi
 			padTo "$packing/$piggy_gz" "$((size_piggy_gz + size_padding_piggy))"
@@ -635,9 +635,9 @@ You might want to try a different combination of the -g, -r and -s options."
 
 unpack() (
 	[ -d "$unpacked" ] && echo "\
-Warning: there is aready an unpacking directory.  If you have files added on 
-your own there, the  repacking result may not reflect the result of the 
-current unpacking process."
+Warning: there is aready an unpacking directory.  If you have files added on
+your own there, the  repacking result may not reflect the result of the
+    current unpacking process."
 	rqd mkdir -p "$unpacked"
 	rqd cd "$unpacked"
 	sizes="$unpacked/sizes"

@@ -1,34 +1,34 @@
 #!/bin/bash
 
 #----------------------------------------------------------------------------------
-# Project Name      - installit/insit
+# Project Name      - Extra/insit
 # Started On        - Wed 13 Dec 01:13:55 GMT 2017
-# Last Change       - Fri 18 May 23:21:27 BST 2018
+# Last Change       - Sun 12 May 22:48:03 BST 2019
 # Author E-Mail     - terminalforlife@yahoo.com
 # Author GitHub     - https://github.com/terminalforlife
 #----------------------------------------------------------------------------------
+# WARNING: Going through some major changes. If you need to remove files installed
+#          with insit, I suggest doing so ASAP, as I'm migrating everything to
+#          DEB packages. The transition will be a pain, but is better long-term.
+#----------------------------------------------------------------------------------
 
-_VERSION_="2018-05-18"
+_VERSION_="2019-05-12"
+_PROJECT_="${0##*/}"
 
-#TODO - If file is removed (FILE), how is a user with updated insit to remove it?
-#       Possible temporary solution could be to have the installation process save
-#       a simple log somewhere which stores only the file paths for what was at the
-#       time installed, that way, when the user uninstalls that item, it picks up
-#       all the files, regardless of insit version. Caveat to this method is of
-#       course that they'd therefore require that log. Still, this is probably a
-#       rudimentary version of how standard package managers do it.
 #TODO - What if you're updating insit from a different branch?
 #TODO - Since the version file only goes by per day, there's no sense in checking
-#       multiple times per day, therefore, this checks needs to be limited to one
+#       multiple times per day, therefore, the check needs to be limited to one
 #       check per day, perhaps using a parameter file.
 
-XERR(){ printf "[L%0.4d] ERROR: %s\n" "$1" "$2" 1>&2; exit 1; }
-ERR(){ printf "[L%0.4d] ERROR: %s\n" "$1" "$2" 1>&2; }
+FAIL(){
+	printf "[L%0.4d] ERROR: %s\n" "$2" "$3" 1>&2
+	[ $1 -eq 1 ] && exit 1
+}
 
 DOM="https://github.com"
 URL="$DOM/terminalforlife"
-MAINDIR="$HOME/.local/share/insit"
-LOGFILE="/var/log/tfl_insit.log"
+MAINDIR="$HOME/.local/share/$_PROJECT_"
+LOGFILE="/var/log/tfl_$_PROJECT_.log"
 BUPATH="$MAINDIR/backups"
 LASTFILE="${BUPATH%/*}/last"
 
@@ -36,29 +36,29 @@ USAGE(){
 	while read -r; do
 		printf "%s\n" "$REPLY"
 	done <<-EOF
-		            INSIT ($_VERSION_)
+		            ${_PROJECT_^^} ($_VERSION_)
 		            Written by terminalforlife (terminalforlife@yahoo.com)
 
-		            Installer for many shell programs from terminalforlife.
+		            An exhaustive handler of TFL or others' files stored on GitHub.
 
-		SYNTAX:     insit [OPTS] WHAT1 WHAT2 WHAT3 . . .
+		SYNTAX:     $_PROJECT_ [OPTS] WHAT1 WHAT2 WHAT3 . . .
 
 		OPTS:       --help|-h|-?            - Displays this help information.
-		            --verbose|-V            - Also display the log output.
 		            --version|-v            - Output only the version datestamp.
-		            --changelog             - Fetch and view the insit changelog.
 		            --quiet|-q              - Runs in quiet mode. Errors still output.
 		            --debug|-D              - Enables the built-in bash debugging.
+		            --verbose|-V            - Also display the log output.
+		            --changelog             - Fetch and view the $_PROJECT_ changelog.
 		            --ignore-os             - Ignore the OS and LSB type; don't check.
 		            --restore|-R            - Restore automatically generated backups.
-		            --no-backup             - Do not back-up for a WHAT update.
+		            --no-backup             - Do not back up chosen WHAT updates.
 		            --no-check|-N           - Do not check for version updates.
 		            --just-check|-J         - Only check for version updates.
 		            --update|-U             - Replace and/or update existing files.
 		            --uninstall|-u          - Uninstall files installed here.
 		            --available|-A          - Output all available programs.
 		            --branch|-B NAME        - Where NAME is the branch to use.
-		            --self-update|-S        - Update insit to the latest stable version.
+		            --self-update|-S        - Update $_PROJECT_ to the latest stable version.
 		            --ignore-root|-I        - Disregard whether you have root access.
 		            --source|-s NAME        - Use NAME instead of terminalforlife.
 		            --custom|-C             - Execute your own FILE function line.
@@ -76,25 +76,23 @@ USAGE(){
 		              5: The file's owner, such as 0 or \$USER.
 		              6: The file's group, such as 1000.
 
-		            By default, insit will always work with the master branch.
+		            By default, $_PROJECT_ will always work with the master branch.
 
-		EXAMPLE:    sudo insit -B dev -U -C miscellaneous mfw /usr/bin/mfw 755 0 0
-		            sudo insit -U notify-upgrade lspkg lsbins apt-undo-install
-		            sudo insit -q --logfile ./test.log -L -u bl wcdl clean-locales
-		            sudo insit -s aktsbot -C dotfiles bashrc ~/.bashrc 600 1000 1000
+		EXAMPLE:    sudo $_PROJECT_ -B dev -U -C Extra mfw /usr/bin/mfw 755 0 0
+		            sudo $_PROJECT_ -U notify-upgrade lspkg lsbins apt-undo-install
+		            sudo $_PROJECT_ -q --logfile ./test.log -L -u bl wcdl clean-locales
+		            sudo $_PROJECT_ -s aktsbot -C dotfiles bashrc ~/.bashrc 600 1000 1000
 
 		WARNING:    Using the --update|-U flags will overwrite existing files.
 
-		            Backups are made, prior to updating files, and will be created after
-		            removing any existing back-ups of files updated with insit. This will
-		            occur per insit execution, only if updating, NOT per item selected.
+		            However, backups are (by default) made for all files replaced by one or
+		            more selected items, including when opting to update $_PROJECT_ itself.
 
-		            The backup and restore functionality applies to insit updates, too.
+		            When updating items, ANY pre-existing $_PROJECT_ back-ups will be DELETED.
 
-		FILE:       Actions by insit are logged in: $LOGFILE
+		FILE:       Actions by $_PROJECT_ are logged in: $LOGFILE
 
-		            Backups made upon an update of existing files, via --update|-U, will be
-		            stored within the following user's own directory:
+		            Backups are stored within:
 
 		              ${BUPATH/$HOME/\$HOME}
 
@@ -102,13 +100,6 @@ USAGE(){
 	EOF
 }
 
-if [ "$HOME" == "/root" ]; then
-	if [ "$SUDO_UID" ]; then
-		XERR "$LINENO" "The sudo '-E' flag must be used."
-	else
-		XERR "$LINENO" "Unable to interact with user whose HOME is '/root'."
-	fi
-fi
 
 OSFILE="/etc/os-release"
 BRANCH="master"
@@ -119,7 +110,7 @@ if ! [ "$IGNOREOS" == "true" ]; then
 			while IFS="=" read -a X; do
 				if [ "${X[0]//\"}" == "ID_LIKE" ]; then
 					if ! [[ "${X[1]//\"}" =~ (debian|ubuntu) ]]; then
-						ERR "$LINENO" "Unsupported distribution base."
+						FAIL 0 "$LINENO" "Unsupported distribution base."
 						return 1
 					fi
 
@@ -127,19 +118,19 @@ if ! [ "$IGNOREOS" == "true" ]; then
 				fi
 			done < "$OSFILE"
 		else
-			XERR "$LINENO" "Unable to get LSB type. Use '--ignore-os' to disregard."
+			FAIL 1 "$LINENO" "Unable to get LSB type. Use '--ignore-os' to disregard."
 		fi
 	else
-		XERR "$LINENO" "Unsupported platform. Use '--ignore-os' to disregard."
+		FAIL 1 "$LINENO" "Unsupported platform. Use '--ignore-os' to disregard."
 	fi
 fi
 
 if [ $# -eq 0 ]; then
-	XERR "$LINENO" "Arguments are required. See: insit --help"
+	FAIL 1 "$LINENO" "Arguments are required. See: $_PROJECT_ --help"
 fi
 
 # This initial test is part of ensuring the user knows not to use one of these OPTs
-# alongside other OPTs; it's invalid syntax, basically. See XERRs for these flags.
+# alongside other OPTs; it's invalid syntax, basically. See FAILs for these flags.
 if [[ "$1" =~ ^(--just-check|-J)$ ]]; then
 	shift; JUST_CHECK="true"
 else
@@ -164,7 +155,7 @@ else
 				NO_VC="true" ;;
 			--just-check|-J)
 				# Catches invalid args to the left of these flags.
-				XERR "$LINENO" "OPT '--just-check|-J' can only be used on its own." ;;
+				FAIL 1 "$LINENO" "OPT '--just-check|-J' can only be used on its own." ;;
 			--quiet|-q)
 				BEQUIET="true" ;;
 			--update|-U)
@@ -183,9 +174,9 @@ else
 			--source|-s)
 				shift
 				if ! [ "$1" ]; then
-					XERR "$LINENO" "A GitHub username is required."
+					FAIL 1 "$LINENO" "A GitHub username is required."
 				elif [[ "$1" =~ terminalforlife ]]; then
-					XERR "$LINENO" "Erm, ..."
+					FAIL 1 "$LINENO" "Erm, ..."
 				else
 					URL="$DOM/$1"
 				fi ;;
@@ -194,15 +185,15 @@ else
 			--logfile)
 				shift; LOGFILE="$1"
 				if ! [ -d "${LOGFILE%/*}" ]; then
-					XERR "$LINENO" "Directory for logfile not found."
+					FAIL 1 "$LINENO" "Directory for logfile not found."
 				fi ;;
 			--log|-L)
 				LOGIT="true" ;;
 			-*)
-				XERR "$LINENO" "Incorrect argument(s) specified." ;;
+				FAIL 1 "$LINENO" "Incorrect argument(s) specified." ;;
 			*)
 				if [ ! "${URL##*/}" == "terminalforlife" -a ! "$CUSTOM" == "true" ]; then
-					XERR "$LINENO" "Can only choose a source with '--custom|-C' OPT."
+					FAIL 1 "$LINENO" "Can only choose a source with '--custom|-C' OPT."
 				else
 					break
 				fi ;;
@@ -212,24 +203,24 @@ else
 fi
 
 if [ "$NOBACKUP" -a "$RESTORE" ]; then
-	XERR "$LINENO" "Conflicting OPTs selected."
+	FAIL 1 "$LINENO" "Conflicting OPTs selected."
 fi
 
 if [ "$RESTORE" -a $# -gt 0 ]; then
-	XERR "$LINENO" "The '--restore|-R' flags cannot be used with WHATs."
+	FAIL 1 "$LINENO" "The '--restore|-R' flags cannot be used with WHATs."
 fi
 
 declare -i DEPCOUNT=0
-for DEP in /usr/bin/{wget,find} /bin/{cp,mv,rm,chmod,chown,mkdir}; {
-	if ! [ -x "$DEP" ]; then
-		ERR "$LINENO" "Dependency '$DEP' not met."
+for DEP in dpkg-query wget find cp mv rm chmod chown mkdir; {
+	if ! type -fP "$DEP" > /dev/null 2>&1; then
+		FAIL 0 "$LINENO" "Dependency '$DEP' not met."
 		DEPCOUNT+=1
 	fi
 }
 
 [ $DEPCOUNT -eq 0 ] || exit 1
 
-read -a WGET_VER_LINE <<< "$(/usr/bin/wget --version)"
+read -a WGET_VER_LINE <<< "$(wget --version)"
 WGET_VERSION=0${WGET_VER_LINE[2]//[!0-9]}
 if [ $WGET_VERSION -ge 01192 -a $WGET_VERSION -lt 01194 ]; then
 	NOWARC="--no-warc-compression"
@@ -238,37 +229,37 @@ fi
 if ! [ "$JUST_CHECK" == "true" ]; then
 	if ! [ "$CLOG" == "true" -o "$AVAIL_SHOW" == "true" -o "$NOROOT" == "true" ]; then
 		if ! [ $UID -eq 0 ]; then
-			XERR "$LINENO" "Unable to continue -- do you have root access?"
+			FAIL 1 "$LINENO" "Unable to continue -- do you have root access?"
 		else
 			if ! [ "$SUDO_UID" -a "$SUDO_GID" ]; then
-				XERR "$LINENO" "Are you not using sudo?"
+				FAIL 1 "$LINENO" "Are you not using sudo?"
 			fi
 		fi
 	fi
 elif [ "$JUST_CHECK" == "true" -a $# -gt 0 ]; then
 	# Catches invalid args to the right of the --just-check|-J flags.
-	XERR "$LINENO" "OPT '--just-check|-J' can only be used on its own."
+	FAIL 1 "$LINENO" "OPT '--just-check|-J' can only be used on its own."
 fi
 
-[ "$BEQUIET" == "true" ] && exec 1> /dev/null
+[ "$BEQUIET" == "true" ] && exec > /dev/null
 [ "$DEBUGME" == "true" ] && set -x
 
 if ! [ -d "$MAINDIR" ]; then
-	if /bin/mkdir "$MAINDIR"; then
-		/bin/chown $SUDO_UID:$SUDO_UID "$MAINDIR"
+	if mkdir "$MAINDIR"; then
+		chown $SUDO_UID:$SUDO_UID "$MAINDIR"
 	else
-		XERR "$LINENO" "Failure to create '$MAINDIR' directory."
+		FAIL 1 "$LINENO" "Failure to create '$MAINDIR' directory."
 	fi
 fi
 
-[ -d "$BUPATH" ] || /bin/mkdir -p "$BUPATH" &> /dev/null
+[ -d "$BUPATH" ] || mkdir -p "$BUPATH"
 
 if ! [ "$JUST_CHECK" == "true" ]; then
 	if [ "$CLOG" == "true" ]; then
-		CLOG_URL="$DOM/terminalforlife/installit/raw/master/CHANGELOG.md"
-		CLOG_FILE=`/usr/bin/wget "$NOWARC" -q "$CLOG_URL" -O -`
-		if [ -x /usr/bin/less ]; then
-			/usr/bin/less <<< "$CLOG_FILE"
+		CLOG_URL="$DOM/terminalforlife/Insit/raw/master/CHANGELOG.md"
+		CLOG_FILE=`wget "$NOWARC" -q "$CLOG_URL" -O -`
+		if type -fP less > /dev/null 2>&1; then
+			less <<< "$CLOG_FILE"
 		else
 			printf "%s\n" "$CLOG_FILE"
 		fi
@@ -280,7 +271,7 @@ fi
 LOGIT(){
 	if [ $UID -eq 0 ]; then
 		if ! [ -d "${LOGFILE%/*}" ]; then
-			XERR "$LINENO" "System directory '/var/log' not found."
+			FAIL 1 "$LINENO" "System directory '/var/log' not found."
 		else
 			printf -v DATETIME "%(%F_%X)T" -1
 			if [ "$LOGIT" == "true" ]; then
@@ -289,8 +280,10 @@ LOGIT(){
 				#TODO - Could not logrotate handle this?
 				readarray A < "$LOGFILE"
 				if [ "${#A[@]}" -gt 4000 ]; then
-					/bin/mv "$LOGFILE"{,.old}
-					[ -x /bin/gzip ] && /bin/gzip "${LOGFILE}.old"
+					mv "$LOGFILE"{,.old}
+					if type -fP gzip > /dev/null 2>&1; then
+						gzip "${LOGFILE}.old"
+					fi
 				fi
 			fi
 
@@ -299,6 +292,12 @@ LOGIT(){
 	fi
 }
 
+EXIT(){
+	LOGIT "Signal 'EXIT' trapped on line '$LINENO' -- $_PROJECT_ quitting"
+}
+
+trap 'EXIT' EXIT
+
 if ! [ "$JUST_CHECK" == "true" ]; then
 	if [ "$RESTORE" ]; then
 		LOGIT "Sourcing backup restoration script"
@@ -306,22 +305,20 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 			. "$LASTFILE"
 			exit 0
 		else
-			XERR "$LINENO" "Missing automatically generated backup restoration script."
+			FAIL 1 "$LINENO" "Missing automatically generated backup restoration script."
 		fi
 	fi
 
-	#TODO - This still gets executed at times when it shouldn't. Not a biggy, -
-	#       but is still annoying and technically a bug.
-	if [ "$UPDATE" ]; then
+	MK_LAST(){
 		if [ -f "$LASTFILE" ] && [ "$SUDO_USER" ]; then
 			LOGIT "Backup restoration script ownership corrected"
-			/bin/chown $SUDO_UID:$SUDO_UID "$LASTFILE"
+			chown $SUDO_UID:$SUDO_UID "$LASTFILE"
 
 			LOGIT "Backup restoration script permissions corrected"
-			/bin/chmod 600 "$LASTFILE"
+			chmod 600 "$LASTFILE"
 		elif [ -f "$LASTFILE" ] && ! [ -r "$LASTFILE" -a -w "$LASTFILE" ]; then
 			LOGIT "Backup restoration script has invalid permissions"
-			XERR "$LINENO" "Unable to write over the old backup restoration script."
+			FAIL 1 "$LINENO" "Unable to write over the old backup restoration script."
 		else
 			LOGIT "Generating a new backup restoration script"
 
@@ -330,18 +327,42 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 					printf "%s\n" "$REPLY"
 				done <<-EOF
 					#!/bin/bash
-					# Backup restoration script automatically generated and used by insit.
+					# Backup restoration script automatically generated and used by $_PROJECT_.
 					# Generated on `printf '%(%F (%X))T' -1` by $SUDO_USER ($SUDO_UID) @ $HOSTNAME.
 					#
 					# Do NOT make any changes to this script, unless you know what you're doing!
 
 				EOF
-			} > "$LASTFILE"
+			} > "$LASTFILE" || return 1
 		fi
+	}
 
-		if [ ! "$NOBACKUP" == "true" -a "$UPDATE" ]; then
-			LOGIT "Cleaning up old backups in $BUPATH"
-			/bin/rm -r "$BUPATH" &> /dev/null
+	if [ "$UPDATE" == "true" ]; then
+		declare -i CHECK_BACKUP_ALREADY_MADE_COUNT=0
+		while read; do
+			CHECK_BACKUP_ALREADY_MADE_COUNT+=1
+		done < "$LASTFILE"
+
+		if [ $CHECK_BACKUP_ALREADY_MADE_COUNT -gt 5 ]; then
+			LOGIT "Detected previous backup in script '$LASTFILE'"
+			if rm "$LASTFILE" > /dev/null 2>&1; then
+				LOGIT "Deleting old backup script '$LASTFILE'"
+			else
+				LOGIT "Failed to delete old backup script '$LASTFILE'"
+			fi
+
+			if ! MK_LAST; then
+				LOGIT "Backup restoration script $LASTFILE not found or read-only"
+				FAIL 0 "$LINENO" "Unable to generate a backup restoration script."
+				BACKUP_PROMPT
+
+				HAS_FAILED_BACKUP="true"
+			fi
+
+			if [ ! "$NOBACKUP" == "true" -a "$UPDATE" == "true" ]; then
+				LOGIT "Cleaning up old backups in $BUPATH"
+				rm -r "$BUPATH" > /dev/null 2>&1
+			fi
 		fi
 	fi
 
@@ -366,12 +387,13 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 	}
 
 	FILE(){
-		LOGIT "FILE $1 $2 $3 $4 $5 $6"
+		[ "$1" == "NLA" ] || LOGIT "FILE $1 $2 $3 $4 $5 $6"
+
 		if [ "$UNINSTALL" == "true" ]; then
 			if [ -f "$3" ]; then
 				if [ "$HASGVFS" == "true" ]; then
 					LOGIT "Trashing $3"
-					if /usr/bin/gvfs-trash "$3"; then
+					if gvfs-trash "$3" > /dev/null 2>&1; then
 						LOGIT "Successfully trashed $3"
 						printf "File '%s' sent to trash.\n" "$3"
 					else
@@ -379,7 +401,7 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 					fi
 				else
 					LOGIT "Deleting $3"
-					if /bin/rm "$3"; then
+					if rm "$3" > /dev/null 2>&1; then
 						LOGIT "Successfully deleted $3"
 						printf "File '%s' deleted.\n" "$3"
 					else
@@ -387,16 +409,58 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 					fi
 				fi
 			else
-				ERR "$LINENO" "File '$3' not found."
+				FAIL 0 "$LINENO" "File '$3' not found."
 				return 1
 			fi
 		else
+			# If first FILE argument is 'NLA', then FILE ignores normal
+			# operation in favor of this exit notifier. Arguments $1, -
+			# then becomes the item name, and $2 becomes the REASON.
+			if [ "$1" == "NLA" ]; then
+				LOGIT "Displaying no longer available for install, for $2"
+				while read; do
+					printf "%s\n" "$REPLY"
+				done <<-EOF
+					This item is no longer available for installation via $_PROJECT_. It may still be
+					available on its associated repository on GitHub:
+
+					  $URL
+
+					Installation via $_PROJECT_ may still be possible via the '--custom|-C' flags.
+
+					REASON: $3
+				EOF
+
+				exit 0
+			fi
+
 			if [ -f "$3" -a ! "$UPDATE" == "true" ]; then
 				LOGIT "File $3 already exists"
-				ERR "$LINENO" "File already exists: $3"
+				FAIL 0 "$LINENO" "File already exists: $3"
 				return 1
 			else
 				if [ -f "$3" ]; then
+					MK_BUP_DIR(){
+						LOGIT "Creating $BUFILE_DIR directory"
+						if ! mkdir -p "$BUFILE_DIR" > /dev/null 2>&1; then
+							FAIL 0 "$LINENO" "Failed to create one or more backup directories."
+							BACKUP_PROMPT
+						else
+							LOGIT "Backing up $1 to $BUFILE"
+							if ! cp "$1" "$BUFILE" > /dev/null 2>&1; then
+								LOGIT "Failed to back up $1"
+								FAIL 0 "$LINENO" "Back up of '$1' failed.\n"
+								BACKUP_PROMPT
+							else
+								LOGIT "Setting correct permissions, UID, and GID for $BUFILE"
+								chmod 600 "$BUFILE" > /dev/null 2>&1
+								find $BUPATH/ -xdev -exec\
+								chown $SUDO_UID:$SUDO_GID "{}" \;
+
+							fi
+						fi
+					}
+
 					if ! [ "$NOBACKUP" == "true" ]; then
 						BUFILE="$BUPATH/${3#/}"
 						BUFILE_DIR="$BUPATH/${3%/*}"
@@ -413,11 +477,13 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 								printf "CAUTION: Continuing without a backup.\n"
 							else
 								LOGIT "Unrecognised response at cautionary backup prompt"
-								ERR "$LINENO" "Unrecognised response."
+								FAIL 0 "$LINENO" "Unrecognised response."
 							fi
 						}
 
-						if [ -f "$LASTFILE" -a -r "$LASTFILE" ]; then
+						MK_BUP_DIR "$3"
+
+						if ! [ "$HAS_FAILED_BACKUP" == "true" ]; then
 							LOGIT "Generating restore commands for $3"
 
 							{
@@ -426,96 +492,76 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 								done <<-EOF
 									LOGIT "Restoring backed up $3"
 									printf "Restoring '%s' file.\n" "$3"
-									if /bin/cp "$BUFILE" "$3"; then
-									        /bin/chown $5:$6 "$3"
-									        /bin/chmod $4 "$3"
+									if cp "$BUFILE" "$3" > /dev/null 2>&1; then
+									        chown $5:$6 "$3" > /dev/null 2>&1
+									        chmod $4 "$3" > /dev/null 2>&1
 									else
-									        ERR "\$LINENO" "Failed to restore '$3' file."
+									        FAIL 0 "\$LINENO" "Failed to restore '$3' file."
 									fi
 
 								EOF
 							} >> "$LASTFILE"
-
-							LOGIT "Creating $BUFILE_DIR directory"
-							if ! /bin/mkdir -p "$BUFILE_DIR" &> /dev/null; then
-								ERR "$LINENO" "Failed to create one or more backup directories."
-								BACKUP_PROMPT
-							else
-								LOGIT "Backing up $3 to $BUFILE"
-								if ! /bin/cp "$3" "$BUFILE" &> /dev/null; then
-									LOGIT "Failed to back up $3"
-									ERR "$LINENO" "Back up of '$3' failed.\n"
-									BACKUP_PROMPT
-								else
-									LOGIT "Setting correct permissions, UID, and GID for $BUFILE"
-									/bin/chmod 600 "$BUFILE" &> /dev/null
-									/usr/bin/find $BUPATH/ -xdev -exec\
-										/bin/chown $SUDO_UID:$SUDO_GID "{}" \;
-
-								fi
-							fi
 						else
-							LOGIT "Backup restoration script $LASTFILE not found or readonly"
-							ERR "$LINENO" "Unable to generate a backup restoration script."
-							BACKUP_PROMPT
+							LOGIT "Choosing to bypass backup procedure, due to failure"
 						fi
+
 					else
 						LOGIT "Skipping back-up of $3"
 					fi
 
 					LOGIT "Downloading $URL/$1/$BRANCH/$2 over $3"
-					if /usr/bin/wget -q $NOWARC "$URL/$1/raw/$BRANCH/$2" -O "$3" &> /dev/null; then
+					if wget -q $NOWARC "$URL/$1/raw/$BRANCH/$2" -O "$3" > /dev/null 2>&1; then
 						LOGIT "Successfully downloaded $URL/$1/$BRANCH/$2 over $3"
 						printf "File '%s' downloaded and updated.\n" "$3"
 
 						LOGIT "Re-setting $3 to $5 UID and $6 GID"
-						if /bin/chown $5:$6 "$3" &> /dev/null; then
+						if chown $5:$6 "$3" > /dev/null 2>&1; then
 							LOGIT "Successfully re-set $3 to $5 UID and $6 GID"
 							printf "File '%s' ownership re-set.\n" "$3"
 						else
 							LOGIT "Failed to re-set $3 to $5 UID and $6 GID"
-							ERR "$LINENO" "Unable to re-set the ownership of '$3' file."
+							FAIL 0 "$LINENO" "Unable to re-set the ownership of '$3' file."
 						fi
 
 						LOGIT "Re-setting $3 to $4 permissions"
-						if /bin/chmod "$4" "$3" &> /dev/null; then
+						if chmod "$4" "$3" > /dev/null 2>&1; then
 							LOGIT "Successfully re-set $3 to $4 permissions"
 							printf "File '%s' mode re-set.\n" "$3"
 						else
 							LOGIT "Failed to re-set $3 to $4 permissions"
-							ERR "$LINENO" "Unable to re-set the mode of '$3' file."
+							FAIL 0 "$LINENO" "Unable to re-set the mode of '$3' file."
 						fi
 					else
 						LOGIT "Failed to download $URL/$1/$BRANCH/$2 over $3"
-						ERR "$LINENO" "Unable to download and/or update '$3' file."
+						FAIL 0 "$LINENO" "Unable to download and/or update '$3' file."
 						return 1
 					fi
 				else
 					LOGIT "Downloading $URL/$1/$BRANCH/$2 to $3"
-					if /usr/bin/wget -q $NOWARC "$URL/$1/raw/$BRANCH/$2" -O "$3" &> /dev/null; then
+					if wget -q $NOWARC "$URL/$1/raw/$BRANCH/$2" -O "$3" > /dev/null 2>&1; then
 						LOGIT "Successfully downloaded $URL/$1/$BRANCH/$2 to $3"
 						printf "File '%s' successfully downloaded.\n" "$3"
 
 						LOGIT "Setting $3 to $6 UID and $5 GID"
-						if /bin/chown $5:$6 "$3" &> /dev/null; then
+						if chown $5:$6 "$3" > /dev/null 2>&1; then
 							LOGIT "Successfully set $3 to $6 UID and $5 GID"
 							printf "File '%s' ownership set.\n" "$3"
 						else
 							LOGIT "Failed to set $3 to $6 UID and $5 GID"
-							ERR "$LINENO" "Unable to set the ownership of '$3' file."
+							FAIL 0 "$LINENO" "Unable to set the ownership of '$3' file."
 						fi
 
 						LOGIT "Setting $3 to $4 permissions"
-						if /bin/chmod "$4" "$3" &> /dev/null; then
+						if chmod "$4" "$3" > /dev/null 2>&1; then
 							LOGIT "Successfully set $3 to $4 permissions"
 							printf "File '%s' mode successfully set.\n" "$3"
 						else
 							LOGIT "Failed to set $3 to $4 permissions"
-							ERR "$LINENO" "Unable to set the mode of '$3' file."
+							FAIL 0 "$LINENO" "Unable to set the mode of '$3' file."
 						fi
 					else
 						LOGIT "Failed to download $URL/$1/$BRANCH/$2 to $3"
-						ERR "$LINENO" "Unable to download '$3' file."
+						FAIL 0 "$LINENO" "Unable to download '$3' file."
 						return 1
 					fi
 				fi
@@ -530,89 +576,42 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 		fi
 
 		if ! [ -x /usr/bin/apt-get ]; then
-			LOGIT "Failed to find dependency $OSFILE"
-			ERR "$LINENO" "Dependency '/usr/bin/apt-get' not found."
+			LOGIT "Failed to find dependency /usr/bin/apt-get"
+			FAIL 0 "$LINENO" "Dependency '/usr/bin/apt-get' not found."
+			return 1
+		elif ! [ -x /usr/bin/apt-mark ]; then
+			LOGIT "Failed to find dependency /usr/bin/apt-mark"
+			FAIL 0 "$LINENO" "Dependency '/usr/bin/apt-mark' not found."
 			return 1
 		fi
 
-		read -e -p "Enter 'APT' to install associated packages via APT: "
-		if ! [[ "$REPLY" == "APT" ]]; then
-			LOGIT "Quit at APT_INSTALL() prompt"
-			printf "No DEB packages installed -- quitting.\n"
-			exit 1
-		else
-			LOGIT "Telling APT to install $@"
-			if ! /usr/bin/apt-get --quiet --show-progress\
-				-o Dpkg::Progress=true -o Dpkg::Progress-Fancy=true\
-				install $@; then
-				LOGIT "APT failed to install $@"
-				return 1
+		if ! [ "$UNINSTALL" == "true" ]; then
+			read -e -p "Enter 'APT' to install associated packages via APT: "
+			if ! [[ "$REPLY" == "APT" ]]; then
+				LOGIT "Quit at APT_INSTALL() prompt"
+				printf "No DEB packages installed -- quitting.\n"
+				exit 1
+			else
+				LOGIT "Telling APT to install $@"
+				if ! apt-get --quiet --show-progress\
+					-o Dpkg::Progress=true -o Dpkg::Progress-Fancy=true\
+					install $@; then
+					LOGIT "APT failed to install $@"
+					return 1
+				#TODO - Need to verify this won't conflict.
+				#else
+				#	LOGIT "Telling APT to mark as auto $@"
+				#	if ! /usr/bin/apt-mark auto $@; then
+				#		LOGIT "APT failed to mark $@"
+				#		return 1
+				#	fi
+				fi
 			fi
 		fi
 	}
 
 	AVAIL=(
-		"apt-undo-install - Undo the last package(s) install executed with apt-get."
-		"autoscrot - Tool to take full screenshots at user-specified intervals using scrot."
-		"backmeup - A simple tool to quickly and easily back up your HOME."
-		"barred - A rudimentary, scriptable, and very small progress bar."
-		"bashconfig - My own bash settings and shell plugins for use by anybody."
-		"bdl - Easily and quickly download a batch of files using wget."
-		"binwatch - Output list of executables found in your PATH"
-		"bios-info - Simple tool to show basic BIOS keys and their values."
-		"bl - Much simpler, quicker version of blkid."
-		"capnum - Small tool to notify of NumLock and CapsLock status changes."
-		"catmedia - Concatenate media files originally separated in parts."
-		"clean-locales - Remove some unnecessary non-English localizations."
-		"compconf - The terminalforlife configuration file for compton."
-		"cpufreq - Lightweight Bourne Shell utility to output your CPU frequencies."
-		"dl-tuxradar-podcasts - Small shell program to download the TuxRadar podcasts."
-		"dlfallwalls - Download a collection of Autumn/Fall wallpapers."
-		"dlfcmags - Download issues of the Full Circle magazine PDFs."
-		"dlspwalls - Download a collection of steampunk wallpapers."
-		"dunstconfig - The terminalforlife configuration file for dunst."
-		"dwwdl - Download all of the available DistroWatch Weekly podcasts."
-		"feh-slides - A super-simple desktop wallpaper slideshow."
-		"filesitter - Watch for and act upon the completion of file size changes."
-		"forex - Easily convert various currency rates straight from the terminal."
-		"freelfm - Download last.fm's free music into the current working directory."
-		"get-uuid - Grab and copy your file system's UUID with this simple, easy-to-use GUI."
-		"getip - View your internal and/or external IP address."
-		"getline - Pure Bourne Again Shell way to handle a plain text file."
-		"ghipc - Check the validity of IP addresses of GitHub servers."
-		"github-ssh-setup - Simple shell program to create an SSH key pair for GitHub."
-		"gtk-greeter-sets - The TFL settings for the GTK LightDM greeter."
-		"homewatch - Output files in HOME which have been modified today."
-		"i3config - My own i3-wm settings and shell plugins for use by anybody."
-		"jotd - Display a Joke of the Day on your terminal."
-		"kernelchk - Small tool to check for a change in kernel version. Ideal for scripts."
-		"lsbins - Simple shell program to list and describe the PATH executables."
-		"lspkg - Quickly and portable-y show, describe, and search installed packages."
-		"mansaver - Save man pages for each applicable command in PATH."
-		"medlog - Need help taking and logging when you've had your medication?"
-		"mfw - Notifier for page-one threads on the Newbie Questions Linux Mint forum."
-		"mif - Shell program to filter films by year and whether seen or not."
-		"mkpass - Pure Bourne Again Shell approach to complex password generation."
-		"mplay - Simple script to allow me to quickly load mocp how I like."
-		"nosp - A workaround for the issue in XFCE wherein Smart Placement refuses to go away."
-		"notify-upgrade - Simple upgrade notification utility for Debian- and Ubuntu-based systems."
-		"nxbt - A fork and improvement of the XBT program written by Joe Collins."
-		"pagewatch - Watch a webpage for signs of change by checkings its md5sum."
-		"purgerc - Very simple and light shell command to remove 'rc' packages."
-		"redshifter - Effective and simple tool to manually adjust the gamma via Redshift."
-		"reviewer - Terminal viewer for Linux Mint's user submitted software reviews."
-		"ripmydvd - Shell program using ffmpeg and mplayer to rip your DVD."
-		"rmne - Remove all non-essential packages from Ubuntu or Debian installations."
-		"roks - This small program will clear out your system of old kernel versions."
-		"seewttr - Super-simple wrapper-like script to get your weather."
-		"simplify-ubuntu - Small project to lighten standard Ubuntu 16.04.* LTS installations."
-		"simwea - Display various weather statistics on a terminal."
-		"snotes - Search your programming notes on-the-fly with this simple tool."
-		"tlptog - Simple command to quickly toggle the 'TLP_ENABLE' parameter."
-		"tozero - Simple program to display a countdown for a target date."
-		"ubuntu-syschk - Performs various non-root system health checks on Ubuntu and similar."
-		"vimconfig - TFL plugins and more for the Vi-IMproved (VIM) modal text editor."
-		"wcdl - Crawl WallpapersCraft for desktop backgrounds. Includes wcdl tools."
+		"[N/A]"
 	)
 
 	if [ "$AVAIL_SHOW" == "true" ]; then
@@ -622,22 +621,22 @@ if ! [ "$JUST_CHECK" == "true" ]; then
 fi
 
 if [ ! $UID -eq 0 -a "$LOGIT" == "true" ]; then
-	ERR "$LINENO" "Logging disabled -- insufficient permissions."
+	FAIL 0 "$LINENO" "Logging disabled -- insufficient permissions."
 fi
 
 if ! [ "$JUST_CHECK" == "true" ]; then
 	if [ "$UPDATE" == "true" -a $# -eq 0 -a ! "$SELF" == "true" ]; then
-		XERR "$LINENO" "No items were selected for update."
+		FAIL 1 "$LINENO" "No items were selected for update."
 	fi
 fi
 
 if [ "$JUST_CHECK" == "true" ] || ! [ "$NO_VC" == "true" -o "$SELF" == "true" ]; then
 	LOGIT "Checking version for update availability"
-	VERSION_URL="$DOM/terminalforlife/installit/raw/master/version"
-	LATEST=`/usr/bin/wget $NOWARC -q "$VERSION_URL" -O -`
+	VERSION_URL="$DOM/terminalforlife/Insit/raw/master/version"
+	LATEST=`wget $NOWARC -q "$VERSION_URL" -O -`
 	if [[ "${LATEST//-}" =~ ^[0-9]{8}$ ]]; then
 		if [ ${LATEST//-} -gt ${_VERSION_//-} ]; then
-			LOGIT "A newer version of insit detected"
+			LOGIT "A newer version of $_PROJECT_ detected"
 			while read -r; do
 				printf "%s\n" "$REPLY"
 			done <<-EOF
@@ -645,11 +644,11 @@ if [ "$JUST_CHECK" == "true" ] || ! [ "$NO_VC" == "true" -o "$SELF" == "true" ];
 				Current version:          $_VERSION_
 			EOF
 		else
-			LOGIT "No new version of insit detected"
+			LOGIT "No new version of $_PROJECT_ detected"
 		fi
 	else
 		LOGIT "Update availability error(s) detected"
-		ERR "$LINENO" "Failed to check for available updates."
+		FAIL 0 "$LINENO" "Failed to check for available updates."
 	fi
 
 	[ "$JUST_CHECK" == "true" ] && exit 0
@@ -658,15 +657,15 @@ else
 fi
 
 if [ "$SELF" == "true" ]; then
-	FILE installit insit /usr/bin/insit 755 0 0
-	FILE installit completion /usr/share/bash-completion/completions/insit 644 0 0
+	FILE Insit $_PROJECT_ /usr/bin/$_PROJECT_ 755 0 0
+	FILE Insit completion /usr/share/bash-completion/completions/$_PROJECT_ 644 0 0
 	exit 0 # Had to do this, since UPDATE is true here; saves possible mistake.
 elif [ "$UNINSTALL" == "true" ]; then
-	if [ -x /usr/bin/gvfs-trash ]; then
+	if type -fP gvfs-trash > /dev/null 2>&1; then
 		read -e -n 1 -p "This will send installed files to the trash -- continue? "
 		HASGVFS="true"
 	else
-		LOGIT "Asking user if insit should continue with file deletion"
+		LOGIT "Asking user if $_PROJECT_ should continue with file deletion"
 		read -e -n 1 -p "This will delete installed files -- continue? "
 		HASGVFS="false"
 	fi
@@ -677,6 +676,11 @@ elif [ "$UNINSTALL" == "true" ]; then
 		exit 0
 	fi
 elif [ "$CUSTOM" == "true" ]; then
+	if [ "$1" == "NLA" ]; then
+		#TODO - What if the repository name (not TFL) is named 'NLA'? Fix!
+		FAIL 1 "$LINENO" "Special word 'NLA' is reserved by $_PROJECT_ functionalty."
+	fi
+
 	LOGIT "Processing custom FILE '$@'"
 	FILE $@
 	exit 0
@@ -684,34 +688,85 @@ fi
 
 while [ "$1" ]; do
 	case "$1" in
+		libtfl-perl)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			read II <<< `dpkg-query -f='${db:Status-Abbrev}' --show libtfl-perl 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "libtfl-perl's DEB package has already been installed."
+			fi
+
+			FILE PerlProjects TFL.pm /usr/share/perl5/TFL.pm 644 0 0 ;;
+		freema.chillout)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE freema.chillout freema.chillout /usr/bin/freema.chillout 755 0 0 ;;
+		previewer)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			read II <<< `dpkg-query -f='${db:Status-Abbrev}' --show previewer 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "previewer's DEB package has already been installed."
+			fi
+
+			printf "NOTE: There is a DEB package available for 'previewer'\n"
+
+			FILE PerlProjects previewer /usr/bin/previewer 755 0 0
+			FILE PerlProjects Completions/previewer /usr/share/bash-completion/completions/previewer 644 0 0
+
+			read II <<< `dpkg-query -f='${db:Status-Abbrev}' --show libtfl-perl 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "libtfl-perl's DEB package has already been installed."
+			fi
+
+			FILE PerlProjects TFL.pm /usr/share/perl5/TFL.pm 644 0 0 ;;
+		tfl_moc_theme)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra tfl_moc_theme /usr/share/moc/themes/tfl_moc_theme 644 0 0 ;;
+		nwchk)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra nwchk /usr/bin/nwchk 755 0 0
+			FILE Extra Completions/nwchk /usr/share/bash-completion/completions/nwchk 644 0 0 ;;
+		lad)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE BashConfig lad /usr/bin/lad 755 0 0 ;;
+		fix-ff-gtk)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra fix-ff-gtk /usr/bin/fix-ff-gtk 755 0 0 ;;
 		purgerc)
-			FILE miscellaneous purgerc /usr/bin/purgerc 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra purgerc /usr/bin/purgerc 755 0 0 ;;
 		tlptog)
-			FILE miscellaneous tlptog /usr/bin/tlptog 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra tlptog /usr/bin/tlptog 755 0 0 ;;
 		feh-slides)
-			FILE miscellaneous feh-slides /usr/bin/feh-slides 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra feh-slides /usr/bin/feh-slides 755 0 0 ;;
 		rmne)
-			FILE miscellaneous rmne /usr/bin/rmne 755 0 0
-			FILE miscellaneous Completions/rmne /usr/share/bash-completion/completions/rmne 644 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra rmne /usr/bin/rmne 755 0 0
+			FILE Extra Completions/rmne /usr/share/bash-completion/completions/rmne 644 0 0 ;;
 		gtk-greeter-sets)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			LOGIT "Displaying gtk-greeter-sets WARNING"
 			REPLACE_PROMPT\
 				"/etc/lightdm/lightdm-gtk-greeter.conf"\
 			|| { shift; continue; }
 
 			if [ -d /etc/lightdm ]; then
-				FILE miscellaneous lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf 644 0 0
+				FILE Extra lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf 644 0 0
 			else
-				ERR "$LINENO" "Missing '/etc/lightdm' directory."
+				FAIL 0 "$LINENO" "Missing '/etc/lightdm' directory."
 			fi ;;
 		freelfm)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE freelfm freelfm /usr/bin/freelfm 755 0 0 ;;
 		barred)
-			FILE miscellaneous barred /usr/bin/barred 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra barred /usr/bin/barred 755 0 0 ;;
 		filesitter)
-			FILE miscellaneous filesitter /usr/bin/filesitter 755 0 0 ;;
-		vimconfig)
-			LOGIT "Displaying vimconfig WARNING"
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra filesitter /usr/bin/filesitter 755 0 0 ;;
+		VimConfig)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			LOGIT "Displaying VimConfig WARNING"
 			REPLACE_PROMPT\
 				"$HOME/.vim/colors/tfl.vim"\
 				"$HOME/.vim/plugin/altnums.vim"\
@@ -741,38 +796,40 @@ while [ "$1" ]; do
 				/bin/mkdir -p $HOME/.vim/colors
 			fi
 
-			FILE vimconfig colors/tfl.vim $HOME/.vim/colors/tfl.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig .vimrc $HOME/.vimrc 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig colors/tfl.vim $HOME/.vim/colors/tfl.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig .vimrc $HOME/.vimrc 600 $SUDO_UID $SUDO_GID
 
 			if ! [ -d $HOME/.vim/plugin ]; then
 				LOGIT "Creating $HOME/.vim/plugin directory"
 				/bin/mkdir -p $HOME/.vim/plugin
 			fi
 
-			FILE vimconfig plugin/altnums.vim $HOME/.vim/plugin/altnums.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/autoscroll.vim $HOME/.vim/plugin/autoscroll.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/banger.vim $HOME/.vim/plugin/banger.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/comtog.vim $HOME/.vim/plugin/comtog.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/datepaste.vim $HOME/.vim/plugin/datepaste.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/exefile.vim $HOME/.vim/plugin/exefile.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/headup.vim $HOME/.vim/plugin/headup.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/listmode.vim $HOME/.vim/plugin/listmode.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/moredoc.vim $HOME/.vim/plugin/moredoc.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/mouseon.vim $HOME/.vim/plugin/mouseon.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/noarrows.vim $HOME/.vim/plugin/noarrows.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/sanekeys.vim $HOME/.vim/plugin/sanekeys.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/simplyhard.vim $HOME/.vim/plugin/simplyhard.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/sudosave.vim $HOME/.vim/plugin/sudosave.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/textwidth.vim $HOME/.vim/plugin/textwidth.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/tflsnips.vim $HOME/.vim/plugin/tflsnips.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/tflstatus.vim $HOME/.vim/plugin/tflstatus.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/togtrans.vim $HOME/.vim/plugin/togtrans.vim 600 $SUDO_UID $SUDO_GID
-			FILE vimconfig plugin/virtedit.vim $HOME/.vim/plugin/virtedit.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/altnums.vim $HOME/.vim/plugin/altnums.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/autoscroll.vim $HOME/.vim/plugin/autoscroll.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/banger.vim $HOME/.vim/plugin/banger.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/comtog.vim $HOME/.vim/plugin/comtog.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/datepaste.vim $HOME/.vim/plugin/datepaste.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/exefile.vim $HOME/.vim/plugin/exefile.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/headup.vim $HOME/.vim/plugin/headup.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/listmode.vim $HOME/.vim/plugin/listmode.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/moredoc.vim $HOME/.vim/plugin/moredoc.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/mouseon.vim $HOME/.vim/plugin/mouseon.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/noarrows.vim $HOME/.vim/plugin/noarrows.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/sanekeys.vim $HOME/.vim/plugin/sanekeys.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/simplyhard.vim $HOME/.vim/plugin/simplyhard.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/sudosave.vim $HOME/.vim/plugin/sudosave.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/textwidth.vim $HOME/.vim/plugin/textwidth.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/tflsnips.vim $HOME/.vim/plugin/tflsnips.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/tflstatus.vim $HOME/.vim/plugin/tflstatus.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/togtrans.vim $HOME/.vim/plugin/togtrans.vim 600 $SUDO_UID $SUDO_GID
+			FILE VimConfig plugin/virtedit.vim $HOME/.vim/plugin/virtedit.vim 600 $SUDO_UID $SUDO_GID
 
 			[ -x /usr/bin/vim ] || APT_INSTALL vim ;;
 		snotes)
-			FILE miscellaneous snotes /usr/bin/snotes 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra snotes /usr/bin/snotes 755 0 0 ;;
 		dunstconfig)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			if [ -f $HOME/.config/dunst/dunstrc ]; then
 				LOGIT "Displaying dunstconfig WARNING"
 				REPLACE_PROMPT\
@@ -785,10 +842,11 @@ while [ "$1" ]; do
 				/bin/mkdir $HOME/.config/dunst
 			fi
 
-			FILE miscellaneous dunstrc $HOME/.config/dunst/dunstrc 600 $SUDO_UID $SUDO_GID
+			FILE Extra dunstrc $HOME/.config/dunst/dunstrc 600 $SUDO_UID $SUDO_GID
 
 			[ -x /usr/bin/dunst ] || APT_INSTALL dunst ;;
 		compconf)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			if [ -f $HOME/.config/compton.conf ]; then
 				LOGIT "Displaying compconf WARNING"
 				REPLACE_PROMPT\
@@ -801,118 +859,174 @@ while [ "$1" ]; do
 				/bin/mkdir $HOME/.config
 			fi
 
-			FILE miscellaneous compton.conf $HOME/.config/compton.conf 600 $SUDO_UID $SUDO_GID
+			FILE Extra compton.conf $HOME/.config/compton.conf 600 $SUDO_UID $SUDO_GID
 
 			[ -x /usr/bin/compton ] || APT_INSTALL compton ;;
 		jotd)
-			FILE miscellaneous jotd /usr/bin/jotd 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra jotd /usr/bin/jotd 755 0 0 ;;
 		bios-info)
-			FILE miscellaneous bios-info /usr/bin/bios-info 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra bios-info /usr/bin/bios-info 755 0 0 ;;
 		ghipc)
-			FILE miscellaneous ghipc /usr/bin/ghipc 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra ghipc /usr/bin/ghipc 755 0 0 ;;
 		capnum)
-			FILE miscellaneous capnum /usr/bin/capnum 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra capnum /usr/bin/capnum 755 0 0 ;;
 		mfw)
-			FILE miscellaneous mfw /usr/bin/mfw 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra mfw /usr/bin/mfw 755 0 0 ;;
 		reviewer)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE reviewer reviewer /usr/bin/reviewer 755 0 0
 			FILE reviewer completion /usr/share/bash-completion/completions/reviewer 644 0 0 ;;
 		ubuntu-syschk)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE ubuntu-syschk ubuntu-syschk /usr/bin/ubuntu-syschk 755 0 0
 			FILE ubuntu-syschk completion /usr/share/bash-completion/completions/ubuntu-syschk 644 0 0 ;;
 		simplify-ubuntu)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE simplify-ubuntu simplify-ubuntu /usr/bin/simplify-ubuntu 755 0 0
 			FILE simplify-ubuntu completion /usr/share/bash-completion/completions/simplify-ubuntu 644 0 0
-			FILE miscellaneous clean-locales /usr/bin/clean-locales 755 0 0
+			FILE Extra clean-locales /usr/bin/clean-locales 755 0 0
+
+			read II <<< `dpkg-query -f='${db:Status-Abbrev}' --show lspkg 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "lspkg's DEB package has already been installed."
+			fi
+
 			FILE lspkg lspkg-set /usr/bin/lspkg-set 755 0 0
 			FILE lspkg lspkg /usr/bin/lspkg 755 0 0
 			FILE lspkg completion /usr/share/bash-completion/completions/lspkg 644 0 0 ;;
 		forex)
-			FILE miscellaneous forex /usr/bin/forex 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra forex /usr/bin/forex 755 0 0 ;;
 		autoscrot)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE autoscrot autoscrot /usr/bin/autoscrot 755 0 0
 			FILE autoscrot completion /usr/share/bash-completion/completions/autoscrot 644 0 0 ;;
 		apt-undo-install)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			read II <<< `dpkg-query -f='${db:Status-Abbrev}' --show apt-undo-install 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "apt-undo-install's DEB package has already been installed."
+			fi
+
 			FILE apt-undo-install apt-undo-install /usr/bin/apt-undo-install 755 0 0
+			FILE apt-undo-install completion /usr/share/bash-completion/completions/apt-undo-install 644 0 0
+
+			APT_INSTALL perl libapt-pkg-perl
+
+			read II <<< `dpkg-query -f='${db:Status-Abbrev}' --show libtfl-perl 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "libtfl-perl's DEB package has already been installed."
+			fi
+
+			FILE PerlProjects TFL.pm /usr/share/perl5/TFL.pm 644 0 0 ;;
+		apt-undo-install.old)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE apt-undo-install apt-undo-install.old /usr/bin/apt-undo-install 755 0 0
 			FILE apt-undo-install completion /usr/share/bash-completion/completions/apt-undo-install 644 0 0 ;;
 		binwatch)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE binwatch binwatch /usr/bin/binwatch 755 0 0 ;;
 		bl)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE bl bl /usr/bin/bl 755 0 0 ;;
 		nxbt)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE nxbt nxbt /usr/bin/nxbt 755 0 0
 			FILE nxbt completion /usr/share/bash-completion/completions/nxbt 644 0 0 ;;
 		catmedia)
-			FILE catmedia catmedia /usr/bin/catmedia 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra catmedia /usr/bin/catmedia 755 0 0 ;;
 		cpufreq)
-			FILE cpufreq cpufreq /usr/bin/cpufreq 755 0 0 ;;
+			read II <<< `/usr/bin/dpkg-query -f='${db:Status-Abbrev}' --show cpufreq 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "cpufreq's DEB package has already been installed."
+			fi
+
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE PerlProjects cpufreq /usr/bin/cpufreq 755 0 0 ;;
 		dwwdl)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE dwwdl dwwdl /usr/bin/dwwdl 755 0 0 ;;
 		notify-upgrade)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE notify-upgrade notify-upgrade /usr/bin/notify-upgrade 755 0 0
-			FILE miscellaneous Cron_Tasks/APT_Update_Cron /etc/cron.hourly/APT_Update_Cron 755 0 0 ;;
+			FILE Extra Cron_Tasks/APT_Update_Cron /etc/cron.hourly/APT_Update_Cron 755 0 0 ;;
 		roks)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE roks roks /usr/bin/roks 755 0 0
 			FILE roks completion /usr/share/bash-completion/completions/roks 644 0 0 ;;
 		bdl)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE bdl bdl /usr/bin/bdl 755 0 0
 			FILE bdl completion /usr/share/bash-completion/completions/bdl 644 0 0 ;;
-		bashconfig)
-			LOGIT "Displaying bashconfig WARNING"
+		BashConfig)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			LOGIT "Displaying BashConfig WARNING"
 			REPLACE_PROMPT\
 				"$HOME/.bash_aliases"\
 				"$HOME/.bash_functions"\
 				"$HOME/.bashrc"\
 				"$HOME/.inputrc"\
 				"$HOME/.profile"\
-				"$HOME/ShellPlugins/Bell_Alarm"\
-				"$HOME/ShellPlugins/CPU_Intensive_Proc"\
-				"$HOME/ShellPlugins/Cleaner_RK_Scan"\
-				"$HOME/ShellPlugins/Clear_CD_LS"\
-				"$HOME/ShellPlugins/Create_VM"\
-				"$HOME/ShellPlugins/Get_Bad_Hosts"\
-				"$HOME/ShellPlugins/Git_Status_All"\
-				"$HOME/ShellPlugins/List_Signals"\
-				"$HOME/ShellPlugins/Load_File_Links2"\
-				"$HOME/ShellPlugins/Loop_This"\
-				"$HOME/ShellPlugins/NIR_Difference"\
-				"$HOME/ShellPlugins/Play_Download_MPSYT"\
-				"$HOME/ShellPlugins/Shell_Alias_Correc"\
-				"$HOME/ShellPlugins/Times_Table"\
+				"$HOME/.shplugs/Bell_Alarm"\
+				"$HOME/.shplugs/CPU_Intensive_Procs"\
+				"$HOME/.shplugs/Cleaner_RK_Scan"\
+				"$HOME/.shplugs/Clear_CD_LS"\
+				"$HOME/.shplugs/Create_VM"\
+				"$HOME/.shplugs/Get_Bad_Hosts"\
+				"$HOME/.shplugs/Git_Status_All"\
+				"$HOME/.shplugs/List_Signals"\
+				"$HOME/.shplugs/Load_File_Links2"\
+				"$HOME/.shplugs/Loop_This"\
+				"$HOME/.shplugs/NIR_Difference"\
+				"$HOME/.shplugs/Play_Download_MPSYT"\
+				"$HOME/.shplugs/Shell_Alias_Correcting"\
+				"$HOME/.shplugs/Terminal_Reminder"\
+				"$HOME/.shplugs/Times_Table"\
 			|| { shift; continue; }
 
-			FILE bashconfig .bash_aliases $HOME/.bash_aliases 600 "$SUDO_UID" "$SUDO_GID"
-			FILE bashconfig .bash_functions $HOME/.bash_functions 600 "$SUDO_UID" "$SUDO_GID"
-			FILE bashconfig .bashrc $HOME/.bashrc 600 "$SUDO_UID" "$SUDO_GID"
-			FILE bashconfig .profile $HOME/.profile 600 "$SUDO_UID" "$SUDO_GID"
-			FILE bashconfig .inputrc $HOME/.inputrc 600 "$SUDO_UID" "$SUDO_GID"
+			FILE BashConfig .bash_aliases $HOME/.bash_aliases 600 "$SUDO_UID" "$SUDO_GID"
+			FILE BashConfig .bash_functions $HOME/.bash_functions 600 "$SUDO_UID" "$SUDO_GID"
+			FILE BashConfig .bashrc $HOME/.bashrc 600 "$SUDO_UID" "$SUDO_GID"
+			FILE BashConfig .profile $HOME/.profile 600 "$SUDO_UID" "$SUDO_GID"
+			FILE BashConfig .inputrc $HOME/.inputrc 600 "$SUDO_UID" "$SUDO_GID"
 
-			if ! [ -d "$HOME/ShellPlugins" ]; then
-				LOGIT "Creating $HOME/ShellPlugins directory"
-				/bin/mkdir "$HOME/ShellPlugins"
+			if ! [ -d "$HOME/.shplugs" ]; then
+				LOGIT "Creating $HOME/.shplugs directory"
+				/bin/mkdir "$HOME/.shplugs"
 			fi
 
-			LOGIT "Setting $HOME/ShellPlugins to $SUDO_UID UID and $SUDO_GID GID"
-			/bin/chown "$SUDO_UID":"$SUDO_GID" "$HOME/ShellPlugins"
+			LOGIT "Setting $HOME/.shplugs to $SUDO_UID UID and $SUDO_GID GID"
+			/bin/chown "$SUDO_UID":"$SUDO_GID" "$HOME/.shplugs"
 
-			FILE bashconfig ShellPlugins/Bell_Alarm $HOME/ShellPlugins/Bell_Alarm 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/CPU_Intensive_Procs $HOME/ShellPlugins/CPU_Intensive_Procs 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Cleaner_RK_Scan $HOME/ShellPlugins/Cleaner_RK_Scan 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Clear_CD_LS $HOME/ShellPlugins/Clear_CD_LS 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Create_VM $HOME/ShellPlugins/Create_VM 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Get_Bad_Hosts $HOME/ShellPlugins/Get_Bad_Hosts 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Git_Status_All $HOME/ShellPlugins/Git_Status_All 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/List_Signals $HOME/ShellPlugins/List_Signals 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Load_File_Links2 $HOME/ShellPlugins/Load_File_Links2 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Loop_This $HOME/ShellPlugins/Loop_This 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/NIR_Difference $HOME/ShellPlugins/NIR_Difference 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Play_Download_MPSYT $HOME/ShellPlugins/Play_Download_MPSYT 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Shell_Alias_Correcting $HOME/ShellPlugins/Shell_Alias_Correcting 600 $SUDO_UID "$SUDO_GID"
-			FILE bashconfig ShellPlugins/Times_Table $HOME/ShellPlugins/Times_Table 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Bell_Alarm $HOME/.shplugs/Bell_Alarm 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/CPU_Intensive_Procs $HOME/.shplugs/CPU_Intensive_Procs 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Cleaner_RK_Scan $HOME/.shplugs/Cleaner_RK_Scan 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Clear_CD_LS $HOME/.shplugs/Clear_CD_LS 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Create_VM $HOME/.shplugs/Create_VM 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Get_Bad_Hosts $HOME/.shplugs/Get_Bad_Hosts 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Git_Status_All $HOME/.shplugs/Git_Status_All 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/List_Signals $HOME/.shplugs/List_Signals 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Load_File_Links2 $HOME/.shplugs/Load_File_Links2 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Loop_This $HOME/.shplugs/Loop_This 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/NIR_Difference $HOME/.shplugs/NIR_Difference 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Play_Download_MPSYT $HOME/.shplugs/Play_Download_MPSYT 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Shell_Alias_Correcting $HOME/.shplugs/Shell_Alias_Correcting 600 $SUDO_UID "$SUDO_GID"
+			FILE BashConfig .shplugs/Times_Table $HOME/.shplugs/Times_Table 600 $SUDO_UID "$SUDO_GID"
 
-			APT_INSTALL fonts-symbola ;;
-		i3config)
-			LOGIT "Displaying i3config WARNING"
+			FILE BashConfig lad /usr/bin/lad 755 0 0
+
+			APT_INSTALL fonts-opensymbol fonts-symbola
+
+			printf "NOTE: Run 'lad' to list various available aliases and functions.\n" ;;
+		i3Config)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			LOGIT "Displaying i3Config WARNING"
 			REPLACE_PROMPT\
 				"$HOME/.config/i3/config"\
 				"$HOME/.i3a/dmesg_overflow"\
@@ -941,10 +1055,15 @@ while [ "$1" ]; do
 				"$HOME/.libi3bview"\
 			|| { shift; continue; }
 
-			FILE i3config .i3babove $HOME/.i3babove 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3bbelow $HOME/.i3bbelow 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .libi3bview $HOME/.libi3bview 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config config $HOME/.config/i3/config 644 "$SUDO_UID" "$SUDO_GID"
+			if ! [ -d "$HOME/.config/i3" ]; then
+				LOGIT "Creating $HOME/.config/i3 directory"
+				/bin/mkdir "$HOME/.config/i3"
+			fi
+
+			FILE i3Config config $HOME/.config/i3/config 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3babove $HOME/.i3babove 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3bbelow $HOME/.i3bbelow 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .libi3bview $HOME/.libi3bview 644 "$SUDO_UID" "$SUDO_GID"
 
 			if ! [ -d "$HOME/.i3a" ]; then
 				LOGIT "Creating $HOME/.i3a directory"
@@ -953,99 +1072,204 @@ while [ "$1" ]; do
 
 			LOGIT "Setting $HOME/.i3a to $SUDO_UID UID and $SUDO_GID GID"
 
-			FILE i3config .i3a/dmesg_overflow $HOME/.i3a/dmesg_overflow 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/drop_terminal $HOME/.i3a/drop_terminal 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/hush_the_mic $HOME/.i3a/hush_the_mic 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/i3bar_trans $HOME/.i3a/i3bar_trans 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/initialize $HOME/.i3a/initialize 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/key_autorepeat $HOME/.i3a/key_autorepeat 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/leave_session $HOME/.i3a/leave_session 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/scrot_sel_take $HOME/.i3a/scrot_sel_take 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/scrot_take $HOME/.i3a/scrot_take 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/scrot_win_take $HOME/.i3a/scrot_win_take 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/sink_lower $HOME/.i3a/sink_lower 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/sink_mute $HOME/.i3a/sink_mute 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/sink_raise $HOME/.i3a/sink_raise 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/source_lower $HOME/.i3a/source_lower 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/source_mute $HOME/.i3a/source_mute 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/source_raise $HOME/.i3a/source_raise 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/term_font_size $HOME/.i3a/term_font_size 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/terminal $HOME/.i3a/terminal 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/track_notify $HOME/.i3a/track_notify 644 "$SUDO_UID" "$SUDO_GID"
-			FILE i3config .i3a/use_dmenu $HOME/.i3a/use_dmenu 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/dmesg_overflow $HOME/.i3a/dmesg_overflow 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/drop_terminal $HOME/.i3a/drop_terminal 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/hush_the_mic $HOME/.i3a/hush_the_mic 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/i3bar_trans $HOME/.i3a/i3bar_trans 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/initialize $HOME/.i3a/initialize 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/key_autorepeat $HOME/.i3a/key_autorepeat 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/leave_session $HOME/.i3a/leave_session 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/scrot_sel_take $HOME/.i3a/scrot_sel_take 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/scrot_take $HOME/.i3a/scrot_take 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/scrot_win_take $HOME/.i3a/scrot_win_take 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/sink_lower $HOME/.i3a/sink_lower 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/sink_mute $HOME/.i3a/sink_mute 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/sink_raise $HOME/.i3a/sink_raise 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/source_lower $HOME/.i3a/source_lower 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/source_mute $HOME/.i3a/source_mute 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/source_raise $HOME/.i3a/source_raise 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/term_font_size $HOME/.i3a/term_font_size 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/terminal $HOME/.i3a/terminal 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/track_notify $HOME/.i3a/track_notify 644 "$SUDO_UID" "$SUDO_GID"
+			FILE i3Config .i3a/use_dmenu $HOME/.i3a/use_dmenu 644 "$SUDO_UID" "$SUDO_GID"
 
-			FILE miscellaneous feh-slides /usr/bin/feh-slides 755 0 0
+			FILE Extra feh-slides /usr/bin/feh-slides 755 0 0
 
 			APT_INSTALL i3-wm i3blocks suckless-tools compton moc\
 				terminology libnotify-bin dunst pulseaudio-utils ;;
 		kernelchk)
-			FILE kernelchk kernelchk /usr/bin/kernelchk 755 0 0
-			FILE kernelchk completion /usr/share/bash-completion/completions/kernelchk 644 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE PerlProjects kernelchk /usr/bin/kernelchk 755 0 0
+
+			APT_INSTALL perl libgtk2-notify-perl
+
+			read II <<< `/usr/bin/dpkg-query -f='${db:Status-Abbrev}' --show libtfl-perl 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "libtfl-perl's DEB package has already been installed."
+			fi
+
+			FILE PerlProjects TFL.pm /usr/share/perl5/TFL.pm 644 0 0 ;;
 		get-uuid)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE get-uuid get-uuid /usr/bin/get-uuid 755 0 0
 			FILE get-uuid get-uuid.desktop /usr/share/applications/get-uuid.desktop 644 0 0 ;;
 		wcdl)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			read II <<< `/usr/bin/dpkg-query -f='${db:Status-Abbrev}' --show wcdl 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "wcdl's DEB package has already been installed."
+			fi
+
 			FILE wcdl wcdl /usr/bin/wcdl 755 0 0
-			FILE wcdl wcdl-cacheparse /usr/bin/wcdl-cacheparse 755 0 0
-			FILE wcdl wcdl-crosschk /usr/bin/wcdl-crosschk 755 0 0
-			FILE wcdl completion /usr/share/bash-completion/completions/wcdl 644 0 0 ;;
+			FILE wcdl completion /usr/share/bash-completion/completions/wcdl 644 0 0
+
+			if [ -f /usr/bin/wcdl-cacheparse -o -f /usr/bin/wcdl-crosschk ]; then
+				LOGIT "Displaying wcdl prompt regarding old wcdl-cacheparse and wcdl-crosschk"
+
+				while read; do
+					printf "%s\n" "$REPLY"
+				done <<-EOF
+
+					WARNING:
+
+					  Files
+
+					    /usr/bin/wcdl-cacheparse
+					      (and/or)
+					    /usr/bin/wcdl-crosschk
+
+					  Were found on your system.
+
+					ASSUMPTION:
+
+					  You've previously installed them with $_PROJECT_, or manually, directly from GitHub.
+					  Now you're either opting to update or uninstall them.
+
+					PROBLEM:
+
+					  These files are no longer supported and no longer available for installation. If
+					  you remove these, you'll have to install them another way; inconvenient.
+
+					  The old shell iteration of wcdl has been deprecated by a Perl rewrite.
+
+					SOLUTION:
+
+					  Run the below commands in a terminal, with root access, to remove the old
+					  files, or ignore this message and continue to uninstall or update wcdl with the
+					  Perl rewrite.
+
+					    rm /usr/bin/wcdl-cacheparse
+					    rm /usr/bin/wcdl-crosschk
+
+				EOF
+
+				read -n 1 -p "Will you (c)ontinue or (a)bort? "
+				if [[ "$REPLY" == [aA] ]]; then
+					printf "\nOperation aborted.\n"
+					exit 0
+				elif [[ "$REPLY" == [cC] ]]; then
+					printf "\n"
+					break
+				else
+					FAIL 0 "$LINENO" "Invalid response detected."
+				fi
+			fi
+
+			APT_INSTALL perl ;;
 		getline)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE getline getline /usr/bin/getline 755 0 0 ;;
 		mansaver)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE mansaver mansaver /usr/bin/mansaver 755 0 0 ;;
 		lspkg)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			read II <<< `/usr/bin/dpkg-query -f='${db:Status-Abbrev}' --show lspkg 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "lspkg's DEB package has already been installed."
+			fi
+
 			FILE lspkg lspkg /usr/bin/lspkg 755 0 0
 			FILE lspkg lspkg-set /usr/bin/lspkg-set 755 0 0
 			FILE lspkg completion /usr/share/bash-completion/completions/lspkg 644 0 0 ;;
 		lsbins)
-			FILE miscellaneous lsbins /usr/bin/lsbins 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra lsbins /usr/bin/lsbins 755 0 0 ;;
 		github-ssh-setup)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE github-ssh-setup github-ssh-setup /usr/bin/github-ssh-setup 755 0 0 ;;
 		homewatch)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE homewatch homewatch /usr/bin/homewatch 755 0 0 ;;
 		getip)
-			FILE getip getip /usr/bin/getip 755 0 0
-			FILE getip completion /usr/share/bash-completion/completions/getip 644 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			read II <<< `/usr/bin/dpkg-query -f='${db:Status-Abbrev}' --show getip 2>&-`
+			if [ "$II" == "ii" ]; then
+				FAIL 1 "$LINENO" "getip's DEB package has already been installed."
+			fi
+
+			FILE PerlProjects getip /usr/bin/getip 755 0 0
+			FILE PerlProjects Completions/getip /usr/share/bash-completion/completions/getip 644 0 0 ;;
 		ripmydvd)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE ripmydvd ripmydvd /usr/bin/ripmydvd 755 0 0 ;;
 		simwea)
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
 			FILE simwea simwea /usr/bin/simwea 755 0 0
 			FILE simwea completion /usr/share/bash-completion/completions/simwea 644 0 0 ;;
 		medlog)
-			FILE miscellaneous medlog /usr/bin/medlog 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra medlog /usr/bin/medlog 755 0 0 ;;
 		mif)
-			FILE miscellaneous mif /usr/bin/mif 755 0 0
-			FILE miscellaneous Completions/mif /usr/share/bash-completion/completions/mif 644 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra mif /usr/bin/mif 755 0 0
+			FILE Extra Completions/mif /usr/share/bash-completion/completions/mif 644 0 0 ;;
 		seewttr)
-			FILE miscellaneous seewttr /usr/bin/seewttr 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra seewttr /usr/bin/seewttr 755 0 0 ;;
 		backmeup)
-			FILE miscellaneous backmeup /usr/bin/backmeup 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra backmeup /usr/bin/backmeup 755 0 0 ;;
 		clean-locales)
-			FILE miscellaneous clean-locales /usr/bin/clean-locales 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra clean-locales /usr/bin/clean-locales 755 0 0 ;;
 		mkpass)
-			FILE miscellaneous mkpass /usr/bin/mkpass 755 0 0
-			FILE miscellaneous Completions/mkpass /usr/share/bash-completion/completions/mkpass 644 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra mkpass /usr/bin/mkpass 755 0 0
+			FILE Extra Completions/mkpass /usr/share/bash-completion/completions/mkpass 644 0 0 ;;
 		mplay)
-			FILE miscellaneous mplay /usr/bin/mplay 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra tfl_moc_theme /usr/share/moc/themes/tfl_moc_theme 644 0 0
+			FILE Extra mplay /usr/bin/mplay 755 0 0 ;;
 		pagewatch)
-			FILE miscellaneous pagewatch /usr/bin/pagewatch 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra pagewatch /usr/bin/pagewatch 755 0 0 ;;
 		redshifter)
-			FILE miscellaneous redshifter /usr/bin/redshifter 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE PerlProjects redshifter /usr/bin/redshifter 755 0 0
+
+			APT_INSTALL perl ;;
 		tozero)
-			FILE miscellaneous tozero /usr/bin/tozero 755 0 0
-			FILE miscellaneous Completions/tozero /usr/share/bash-completion/completions/tozero 644 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra tozero /usr/bin/tozero 755 0 0
+			FILE Extra Completions/tozero /usr/share/bash-completion/completions/tozero 644 0 0 ;;
 		nosp)
-			FILE miscellaneous nosp /usr/bin/nosp 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra nosp /usr/bin/nosp 755 0 0 ;;
 		dlspwalls)
-			FILE miscellaneous dlspwalls /usr/bin/dlspwalls 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra dlspwalls /usr/bin/dlspwalls 755 0 0 ;;
 		dlfcmags)
-			FILE miscellaneous dlfcmags /usr/bin/dlfcmags 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra dlfcmags /usr/bin/dlfcmags 755 0 0 ;;
 		dlfallwalls)
-			FILE miscellaneous dlfallwalls /usr/bin/dlfallwalls 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra dlfallwalls /usr/bin/dlfallwalls 755 0 0 ;;
 		dl-tuxradar-podcasts)
-			FILE miscellaneous dl-tuxradar-podcasts /usr/bin/dl-tuxradar-podcasts 755 0 0 ;;
+			FILE NLA '[N/A]' 'Transitioning to DEB packages.'
+			FILE Extra dl-tuxradar-podcasts /usr/bin/dl-tuxradar-podcasts 755 0 0 ;;
 		*)
-			ERR "$LINENO" "Unavailable WHAT at: $1" ;;
+			FAIL 0 "$LINENO" "Unavailable WHAT at: $1" ;;
 	esac
 	shift
 done

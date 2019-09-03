@@ -3,29 +3,29 @@
 #2#::.. Last edit: - Mon Jun  6 18:54:30 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 exit
-              B A S H   C H E A T   S H E E T
+B A S H   C H E A T   S H E E T
 
- to page output forward (only): command filename | more
- to page output forward & back: command filename | less
- to print a dataset: lp datasetname (-d printerid) (-o landscape)
+to page output forward (only): command filename | more
+to page output forward & back: command filename | less
+to print a dataset: lp datasetname (-d printerid) (-o landscape)
 
- USE OF QUOTATION MARKS
-    echo "$varname"    =   echo The value of \$varname is \"$varname\"
-                       =   echo "The value of \$varname is \"$varname\"."
-    $fred='Four spaces between these    words.'
-          echo $fred      yields    Four spaces between these words.
-          echo "$fred"    yields    Four spaces between these    words.
+USE OF QUOTATION MARKS
+echo "$varname"    =   echo The value of \$varname is \"$varname\"
+=   echo "The value of \$varname is \"$varname\"."
+$fred='Four spaces between these    words.'
+echo $fred      yields    Four spaces between these words.
+echo "$fred"    yields    Four spaces between these    words.
 
- SPECIAL CHARACTERS
-   ~ home directory                 # comment
-   $ variable expression            & background job
-   ; shell command separator        / pathname directory separator
-   \ quote (escape) next character  | pipe
-   * string wildcard                ? single-character wildcard
-   ( start subshell                 ) end subshell
-   [ start character-set wildcard   ] end character-set wildcard
-   { start command block            } end command block
-   ' strong quote (prevents subs)   " weak quote (allows subs)
+SPECIAL CHARACTERS
+~ home directory                 # comment
+$ variable expression            & background job
+; shell command separator        / pathname directory separator
+\ quote (escape) next character  | pipe
+* string wildcard                ? single-character wildcard
+( start subshell                 ) end subshell
+[ start character-set wildcard   ] end character-set wildcard
+{ start command block            } end command block
+' strong quote (prevents subs)   " weak quote (allows subs)
    < input redirect                 > output redirect
    ! logical NOT                    || logical OR
   && logical AND                    \ Return  continue on next line

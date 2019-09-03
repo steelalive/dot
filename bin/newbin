@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 #2#::.. Last edit: - Tue Jun 20 20:26:50 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.1.7 - #_# #@#200617#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
+[[ $1 ]] || return || exit
 bindir="${dot}"/bin
 f="$1"
 if ! echo "${f}" | grep "/" &>/dev/null; then

@@ -32,10 +32,10 @@ edit_file() {
 	shfmtw "$1"
 	sharden "$1"
 	skip=1
-	return
+	return || exit
 }
 if [[ -e $arg1 ]]; then
-	edit_file "$@" && return
+	edit_file "$@" && return || exit
 	export skip=1
 fi
 
@@ -69,7 +69,7 @@ else
 		echo
 		yorn && {
 			newbin "$arg1"
-			return
+			exit
 		}
 	else
 		arg_maybe="$dot/bin/$arg1"

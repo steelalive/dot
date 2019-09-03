@@ -8,7 +8,7 @@
 part_mapper() {
 	if is_in_path grc; then
 		/usr/bin/grc -es --colour=auto blkid
-		/usr/bin/grc -es --colour=auto lsblk
+		/usr/bin/grc -es --colour=auto lsblk -o name,label,fstype,size,uuid,mountpoint --noheadings
 	else
 		blkid
 		is_in_path lsblk && lsblk

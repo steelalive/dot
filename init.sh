@@ -13,7 +13,7 @@ else
 fi
 
 dot="$(dirname "${BASH_SOURCE[0]}")"
-[[ -e /dot ]]  || ln -sri $dot /
+[[ -e /dot ]] || ln -sri $dot /
 if [[ -e "$dot/init.sh" ]]; then
 	export dot
 else
@@ -49,8 +49,7 @@ printf "%b" "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(c
 for this in $dot_files; do
 	[[ -r $this ]] && source "$this"
 	exit_code=$?
-	"$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Sourced...\x1b[0m" $exit_code
-	[[ -r $this ]] || printf "%b" "${RED}Cannot source $this\\n"
+	"$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Sourced...\x1b[0m" $exit_code || printf "%b" "${RED}Cannot source $this\\n"
 done
 printf %b "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\\n\\n"
 
@@ -62,12 +61,14 @@ unset IFS info this_4_real this future_path futur_path_test
 (
 	pkill ps1bg.sh &>/dev/null
 ) &>/dev/null
-[[ "$(tty 2>/dev/null)" =~ tty ]] || ps1_writer & disown
+[[ "$(tty 2>/dev/null)" =~ tty ]] || ps1_writer &
+disown
 if [[ -e /oem ]]; then
 	[[ -x /bin/nano ]] && export EDITOR="/bin/nano --syntax bash"
 fi
-(ps1_writer &)
+(fork ps1_writer &) &>/dev/null
 is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval $(dircolors --sh "$dot"/.dir_colors 2>/dev/null)
 is_in_path archey && archey
 hash fortunes &>/dev/null && fortunes
 . "$dot/setpath.sh"
+[[ $meteo_done ]] || neofetch && export meteo_done=1 && cd / && ls

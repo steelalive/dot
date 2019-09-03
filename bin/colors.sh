@@ -156,7 +156,7 @@ useage() {
 	printf "  \e[1m-q\e[m This will display the 256 color version of this chart without the extra text.\n"
 	printf "  \e[1m-bq\e[m    This will display the 8 color version of this chart without the extra text.\n"
 	printf "  \e[1m-fq\e[m    This will display the 256 color version of this chart using foreground colors without the
-	extra text.\n"
+                            extra text.\n"
 	printf "  \e[1m-?|?\e[m   Displays this help screen.\n"
 	printf "\nThe remaining parameters are only used if the first parameter is one of: \e[1m-,-f,q,fq\e[m\n\n"
 	printf "  \e[1mstart\e[m  The color index to begin display at.\n"
@@ -168,7 +168,7 @@ verbose() {
 	if [[ $1 != "-q" && $1 != "-fq" && $1 != "-bq" ]]; then
 		printf "\nTo control the display style use \e[1m%s\e[m where \e[1m%s\e[m is:\n" '\e[{$value}[:{$value}]m' '{$value}'
 		printf "\n  0 Normal \e[1m1 Bold\e[m \e[2m2 Dim\e[m \e[3m3 ???\e[m \e[4m4 Underlined\e[m \e[5m5 Blink\e[m \e[6m6
-		???\e[m \e[7m7 Inverted\e[m \e[8m8 Hidden\e[m\n\n"
+                                ???\e[m \e[7m7 Inverted\e[m \e[8m8 Hidden\e[m\n\n"
 		printf "If \e[1m%s\e[m is not provided it will reset the display.\n\n" '{$value}'
 	fi
 }

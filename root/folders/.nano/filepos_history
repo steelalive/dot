@@ -1,6 +1,3 @@
-/last/G4/HARPIA_NPI26.48-43_cid50_subsidy-DEFAULT_regulatory-DEFAULT_CFC.xml/flashfile.xml 31 23
-/src/device/motorola/harpia/device.mk 44 1
-/src/device/motorola/msm8916-common/proprietary-files.txt 179 1
 /prog/unzip/Nano_for_Android_NDK-2.9.8/bin/nano 14 1
 /last/G4/XT1601_HARPIA_LATAM_MPI24.241-2.43_cid50_subsidy-DEFAULT_regulatory-DEFAULT_CFC.xml/flash.sh 3 31
 /src/build/envsetup.sh 13 1
@@ -191,7 +188,6 @@
 /src/.repo/local_manifests-nx-8.1/devices/samsung/zero.xml 24 1
 /last/s6/partition.txt 360 1
 /src/device/samsung/zerofltecan/device-proprietary-blobs.txt 11 1
-/ext/yay/neovim-youcompleteme-core-git/PKGBUILD 77 45
 /src/device/samsung/zerofltecan/AndroidProducts.mk 2 22
 /dot/slash/etc/mk 101 4
 /src/kernel/samsung/exynos7420/Makefile 1485 1
@@ -199,3 +195,5 @@
 /root/.config/nvim/config/plugins.yaml 256 1
 /shell/.xinitrc 1 14
 /ext/src/lineage/scripts/device-deps-regenerator/token 1 41
+/tmp/bash-fc.Llc5hs 3 1
+/tmp/bash-fc.X7uipt 2 3

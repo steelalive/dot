@@ -20,11 +20,14 @@ sd | ds)
 	systemctl disable "$@"
 	;;
 *)
-	ANO "sto=stop sta=start re=restart en=enable es=enable and start di=disable ds=disable and stop"
-	systemctl "$@"
+	systemctl list-unit-files --state=disabled --no-pager
+	systemctl --no-pager "$@"
+	ANORANGE 'sto=stop sta=start re=restart en=enable es=enable and start di=disable ds=disable and stop\n'
 	;;
 esac
-for arg in "$@"; do
-	systemctl help "$arg"
-	systemctl status "$arg"
-done
+[[ $1 ]] && {
+	for arg in "$@"; do
+		systemctl help "$arg"
+		systemctl status "$arg"
+	done
+}

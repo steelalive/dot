@@ -3,6 +3,10 @@
 #2#::.. Last edit: - Fri May 25 05:25:22 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.4.2 - #_# #@#250518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 # Author: #
+echo_color_names(){
+    NAMES=($(for COLOR in $(ANH); do echo $COLOR | cut -d'=' -f1; done))
+    echo ${NAMES[@]}
+}; unset echo_color_names
 export ESC='\x1b['
 BOLD="${ESC}"1m DIM="${ESC}"2m UNDER="${ESC}"4m BLINK="${ESC}"5m REVERSE="${ESC}"7m HIDDEN="${ESC}"8m STRIKE="${ESC}"9m PLAIN="${ESC}"0m
 ITALIC="${ESC}"3m

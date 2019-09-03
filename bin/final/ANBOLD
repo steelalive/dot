@@ -1,0 +1,7 @@
+
+ANBOLD () 
+{ 
+printf "%b" "\x1b[m\x1b[1m${*}\x1b[m"
+
+}
+ANBOLD "$@"

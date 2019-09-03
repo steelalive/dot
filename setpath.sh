@@ -56,9 +56,6 @@ allpath+="/usr/lib/cw
 /su
 /system/xbin
 /system/bin
-/data/local/bin
-/data/local/xbin
-/data/local/sbin
 /vendor/bin
 /vendor/xbin
 /usr/bin
@@ -67,6 +64,7 @@ allpath+="/usr/lib/cw
 /sbin
 /usr/local/bin
 /usr/local/sbin
+/usr/bin/lou_maketable.d
 /usr/lib/jvm/default
 /usr/lib/node_modules
 /root/.cache/node_modules
@@ -78,6 +76,7 @@ $HOME/toolchain/bin
 /root/.gem/ruby/2.6.0/bin
 /shell/.gem/ruby/2.6.0/bin
 /root/.cargo/bin
+/ext/opt/crosstool-ng-build/bin
 /ext/opt/platform-tools
 /ext/opt/tools
 /ext/opt/tools/bin
@@ -85,8 +84,8 @@ $HOME/toolchain/bin
 /ext/opt/android-ndk/build/tools
 /system/sbin
 /data/dot/slash/sbin
-$(printf "%s\n" /ext/opt/build-tools/*)
-$lux/usr/bin
+/usr/lib/bash-utils
+$(printf "%s\n" /ext/opt/build-tools/**/bin)
 $dot/bin
 $dot/bin/final
 $dot"

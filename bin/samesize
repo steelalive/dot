@@ -28,7 +28,7 @@ Usage: $SYNOPSIS_
 Requires: $REQUIRES_
 Options:
      -h, usage and options (help)
-     -l, list the script"
+    -l, list the script"
 
 	exit 1
 

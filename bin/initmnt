@@ -13,7 +13,7 @@
 #	umount $i
 #	e2fsck -f $i; tune2fs -O ^has_journal -o journal_data_writeback,nobarrier $i &>/dev/null
 #done
-mount_opt='remount,noatime,noauto_da_alloc,delalloc,barrier=0,commit=30,nodiscard'
+mount_opt='remount,noatime,delalloc,barrier=0,commit=30,nodiscard'
 sync
 mount -o "$mount_opt" / && ANG "mount -o \"$mount_opt\" /\n"
 (
@@ -50,7 +50,7 @@ done
 #	[[ -e /swap ]] && swapon /swap
 #[[ -e /dev/sdb7 ]] && { fsck /dev/sdb7; mount /dev/sdb7 /last; }
 if ! findmnt /last &>/dev/null; then
-	mkdir /last &>/dev/null
+	mkdir -p /last &>/dev/null
 	mount LABEL=LAST-GA /last &>/dev/null
 fi
 [[ -e /var/swap ]] && swapon /var/swap &>/dev/null
@@ -64,7 +64,7 @@ for add in {0..3}; do
 done
 unset add full_path
 #shellcheck disable=SC2034
-mount_opt='noatime,remount,rw,noauto_da_alloc,delalloc'
+mount_opt='noatime,remount,rw'
 for init_mnt in $(mount | awk '{print $3}' | grep -v -E '/mnt|^/$'); do
 	[[ -e $init_mnt ]] || continue
 	mount -o "$mount_opt" "$init_mnt" 2>/dev/null

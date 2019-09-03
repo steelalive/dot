@@ -1,0 +1,15 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Sun Sep  1 00:11:10 EDT 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-09-01#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/trimall_#######################..::#3#
+trim_all() {
+    # Usage: trim_all "   example   string    "
+    set -f
+    set -- $*
+    printf '%s\n' "$*"
+    set +f
+}
+trim_all "$@"
+

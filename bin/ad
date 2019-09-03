@@ -21,7 +21,7 @@ if ! $adb devices | grep 'device$' &>/dev/null; then
 fi
 
 sutest() {
-	$adb shell su -c "ls $1 &>/dev/null && echo $1" | grep $1 &>/dev/null
+	$adb shell "su -c ls $1 &>/dev/null && echo $1" | grep $1 &>/dev/null
 
 }
 remnt() {
@@ -83,7 +83,7 @@ apk_to_() {
 	adbsu pm install -r -g "$apk"
 	return
 }
-adbsu() { $adb shell su -c "$@"; }
+adbsu() { $adb shell su 0 "$@"; }
 export -f adbsu
 adb_read() {
 	adbsu /data/dot/bin/remnt && return 0
@@ -107,14 +107,14 @@ echo_adbconnect() {
 	adb connect $ANDROID_SERIAL
 	adb remount
 	adb connect $ANDROID_SERIAL
-	adb shell\\n"
+    adb shell\\n"
 	adbde devices -l
 	liner
 }
 adb_info() {
 	ANW "Connected to
 serial:		$ANDROID_SERIAL
-ex:		$ex\\n"
+    ex:		$ex\\n"
 	adbde shell '[[ -e $ex ]]' && ANG "$ex exist.\\n"
 	adbde devices -l
 }
@@ -161,9 +161,11 @@ s4 | cell)
 	shift
 	export ANDROID_SERIAL=$cell:5555
 	adbconnect "$adb"
-	echo_adbconnect
+	[[ $(adb shell "which su") == /system/xbin/su ]]
+	adb root
+	adbconnect $adb
 	echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
-	push_key
+	#	push_key
 	return
 	;;
 tabip | adbtab)
@@ -172,11 +174,8 @@ tabip | adbtab)
 	▏ adbconnect "$adb"
 	▏ echo_adbconnect
 	▏ echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
-
 	▏ push_key
 	▏ return
-
-	▏
 	;;
 
 \
@@ -185,9 +184,10 @@ tabip | adbtab)
 	export ANDROID_SERIAL=1015fa08983d3602
 	ANG "Connected to usb adb\n"
 	if ! grep -q "$ANDROID_SERIAL" <<<"$($adb devices 2>/dev/null)" &>/dev/null; then
+		$adb disconnect
 		$adb usb
 	fi
-
+	adb root 2>/dev/null
 	echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
 	ex='/sdcard'
 	return
@@ -268,8 +268,8 @@ push)
 	shift
 	download=$ex
 	[[ $ex ]] || ANRED "$ex \$ex is not defined.\n"
-	echo $adb push "$@" $ex
-	$adb push "$@" $ex
+	echo $adb push "$@" /sdcard/Download/
+	$adb push "$@" /sdcard/Download/
 	return
 	;;
 pull)
@@ -293,10 +293,10 @@ pushdot)
 	ANLO "/dot sync in progress...\n"
 	adbsu 'mkdir -p /data/dot'
 	adbsu 'chmod -R 0777 /data/dot'
-	adbsu mkdir -p /data/dot
-	adbsu chmod 0777 /data/dot
-	adb shell su 0 -c "mkdir -p /data/dot"
-	adb shell su 0 -c "chmod 0777 -R /data/dot"
+	adbsu 'mkdir -p /data/dot'
+	adbsu 'chmod 0777 /data/dot'
+	adb shell "su -c 'mkdir -p /data/dot'"
+	adb shell "su -c 'chmod 0777 -R /data/dot'"
 	adbde shell "test -e /sdcard &>/dev/null" || {
 		sync_delete /dot /data
 		push_key
@@ -317,13 +317,13 @@ pushall | sync-delete)
 	ANLO "Full sync in progress...\n"
 	adbsu 'mkdir -p /data/dot'
 	adbsu 'chmod -R 777 /data/dot'
-	sync_delete $files_to_copy /data/dot
+	sync_delete /dot /data
 	sync_delete /last/misc-android $ex
 	adbde push /last/dot.zip $ex
 	adbsu "/data/dot/slash/sbin/bash -c /data/dot/slash/pushthem"
 	adbsu "source /data/dot/slash/etc/mk"
-    adbsu "bash /data/dot/bin/rmbloat"
-	ANG "Sync completed! \\n"
+	adbsu "bash /data/dot/bin/rmbloat"
+	ANG 'Sync completed! \n'
 	return
 	;;
 syncdot)
@@ -344,10 +344,10 @@ syncmisc)
 	return
 	;;
 ota)
-result="$(printf "%s" $O/target/product/*)"
-    $adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip ||
-	$adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip
-	echo "Reboot recovery?\\n"
+	result="$(printf "%s" $O/target/product/*)"
+	$adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip ||
+		$adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip
+	printf "${G}Reboot recovery?\\n"
 	yorn && $adb reboot recovery
 	;;
 log)

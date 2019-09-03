@@ -582,8 +582,8 @@ isfinal() {
 		cmd2=("unpack_cmd" "$data")
 		echo
 		istemp "ar p" "$2" $data | $("${cmd2[@]}") | $tarcmd tvf -
-		# do not display all perl text containing pod using perldoc
-		#elif [[ "$1" = *Perl\ POD\ document\ text* || "$1" = *Perl5\ module\ source\ text* ]]; then
+	# do not display all perl text containing pod using perldoc
+	#elif [[ "$1" = *Perl\ POD\ document\ text* || "$1" = *Perl5\ module\ source\ text* ]]; then
 	elif [[ $1 == *Perl\ POD\ document\ text$NOL_A_P* ]] && cmd_exist perldoc; then
 		msg "append $sep to filename to view the perl source"
 		istemp perldoc "$2"
@@ -638,7 +638,7 @@ isfinal() {
 				# extract name of temporary file containing the 7za archive
 				t=${res#*Listing\ archive:\ }
 				t2="
-"
+                        "
 				t=${t%%$t2*}
 				7za e -so $t 2>/dev/null
 			fi
@@ -657,7 +657,7 @@ isfinal() {
 				# extract name of temporary file containing the 7za archive
 				t=${res#*Listing\ archive:\ }
 				t2="
-"
+                        "
 				t=${t%%$t2*}
 				7zr e -so $t 2>/dev/null
 			fi

@@ -1,137 +1,129 @@
 #!/data/dot/slash/sbin/bash
-PMU="com.sec.android.emergencylauncher 
-cm.aptoide.pt 
+PMU="com.sec.android.emergencylauncher
+cm.aptoide.pt
 com.android.bookmarkprovider
-com.android.calllogbackup 
-com.android.camera2 
-com.android.contacts 
+com.android.camera2
 com.android.cts.ctsshim
 com.android.dreams.basic
-com.android.dreams.phototable 
-com.android.egg 
-com.android.email  
+com.android.dreams.phototable
+com.android.egg
+com.android.email
 com.android.frameworks.telresources
-com.android.gallery3d 
-com.android.inputmethod.latin 
+com.android.gallery3d
+com.android.inputmethod.latin
 com.android.keychain
-com.android.music 
-com.android.musicfx 
-com.android.noisefield 
+com.android.music
+com.android.musicfx
+com.android.noisefield
 com.android.phasebeam
-com.android.printspooler 
-com.android.providers.downloads.ui 
-com.android.provision 
-com.android.soundrecorder 
-com.android.statementservice 
-com.android.vpndialogs 
-com.android.wallpaper.holospiral 
+com.android.printspooler
+com.android.providers.downloads.ui
+com.android.provision
+com.android.soundrecorder
+com.android.statementservice
+com.android.vpndialogs
+com.android.wallpaper.holospiral
 com.android.wallpapercropper
-com.cyanogenmod.trebuchet 
+com.cyanogenmod.trebuchet
 com.droidlogic.BluetoothRemote
 com.droidlogic.FileBrower
-com.droidlogic.PPPoE 
+com.droidlogic.PPPoE
 com.droidlogic.SubTitleService
 com.droidlogic.appinstall
-com.droidlogic.dig 
-com.droidlogic.imageplayer 
-com.droidlogic.mediacenter 
-com.droidlogic.miracast 
-com.droidlogic.videoplayer 
-com.example.a62000435.box_fix 
+com.droidlogic.dig
+com.droidlogic.imageplayer
+com.droidlogic.mediacenter
+com.droidlogic.miracast
+com.droidlogic.videoplayer
+com.example.a62000435.box_fix
 com.ghisler.android.TotalCommander
 com.google.android.feedback
-com.google.android.partnersetup 
-com.google.android.youtube.tv 
-com.google.vr.vrcore 
-com.lonelycatgames.Xplore 
-com.netflix.mediaclient 
-com.samsung.android.app.colorblind 
-com.samsung.android.app.sbrowseredge 
-com.samsung.android.da.daagent 
-com.samsung.android.dqagent 
-com.samsung.android.fingerprint.service 
-com.samsung.android.game.gamehome 
-com.samsung.android.game.gametools 
-com.samsung.android.intelligenceservice2 
-com.samsung.android.sdk.handwriting 
-com.samsung.android.sdk.professionalaudio.app.audioconnectionservice 
-com.samsung.android.sdk.professionalaudio.utility.jammonitor 
-com.samsung.android.server.iris 
-com.samsung.android.service.livedrawing 
-com.samsung.android.service.peoplestripe 
-com.samsung.android.smartmirroring 
-com.samsung.android.soundassistant 
-com.samsung.android.video 
-com.samsung.android.weather 
-com.samsung.android.widgetapp.yahooedge.finance 
-com.samsung.android.widgetapp.yahooedge.sport 
-com.samsung.clipboardsaveservice 
-com.samsung.fresco.logging 
-com.samsung.safetyinformation 
+com.google.android.partnersetup
+com.google.android.youtube.tv
+com.google.vr.vrcore
+com.lonelycatgames.Xplore
+com.netflix.mediaclient
+com.samsung.android.app.colorblind
+com.samsung.android.app.sbrowseredge
+com.samsung.android.da.daagent
+com.samsung.android.dqagent
+com.samsung.android.fingerprint.service
+com.samsung.android.game.gamehome
+com.samsung.android.game.gametools
+com.samsung.android.intelligenceservice2
+com.samsung.android.sdk.handwriting
+com.samsung.android.sdk.professionalaudio.app.audioconnectionservice
+com.samsung.android.sdk.professionalaudio.utility.jammonitor
+com.samsung.android.server.iris
+com.samsung.android.service.livedrawing
+com.samsung.android.service.peoplestripe
+com.samsung.android.smartmirroring
+com.samsung.android.soundassistant
+com.samsung.android.video
+com.samsung.android.weather
+com.samsung.android.widgetapp.yahooedge.finance
+com.samsung.android.widgetapp.yahooedge.sport
+com.samsung.clipboardsaveservice
+com.samsung.fresco.logging
+com.samsung.safetyinformation
 com.samsung.storyse
-com.samsung.storyservice 
-com.samsung.svoice.sync 
+com.samsung.storyservice
+com.samsung.svoice.sync
 com.sec.android.app.music
-com.sec.android.easyonehand 
-com.sec.android.emergencylauncher 
-com.sec.enterprise.mdm.services.simpin 
-com.sec.enterprise.mdm.vpn 
-com.sec.factory.iris.usercamera 
-com.sec.hearingadjust 
-com.test.LTEfunctionality 
-com.xynotec.andboost 
-org.cyanogenmod.weatherservice    
-org.lineageos.audiofx 
-org.lineageos.trebuchet 
+com.sec.android.easyonehand
+com.sec.android.emergencylauncher
+com.sec.enterprise.mdm.services.simpin
+com.sec.enterprise.mdm.vpn
+com.sec.factory.iris.usercamera
+com.sec.hearingadjust
+com.test.LTEfunctionality
+com.google.android.apps.wellbeing
+com.xynotec.andboost
+jp.co.omronsoft.openwnn
+org.cyanogenmod.weatherservice
+org.lineageos.audiofx
+org.lineageos.trebuchet
+com.android.stk
+com.android.simappdialog
 org.xbmc.ftmc
 org.xbmc.kodi
-jp.co.omronsoft.openwnn
 service.odtcfactory.sec.com.odtcfactoryservice"
 
 DELETE="BCService
-Updater 
-StorageManager
+AudioFX
 BasicDreams
-EasterEgg 
-LatinIME 
-PrintSpooler 
-Recorder
-VpnDialogs
-WallpaperCropper
-Eleven
-BuiltInPrintService
-Email
-Exchange2
-Jelly
-PrintRecommendationService
-com.google.android.apps.wellbeing
-Traceur 
-BookmarkProvider 
-GoogleFeedback 
-GooglePartnerSetup 
-DownloadProviderUi 
-Dialer
+Backgrounds
+BookmarkProvider
 Browser
+BuiltInPrintService
 CatchFavorites_Zero
 Crane
 DLNA
 DownloadProviderUi
 EasterEgg
+Eleven
+Email
 EmergencyInfo
+Exchange2
 GalaxyAppsWidget_Phone
 GoogleFeedback
 GooglePartnerSetup
+Jelly
 KeyguardWallpaperUpdator
 LatinIME
 LogsProvider
 Miracast
 Music
 MusicFX
+NfcNci
 OmaCP
+ManagedProvisioning
 PPPoE
 PhotoTable
+PrintRecommendationService
 PrintSpooler
 ProxyHandler
+Recorder
 RemoteIME
 ResurrectionStats
 SBrowserEdge
@@ -140,48 +132,56 @@ SecSetupWizard2015
 SetupWizard
 ShareLink
 SplitSoundService
+StorageManager
 SubTitle
 Tag
-AudioFX
 TaskEdgePanel
 TasksProvider
 Traceur
 TrebuchetQuickStep
 USBSettings
+Updater
+SimAppDialog
 VideoPlayer
-VideoPlayer
+VpnDialogs
 WAPPushManager
 WallpaperBackup
+WallpaperCropper
 WebViewGoogle
 smartfaceservice
 webview
+WeatherProvider
+SettingsIntelligence
+LockClock
+Stk
+UserDictionaryProvider
 AntHalService"
 
 if [[ $1 ]]; then
-	PHONE="com.android.smspush 
-com.android.mms.service 
-com.android.server.telecom 
-com.android.CarrierConfigerconfig"
+	PHONE="com.android.smspush
+    com.android.mms.service
+    com.android.server.telecom
+    com.android.CarrierConfigerconfig"
 	PHONEFOLDERS="telresources
-DialerReceiver
-CarrierConfig
-Dialer
-BlockedNumberProvider
-MmsService
-TeleService
-Telecom
-TelephonyProvider
-VpnDialogs"
+    DialerReceiver
+    CarrierConfig
+    Dialer
+    BlockedNumberProvider
+    MmsService
+    TeleService
+    Telecom
+    TelephonyProvider
+    VpnDialogs"
 fi
 
 for dir in '/' /data/app /system/app /system/priv-app; do
 	cd "$dir"
 	for crap in $DELETE $PMU; do
-		full=*"${dir}/${crap}"*
-		[[ -e $full ]] && rm -rf "${full}"* && ANRED "UNINSTALLED1 ${Y}$full${R} ...\n"
-		[[ -e "${dir}/${crap}" ]] && rm -rf "${dir}/${crap}"* && ANRED "UNINSTALLED2 ${Y}${dir}/${crap}${R} ...\n"
-        [[ -e $crap ]] && rm -rf *"$crap"* ANRED "UNINSTALLED3 ${Y}${dir}/${crap}${R} ...\n"
+		full="$(echo ${dir}/*${crap}*)"
+		[[ -e $full ]] && rm -rf "${full}" && ANRED "rm -rf ${full} \\nUNINSTALLED1 ${Y}$full${R} ...\n"
+		[[ -e "${dir}/${crap}" ]] && rm -rf "${dir}/${crap}" && ANRED "UNINSTALLED2 rm -rf ${Y}${dir}/${crap}${R} ...\n"
+		[[ -e $crap ]] && rm -rf "$crap" ANRED "rm -rf $crap\\nUNINSTALLED3 ${Y}${dir}/${crap}${R} ...\n"
 	done
 done
-#pmu $PMU
-rm_empty_dir /system/app/* /system/priv-app/*
+pmu $PMU
+rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*

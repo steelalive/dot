@@ -1,0 +1,13 @@
+	inout(){ echo Display total network data transfer this session.
+		local X
+		while read -a X; do
+			if [ "${X[0]}" == "${1}:" ]; then
+				declare -i IN=${X[1]}
+				declare -i OUT=${X[9]}
+				break
+			fi
+		done < /proc/net/dev
+
+		printf "IN:  %'14dK\nOUT: %'14dK\n" "$((IN/1024))" "$((OUT/1024))"
+	}
+inout "$@"

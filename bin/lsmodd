@@ -1,0 +1,10 @@
+if type -fP lsmod modinfo > /dev/null 2>&1; then
+	lsmodd(){ echo List and describe (most) detected kernel modules.
+		local X Y
+		while read -a X; do
+			[ "${X[0]}" == "Module" ] && continue
+			Y=`/sbin/modinfo -d "${X[0]}"`
+			[ "$Y" ] && printf "%s - %s\n" "${X[0]}" "$Y"
+		done <<< "$(/sbin/lsmod)"
+	}
+fi

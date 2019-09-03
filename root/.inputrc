@@ -30,16 +30,19 @@
 "\es": menu-complete
 "\eS": menu-complete-backward
 "\M-r": forward-search-history
+Control-k: kill-whole-line
 #set bell-style audible
 set bind-tty-special-chars on
 set blink-matching-paren on
 set colored-completion-prefix on
 set colored-stats on
+set comment-begin '#'
 set completion-ignore-case on
 set completion-map-case on
 set completion-query-items 1000
 set completion-prefix-display-length 3
-set convert-meta off
+set convert-meta on
+set enable-meta-key on
 set disable-completion off
 set echo-control-characters off
 set editing-mode emacs
@@ -50,19 +53,20 @@ set expand-tilde off
 set history-preserve-point on
 set history-size 32000
 set horizontal-scroll-mode off
-set input-meta on
+set input-meta off
 set keyseq-timeout 500
 set keymap emacs
+set isearch-terminators 'C-[C-J'
 set mark-directories on
 set mark-modified-lines off
 set mark-symlinked-directories on
 set match-hidden-files on
 set menu-complete-display-prefix on
 set meta-flag off
-set output-meta on
+set output-meta off
 set page-completions off
 set print-completions-horizontally off
-set revert-all-at-newline off
+set revert-all-at-newline on
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
 set show-mode-in-prompt off

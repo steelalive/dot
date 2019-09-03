@@ -45,7 +45,7 @@ nvim-config() {
 	$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade-strategy eager --progress-bar pretty --upgrade pip
 	$sudo pip3 install --user --upgrade --upgrade-strategy eager --progress-bar pretty PyYAML
 	grep -q setcolors /root/.config/nvim/.gitignore || echo "/config/setcolors.vim
-/config/plugins.yaml" >>/root/.config/nvim/.gitignore
+    /config/plugins.yaml" >>/root/.config/nvim/.gitignore
 	for install in postcss-html postcss-markdown postcss postcss-syntax jshint jsxhint jsonlint stylelint sass-lint raml-cop markdownlint-cli write-good neovim nomnom; do
 		$sudo npm install -g --upgrade "$install"
 	done
@@ -78,7 +78,7 @@ $sudo	npm -g install --upgrade jshint jsxhint jsonlint stylelint sass-lint
 $sudo	npm -g install --upgrade raml-cop markdownlint-cli write-good
 $sudo	npm -g install --upgrade tern
 $sudo	pip install --upgrade pycodestyle pyflakes flake8 vim-vint proselint yamllint
-	venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim3/bin/pip" install -U pip --upgrade pip;venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim2/bin/pip" install -U pip --upgrade pip' | ca
+        venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim3/bin/pip" install -U pip --upgrade pip;venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim2/bin/pip" install -U pip --upgrade pip' | ca
 
 	;;
 *)

@@ -1,0 +1,7 @@
+
+ANORANGE () 
+{ 
+printf "%b" "\x1b[m\x1b[1;38;2;255;97;3m${*}\x1b[m"
+
+}
+ANORANGE "$@"

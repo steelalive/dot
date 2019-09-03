@@ -3,8 +3,8 @@
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Mon May 28 08:35:41 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.0.4 - #_# #@#280518#@# #2#
 #3#vi ft=fsee ::..#####################_/dot/bin/ff_#######################..::#3#
-ff() { 
-    path="${1:-$(realpath .)}"
-    shift
-    find "$path" -iname '*'"$*"'*'; }
+ff() {
+	path="$(realpath ./)"
+	find $path -iname '*'"$*"'*'
+}
 ff "$@"

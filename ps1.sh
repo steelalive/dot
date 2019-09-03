@@ -51,9 +51,9 @@ if [[ $USER == root ]]; then
 else
 	PS1ADD="\[\e[0;01m\]"
 fi
-PS1="\[\e[1m\]\[\e[38;5;9m\][\[$PS1ADD\u\[\e[38;5;106m\]@\[\e[38;5;63m\]\H\[\e[38;5;135m\]\[\e[38;5;9m\]]\[\e[0m\] "
 prompt_command() {
 	RET
+set_title " $(fc -rl | head -n1  | cut -d" " -f2-99) "
 	if [[ $HOSTNAME == PC ]]; then
 		local has_job tmp_git
 		has_job="$(jobs -l | wc -l)"
@@ -505,3 +505,27 @@ PS1="\[$sexy_bash_prompt_reset\]\
   echo -n \"\[$sexy_bash_prompt_git_progress_color\]\$(sexy_bash_prompt_get_git_progress)\" && \
   echo -n \"\[$sexy_bash_prompt_reset\]\")\n\
 \[$sexy_bash_prompt_symbol_color\]$sexy_bash_prompt_symbol \[$sexy_bash_prompt_reset\]"
+
+set_title() 
+{
+ORIG=$PS1
+TITLE="\e]2;$*\a"
+#PS1=${ORIG}${TITLE}
+PS1=${TITLE}"\[$sexy_bash_prompt_reset\]\
+\[$sexy_bash_prompt_user_color\]\u\[$sexy_bash_prompt_reset\] \
+\[$sexy_bash_prompt_preposition_color\]at\[$sexy_bash_prompt_reset\] \
+\[$sexy_bash_prompt_device_color\]\h\[$sexy_bash_prompt_reset\] \
+\[$sexy_bash_prompt_preposition_color\]in\[$sexy_bash_prompt_reset\] \
+\[$sexy_bash_prompt_dir_color\]\w\[$sexy_bash_prompt_reset\]\
+\$( sexy_bash_prompt_is_on_git && \
+  echo -n \" \[$sexy_bash_prompt_preposition_color\]on\[$sexy_bash_prompt_reset\] \" && \
+  echo -n \"\[$sexy_bash_prompt_git_status_color\]\$(sexy_bash_prompt_get_git_info)\" && \
+  echo -n \"\[$sexy_bash_prompt_git_progress_color\]\$(sexy_bash_prompt_get_git_progress)\" && \
+  echo -n \"\[$sexy_bash_prompt_reset\]\")\n\
+\[$sexy_bash_prompt_symbol_color\]$sexy_bash_prompt_symbol \[$sexy_bash_prompt_reset\]"
+
+
+
+}
+
+#set_title $(fc -rl | head -n1  | cut -d" " -f2-99)

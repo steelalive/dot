@@ -7,9 +7,10 @@
 resync() {
 	proc="$(nproc --all)"
 	cd ${kernel:-kernel/motorola/msm8916} && gitreset
+	cd $src/device/samsung/zero-common && gitreset
 	[[ $src ]] || return
 	cd $src || return
-	repo --color=auto --no-pager sync --no-clone-bundle --current-branch --prune --no-tags --optimized-fetch --force-sync -j${proc:-$1} $2 $3
+	repo --color=auto --no-pager sync --no-clone-bundle --no-repo-verify --current-branch --prune --no-tags --optimized-fetch --force-sync -j8 $2 $3
 	[[ $src ]] || return
 	cd $src || return
 }

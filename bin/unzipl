@@ -13,9 +13,9 @@ unzipl() {
 	if yorn y; then
 		unzip "$@" -d /prog/unzip/"$fname"
 	else
-		read -p "Enter path 
+		read -p "Enter path
     result:   path/$fname
-    ?" fpath
+        ?" fpath
 		unzip "$@" -d "$fpath/$fname"
 	fi
 }

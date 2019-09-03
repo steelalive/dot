@@ -181,10 +181,8 @@ wch() {
 	fi
 }
 
-
-setenv () 
-{ 
-    export "$1=$2"
+setenv() {
+	export "$1=$2"
 }
 
 stde() {
@@ -224,3 +222,6 @@ err() {
 	return $EXIT
 }
 
+date_for_filename() {
+	date '+%F_%H:%M:%S'
+}

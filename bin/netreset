@@ -3,32 +3,12 @@
 #2#::.. Last edit: - Mon May 28 02:20:24 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.3.1 - #_# #@#280518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 
-case $1 in
-reverse | enable)
-	rm /etc/resolv.conf
-	ln -sF /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-	for e in systemd-resolved.service \
-		systemd-networkd.socket \
-		systemd-networkd.service \
-		systemd-networkd-wait-online.service \
-		NetworkManager.service \
-		NetworkManager-wait-online.service \
-		NetworkManager-dispatcher.service \
-		NetworkManager.service \
-		wpa_supplicant-nl80211@wlan0.service \
-		wpa_supplicant.service; do
-		systemctl enable $e &>/dev/null &
-		disown
-		systemctl start $e &>/dev/null &
-		disown
-	done
-	;;
-esac
-
 center_string "${RED}${UNDER}Network service and wifi adapter reset v0.13 ${PACKAGER}${R}\n"
 if is_in_path macchanger; then
-	macchanger wlan0 --show | grep Current | grep -i CA:91:5E:71:72:E7 || ip link set $NET down
-	macchanger wlan0 --mac=CA:91:5E:71:72:E7
+	if macchanger $NET --show | grep -i "Current.*24:05:0f:ea:36:6c"; then
+		ip link set $NET down
+		macchanger -a $NET
+	fi
 fi
 
 dhcpcd -k -x "$NET" >/dev/null 2>&1
@@ -59,16 +39,13 @@ for service in NetworkManager.service \
 	NetworkManager.service \
 	NetworkManager-wait-online.service \
 	NetworkManager-dispatcher.service \
-	dbus-org.freedesktop.NetworkManager.service \
 	wpa_supplicant \
 	systemd-networkd.socket \
 	NetworkManager.service \
-	wpa_supplicant-nl80211@wlan0.service \
 	wpa_supplicant.service \
 	systemd-networkd.service \
 	systemd-networkd.socket \
 	systemd-networkd-wait-online.service \
-	network.target \
 	systemd-resolved.service \
 	dhcpd4.service \
 	dhcpd6.service \
@@ -76,9 +53,10 @@ for service in NetworkManager.service \
 	systemd-networkd.socket \
 	systemd-resolved.service \
 	systemd-networkd-wait-online.service \
-	wpa_supplicant-nl80211@wlan0.service \
 	wpa_supplicant.service \
 	nm-applet \
+	connman.service \
+	connman-vpn.service \
 	kea-idhcp4.service \
 	kea-dhcp6.service \
 	wpa_supplicant \

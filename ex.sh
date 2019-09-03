@@ -3,7 +3,7 @@
 #3#::..#####################_MAIN_#######################..::#3#
 #p || $dot/bin/wp
 dot=${dot:-/dot}
-if [[ $SHELL = *bash* ]]; then
+if [[ $SHELL == *bash* ]]; then
 	#[[ -e /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion
 	complete -d d
 	for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
@@ -29,8 +29,8 @@ is_android && {
 set -a
 eval "$(dircolors --sh $dot/.dir_colors)"
 if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
-	
-	NET=wlan0
+
+	export NET=wlan0
 	$dot/bin/wp
 	touch /tmp/INIT
 	mkdir -p /tmp &>/dev/null
@@ -43,15 +43,18 @@ if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	if tty | grep 1 &>/dev/null; then
 		zip -rq -FS /last/BACKUP/etc.zip /etc &>/dev/null
 		zip -rq -FS /last/BACKUP/dot.zip /dot &>/dev/null
+		cp -au --backup=numbered /last/Acreation /ext/ &>/dev/null
 	fi
-#	mount /dev/sda4 /boot
+	#	mount /dev/sda4 /boot
 	#for i in /dot/etc/cron.daily/*; do
 	#	ANBB "Daily task $i ...${R}\n"
 	#	bash $i
 	#done
 	#tar -cf /last/dot.tar ${dot} &>/dev/null
 	#+all /dot
+	rm_empty_dir /* /.* /root/* /shell/* /root/.* /shell/.*
 	ANBG "One-time init completed.$R\\n"
+
 fi
 
 pgrep ssh-agent &>/dev/null || ssh-agent >/tmp/ssh-agent 2>/dev/null
@@ -77,7 +80,6 @@ if ! findmnt /last &>/dev/null; then
 	mkdir /last &>/dev/null
 	mount LABEL=LAST-GA /last &>/dev/null && ANG "LAST-GA mounted"
 fi
-
 
 ###############################shopt and shits##############################################
 is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval "$(dircolors --sh "$dot"/.dir_colors 2>/dev/null)"
@@ -122,15 +124,15 @@ stfu ulimit -S -c 0
 #		chmod 755 -R "$folder" 2>/dev/null
 #		+user -R "$folder" 2>/dev/null
 #	fi
- #one
+#one
 
 is_in_path xdg-user-dirs-update && XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}" \
 	XDG_CACHE_HOME="$HOME/.cache" XDG_DATA_HOME="$HOME/.local/share" XDG_CONFIG_DIRS=/etc/xdg \
 	XDG_DATA_DIRS=/usr/share XDG_DESKTOP_DIR="$HOME/Desktop" XDG_MUSIC_DIR=/last/mp3 \
-	XDG_PICTURES_DIR=/last/wallpapers && mkdir -p "$HOME"/doc && \
+	XDG_PICTURES_DIR=/last/wallpapers && mkdir -p "$HOME"/doc &&
 	for i in XDG_TEMPLATES_DIR XDG_PUBLICSHARE_DIR XDG_DOCUMENTS_DIR XDG_VIDEOS_DIR; do
-	declare -x "$i=$HOME/doc"
-done
+		declare -x "$i=$HOME/doc"
+	done
 
 [[ -e /last/Downloads ]] && XDG_DOWNLOAD_DIR=/last/Downloads
 is_in_path xdg-user-dirs-update && {
@@ -222,7 +224,7 @@ LESSHISTFILE=-
 LESSOPEN="| $(command -v highlight) %s --quit-if-one-screen --out-format truecolor --quiet --force --style candy --syntax bash"
 LOGDEST="$BUILDDIR"
 LS_COLLATE='C'
-LD_LIBRARY_PATH='/usr/lib:/usr/local/lib' 
+LD_LIBRARY_PATH='/usr/lib:/usr/local/lib'
 ldconfig
 [[ $HOSTNAME == PC ]] && LS_OPTIONS=' -l --color=auto --quoting-style=shell-escape --ignore-backups --group-directories-first --file-type --almost-all --human-readable -L'
 MALLOC_CHECK_=3
@@ -242,6 +244,8 @@ SHELL="${SHELL:-$(command -v bash 2>/dev/null || command -v sh 2>/dev/null)}"
 SHELLCHECK_OPTS='--shell=bash --exclude=SC1001,SC2016,SC2034,SC2154,SC2120,SC2054,SC1090,SC1091,SC2001,SC2086,SC2162,SC2139'
 SOURCE_HIGHLIGHT_DATADIR="/usr/share/source-highlight"
 SYSTEMD_PAGER="$PAGER"
+export TIMEFORMAT=">>> real %3R | user %3U | sys %3S | pcpu %P <<<"
+
 TERM='xterm-256color'
 TERM_AUDIO=enabled
 TERM_COLOR=16m
@@ -276,7 +280,7 @@ netmask='255.255.255.0'
 no_proxy='localhost,127.0.0.1,localaddress,.localdomain.com'
 pc='192.168.0.20'
 tv='192.168.0.9'
-cell='192.168.0.120'
+cell='192.168.0.129'
 #[[ ! -e /oem ]] && ex="$(ad ex 2>/dev/null)"
 [[ -e "$dot"/slash ]] && export slash="$dot"/slash
 [[ -e "$dot"/bin/wp ]] && eval "$(grep -m1 'WPCONF' "$dot"/bin/wp | sed 's/\[\[.*&& //')"
@@ -306,7 +310,7 @@ if [[ $HOSTNAME == PC ]]; then
 		#which_network 5G
 	fi
 fi
-#export NET=eth0
+export NET
 # vi: set noro: ft=sh
 # Check for interactive bash and that we haven't already been sourced.
 if [ -n "${BASH_VERSION-}" -a -n "${PS1-}" -a -z "${BASH_COMPLETION_COMPAT_DIR-}" ]; then

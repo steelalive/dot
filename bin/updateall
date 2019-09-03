@@ -5,7 +5,7 @@
 # Author: #noharden
 wp || exit
 
-[[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR
+[[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR 2>/dev/null
 
 suuser "yay -Syu --devel --needed --noconfirm --force"
 suuser "yay -S --needed --noconfirm -ua"
@@ -35,10 +35,10 @@ paccache --keep 1 --verbose --remove
 
 	rm -rf /tmp/makepkg
 	$(ncu -g | grep 'npm -g install ')
-	python2 -m pip_review --auto 
-    python3 -m pip_review --auto 
-    $(pip-check -c pip2 -rfHu 2>/dev/null| grep -o "pip.* install -U .*")
-    $(pip-check -c pip3 -rfHu 2>/dev/null| grep -o "pip.* install -U .*")↵
+	python2 -m pip_review --auto
+	python3 -m pip_review --auto
+	$(pip-check -c pip2 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")
+	$(pip-check -c pip3 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")↵
 
 	npm install --global --upgrade npm@latest
 	#for i in /usr/lib/node_modules/*; do
@@ -46,27 +46,27 @@ paccache --keep 1 --verbose --remove
 	#	ncu --newest --greatest --upgrade
 	#	cd '/usr/lib/node_modules' || cd ..
 	#done
-    npm-check -g -y
-    npm update -g
+	npm-check -g -y
+	npm update -g
 	npm doctor
-	for i in $(pip list | awk '{print $1}'); do
-		pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$i"
-	done
+	#	for i in $(pip list | awk '{print $1}'); do
+	#		pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$i"
+	#	done
 
-#cat <<'END' >		venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
-#		$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
-#		$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
-#		$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
-#		for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
-#			$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-#			$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-#	    	$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-#		done 
-#END
+	#cat <<'END' >		venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
+	#		$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
+	#		$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
+	#		$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
+	#		for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
+	#			$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+	#			$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+	#	    	$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
+	#		done
+	#END
 
-    if cd /ext/sexy-bash-prompt; then
-        gitreset
-    fi
+	if cd /ext/sexy-bash-prompt; then
+		gitreset
+	fi
 
 	if is_in_path cpanm && is_in_path cpanm-outdated; then
 		cpanm --self-upgrade
@@ -74,7 +74,7 @@ paccache --keep 1 --verbose --remove
 	fi
 	#+user -R /root /shell /home /dot &>/dev/null
 	cpan -u
-	suuser "yay -Y --gendb"
+	#	suuser "yay -Y --gendb"
 	### Neovim setup ###
 	cd /root/.config/nvim && {
 		gitreset
@@ -82,7 +82,7 @@ paccache --keep 1 --verbose --remove
 		init="$HOME/.config/nvim/init.vim"
 		if ! grep -q "$local" $init; then
 			echo "source $local" >>"$init"
-		#	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
+			#	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
 		fi
 		unset local init
 		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es

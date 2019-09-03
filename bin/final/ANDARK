@@ -1,0 +1,8 @@
+
+ANDARK () 
+{
+
+printf "%b" "\x1b[m\x1b[1;38;5;243m${*}\x1b[m"
+
+}
+ANDARK "$@"

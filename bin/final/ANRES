@@ -1,0 +1,7 @@
+
+ANRES () 
+{ 
+printf "%b" "\x1b[m\x1b[m${*}\x1b[m"
+
+}
+ANRES "$@"

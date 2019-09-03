@@ -17,7 +17,7 @@ x4=/etc/profile
 x5=~/.bashrc
 x6=/etc/bash.bashrc
 x7=/root/bin/wp
-x8=/root/bin/wpconf"
+        x8=/root/bin/wpconf"
 	export db_sources
 	export DB_SOURCES=($db_sources)
 	;;

@@ -4,13 +4,7 @@
 #2#::.. Last edit: - Wed Jun 13 12:02:47 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-13#@# #2#
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/shfmtw_#######################..::#3#
-#is_in_path shfmt || exit
-
-shfmtw() {
-	if is_bash "$script" ; then
-		shfmt -w -s -i 0 "$script" && ANORANGE "[$?] -- ${C}$1 ${O}formatting has been optimized.\\n"
-	fi
-}
-for args in "$@"; do
-	shfmtw "$args"
+for script in "$@"; do
+	is_bash "$script" || exit
+	shfmt -w -s -i 0 "$script" && ANORANGE "[$?] -- ${C}$script ${ORANGE}formatting has been optimized.${R}\\n"
 done

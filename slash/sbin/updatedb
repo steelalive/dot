@@ -85,7 +85,7 @@ esac
 if test "$old" = yes || test "$dbformat" = "old" ; then
     echo "Warning: future versions of findutils will shortly discontinue support for the old locate database format." >&2
     old=yes
-    sort="/usr/bin/sort"
+    sort="/system/bin/sort"
     print_option="-print"
     frcode_options=""
 else
@@ -108,11 +108,11 @@ else
 
     if false
     then
-        sort="/usr/bin/sort -z"
+        sort="/system/bin/sort -z"
         print_option="-print0"
         frcode_options="$frcode_options -0"
     else
-        sort="/usr/bin/sort"
+        sort="/system/bin/sort"
         print_option="-print"
     fi
 fi
@@ -149,7 +149,7 @@ select_shell() {
 : ${FINDOPTIONS=}
 
 # What shell shoud we use?  We should use a POSIX-ish sh.
-: ${SHELL="/bin/sh"}
+: ${SHELL="/system/bin/sh"}
 
 # Non-network directories to put in the database.
 : ${SEARCHPATHS="/"}
@@ -183,7 +183,8 @@ test -z "$PRUNEREGEX" &&
   PRUNEREGEX=`echo $PRUNEPATHS|sed -e 's,^,\\\(^,' -e 's, ,$\\\)\\\|\\\(^,g' -e 's,$,$\\\),'`
 
 # The database file to build.
-: ${LOCATE_DB=/usr/local/var/locatedb}
+mkdir -p /sdcard/gnu/tmp /sdcard/gnu/var
+: ${LOCATE_DB=/sdcard/gnu/var/locatedb}
 
 # Directory to hold intermediate files.
 if test -d /var/tmp; then
@@ -191,7 +192,7 @@ if test -d /var/tmp; then
 elif test -d /usr/tmp; then
   : ${TMPDIR=/usr/tmp}
 else
-  : ${TMPDIR=/tmp}
+  : ${TMPDIR=/sdcard/gnu/tmp}
 fi
 export TMPDIR
 
@@ -202,14 +203,14 @@ export TMPDIR
 if test -n "$LIBEXECDIR" ; then
     : LIBEXECDIR already set, do nothing
 else
-    : ${LIBEXECDIR=/usr/local/libexec}
+    : ${LIBEXECDIR=/system/bin}
 fi
 
 # The directory containing find.
 if test -n "$BINDIR" ; then
     : BINDIR already set, do nothing
 else
-    : ${BINDIR=/usr/local/bin}
+    : ${BINDIR=/system/bin}
 fi
 
 # The names of the utilities to run to build the database.

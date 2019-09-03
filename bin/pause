@@ -5,6 +5,6 @@
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/pause_#######################..::#3#
 echo
-read -s -r -n 1 -p "Press any key to continue... 
+read -s -r -n 1 -p "Press any key to continue...
 " --
 echo

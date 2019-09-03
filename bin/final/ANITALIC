@@ -1,0 +1,7 @@
+
+ANITALIC () 
+{ 
+printf "%b" "\x1b[m\x1b[3m${*}\x1b[m"
+
+}
+ANITALIC "$@"

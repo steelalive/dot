@@ -5,12 +5,10 @@
 export cmd=' androidboot.selinux=permissive buildvariant=eng threadirqs nowatchdog fsck.repair=yes commit=30 errors=remount-ro rootfstype=ext4 raid=noautodetect plymouth.enable=0 smsc95xx.turbo_mode=N net.ifnames=0 noatime libahci.ignore_sss=1 cgroup_disable=memory sysrq_always_enabled'
 
 [[ -e /system ]] && mount -o remount,rw /system
-for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build.prop /system/build.prop /default.prop default.prop build.prop /vendor/build.prop "$@"; do
+for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build.prop /system/build.prop /default.prop default.prop build.prop /system/vendor/build.prop /vendor/build.prop "$@"; do
 	[[ -r $i ]] || continue
 	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
 		-e "s/ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
-		-e "s/ro.build.type=.*/ro.build.type=eng/" \
-		-e "s/=user$/=eng/" \
 		-e "s/ro.debuggable=0$/ro.debuggable=1/" \
 		-e "s/MM-dd-yyyy/dd-MM-yyyy/" \
 		-e "s/=en-US$/=en-CA/" \
@@ -103,9 +101,9 @@ if [[ ! -e /oem ]] && [[ $1 == boot ]]; then
 	done
 fi
 
-for target in ramdisk/system/build.prop /system/build.prop system/build.prop build.prop "$@"; do
+for target in ramdisk/system/build.prop /vendor/build.prop /system/vendor/build.prop /system/build.prop system/build.prop build.prop "$@"; do
 	string='PROPER_SYS'
 	[[ -r $target ]] || continue
-#	prop-replace "$dot/bin/build.prop" "$string" "$target"
-    ANY ""Proper NOT done.: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
+	prop-replace "$dot/bin/build.prop" "$string" "$target" &&  ANG ""Prop values changed: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
+#    ANY ""Proper NOT done.: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
 done

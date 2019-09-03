@@ -161,7 +161,7 @@ newbash() {
 #2#::.. Last edit: - Mon Jun  6 18:54:30 EDT 2016 - by: - __INDNYALL__ - ..::## #_# - VERSION=0.0.0.1 - #_# #@#060616#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 #-*- coding: utf-8 -*-
-VERSION=0.0.0.001 
+VERSION=0.0.0.001
 cmd_pwd=$(pwd) cmd_name="$0" cmd_dir="$(cd "$(dirname "$CMD")" && pwd -P)"
 [[ -r "$init_script" ]] && . "$init_script"
 init_function &>/dev/null && init_function

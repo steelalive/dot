@@ -1,0 +1,7 @@
+
+ANSTRIKE () 
+{ 
+printf "%b" "\x1b[m\x1b[9m${*}\x1b[m"
+
+}
+ANSTRIKE "$@"

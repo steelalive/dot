@@ -1,0 +1,8 @@
+
+ANBLINK () 
+{ 
+printf "%b" "\x1b[m\x1b[5m${*}\x1b[m"
+
+
+}
+ANBLINK "$@"

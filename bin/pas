@@ -19,7 +19,7 @@ pas() {
 		)
 	fi
 	liner
-	suuser "yay --needed --noconfirm \"$*\""
+	suuser "yay --needed --noconfirm $1 $2 $3 $4"
 	#--pacman="--force"
 	export XDG_RUNTIME_DIR=/run/user/"$UID"
 	liner

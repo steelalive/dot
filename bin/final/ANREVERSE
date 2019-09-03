@@ -1,0 +1,7 @@
+
+ANREVERSE () 
+{ 
+printf "%b" "\x1b[m\x1b[7m${*}\x1b[m"
+
+}
+ANREVERSE "$@"

@@ -14,7 +14,7 @@ if command -v xclip 1>/dev/null; then
 		# stdin is a pipe
 		# stdin -> clipboard
 		xclip -i
-		ANBG "Saved to clipboard"
+		ANBG "Saved to clipboard${R}\n"
 		echo
 	else
 		# stdin is not a pipe

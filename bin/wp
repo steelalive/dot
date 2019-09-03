@@ -66,12 +66,12 @@ echo $WPCONF
 #######################################
 while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	((CUNT > 4)) && CUNT=0
-	((CUNT > 0)) && ANB "This is attempt $CUNT on $WPCONF"
+	((CUNT > 0)) && ANB "This is attempt $CUNT on $WPCONF\n"
 	CUNT=$((CUNT + 1))
 	"${dot}/bin/netreset"
 	center_string "${RED}${UNDER}WPA_SUPPLICANT${R}"
 	echo
-	ANG "$NET${W} on ${G}$WPCONF"
+	ANG "$NET${W} on ${G}$WPCONF\\n"
 	ip link set "$NET" up
 	s1 222
 	wpa_supplicant -Dnl80211 -B -i"$NET" -c"$WPCONF"
@@ -81,21 +81,21 @@ while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	dhcpcd "$NET"
 	center_string "${RED}${UNDER}PING TEST AND ROUTE SETUP${R}\\n"
 	"${dot}"/bin/88
-	NET_AP=$(iwgetid -r $NET)
+	NET_AP="$(iwgetid -r $NET)"
 	[[ $NET_AP ]] && GOOG=0
 	sleep 1
 	p || GOOG=1
 done
 #######################################
 if ((GOOG != 0)); then
-	ANORANGE "Please try again."
+	ANORANGE "Please try again.\n"
 	unset PINGFAIL GDNS d CUNT
 	ANORANGE "$NET_AP${R}\\n"
 else
-	ANLG "Operation successful! You are now connected to: ${RES}"
+	ANLG "Operation successful! You are now connected to: ${RES}\n"
 	ANBG "${NET_AP}${R}\\n"
 	is_in_path synergy && synergy.sh
 fi
-ntponce
+ntponce 2 &>/dev/null
 unset PINGFAIL GDNS d CUNT NET_AP
 exit 0

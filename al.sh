@@ -24,6 +24,7 @@ alias e='. $dot/bin/e'
 alias mvv='mv -v '
 alias df='command \df -h '
 alias dir='command \dir --color=auto '
+alias dmesgerr='dmesg -t -l err,crit,alert,emerg'
 alias cpav='command \cp -avu  '
 alias mvv='command \mv -v '
 alias rmrf='command \rm -rvf --preserve-root --one-file-system '
@@ -50,9 +51,6 @@ alias reboot='command \systemctl reboot '
 alias suedit='SUDO_EDITOR=kate sudoedit '
 alias tree='command \tree --dirsfirst -pshF -C '
 alias udevreload='udevadm control --reload-rules; systemctl restart systemd-udevd.service;udevadm control --reload '
-shfmtw() {
-	for script; do is_bash "$script" &>/dev/null && shfmt -w -s -i 0 "$(is_bash "$script")"; done
-}
 alias vnstat="vnstat -i wlan0 "
 alias ~='builtin \cd ~; lk '
 #if is_in_path pacmatic; then
@@ -65,6 +63,9 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"='lwp-request -m $method'
 done
 unset method
+if [[ -e /usr/lib/cw ]]; then
+	cd /usr/lib/cw && rm -v ping traceroute netstat mount make lsof iptables ifconfig free env dig df clock configure cw-pipe cw-test.cgi etc figlet host ltrace-color nmap nslookup pmap_dump praliases quota quotastats strace-color syslog tcpdump finger 2>/dev/null
+fi
 [[ -e /etc/profile.d/grc.bashrc ]] && . /etc/profile.d/grc.bashrc
 if GRC="$(command \which grc 2>/dev/null)"; then
 	if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
@@ -85,5 +86,5 @@ if [[ $HOSTNAME == UBUNTU ]]; then
 	alias apts='apt search '
 	alias aptu='apt update; apt-get upgrade '
 fi
-alias df="/usr/bin/grc -es --colour=auto /usr/bin/df -h"
+alias df="/usr/bin/grc -es --colour=auto df -lhT -x devtmpfs -x tmpfs -x usbfs"
 alias pacss="pacman -Ss"

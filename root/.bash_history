@@ -1,59 +1,3 @@
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-journalctl -xe
-mount /dev/sdc3 /last
-nano  /etc/fstab
-exit
-. env.sh
-cd $kernel
-ls
-make distclean
-cd /src
-. env.sh
-ls
-cd $kernel
-make jf_can_defconfig
-make
-ls jf_can_defconfig
-ls
-make_defconfig.sh jf_can_defconfig
-./make_defconfig.sh jf_can_defconfig
-ls
-make
-ls
-make ARCH=arm
-make ARCH=arm jf_defconfig
-make
-make ARCH=arm jf_defconfig
-make ARCH=arm 
-ls
-make jf
-make jf_defconfig
-make
-make ARCH=arm jf_defconfig
-make
-export CROSS_COMPILE=/src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androidkernel-
-make ARCH=arm jf_defconfig
-make
-ls
-make distclean
-make ARCH=arm jf_defconfig
-make distclean
-make ARCH=arm jf_defconfig
-export CROSS_COMPILE=/src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androidkernel-
-make ARCH=arm 
-gitreset
-make ARCH=arm 
-make ARCH=arm jf_defconfig
-make ARCH=arm 
-ls
-./make_defconfig.sh jf_defconfig
-make ARCH=arm 
-ls
-make oldconfig
-make ARCH=arm jf_defconfig
-make
-ls
-ca README_Kernel.txt 
 export ARCH=arm
 export CROSS_COMPILE=/src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androidkernel-
 make VARIANT_DEFCONFIG=jf_can_defconfig SELINUX_DEFCONFIG=selinux_defconfig
@@ -498,3 +442,59 @@ resync
 . env.sh
 resync
 su
+netreset
+systemctl stop connman.service connman-vpn.service 
+systemctl disable  connman.service connman-vpn.service 
+e netreset
+systemctl enable NetworkManager
+systemctl start NetworkManager
+src
+sudo su
+lsls
+. /etc/profile
+. /etc/profile
+exit
+su
+sudo su
+ls
+su
+sudo su
+ls
+su
+ls
+e /dot/root/folders/.config/terminator/config
+nvim /dot/root/folders/.config/terminator/config
+sudo nvim /dot/root/folders/.config/terminator/config
+rm /dot/root/folders/.config/terminator/config 
+cd /last/
+ls
+cd BACKUP/
+ls
+..
+cd ..
+unzip dot.zip -d /tmp/
+ls /tmp/dot/root/folders/.config/terminator/ /dot/root/folders/.config/terminator/c
+cd /last
+l
+sls
+ls
+cd BACKUP/
+ls
+lk
+unzip dot.zip -d /tmp/
+ls /tmp/dot/root/folders/.config/terminator/ /dot/root/folders/.config/terminator/c
+cp /tmp/dot/root/folders/.config/terminator/config /dot/root/folders/.config/terminator/
+sudo nvim /tmp/dot/root/folders/.config/terminator/config 
+lnr /dot/root/folders/.config/terminator/config /root/.config/terminator/config 
+ls /dot/root/folders/.config/terminator/config 
+cp /tmp/dot/root/folders/.config/terminator/config /dot/root/folders/.config/terminator/
+lnr  /root/.config/terminator/config /dot/root/folders/.config/terminator/config
+ls /dot/root/folders/.config/terminator/config 
+rm /dot/root/folders/.config/terminator/config 
+rm /dot/root/folders/.config/terminator/config
+rm /root/.config/terminator/config
+rm /shell/.config/terminator/config
+ls
+sudo su
+src
+nvim /dot/init.sh 

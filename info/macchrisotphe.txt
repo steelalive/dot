@@ -1,0 +1,30 @@
+Starting Nmap 7.70 ( https://nmap.org ) at 2019-08-21 16:39 EDT
+Nmap scan report for 192.168.0.1
+Host is up (0.12s latency).
+MAC Address: 18:0F:76:A0:0D:6F (Unknown)
+Nmap scan report for 192.168.0.101
+Host is up (0.067s latency).
+MAC Address: 2C:54:91:1E:BE:25 (Microsoft)
+Nmap scan report for 192.168.0.107
+Host is up (0.059s latency).
+MAC Address: 8C:85:90:6A:8D:15 (Apple)
+Nmap scan report for 192.168.0.132
+Host is up (0.11s latency).
+MAC Address: B4:64:87:7C:AB:56 (Unknown)
+Nmap scan report for 192.168.0.146
+Host is up (0.11s latency).
+MAC Address: D0:DF:9A:21:ED:39 (Liteon Technology)
+Nmap scan report for 192.168.0.189
+Host is up.
+MAC Address: AC:AE:19:0A:E2:D4 (Unknown)
+Nmap scan report for 192.168.0.193
+Host is up (0.070s latency).
+MAC Address: 82:26:89:42:60:A2 (Unknown)
+Nmap scan report for 192.168.0.194
+Host is up (0.0052s latency).
+MAC Address: D8:0D:17:31:93:63 (Unknown)
+Nmap scan report for 192.168.0.121
+Host is up.
+Nmap scan report for 192.168.0.128
+Host is up.
+Nmap done: 256 IP addresses (10 hosts up) scanned in 16.66 seconds
