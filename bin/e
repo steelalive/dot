@@ -48,7 +48,7 @@ if [[ "$skip" ]]; then
 else
 	is_script="/usr/bin/$arg1"
 	if is_bash "$is_script"; then
-		ANW "$C$arg1$G is a bash file located in$R $C$is_script ${BY}do you want to open it?$RES"
+		ANW "$C$arg1$G is a bash file located in$R $C$is_script ${BY}do you want to open it?$RES\\n"
 		echo
 		if yorn yes; then
 			arg1="$is_script"
@@ -65,19 +65,19 @@ else
 		return
 	fi
 	if echo "$arg1" | grep "/" &>/dev/null; then #Filename is a path
-		ANBY "Do you want to create a bash template file named$R $C$arg1$Y?"
+		ANBY "Do you want to create a bash template file named$R $C$arg1$Y?\\n"
 		echo
 		yorn && {
 			newbin "$arg1"
-			exit
+			return
 		}
 	else
 		arg_maybe="$dot/bin/$arg1"
-		ANBY "Create plain new file in current dir:$R $C$PWD/$arg1$Y?"
+		ANBY "Create plain new file in current dir:$R $C$PWD/$arg1$Y?\\n"
 		echo
 		yorn && edsc "$PWD/$arg1"
 
-		ANBY "Do you want to create a bash template file named$R $C$arg_maybe$Y?"
+		ANBY "Do you want to create a bash template file named$R $C$arg_maybe$Y?\\n"
 		echo
 		if yorn; then
 			newbin "$arg1"

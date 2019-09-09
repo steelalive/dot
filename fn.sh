@@ -223,5 +223,5 @@ err() {
 }
 
 date_for_filename() {
-	date '+%F_%H:%M:%S'
+	date '+%F_%Hh%M'
 }

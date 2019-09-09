@@ -39,7 +39,8 @@ paccache --keep 1 --verbose --remove
 	python3 -m pip_review --auto
 	$(pip-check -c pip2 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")
 	$(pip-check -c pip3 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")↵
-
+	pip2.7 freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip2.7 install -U
+	pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip install -U
 	npm install --global --upgrade npm@latest
 	#for i in /usr/lib/node_modules/*; do
 	#	cd "$i" || continue

@@ -180,8 +180,8 @@ for dir in '/' /data/app /system/app /system/priv-app; do
 		full="$(echo ${dir}/*${crap}*)"
 		[[ -e $full ]] && rm -rf "${full}" && ANRED "rm -rf ${full} \\nUNINSTALLED1 ${Y}$full${R} ...\n"
 		[[ -e "${dir}/${crap}" ]] && rm -rf "${dir}/${crap}" && ANRED "UNINSTALLED2 rm -rf ${Y}${dir}/${crap}${R} ...\n"
-		[[ -e $crap ]] && rm -rf "$crap" ANRED "rm -rf $crap\\nUNINSTALLED3 ${Y}${dir}/${crap}${R} ...\n"
+		[[ -e $crap ]] && rm -rf $(echo /system/app/*$crap* /system/priv-app/*$crap*) && ANRED "rm -rf $crap\\nUNINSTALLED3 ${Y}${dir}/${crap}${R} ...\n"
 	done
 done
-pmu $PMU
+#pmu $PMU
 rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
