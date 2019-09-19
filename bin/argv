@@ -7,5 +7,5 @@ set -e
 count=0
 for a in "$@"; do
 	count=$((count + 1))
-	echo "$count: $a"
+	ANORANGE "$count:$G $a$R\n"
 done

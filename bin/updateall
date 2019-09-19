@@ -23,7 +23,7 @@ paccache --keep 1 --verbose --remove
 	done
 	### Back to relative sanity.
 
-	[[ $1 ]] && sdkmanager --update
+	#[[ $1 ]] && sdkmanager --update
 
 	is_in_path bundle && bundle update
 
@@ -35,12 +35,12 @@ paccache --keep 1 --verbose --remove
 
 	rm -rf /tmp/makepkg
 	$(ncu -g | grep 'npm -g install ')
-	python2 -m pip_review --auto
-	python3 -m pip_review --auto
+	#python2 -m pip_review --auto
+	#python3 -m pip_review --auto
 	$(pip-check -c pip2 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")
 	$(pip-check -c pip3 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")↵
-	pip2.7 freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip2.7 install -U
-	pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip install -U
+	#pip2.7 freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip2.7 install -U
+	#pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip install -U
 	npm install --global --upgrade npm@latest
 	#for i in /usr/lib/node_modules/*; do
 	#	cd "$i" || continue
@@ -75,6 +75,9 @@ paccache --keep 1 --verbose --remove
 	fi
 	#+user -R /root /shell /home /dot &>/dev/null
 	cpan -u
+	if cd /dot/root/.SpaceVim; then
+		gitreset
+	fi
 	#	suuser "yay -Y --gendb"
 	### Neovim setup ###
 	cd /root/.config/nvim && {
@@ -87,7 +90,7 @@ paccache --keep 1 --verbose --remove
 		fi
 		unset local init
 		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es
-		if cd /ext/.dotfiles2; then
+		if cd $dot/root/.dotfiles2; then
 			make update
 		fi
 	}

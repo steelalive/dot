@@ -1,5 +1,5 @@
 #i=0;while IFS= read line; do echo -en "\e[1;38;5;${i}m" "$line";((i++)); done <colnames
-0 Black
+echo "0 Black
 1 Maroon
 2 Green
 3 Olive
@@ -254,4 +254,4 @@
 252 Grey82
 253 Grey85
 254 Grey89
-255 Grey93
+255 Grey93"

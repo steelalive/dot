@@ -75,10 +75,14 @@ usermod -a -G video sddm
 	cd $dot/etc/folders || exit 1
 	for folders in *; do lnr $folders/* /etc/$folders/; done
 )
+#Nvim setup
 lnr $dot/root/.??* /shell/
 lnr $dot/root/.??* /root/
 lnr $dot/root/folders/.SpaceVim /shell/.config/nvim
 lnr $dot/root/folders/.SpaceVim /root/.config/nvim
+rm -v /root/.config/nvim /shell/.config/nvim
+lnr .SpaceVim /root/.config/nvim
+lnr .SpaceVim /shell/.config/nvim
 ###############_link_dot_############################
 
 #ln -s /dot/root/.??* /home/
@@ -141,20 +145,23 @@ if grep "x86_64" /etc/makepkg.conf; then
 	hostname PC
 else
 	echo "is it arm?"
-	yorn && pacman-key --populate archlinuxarm
-	groupadd -g 3001 aid_bt
-	groupadd -g 3002 aid_bt_net
-	groupadd -g 3003 aid_inet
-	groupadd -g 3004 aid_net_raw
-	groupadd -g 3005 aid_admin
-	usermod -a -G aid_bt,aid_bt_net,aid_inet,aid_net_raw,aid_admin master
-	usermod -a -G aid_bt,aid_bt_net,aid_inet,aid_net_raw,aid_admin root
+	yorn && {
+		pacman-key --populate archlinuxarm
+		groupadd -g 3001 aid_bt
+		groupadd -g 3002 aid_bt_net
+		groupadd -g 3003 aid_inet
+		groupadd -g 3004 aid_net_raw
+		groupadd -g 3005 aid_admin
+		usermod -a -G aid_bt,aid_bt_net,aid_inet,aid_net_raw,aid_admin master
+		usermod -a -G aid_bt,aid_bt_net,aid_inet,aid_net_raw,aid_admin root
+	}
 fi
 pacman -Syu --needed --ignore=filesystem
 pacman -S --needed --noconfirm filesystem --force
 pacman -S --needed --ignore=gcc-libs --ignore=gcc base base-devel
 pacman -S --needed --force --noconfirm bash-completion htop openssh git wget \
-	diffutils libnewt dialog wpa_supplicant wireless_tools iw crda lshw highlight source-highlight pygmentize ruby ruby-bundler \
+	diffutils libnewt dialog wpa_supplicant wireless_tools iw crda lshw highlight \
+	source-highlight pygmentize ruby ruby-bundler \
 	arp-scan ntp the_silver_searcher
 #
 pacman -S --needed --noconfirm lsof strace shellcheck rsync \
@@ -164,15 +171,20 @@ if grep "x86_64" /etc/makepkg.conf; then
 
 	pacman -S --needed --noconfirm python-pip ruby gpm
 
-	pacman -S --needed --noconfirm alsa-utils alsa-firmware alsa-lib alsa-plugins xorg-xset xclip ack neovim alsa-plugins xorg-apps perl-cpan-meta perl-extutils-installpaths perl-extutils-depends perl-extutils-pkgconfig \
-		perl-extutils-config perl-extutils-installpaths xdg-user-dirs perl-extutils-xsbuilder perl-json perl-mime-base32 cpanminus
+	pacman -S --needed --noconfirm alsa-utils alsa-firmware alsa-lib alsa-plugins xorg-xset \
+		xclip ack neovim alsa-plugins xorg-apps perl-extutils-installpaths \
+		perl-extutils-depends perl-extutils-pkgconfig \
+		perl-extutils-config perl-extutils-installpaths xdg-user-dirs perl-extutils-xsbuilder \
+		perl-json perl-mime-base32
 	systemctl enable gpm sshd.service sshd.socket irqbalance
 	systemctl start gpm sshd.service sshd.socket irqbalance
 	pip install --upgrade neovim
 	gem install neovim
 fi
-cpanm App::cpanoutdated
-cpan-outdated -p | cpanm
+is_in_path cpanm && {
+	cpanm App::cpanoutdated
+	cpan-outdated -p | cpanm
+}
 rm /etc/profile.d/gpm.sh
 localectl set-x11-keymap pc105+inet
 localectl set-keymap us

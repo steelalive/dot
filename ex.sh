@@ -43,7 +43,7 @@ if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	if tty | grep 1 &>/dev/null; then
 		zip -rq -FS /last/BACKUP/etc.zip /etc &>/dev/null
 		zip -rq -FS /last/BACKUP/dot.zip /dot &>/dev/null
-		cp -au --backup=numbered /last/Acreation /ext/ &>/dev/null
+		cp -au --backup=numbered /last/Google\ Drive/Acreation /ext/
 	fi
 	#	mount /dev/sda4 /boot
 	#for i in /dot/etc/cron.daily/*; do
@@ -83,7 +83,7 @@ fi
 
 ###############################shopt and shits##############################################
 is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval "$(dircolors --sh "$dot"/.dir_colors 2>/dev/null)"
-#is_there /usr/lib/libstderred.so && LD_PRELOAD="/usr/lib/libstderred.so"	STDERRED_ESC_CODE=$(ANRED)	STDERRED_BLACKLIST="^(test.*)$"i
+is_there /usr/lib/libstderred.so && LD_PRELOAD="/usr/lib/libstderred.so" STDERRED_ESC_CODE=$(ANRED) STDERRED_BLACKLIST="^(test.*)$"i
 is_in_path colordiff &>/dev/null && alias diff="colordiff"
 is_in_path iwgetid && SSID="$(iwgetid -r 2>/dev/null)"
 is_in_path setterm && setterm --term "$TERM"
@@ -194,8 +194,8 @@ FFLAGS="-g -O3"
 CFLAGS="-march=native -O3 -pipe -m64 -fno-plt --param=ssp-buffer-size=4 "
 CXXFLAGS="$CFLAGS -ftree-vectorize"
 LDFLAGS="-Wl,-O3,--sort-common,--as-needed,-z,relro,-z,now"
-CC='/usr/bin/zapcc'
-CXX='/usr/bin/zapcc++'
+CC='/usr/bin/clang'
+CXX='/usr/bin/clang++'
 MAKEFLAGS="-j$(nproc --all)"
 DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
@@ -245,7 +245,6 @@ SHELLCHECK_OPTS='--shell=bash --exclude=SC1001,SC2016,SC2034,SC2154,SC2120,SC205
 SOURCE_HIGHLIGHT_DATADIR="/usr/share/source-highlight"
 SYSTEMD_PAGER="$PAGER"
 export TIMEFORMAT=">>> real %3R | user %3U | sys %3S | pcpu %P <<<"
-
 TERM='xterm-256color'
 TERM_AUDIO=enabled
 TERM_COLOR=16m

@@ -9,7 +9,10 @@
 package="$(basename $(realpath .))"
 +user -R /tmp/makepkg $BUILDDIR /ext/yay
 rm -rf /tmp/makepkg
-#cd ..
-#suuser "yay --getpkgbuild "$package""
-#cd "$package"
-suuser "command \makepkg -i --syncdeps --skippgpcheck --skipinteg $*"
+if [[ $1 ]]; then
+	cd ..
+	suuser "yay --getpkgbuild "$package""
+	cd "$package"
+	shift
+fi
+suuser "command \makepkg -if --syncdeps --skippgpcheck --skipinteg $*"

@@ -46,10 +46,11 @@ call dein#add('tomasiser/vim-code-dark')
 call dein#add('jszakmeister/vim-togglecursor')
 call dein#add('vim-airline/vim-airline')
 call dein#add('vim-airline/vim-airline-themes')
-"call dein#add('')
-"call dein#add('')
-"call dein#add('')
-"call dein#add('')
+call dein#add('rafi/awesome-vim-colorschemes')
+call dein#add('mkarmona/colorsbox')
+call dein#add('dracula/vim')
+call dein#add('jacoborus/tender.vim')
+call dein#add('kyoz/purify')
 "call dein#add('')
 "call dein#add('')
 "call dein#add('')
@@ -96,7 +97,6 @@ let g:airline_symbols.paste = '∥'
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.whitespace = 'Ξ'
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 let g:AirlineTheme = 'material'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
@@ -121,7 +121,7 @@ let g:tex_flavor = 'latex'
 let g:ycm_max_num_candidates = 25
 let g:ycm_min_num_of_chars_for_completion = 2
 let g:ycm_use_ultisnips_completer = 1
-
+let g:PYENV_ROOT = '/root/.pyenv'
 " vim: set ft=vim :
 set autochdir         " Change directory to the current buffer when opening files.
 set autoindent
@@ -131,7 +131,7 @@ set backupdir=~/.cache/vim/backup
 set cindent
 set clipboard=unnamedplus " Copy & Paste with the system clipboard (the * register), no need to use the "* prefix when pasting or copying
 set colorcolumn=0
-set completeopt=menuone
+set completeopt=menu,menuone,preview
 set cpoptions=aAceFs_dB
 set cursorline        " highlight current line
 set directory=~/.cache/SpaceVim/swap
@@ -190,7 +190,6 @@ set tabstop=4         " number of visual spaces per tab
 set termguicolors
 set textwidth=0       " disable automatic word wrapping (newlines)
 set title             " change the title of the terminal
-set ttyfast           " faster redraws
 set undodir=~/.cache/vim/undofile
 set undolevels=1000   " save more levels of undo
 set viminfo='10,\"100,:20,%,n~/.viminfo
@@ -198,15 +197,9 @@ set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc,*.class
 set wildignorecase
 set wildmenu          " visual autocomplete for command menu
 set wildmode=list:longest
-let mapleader      = ' '
-let maplocalleader = ' '
-set window=57
+let mapleader=','
+let maplocalleader = ','
 syntax enable         " enables syntax highlighting
-"  '10  :  marks will be remembered for up to 10 previously edited files
-"  "100 :  will save up to 100 lines for each register
-"  :20  :  up to 20 lines of command-line history will be remembered
-"  %    :  saves and restores the buffer list
-"  n... :  where to save the viminfo files
 
 if (empty($TMUX))
   if (has('nvim'))
@@ -225,7 +218,6 @@ let   g:solarized_underline =   1
 let    g:solarized_italic    =   1
 let  g:solarized_contrast  =  'normal'
 let    g:solarized_visibility=  'normal'
-let mapleader=','
 nmap <silent> <leader>q :wq $MYVIMRC<CR>
 
 nnoremap ; :

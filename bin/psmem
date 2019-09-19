@@ -4,4 +4,4 @@
 #2#::.. Last edit: - Fri Jul 14 03:43:09 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.2 - #_# #@#140717#@# #2#
 #3#::..#####################_/dot/bin/psmem_#######################..::#3#
 echo 'USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND'
-unbuffer /usr/bin/grc -es --colour=auto ps aux --sort=%mem | tail -n20
+unbuffer /usr/bin/grc -es --colour=auto ps aux --sort=%mem | grep -v -e "/bin/ps" -e "/usr/bin/grcat" -e "irq/" -e "nv_queue" -e "RTW_CMD_THREAD" -e "kworker" -e "tail" -e "sleep" | tail -n20

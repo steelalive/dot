@@ -20,7 +20,7 @@ else
 	[[ -e /dot/init.sh ]] && dot=/dot
 	[[ -e /data/dot/init.sh ]] && dot=/data/dot
 fi
-
+bash $dot/bin/base16.bash
 [[ -e /system/etc/rc ]] && . /system/etc/rc
 
 [[ "$lux" ]] || lux=
@@ -41,7 +41,8 @@ export -f setenv
 for i in $(command \ps aux | command \grep ps1bg.sh | command \grep -v grep | command \awk '{print $2}'); do kill -9 "$i"; done
 
 export source_files="ps1.sh al.sh ps4.sh fn.sh init.sh ex.sh anset.sh setpath.sh"
-export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh $dot/ps1.sh /ext/sexy-bash-prompt/.bash_prompt" # $dot/ps4.sh  #$dot/bin/goto.sh
+export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh $dot/ps1.sh $HOME/.bash_prompt" # $dot/ps4.sh  #$dot/bin/goto.sh
+
 [[ -e /oem ]] && dot_files="$dot_files $dot/g4.sh $dot/anset.sh"
 [[ -e /oem ]] || dot_files="$dot_files $dot/ps1bg.sh"
 echo
@@ -69,6 +70,8 @@ fi
 (fork ps1_writer &) &>/dev/null
 is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval $(dircolors --sh "$dot"/.dir_colors 2>/dev/null)
 is_in_path archey && archey
-hash fortunes &>/dev/null && fortunes
+#hash fortunes &>/dev/null && fortunes
+/usr/bin/quote
+
 . "$dot/setpath.sh"
 [[ $meteo_done ]] || neofetch && export meteo_done=1 && cd / && ls

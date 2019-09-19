@@ -3,4 +3,4 @@
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Fri Jul 14 03:43:40 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.2 - #_# #@#140717#@# #2#
 #3#::..#####################_/dot/bin/pscpu_#######################..::#3#
-unbuffer ps aux --sort=%cpu "$@" | /usr/bin/grc -es --colour=auto tail -n 20
+unbuffer /usr/bin/grc -es --colour=auto /bin/ps aux --sort=%cpu "$@" | grep -v -e "/bin/ps" -e "/usr/bin/grcat" -e "irq/" -e "nv_queue" -e "RTW_CMD_THREAD" -e "kworker" -e "tail" -e "sleep" | tail -n 20

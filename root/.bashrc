@@ -16,8 +16,8 @@ use_color=true
 # globbing instead of external grep binary.
 safe_term="${TERM//[^[:alnum:]]/?}" # sanitize TERM
 match_lhs=""
-[[ -f ~/.dir_colors ]] && match_lhs="$match_lhs$(<~/.dir_colors)"
-[[ -f /etc/DIR_COLORS ]] && match_lhs="$match_lhs$(</etc/DIR_COLORS)"
+[[ -f /dot/.dir_colors ]] && match_lhs="$match_lhs$(</dot/.dir_colors)"
+[[ -f $dot/.dir_colors ]] && match_lhs="$match_lhs$(<$dot/.dir_colors)"
 [[ -z $match_lhs ]] &&
 	type -P dircolors >/dev/null &&
 	match_lhs="$(dircolors --print-database)"
@@ -26,9 +26,9 @@ match_lhs=""
 #if ${use_color} ; then
 # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 if type -P dircolors >/dev/null; then
-	if [[ -f ~/.dir_colors ]]; then
+	if [[ -f /dot/.dir_colors ]]; then
 		eval "$(dircolors -b ~/.dir_colors)"
-	elif [[ -f /etc/DIR_COLORS ]]; then
+	elif [[ -f $dot/.dit_colors ]]; then
 		eval "$(dircolors -b /etc/DIR_COLORS)"
 	fi
 fi
@@ -81,4 +81,5 @@ src() {
 }
 
 export ANDROID_HOME=/ext/opt/android-sdk
-. "/root/.acme.sh/acme.sh.env"
+# Run twolfson/sexy-bash-prompt
+. ~/.bash_prompt

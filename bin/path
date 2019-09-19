@@ -4,4 +4,4 @@
 #2#::.. Last edit: - Wed Jun 21 06:00:52 EDT 2017 - by: - steelalive - ..::## #_# - VERSION=0.0.0.2 - #_# #@#210617#@# #2#
 #3#::..#####################_/dot/bin/path_#######################..::#3#
 some_path=${1:-$PATH}
-echo -e ${some_path//:/\\n}
+ANC ${some_path//:/\\n}

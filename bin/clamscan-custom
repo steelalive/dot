@@ -1,0 +1,10 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Sep 10 06:47:18 EDT 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-09-10#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/clamscan-custom_#######################..::#3#
+mkdir -p /root/clamav
+touch /root/clamav/clam.log
+systemctl start clamav-daemon.service clamav-daemon.socket clamav-freshclam.service
+clamscan --infected --suppress-ok-results --move=/root/clamav --cross-fs=no --scan-archive=no --recursive=yes --log=/root/clamav/clam.log "$@"

@@ -38,5 +38,4 @@ print_args() {
 	echo
 }
 print_args "$@"
-. $0 skip "$@"
 #set +xv

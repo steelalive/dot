@@ -52,7 +52,20 @@
     scrollback_infinite = True
     use_custom_command = True
     use_system_font = False
-    word_chars = "-,./?%&#_"
+    word_chars = "-,.?%&#_"
+  [[Galaxy]]
+    background_color = "#1d2837"
+    cursor_color = "#bbbbbb"
+    custom_command = exec sudo /bin/bash -il
+    font = Monospace 12
+    foreground_color = "#ffffff"
+    login_shell = True
+    palette = "#000000:#f9555f:#21b089:#fef02a:#589df6:#944d95:#1f9ee7:#bbbbbb:#555555:#fa8c8f:#35bb9a:#ffff55:#589df6:#e75699:#3979bc:#ffffff"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    use_custom_command = True
+    use_system_font = False
+    word_chars = "-,.?%&#_"
   [[Gruvbox Dark]]
     background_color = "#1e1e1e"
     cursor_color = "#bbbbbb"
@@ -66,19 +79,21 @@
     use_custom_command = True
     use_system_font = False
     word_chars = "-,./?%&#_"
-  [[MonaLisa]]
-    background_color = "#120b0d"
-    cursor_color = "#c46c32"
+  [[Material colors]]
+    background_color = "#1e282c"
+    cursor_color = "#657B83"
     custom_command = exec sudo /bin/bash -il
     font = Monospace 12
-    foreground_color = "#f7d66a"
+    foreground_color = "#c3c7d1"
     login_shell = True
-    palette = "#351b0e:#9b291c:#636232:#c36e28:#515c5d:#9b1d29:#588056:#f7d75c:#874228:#ff4331:#b4b264:#ff9566:#9eb2b4:#ff5b6a:#8acd8f:#ffe598"
+    palette = "#073641:#EB606B:#C3E88D:#F7EB95:#80CBC3:#FF2490:#AEDDFF:#FFFFFF:#002B36:#EB606B:#C3E88D:#F7EB95:#7DC6BF:#6C71C3:#34434D:#FFFFFF"
     scroll_on_keystroke = False
     scrollback_infinite = True
     use_custom_command = True
     use_system_font = False
-    word_chars = "-,./?%&#_"
+    word_chars = "-,.?%&#_"
+  [[MonaLisa]]
+    cursor_color = "#aaaaaa"
   [[Monokai Soda]]
     background_color = "#1a1a1a"
     cursor_color = "#f6f7ec"
@@ -93,15 +108,28 @@
     use_system_font = False
     word_chars = "-,./?%&#_"
   [[Monokai Vivid]]
-    background_color = "#121212"
-    cursor_color = "#fb0007"
+    background_color = "#120b0d"
+    cursor_color = "#c46c32"
     custom_command = exec sudo /bin/bash -il
     font = Monospace 12
-    foreground_color = "#f9f9f9"
+    foreground_color = "#f7d66a"
     login_shell = True
-    palette = "#121212:#fa2934:#98e123:#fff30a:#0443ff:#f800f8:#01b6ed:#ffffff:#838383:#f6669d:#b1e05f:#fff26d:#0443ff:#f200f6:#51ceff:#ffffff"
+    palette = "#351b0e:#9b291c:#636232:#c36e28:#515c5d:#9b1d29:#588056:#f7d75c:#874228:#ff4331:#b4b264:#ff9566:#9eb2b4:#ff5b6a:#8acd8f:#ffe598"
     scroll_on_keystroke = False
     scrollback_infinite = True
     use_custom_command = True
     use_system_font = False
     word_chars = "-,./?%&#_"
+  [[OceanicMaterial]]
+    background_color = "#1c262b"
+    cursor_color = "#b3b8c3"
+    custom_command = exec sudo /bin/bash -il
+    font = Monospace 12
+    foreground_color = "#c2c8d7"
+    login_shell = True
+    palette = "#000000:#ee2b2a:#40a33f:#ffea2e:#1e80f0:#8800a0:#16afca:#a4a4a4:#777777:#dc5c60:#70be71:#fff163:#54a4f3:#aa4dbc:#42c7da:#ffffff"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    use_custom_command = True
+    use_system_font = False
+    word_chars = "-,.?%&#_"
