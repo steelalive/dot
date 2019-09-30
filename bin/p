@@ -5,14 +5,14 @@
 arg1="$1"
 args="$@"
 #if [[ "$1" = silent ]];then
-ping() {
+_ping() {
 	if [[ -x /usr/bin/grc ]]; then
 		/usr/bin/grc -es --colour=auto /bin/ping "$@"
 	else
 		command \ping "$@"
 	fi
 }
-export -f ping
+
 suppress() { "$@" >/dev/null 2>&1; }
 ping_address() {
 	[[ $1 == long ]] && {
@@ -20,11 +20,11 @@ ping_address() {
 		relentless_ping "$@"
 		return "$?"
 	}
-	[[ $1 == long ]] || ping -c1 -i0.2 -W1 "$1"
+	[[ $1 == long ]] || _ping -c1 -i0.2 -W1 "$1"
 	return $?
 }
 relentless_ping() {
-	ping -c 100 -i 1 -A -I "$NET" "$@"
+	_ping -c 100 -i 1 -A -I "$NET" "$@"
 }
 export -f relentless_ping
 #if hash prettyping; then ping_address(){ /usr/bin/prettyping -A -b -c1 -i0.2 -n -W1 -l3 "$1"; }; fi
@@ -99,7 +99,8 @@ tv)
 	exit $?
 	EXIT=$?
 	;;
-*)
+*full* | *all*)
+	shift
 	[[ "$1" ]] || set -- 8.8.8.8 www.google.ca
 	EXIT2=0 EXIT=0
 	ping_address "$1"
@@ -121,6 +122,8 @@ tv)
 	{ ((EXIT == 0)) || ((EXIT2 == 0)); } && ANG "Network is ${Y}somewhat$G operational.$R\\n" && exit 0
 	ANBR "There is NO internet.${R}\\n"
 	exit 1
-
+	;;
+*)
+	ping_address 8.8.8.8
 	;;
 esac

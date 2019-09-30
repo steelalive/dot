@@ -62,7 +62,8 @@ unset IFS info this_4_real this future_path futur_path_test
 (
 	pkill ps1bg.sh &>/dev/null
 ) &>/dev/null
-[[ "$(tty 2>/dev/null)" =~ tty ]] || ps1_writer &
+#[[ "$(tty 2>/dev/null)" =~ tty ]] ||
+ps1_writer &
 disown
 if [[ -e /oem ]]; then
 	[[ -x /bin/nano ]] && export EDITOR="/bin/nano --syntax bash"

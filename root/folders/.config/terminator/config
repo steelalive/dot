@@ -1,7 +1,7 @@
 [global_config]
   always_split_with_profile = True
   broadcast_default = off
-  enabled_plugins = TerminatorThemes,
+  enabled_plugins = TerminatorThemes, TerminalShot
   title_inactive_bg_color = "#a40000"
   title_receive_fg_color = "#000000"
   title_transmit_bg_color = "#4e9a06"
@@ -45,7 +45,7 @@
   [[default]]
     cursor_color = "#aaaaaa"
     custom_command = exec sudo /bin/bash -il
-    font = Monospace 12
+    font = Droid Sans Mono 12
     login_shell = True
     palette = "#1a1a1a:#f4005f:#98e024:#fa8419:#9d65ff:#f4005f:#58d1eb:#c4c5b5:#625e4c:#f4005f:#98e024:#e0d561:#9d65ff:#f4005f:#58d1eb:#f6f6ef"
     scroll_on_keystroke = False

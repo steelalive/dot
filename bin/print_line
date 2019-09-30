@@ -1,0 +1,16 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Fri Sep 27 15:41:54 EDT 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-09-27#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/print_line_#######################..::#3#
+divider() {
+	if [[ -z ${1} ]]; then
+		echo "Requires a character to print as an argument"
+		return
+	fi
+	for x in $(seq 1 $(tput cols)); do printf "$W${1}"; done
+	echo -en "$R"
+	echo
+}
+divider "$@"

@@ -138,7 +138,7 @@ set directory=~/.cache/SpaceVim/swap
 set encoding=utf-8    " usually the case rather than latin1
 set expandtab         " tabs are converted into spaces
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
-set fillchars=vert:│,fold:·
+"set fillchars=vert:│,fold:·
 set grepprg=grep\ -nH\ $*
 set guicursor=i-ci-ve:ver25-Cursor2/lCursor2i-blinkon10
 set helplang=en
@@ -148,8 +148,8 @@ set hlsearch          " high light search results
 set ignorecase        " ignore case when searching
 set incsearch         " display search results while writing
 set iskeyword=@,48-57,_,192-255,-
-set iskeyword+=-      " Treat dash separated words as word text objects (for ciw etc)
-set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
+"set iskeyword+=-      " Treat dash separated words as word text objects (for ciw etc)
+"set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
 set makeprg=makeobj
 set matchtime=0
 set modeline
@@ -177,7 +177,6 @@ set shiftround        " use multiples of shiftwidth when indenting with '<' and 
 set shiftwidth=4      " number of spaces used for autoindent, command: <<, >>, == (auto entire doc: gg=G)
 set shortmess=filnxtToOsFc
 set showcmd           " show command in bottom bar
-set showmatch
 set showmatch         " highlight matching {[()]}
 set showtabline=4     " t
 set sidescrolloff=5

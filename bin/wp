@@ -92,8 +92,8 @@ if ((GOOG != 0)); then
 	unset PINGFAIL GDNS d CUNT
 	ANORANGE "$NET_AP${R}\\n"
 else
-	ANLG "Operation successful! You are now connected to: ${RES}\n"
-	ANBG "${NET_AP}${R}\\n"
+	ANLG "Operation successful! You are now connected to: ${RES}"
+	ANORANGE "${NET_AP}${R}\\n"
 	is_in_path synergy && synergy.sh
 fi
 [[ -e /tmp/delete/ntponce ]] || ntponce 2 &>/dev/null && touch /tmp/delete/ntponce

@@ -18,7 +18,9 @@ elif [[ ${!#} == rm ]]; then
 	set -- "$@" echo
 else
 	[[ $# -lt 2 ]] && {
-		ANY 'Need -s or silent for first argument if you want quiet output. Next is file then the command.'
+		ANW "on will execute a command on a file without the filepath input
+            ${Y}e.g.: on myfile echo 
+            ${W}on accept -s as argument for silent${R}\n"
 		exit "${LINENO}"
 	}
 fi
@@ -129,6 +131,7 @@ netreset) arg1=${dot}/bin/netreset ;;
 newbin) arg1=${dot}/bin/newbin ;;
 nano) arg1=${dot}/root/.nano/bash.nanorc ;;
 nvim) arg1=${dot}/root/folders/.config/nvim/local.vim ;;
+on) arg1=${dot}/bin/on ;;
 pacman) arg1=/etc/pacman.conf ;;
 refind) arg1=/boot/refind_linux.conf ;;
 profile) arg1=/etc/profile ;;
@@ -198,28 +201,33 @@ fi
 findtmp=/tmp/find.tmp
 [[ -e $findtmp ]] || {
 	find /dot -type d -printf '"%p"\n' 2>/dev/null >"$findtmp"
-	find /etc /prog /last /home /root /mnt /prog /opt /usr /tmp -maxdepth 5 -type d -printf '"%p"\n' 2>/dev/null >>"$findtmp" &
-	disown
+	fd --hidden --type d -a . /dot /etc /root /shell /usr /tmp 2>/dev/null >>"$findtmp"
 }
 for dir in $(<${findtmp:-/tmp/find.tmp}); do
-	[[ -e "$dir/$arg1_untouched" ]] && file_path="$dir/$arg1_untouched" && break
+	[[ -e "$dir/$arg1_untouched" ]] &&
+		file_path="$dir/$arg1_untouched" &&
+		((silence = 1)) &&
+		${execute} ${file_path} $arg2 &&
+		exit
 done
+
 #file_path=$(grep -m1 "$arg1_untouched$" /tmp/find.tmp 2>/dev/null)
 
 #for i in /*; do [[ -d $i ]] && [[ ! -h $i ]] && printf "%s " "$i"/;done
 #/BACKUP/ /boot/ /dev/ /dot/ /etc/ /home/ /last/ /lineage/ /lost+found/ /mnt/ /opt/ /out/ /proc/ /prog/ /root/ /run/ /sdk/ /srv/ /sys/ /tmp/ /usr/ /var/
 #[[ -e ${file_path} ]] || file_path=${fzf}
-[[ -e ${file_path} ]] ||
-	{ file_path="$(locate --basename --nofollow --quiet --existing --limit=1 $arg1_untouched 2>/dev/null)" ||
-		exit "${LINENO}"; }
+#	fd --hidden --type f -a "${arg1_untouched}" /dot | fz +m --query="${arg1_untouched}" | read file_path ||
+#	exit "${LINENO}"
+IFS=$'\n' fd --full-path --hidden --type f -a . /dot | fz --query="$arg1_untouched" --exit-0 | read file_path
+unset IFS
+[[ -e ${file_path} ]] || exit "${LINENO}"
 if ((silence == 1)); then
-	"${execute}" "${file_path}" $arg2
+	ANRED "${execute} ${C}${file_path} $arg2$R\n${execute} ${file_path} $arg2"
+	${execute} "${file_path[@]}" $arg2
 	exit
 else
-	is_text "${file_path}" || ANBR "${UNDER}${file_path} IS NOT TEXT!!!"
-	echo
-	ANBR "EXECUTE?${R} ${RED}${UNDER}${execute}${RES} ${C}${file_path}"
-	echo
+	is_text "${file_path}" || ANBR "${UNDER}${file_path} IS NOT TEXT!!!\n"
+	ANBR "EXECUTE?${R} ${RED}${UNDER}${execute}${RES} ${C}${file_path}\n"
 
 	if yorn y; then
 		${execute} "${file_path}" || exit "${LINENO}"

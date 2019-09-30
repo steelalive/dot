@@ -20,7 +20,7 @@ if [[ $1 == all || $1 == "-a" ]]; then
 		rmdir -v $i
 	done
 	umount /mnt/iso &>/dev/null
-	ANO "Umount LAST?"
+	ANORANGE "Umount LAST?\n"
 	stfu mountpoint /last && yorn && umount /last
 	drive_mapper
 	exit

@@ -16,6 +16,7 @@ ddv() {
 	echo
 	is_in_path grc && {
 		/usr/bin/grc -es --colour=auto blkid
+		liner
 		/usr/bin/grc -es --colour=auto lsblk
 	}
 	select output in /dev/sd?; do
@@ -23,8 +24,8 @@ ddv() {
 	done
 	test -b $output || return 100
 	test -f $input || return 2
-	ANORANGE "EXECUTE: dd if=$input of=$output status=progress seek=0 bs=16M  conv=notrunc ?????\n"
-	yorn "$@" || return 1
+	ANW "EXECUTE: ${ORANGE}dd if=${G}$input ${ORANGE}of=${G}$output ${W}status=progress seek=0 bs=16M  conv=notrunc${R}\n"
+	yorn n || return 1
 	dd if="$input" of="$output" status=progress seek=0 bs=16M conv=notrunc
 }
 ddv $@

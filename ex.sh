@@ -97,6 +97,7 @@ is_in_path nvim && EDITOR="$(command -v nvim)" && alias vim="$EDITOR"
 if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hstr -- \C-j"'; fi
 # if this is interactive shell, then bind 'kill last command' to Ctrl-x k
 if [[ $- =~ .*i.* ]]; then bind '"\C-xk": "\C-a hstr -k \C-j"'; fi
+[[ -r "/usr/share/z/z.sh" ]] && source /usr/share/z/z.sh
 VISUAL="$EDITOR"
 is_in_path src-highlight-lesspipe.sh && LESSOPEN="| src-hilite-lesspipe.sh %s"
 is_in_path stty && LINES="$(stty size | cut -d' ' -f1)" COLUMNS="$(stty size | cut -d' ' -f2)"
@@ -200,6 +201,7 @@ MAKEFLAGS="-j$(nproc --all)"
 DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
 GREP_COLORS='ms=38;5;226:mc=02;33:sl=01;37:cx=01;36:fn=35:ln=32:bn=32:se=36'
+FZF_DEFAULT_COMMAND="fd"
 JAVA_HOME=/usr/lib/jvm/default
 HH_CONFIG='hicolor'
 HIGHLIGHT_DATADIR='/usr/share/highlight'
@@ -244,7 +246,7 @@ SHELL="${SHELL:-$(command -v bash 2>/dev/null || command -v sh 2>/dev/null)}"
 SHELLCHECK_OPTS='--shell=bash --exclude=SC1001,SC2016,SC2034,SC2154,SC2120,SC2054,SC1090,SC1091,SC2001,SC2086,SC2162,SC2139'
 SOURCE_HIGHLIGHT_DATADIR="/usr/share/source-highlight"
 SYSTEMD_PAGER="$PAGER"
-export TIMEFORMAT=">>> real %3R | user %3U | sys %3S | pcpu %P <<<"
+TIMEFORMAT=">>> real %3R | user %3U | sys %3S | pcpu %P <<<"
 TERM='xterm-256color'
 TERM_AUDIO=enabled
 TERM_COLOR=16m
