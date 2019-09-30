@@ -11,7 +11,11 @@ Just borrow some inspiration. You read, if it look harmless, you copy the harmle
 ![GitHub Logo](/info/shell-photo-woahhh.png)
 Format: ![Alt Text](url)
 Just get the .dir_colors, there is no executable code in it. check to make sure, sometimes porn hides in the worsts places. It's compilations, nothing to call the municipal police. Juste call the FBI, I dont want to die in the hands of amateurs. Or do I?
-Hire me! I have no gifriend and live with my mom. Yes, the internet is slow today mommy. She is pretty hot, and my father suck thesse days. He regrets me every day, expet does I show him who is the most ... Anyways. Tired. PAresseux. Masi asusi des fois l\. J<ai la pateince de l<envoyer chier. Ca fait m[eme pas du bien esti. Cr've dotn qu<on enfinisses. 
-Don't worry, he knows. Ot's nothing new. Like the void of porn in that code. Nope, still empty of pornography. I hate the whole word. 
+Hire me! I have no gifriend and live with my mom. Yes, the internet is slow today, mommy. She is pretty hot, and my father suck these days. He regrets every decisions in my life. He show love when I really show him supertiriority. I show him who is the most... Anyways. Tired. Paresseux. 
+Mais aussi, des fois, J'ai la pateince de l'envoyer chier. Ca fait même pas du bien esti. Il baisse la tête et ca fait mal, sa souffrance fait mal, pourquoi tu me le fais depuis j'ai 12 ans.
+Crève dont quèon enfinisses esti de génération de pères qui calents n'importes qui, sauf leurs mère. Je t'aime maman. Fuck you everybody and myself. 
+Don't worry, he knows, he hurry up, that blood cancer. He is though fucker. 
+I like the void of porn in that code. Nope, still empty of any kind of adult pornography. I hate that whole word, soo dirty, your mom is dirty, but... I would.
+I wish your the greatest day. I'Km gonne be rich, very soon!I still need towork, maybe. I love promming bash, sed manipulating my fatchers and files. Pipes ans redirection. It's like an old lost art, exept it's always evolving, from nerds in mom's basement in tremblant mountain.  Ah the  mountain. 10 years since my last snowboard ride.I don't even party there. I party, aww shut up. 
 # dot
 
