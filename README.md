@@ -6,12 +6,12 @@ And to be run as root.
 They contain no comments.
 Install with the very destructive setup_arch.sh
 Make your cumputeer glow a golden dancing light, it's hot! By sourcing 
-init.sh. It should do something. It delets every folders in / and ~. Only  
-Only the empty folders. I hate empty folders. I hate them! I know, it's not sane.
-So is sourcing an unknown init.sh of some clown who live in Tremblant. So fuck off.
-It goes anywahere does anything but Porn. No sex inside the files, I check often. 
-Or just borrow some inspiration. You read, if it<s smart or useful, you copy the 
-harmless code and! It's glowing again!
+init.sh. It should do something. It deletes every folders in / and ~. Really!   
+But only the empty folders. I hate empty folders, recently. It<s gone! My hatred, and my folders.
+I know, a sane programmer would<t do that. Sooo, why are you thinking about sourcing an 
+unknown init.sh of some clown who live down in Tremblant? ANSWER! ANSWER ME. So fuck off.
+It goes anywhere does anything but Porn. No sex inside the files, I check often. It's useless to checke again.
+Just borrow some inspiration. You read, if it's smart or useful, you copy the harmless code and! It's glowing again!
 ![GitHub Logo](/info/shell-photo-woahhh.png)
 Format: ![Alt Text](url)
 # dot
