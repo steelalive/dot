@@ -19,7 +19,9 @@ I wish you the greatest day. I know i'm gonne be rich, very soon! I still need t
 I love promming bash, it<s my GF. She said no, but soon, i'm conna be rich. I love sed, manipulating my fatchers and files. The non-sexual Pipes and sexual redirection. It's like an old lost art, exept it's always evolving, from nerds in mom's basement in tremblant mountain. Nah, annother on, I just fuck around. 
 Ah the Tremblant mountain. Ahhh. 10 years since my last snowboard ride. I don't even party there. I party, aww shut up. With you. Cheers.
 ![GitHub Logo](info/Laissetoidontfourrernormalemnt.jpg)
-I<m the dude, you fuckeers. Yeah, she rides me in bed. I do that to homely girls. She became a feminist after one year with me, litlle female cunt of a cunt. She<s ok. She is not. NOT. My mother. No pictures, im bnot ready, to let her go. Mommy!, get back homme before 10pm ok^ Mommy!
+I'm the dude, you fuckers. Yeah, she rides me in bed. I do that to homely girls. She became a feminist, after one year with me. That litlle female cunt of a cunt. She's ok. sober she ispure hapiness, talking abouut strangers dog, old person<s meto. J<adore la facon qu<elle abordes les /trangers, full happy et elle vouvois. 
+Elle me vouvoyais quand je l<a irencontrer. C<est bizarree. ? était majeur bandes de pd. On est dans le nord. C'est même pas ma cousine de proche entka.Elle asddu sang améridien ou irlandais, sinon du sang de femmes qui boit mal. Comme ma maman. 
+No pictures of MY mommy.Im not ready, to let her go. Mommy! get back homme before 10pm ok??? Mommy!
 Love you.
-# dot
+# Francis Demers
 
