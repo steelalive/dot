@@ -9,8 +9,7 @@ It goes anywhere and does anything but Porn. I know it is possible, I try to kee
 No sex inside the files, I check often. It's useless to check again. Nope.
 Just borrow some inspiration. You read, if it look harmless, you copy the harmless code and! It's glowing again!
 ![GitHub Logo](/info/shell-photo-woahhh.png)
-Format: ![Alt Text](url)
-Just get the .dir_colors, there is no executable code in it. check to make sure, sometimes porn hides in the worsts places. It's compilations, nothing to call the municipal police. Juste call the FBI, I dont want to die in the hands of amateurs. Or do I?
+Just get the .dir_colors, there is no executable \n newlin? Markdone obey the fuck up. Oups, no exec code in it. check to make sure, sometimes porn hides in the worsts places. It's compilations, nothing to call the municipal police. Juste call the FBI, I dont want to die in the hands of amateurs. Or do I?
 Hire me! I have no gifriend and live with my mom. Yes, the internet is slow today, mommy. She is pretty hot, and my father suck these days. He regrets every decisions in my life. He show love when I really show him supertiriority. I show him who is the most... Anyways. Tired. Paresseux. 
 Mais aussi, des fois, J'ai la pateince de l'envoyer chier. Ca fait même pas du bien esti. Il baisse la tête et ca fait mal, sa souffrance fait mal, pourquoi tu me le fais depuis j'ai 12 ans.
 Crève dont quèon enfinisses esti de génération de pères qui calents n'importes qui, sauf leurs mère. Je t'aime maman. Fuck you everybody and myself. 
@@ -19,5 +18,6 @@ I like the void of porn in that code. Nope, still empty of any kind of adult por
 I wish you the greatest day. I know i'm gonne be rich, very soon! I still need to get things done. Show me a problem and give me unlimites powers! Nothing stand in my way for long, I love solving the ungoogable.
 I love promming bash, it<s my GF. She said no, but soon, i'm conna be rich. I love sed, manipulating my fatchers and files. The non-sexual Pipes and sexual redirection. It's like an old lost art, exept it's always evolving, from nerds in mom's basement in tremblant mountain. Nah, annother on, I just fuck around. 
 Ah the Tremblant mountain. Ahhh. 10 years since my last snowboard ride. I don't even party there. I party, aww shut up. With you. Cheers.
+![GitHub Logo](info/Laissetoidontfourrernormalemnt.jpg)
 # dot
 
