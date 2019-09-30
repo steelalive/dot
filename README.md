@@ -16,6 +16,8 @@ Mais aussi, des fois, J'ai la pateince de l'envoyer chier. Ca fait même pas du 
 Crève dont quèon enfinisses esti de génération de pères qui calents n'importes qui, sauf leurs mère. Je t'aime maman. Fuck you everybody and myself. 
 Don't worry, he knows, he hurry up, that blood cancer. He is though fucker. 
 I like the void of porn in that code. Nope, still empty of any kind of adult pornography. I hate that whole word, soo dirty, your mom is dirty, but... I would.
-I wish your the greatest day. I'Km gonne be rich, very soon!I still need towork, maybe. I love promming bash, sed manipulating my fatchers and files. Pipes ans redirection. It's like an old lost art, exept it's always evolving, from nerds in mom's basement in tremblant mountain.  Ah the  mountain. 10 years since my last snowboard ride.I don't even party there. I party, aww shut up. 
+I wish you the greatest day. I know i'm gonne be rich, very soon! I still need to get things done. Show me a problem and give me unlimites powers! Nothing stand in my way for long, I love solving the ungoogable.
+I love promming bash, it<s my GF. She said no, but soon, i'm conna be rich. I love sed, manipulating my fatchers and files. The non-sexual Pipes and sexual redirection. It's like an old lost art, exept it's always evolving, from nerds in mom's basement in tremblant mountain. Nah, annother on, I just fuck around. 
+Ah the Tremblant mountain. Ahhh. 10 years since my last snowboard ride. I don't even party there. I party, aww shut up. With you. Cheers.
 # dot
 
