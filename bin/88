@@ -19,7 +19,7 @@ if [[ "$NET_AP" ]]; then
 	command \iwconfig "$NET" | grep --color -o "Bit Rate:.*[0-9] Mb/s\n"
 	echo
 	ANBG "Nameservers corrected.$R
-    ${BG}You are on $BW$BLACK$NET_AP$RES\n"
+${BG}You are on${R} ${Y}$NET_AP$RES\n"
 else
 	ANBR "No Wide area network response yet from $BLACK$NET_AP$RES\n"
 	exit 1

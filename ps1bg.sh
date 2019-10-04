@@ -1,4 +1,4 @@
-#!bash
+#!/bin/bash
 #-*- coding: utf-8 -*-
 #1#_SCRIPT_#1#
 #2#::.. Last edit: - Sat May 12 19:51:37 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.1.2.3 - #_# #@#120518#@# #2#
@@ -44,7 +44,7 @@ sys_color() {
 		if [[ $section == temp ]]; then
 			[[ $HOSTNAME != PC ]] && ldtemp="$(sensors 2>/dev/null | awk '/Core\ 0/ {gsub(/\+/,"",$3); gsub(/\..+/,"",$3)    ; print $3}')" &&
 				SYSLOAD="$((200 * ldtemp / ${cpu_temp_max:-1} % 2 + 100 * ldtemp / ${cpu_temp_max:-1}))"
-			[[ $HOSTNAME = PC ]] && temp="$(</sys/devices/virtual/thermal/thermal_zone2/temp)" && ldtemp="${temp:0:2}" && SYSLOAD="$ldtemp"
+			[[ $HOSTNAME == PC ]] && temp="$(</sys/devices/virtual/thermal/thermal_zone2/temp)" && ldtemp="${temp:0:2}" && SYSLOAD="$ldtemp"
 			export echo_out="$ldtemp°C"
 		fi
 		if [[ $section == load ]]; then
@@ -172,10 +172,10 @@ limit_ps1="${limit_ps1:-400}"
 touch /tmp/prompt /tmp/loadcpu /tmp/START.1
 ((UID > 0)) && sudo chmod 777 /tmp/prompt /tmp/loadcpu /tmp/START*.* "$dot"
 count_bg=0
-ps1_writer() 
-{
+ps1_writer() {
 	while ((count_bg < limit_ps1)); do
-		{ count_bg=$((count_bg + 1))
+		{
+			count_bg=$((count_bg + 1))
 			load_cpu &
 			sys_color $sys_color_options
 			[[ $count_bg -gt $((limit_ps1 - 20)) ]] && ANBR "|$count_bg|" && echo "1" >/tmp/prompt_restart
@@ -206,4 +206,3 @@ ps1_writer()
 #}
 #ps1_writer
 #noharden
-

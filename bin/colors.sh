@@ -98,6 +98,14 @@
 # BcyanV () { printf '\e[8;46m'"$*"'\e[m'; }
 # BgreyV () { printf '\e[8;47m'"$*"'\e[m'; }
 # BwhiteV () { printf '\e[8;47m'"$*"'\e[m'; }
+ANG "ps1bg.sh test \n"
+export start=0
+export increment=1
+for i in {0..101..1}; do
+	export SYSLOAD=$i echo_out="$i "
+	sys_color test $i
+done
+echo
 i=1
 while true; do
 	sec=$i

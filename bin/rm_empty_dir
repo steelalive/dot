@@ -1,3 +1,4 @@
+#!/bin/bash
 #-*- coding: utf-8 -*-
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Wed Feb 21 12:53:42 EST 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.9 - #_# #@#210218#@# #2#
@@ -9,11 +10,20 @@ for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkw
 done
 unset shopt_opt set_minus set_plus
 [[ -e $dot/anset.sh ]] && . $dot/anset.sh
+[[ -e /srv ]] && touch /src/.placeholder
 unset recurse
 rm_dir() {
 	for job; do
 		fullpath="$(realpath "$job")"
-		rmdir "$fullpath" &>/dev/null && ANRED "REMOVED ${C}$fullpath ${RED}because it was EMPTY\\n"
+		if rmdir "$fullpath" &>/dev/null; then
+			ANG "Directory ${C}$fullpath ${G}is empty, do you want to remove it?\n"
+			ANW "If you choose no, a file called .placeholder will be created inside the folder\n"
+			if yornq y; then
+				ANRED "REMOVED ${C}$fullpath ${RED}because it was EMPTY!!!\\n"
+			else
+				touch "$fullpath/.placeholder"
+			fi
+		fi
 	done
 }
 case $1 in

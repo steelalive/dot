@@ -71,7 +71,7 @@ while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	"${dot}/bin/netreset"
 	center_string "${RED}${UNDER}WPA_SUPPLICANT${R}"
 	echo
-	ANG "$NET${W} on ${G}$WPCONF\\n"
+	ANG "$NET${W} on ${G}$WPCONF${R}\\n"
 	ip link set "$NET" up
 	s1 222
 	wpa_supplicant -Dnl80211 -B -i"$NET" -c"$WPCONF"
@@ -88,12 +88,12 @@ while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 done
 #######################################
 if ((GOOG != 0)); then
-	ANORANGE "Please try again.\n"
+	ANORANGE "Please try again.${R}\n"
 	unset PINGFAIL GDNS d CUNT
-	ANORANGE "$NET_AP${R}\\n"
+	ANBR "$NET_AP$ dit not connect!${R}\\n"
 else
 	ANLG "Operation successful! You are now connected to: ${RES}"
-	ANORANGE "${NET_AP}${R}\\n"
+	ANG "${NET_AP}${R}\\n"
 	is_in_path synergy && synergy.sh
 fi
 [[ -e /tmp/delete/ntponce ]] || ntponce 2 &>/dev/null && touch /tmp/delete/ntponce

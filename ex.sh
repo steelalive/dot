@@ -41,9 +41,12 @@ if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	[[ -e /sys/devices/system/memory/power/async ]] && echo enabled >/sys/devices/system/memory/power/async
 	is_in_path dbus-launch && eval "$(dbus-launch 2>/dev/null)"
 	if tty | grep 1 &>/dev/null; then
-		zip -rq -FS /last/BACKUP/etc.zip /etc &>/dev/null
+		#		zip -rq -FS /last/BACKUP/etc.zip /etc &>/dev/null
+		ANG "Please be patient, file backup in progress...\n"
 		zip -rq -FS /last/BACKUP/dot.zip /dot &>/dev/null
+		ANG "$dot backed up!\n"
 		cp -au --backup=numbered /last/Google\ Drive/Acreation /ext/
+		ANG "Google drive backed up!\n"
 	fi
 	#	mount /dev/sda4 /boot
 	#for i in /dot/etc/cron.daily/*; do
@@ -54,7 +57,6 @@ if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	#+all /dot
 	rm_empty_dir /* /.* /root/* /shell/* /root/.* /shell/.*
 	ANBG "One-time init completed.$R\\n"
-
 fi
 
 pgrep ssh-agent &>/dev/null || ssh-agent >/tmp/ssh-agent 2>/dev/null
@@ -195,8 +197,13 @@ FFLAGS="-g -O3"
 CFLAGS="-march=native -O3 -pipe -m64 -fno-plt --param=ssp-buffer-size=4 "
 CXXFLAGS="$CFLAGS -ftree-vectorize"
 LDFLAGS="-Wl,-O3,--sort-common,--as-needed,-z,relro,-z,now"
-CC='/usr/bin/clang'
-CXX='/usr/bin/clang++'
+if is_in_path clang; then
+	CC='/usr/bin/clang'
+	CXX='/usr/bin/clang++'
+else
+	CC='/usr/bin/zapcc'
+	CXX='/usr/bin/zapcc++'
+fi
 MAKEFLAGS="-j$(nproc --all)"
 DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
@@ -227,7 +234,6 @@ LESSOPEN="| $(command -v highlight) %s --quit-if-one-screen --out-format truecol
 LOGDEST="$BUILDDIR"
 LS_COLLATE='C'
 LD_LIBRARY_PATH='/usr/lib:/usr/local/lib'
-ldconfig
 [[ $HOSTNAME == PC ]] && LS_OPTIONS=' -l --color=auto --quoting-style=shell-escape --ignore-backups --group-directories-first --file-type --almost-all --human-readable -L'
 MALLOC_CHECK_=3
 MALLOC_PERTURB_=$((RANDOM % 255 + 1))
@@ -272,9 +278,7 @@ alias more='less'
 XDG_CACHE_HOME="$HOME/.cache"
 auto_resume=1
 broadcast='192.168.0.1'
-
 chmod 777 /tmp/loadcpu /tmp/prompt /tmp/START.1 2>/dev/null
-chromium="/usr/bin/chromium --disk-cache-dir=/tmp/profile-sync-daemon --scroll-pixels=600 --disk-cache-size=629145600 --memory-model=high --password-store=basic --no-proxy-server --user-data-dir=/root/.config/chromium %U"
 force_color_prompt=yes
 hotmail='demers.francis@hotmail.com'
 netmask='255.255.255.0'
@@ -299,6 +303,7 @@ else
 	[[ -e /sbin/x ]] && TERMINFO=/sbin
 fi
 
+ldconfig
 TMP=/tmp
 TMPDIR="$TMP"
 mkdir -p "$TMP" || TMP="$HOME"/tmp

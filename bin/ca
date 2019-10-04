@@ -4,11 +4,11 @@
 #2#::.. Last edit: - Tue May 15 20:37:34 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.6.9 - #_# #@#150518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 #highlight_fn() { highlight --quiet --out-format=truecolor --style=candy --stdout --plug-in=bash_functions --plug-in=comment_links --syntax=bash --pretty-symbols --validate-input "$@"; }
-if is_in_path highlight; then
-	highlight_fn() { highlight --quiet --out-format=truecolor --style=zmrok --stdout --plug-in=comment_links --syntax=bash --plug-in=bash_functions --plug-in=bash_ref_man7_org --pretty-symbols --validate-input "$@"; }
+if is_in_path bat; then
+	highlight_fn() { bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
 else
-	is_in_path bat && highlight_fn() { bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
-	is_in_path bat || highlight_fn() { cat "$@"; }
+	highlight_fn() { highlight --quiet --out-format=truecolor --style=zmrok --stdout --plug-in=comment_links --syntax=bash --plug-in=bash_functions --plug-in=bash_ref_man7_org --pretty-symbols --validate-input "$@"; }
+	is_in_path highlight || highlight_fn() { cat "$@"; }
 fi
 export -f highlight_fn
 if [[ $1 == show ]]; then
