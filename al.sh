@@ -15,6 +15,7 @@ alias .....='builtin \cd ../../../.. && lk '
 alias ....='builtin \cd ../../.. && lk '
 alias ...='builtin \cd ../.. && lk  '
 alias ..='builtin \cd .. && lk '
+alias mnt=". $dot/bin/mnt"
 alias ad=". $dot/bin/ad "
 alias rmv="command \rm -rfv --one-file-system --preserve-root --dir "
 alias cpv="command \cp -av --dereference --strip-trailing-slashes --update --context "

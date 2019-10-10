@@ -135,9 +135,11 @@ RET() {
 }
 do_meteo() {
 	hash curl &>/dev/null || return 1
-	city=$(command curl -s ipinfo.io/city) >/dev/null
-	region=$(command curl -s ipinfo.io/region) >/dev/null
-	region=$(echo "$region" | tr -dc '[:upper:]')
+	#city=$(command curl -s ipinfo.io/city) >/dev/null
+	#region=$(command curl -s ipinfo.io/region) >/dev/null
+	#region=$(echo "$region" | tr -dc '[:upper:]')
+	city=mont-tremblant
+	region=quebec
 	[[ -e /tmp/moon ]] || if [[ $(date +%H) -gt 19 ]]; then
 		command curl -s "http://wttr.in/moon"
 		touch /tmp/moon

@@ -12,11 +12,11 @@ basename="$(basename "${arg1}")"
 export arg1 basename
 EDITOR=${EDITOR:-nvim}
 congrats() {
-	ANBG 'CONGRATULATION!'" File${R}${C} $arg1 ${BG}is error free."
-	echo
+	ANBG 'CONGRATULATION!'" File${R}${C} $arg1 ${BG}is error free.{R}\n"
 }
 if [[ $USER == master ]]; then
-	sudo +master -R /tmp/delete "${HOME:-/root}"
+	mkdir
+	sudo +user -R /tmp/delete "${HOME:-/root}"
 else
 	#+master -R /tmp/delete "${HOME:-/root}"
 	true
@@ -62,8 +62,8 @@ shell_edit_check() {
 		sc_ret="$(sc "$arg1" | grep 'In .*:' | tail -1 | sed 's/[^0-9]*//' | sed 's/://' | cut -d' ' --fields=3)"
 		if [[ $sc_ret =~ [0-9] ]]; then
 			export sc_ret
-			sc "$arg1" | grep --after-context=16 "line $sc_ret"
-			ANBW TERM=xterm-color /bin/nano '+'"$sc_ret" "${arg1}" "${arg2}" "${arg3}" && lk
+			sc "${arg1}" | grep --after-context=16 "line ${sc_ret}"
+			ANBW TERM=xterm-color /bin/nano '+'"${sc_ret}" "${arg1}" "${arg2}" "${arg3}" && lk
 		else
 			lk
 			congrats "$arg1"
@@ -86,7 +86,7 @@ gui_ed_sc() {
 cp "${arg1}" "${tmp_copy}"
 if [[ $EUID == 0 ]]; then
 	[[ $arg2 =~ [-.*] ]] || unset arg2
-	eval ${EDITOR} $nano_line $arg2 $arg3 "$arg1"
+	eval ${EDITOR} ${nano_line} ${arg2} ${arg3} "$arg1"
 else
 	sudo sh -c "eval ${EDITOR} $arg2 $arg3 $arg1"
 fi

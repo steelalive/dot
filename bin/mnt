@@ -4,7 +4,7 @@
 #2#::.. Last edit: - Fri May 11 09:35:51 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.3.5 - #_# #@#110518#@# #2#
 # vi: ft=sh
 #::..#####################_/dot/bin/mnt_#######################..::#3#
-[[ $USER == root ]] || exit
+[[ $USER == root ]] || return || exit
 part_mapper() {
 	if is_in_path grc; then
 		/usr/bin/grc -es --colour=auto blkid
@@ -17,30 +17,33 @@ part_mapper() {
 }
 if (($# == 0)); then
 	part_mapper
-	exit
+	return || exit
 fi
 if [[ $1 == last ]]; then
 	fsck LABEL=LAST-GA
 	mount LABEL=LAST-GA /last
 	part_mapper
-	exit
+	return || exit
 fi
-if [[ $1 == loop ]] || [[ $1 == iso ]]; then
-	[[ $2 ]] || select iso in ./*.iso ./*.img; do
-		echo $iso
+if [[ $1 == loop ]] || [[ $1 == iso ]] || [[ $1 == img ]]; then
+	[[ $2 ]] || select iso in ./*.iso ./*.img ./*.raw; do
+		echo "mounting $iso in /mnt/iso"
 		break
 	done
 	[[ $iso ]] || iso="$2"
+	umount -v /mnt/iso 2>/dev/null
 	mkdir -p /mnt/iso
 	mount -o loop "$iso" /mnt/iso
 	part_mapper
-	exit
+	cd /mnt/iso
+	ls
+	return || exit
 fi
 if [[ $1 == dot ]]; then
 	mv /dot /dottmp
 	mkdir /dot
 	sshfs -p 22 root@192.168.0.100:/dot /dot/ -o allow_root
-	exit
+	return || exit
 fi
 
 for i; do
@@ -54,9 +57,9 @@ for i; do
 	fsck.exfat "$dev_path" 2>/dev/null
 	e2fsck "$dev_path" 2>/dev/null
 	mkdir -vp "$mnt_path" 2>/dev/null
-	sh_exit $?
+	sh_return || exit $?
 	mount -v "$dev_path" "$mnt_path"
-	sh_exit $?
+	sh_return || exit $?
 	cd "$mnt_path" || true
 	part_mapper
 	lk "$mnt_path"

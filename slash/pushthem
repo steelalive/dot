@@ -23,6 +23,10 @@ cp -av $slash/sbin/bash /system/xbin/
 cp -av $slash/sbin/bash /system/bin/
 ln -sfv $slash/etc/mkshrc /system/etc/
 ln -sfv /proc/self/mounts /system/etc/mtab
+ln -sfv $slash/sbin /data
+ln -sfv $slash /data
+ln -sfv $slash/etc/mk /data/
+ln -sfv $slash/pushthem /data/pu
 echo EST5EDT >/system/etc/timezone
 cd /data/dot/slash || exit
 echo "Initialize system..."

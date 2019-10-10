@@ -19,8 +19,8 @@ elif [[ ${!#} == rm ]]; then
 else
 	[[ $# -lt 2 ]] && {
 		ANW "on will execute a command on a file without the filepath input
-            ${Y}e.g.: on myfile echo 
-            ${W}on accept -s as argument for silent${R}\n"
+${Y}e.g.: on myfile echo 
+${W}on accept -s as argument for silent${R}\n"
 		exit "${LINENO}"
 	}
 fi
@@ -207,7 +207,7 @@ for dir in $(<${findtmp:-/tmp/find.tmp}); do
 	[[ -e "$dir/$arg1_untouched" ]] &&
 		file_path="$dir/$arg1_untouched" &&
 		((silence = 1)) &&
-		${execute} ${file_path} $arg2 &&
+		"${execute}" "${file_path}" "$arg2" &&
 		exit
 done
 
@@ -223,7 +223,7 @@ unset IFS
 [[ -e ${file_path} ]] || exit "${LINENO}"
 if ((silence == 1)); then
 	ANRED "${execute} ${C}${file_path} $arg2$R\n${execute} ${file_path} $arg2"
-	${execute} "${file_path[@]}" $arg2
+	"${execute}" "${file_path[@]}" "$arg2"
 	exit
 else
 	is_text "${file_path}" || ANBR "${UNDER}${file_path} IS NOT TEXT!!!\n"

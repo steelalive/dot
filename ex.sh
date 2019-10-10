@@ -30,7 +30,6 @@ set -a
 eval "$(dircolors --sh $dot/.dir_colors)"
 if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 
-	export NET=wlan0
 	$dot/bin/wp
 	touch /tmp/INIT
 	mkdir -p /tmp &>/dev/null
@@ -85,7 +84,7 @@ fi
 
 ###############################shopt and shits##############################################
 is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval "$(dircolors --sh "$dot"/.dir_colors 2>/dev/null)"
-is_there /usr/lib/libstderred.so && LD_PRELOAD="/usr/lib/libstderred.so" STDERRED_ESC_CODE=$(ANRED) STDERRED_BLACKLIST="^(test.*)$"i
+is_there /usr/lib/libstderred.so && LD_PRELOAD="/usr/lib/libstderred.so" STDERRED_ESC_CODE=$(ANRED) STDERRED_BLACKLIST="^(test.*)$"
 is_in_path colordiff &>/dev/null && alias diff="colordiff"
 is_in_path iwgetid && SSID="$(iwgetid -r 2>/dev/null)"
 is_in_path setterm && setterm --term "$TERM"
@@ -132,10 +131,11 @@ stfu ulimit -S -c 0
 is_in_path xdg-user-dirs-update && XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}" \
 	XDG_CACHE_HOME="$HOME/.cache" XDG_DATA_HOME="$HOME/.local/share" XDG_CONFIG_DIRS=/etc/xdg \
 	XDG_DATA_DIRS=/usr/share XDG_DESKTOP_DIR="$HOME/Desktop" XDG_MUSIC_DIR=/last/mp3 \
-	XDG_PICTURES_DIR=/last/wallpapers && mkdir -p "$HOME"/doc &&
-	for i in XDG_TEMPLATES_DIR XDG_PUBLICSHARE_DIR XDG_DOCUMENTS_DIR XDG_VIDEOS_DIR; do
-		declare -x "$i=$HOME/doc"
-	done
+	XDG_PICTURES_DIR='/last/wallpapers'
+mkdir -p "$HOME/doc"
+for i in XDG_TEMPLATES_DIR XDG_PUBLICSHARE_DIR XDG_DOCUMENTS_DIR XDG_VIDEOS_DIR; do
+	declare -x "$i=$HOME/doc"
+done
 
 [[ -e /last/Downloads ]] && XDG_DOWNLOAD_DIR=/last/Downloads
 is_in_path xdg-user-dirs-update && {
@@ -212,10 +212,10 @@ FZF_DEFAULT_COMMAND="fd"
 JAVA_HOME=/usr/lib/jvm/default
 HH_CONFIG='hicolor'
 HIGHLIGHT_DATADIR='/usr/share/highlight'
-HISTCONTROL='ignoreboth:erasedups'
+HISTCONTROL=ignoredups:ignorespace:erasedups
+HISTIGNORE="&:cd:..:...:ls:la:lad:lsd:[bf]g:exit:yy"
 HISTFILE="$dot/.histfile"
 HISTFILESIZE=500000
-HISTIGNORE='&:exit'
 HISTSIZE=500000
 HOST="${HOST:-$(hostname)}" HOSTNAME="$HOST"
 HOME="${HOME:-/root}"
@@ -308,8 +308,16 @@ TMP=/tmp
 TMPDIR="$TMP"
 mkdir -p "$TMP" || TMP="$HOME"/tmp
 set +a
-if [[ $HOSTNAME == PC ]]; then
-	case "$(ip link | command grep -o -E "wlan[0-9]" | wc -l)" in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac
+if is_pc || is_ga; then
+	case "$(ip link | command grep -o -E "wlan[0-9]" | wc -l)" in
+	4) NET=wlan3 ;;
+	3) NET=wlan2 ;;
+	2) NET=wlan1 ;;
+	1) NET=wlan0 ;;
+	*)
+		echo no wireless
+		;;
+	esac
 	if ip link | grep -o "wlp.*:" &>/dev/null; then NET="$(ip link | grep -o "wlp.*:" | sed "s/://")"; fi
 	if ip link | grep "24:05:0f:ea:36:6c" &>/dev/null; then
 		NET="$(ip link | grep "24:05:0f:ea:36:6c" --before-context=1 | head -n1 | awk '{print $2}' | sed 's/://')"
@@ -319,11 +327,11 @@ fi
 export NET
 # vi: set noro: ft=sh
 # Check for interactive bash and that we haven't already been sourced.
-if [ -n "${BASH_VERSION-}" -a -n "${PS1-}" -a -z "${BASH_COMPLETION_COMPAT_DIR-}" ]; then
+if [ -n "${BASH_VERSION-}" ] && [ -n "${PS1-}" ] && [ -z "${BASH_COMPLETION_COMPAT_DIR-}" ]; then
 
 	# Check for recent enough version of bash.
 	if [ "${BASH_VERSINFO[0]}" -gt 4 ] ||
-		[ "${BASH_VERSINFO[0]}" -eq 4 -a "${BASH_VERSINFO[1]}" -ge 1 ]; then
+		[ "${BASH_VERSINFO[0]}" -eq 4 ] && [ "${BASH_VERSINFO[1]}" -ge 1 ]; then
 		[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/bash_completion" ] &&
 			. "${XDG_CONFIG_HOME:-$HOME/.config}/bash_completion"
 		if shopt -q progcomp && [ -r /usr/local/share/bash-completion/bash_completion ]; then

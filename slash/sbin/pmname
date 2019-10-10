@@ -1,0 +1,12 @@
+pmname () 
+{ 
+    local apk_name name;
+    for apk_name in "$@";
+    do
+        name="$(aapt dump badging "$1" | grep application-label:)";
+        name="${name#*:}";
+        name="$(echo "$name" | tr -d ' ' | tr -d "'")";
+        echo $name;
+    done
+}
+for i in "$@"; do pmname "$i";done

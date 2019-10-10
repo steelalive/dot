@@ -7,13 +7,12 @@
 
 #shopt &>/dev/null || return 2
 
-
 export lux=/mnt/media_rw/c68dcfb1-c438-4f9f-8109-7ce175ca99a3
 export dot=/data/dot
 export slash=$dot/slash
 export dot_dir=$dot LANG='en_US.UTF-8'
 export pc=192.168.0.20 s4=192.168.0.8 tv=192.168.0.5
-export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
+export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
 result=":"
 IFS=:
 for p in $PATH; do
@@ -36,7 +35,6 @@ export bb
 
 bb() { command \\"$bb" "$@"; }
 
-
 #for i in /ex $(echo /mnt/media_rw/????-????) $(echo /storage/????-????) /external_sd; do
 #	[[ -e $i/misc-android ]] || continue
 #	export ex=$i
@@ -44,7 +42,7 @@ bb() { command \\"$bb" "$@"; }
 ex=/sdcard
 
 echo /init.* | grep amlogic && export HOSTNAME=TV
-{ echo /* | grep exyn &>/dev/null || grep zeroflte /default.prop ; } && export HOSTNAME=S6
+{ echo /* | grep exyn &>/dev/null || grep zeroflte /default.prop; } && export HOSTNAME=S6
 [[ $HOSTNAME ]] || { getprop ro.product.device && export HOSTNAME="$(getprop ro.product.device)"; }
 [[ -d $dot/root ]] && HOME=$dot/root
 #[[ -e $HOME ]] || HOME=$ex
@@ -55,7 +53,6 @@ echo /init.* | grep amlogic && export HOSTNAME=TV
 [[ -e /sbin/terminfo ]] && TERMINFO=/sbin/terminfo
 [[ -e $TERMINFO ]] && export TERMINFO TERM=screen-256color
 #export TERM=xterm-256color
-
 
 [[ -x $BASH ]] || export BASH=/data/dot/slash/sbin/bash
 [[ -x $BASH ]] || BASH=$(command -v bash)
@@ -70,7 +67,7 @@ mkdir -p /tmp
 [[ -x $slash/sbin/nano ]] && export EDITOR="$slash/sbin/nano" VISUAL="$EDITOR"
 [[ HOSTNAME == PC ]] && lux=/data/lux
 
-boot="$(find /dev/block -iname boot | tail -1 )"
+boot="$(find /dev/block -iname boot | tail -1)"
 recovery="$(find /dev/block -iname recovery | tail -1)"
 
 export TMP TMPDIR=$TMP BASH SHELL=$BASH HISTFILE="${dot}/root/histfile_android" HISTSIZE=50000 USER slash
@@ -78,9 +75,9 @@ test $HOSTNAME && hostname $HOSTNAME
 alias e='. $dot/bin/e'
 cmdcompile() {
 	cmd package compile -a -m everything
-	fstrim /system; 
-fstrim /data;
-fstrim /cache
+	fstrim /system
+	fstrim /data
+	fstrim /cache
 }
 
 hash remnt &>/dev/null && remnt
@@ -99,21 +96,21 @@ unalias ls &>/dev/null
 #if cp --help 2>&1 | grep -o "\-c" ; then alias cp='cp -c ';fi
 unset ls LS_OPTIONS &>/dev/null
 if [[ -e $slash/sbin/ls ]]; then
-    LS_BIN="$slash/sbin/ls"
-    elif [[ -e /system/xbin/ls ]]; then
-    LS_BIN="$slash/sbin/ls"
-    else
-    LS_BIN="ls"
+	LS_BIN="$slash/sbin/ls"
+elif [[ -e /system/xbin/ls ]]; then
+	LS_BIN="$slash/sbin/ls"
+else
+	LS_BIN="ls"
 fi
 
-if $LS_BIN --help 2>&1 | grep 'Z' ; then LS_OPTIONS=' -Z '; fi
-if $LS_BIN --help 2>&1 | grep 'group-directories-first' ; then
+if $LS_BIN --help 2>&1 | grep 'Z'; then LS_OPTIONS=' -Z '; fi
+if $LS_BIN --help 2>&1 | grep 'group-directories-first'; then
 	export LS_OPTIONS="$LS_OPTIONS --group-directories-first "
 fi
 export LS_OPTIONS="$LS_OPTIONS -AHhpFl --color "
 
 ls() { "$LS_BIN" $LS_OPTIONS "$@"; }
-if echo $0 | grep bash ; then
+if echo $0 | grep bash; then
 	if [[ ${EUID} == 0 ]]; then
 		PS1='\[\033[01;31m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
 	else
@@ -124,10 +121,10 @@ fi
 remnt
 
 #Check busybox validity and correct.
-if ! busybox | $bb grep '1.29.2' ; then
+if ! busybox | $bb grep '1.29.2'; then
 	echo "Setup a newer busybox..."
-		cd $slash
-		bash $slash/box
+	cd $slash
+	bash $slash/box
 fi
 
 [[ -e /system/bin/logd ]] && mv /system/bin/logd /system/bin/logd.bak
@@ -147,7 +144,6 @@ for bin_dir in /system/bin /system/xbin; do
 done
 #####_MISC_MAINTENANCE_#####
 [[ -e /system/bin/logd ]] && mv /system/bin/logd /system/bin/logd.bak
-
 
 #####_SETUP RC FILES_#####
 
@@ -172,4 +168,3 @@ hash resize &>/dev/null && eval $(resize) &>/dev/null
 
 # vi: ft=sh
 unalias nano 2>/dev/null
-

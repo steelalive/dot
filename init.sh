@@ -4,7 +4,6 @@ case $- in
 esac
 
 [ -z "$PS1" ] && return
-shopt &>/dev/null || return 0
 
 if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 	umask 002
@@ -20,13 +19,21 @@ else
 	[[ -e /dot/init.sh ]] && dot=/dot
 	[[ -e /data/dot/init.sh ]] && dot=/data/dot
 fi
-bash $dot/bin/base16.bash
+shopt &>/dev/null || {
+	echo "Sorry, this file is not compatible with ${SHELL}. You have to use bash.
+Do you want to launch $(which bash 2>/dev/null)?
+"
+	yorn && $(which bash) -il --init-file $dot/init.sh || return 0
+}
+
+sh $dot/bin/base16.bash
 [[ -e /system/etc/rc ]] && . /system/etc/rc
 
-[[ "$lux" ]] || lux=
 export dot_dir="$dot" dbin="$dot/bin" lux dot
 export PATH="$PATH:$dot/bin:$dot/bin/final:$dot"
-[[ $1 == "-bare" ]] && return
+
+for i in $(command \ps aux | command \grep ps1bg.sh | command \grep -v grep | command \awk '{print $2}'); do kill -9 "$i"; done ##kill ps1 background process
+
 . "$dot"/setpath.sh
 
 src() {
@@ -38,10 +45,9 @@ src() {
 
 setenv() { export "$1=$2"; }
 export -f setenv
-for i in $(command \ps aux | command \grep ps1bg.sh | command \grep -v grep | command \awk '{print $2}'); do kill -9 "$i"; done
 
 export source_files="ps1.sh al.sh ps4.sh fn.sh init.sh ex.sh anset.sh setpath.sh"
-export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh $dot/ps1.sh $HOME/.bash_prompt" # $dot/ps4.sh  #$dot/bin/goto.sh
+export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh $dot/ps1.sh $HOME/.bash_prompt /usr/share/fzf/key-bindings.bash /usr/share/fzf/completion.bash /usr/share/git/git-prompt.sh /usr/share/git/completion/git-prompt.sh" # $dot/ps4.sh  #$dot/bin/goto.sh
 
 [[ -e /oem ]] && dot_files="$dot_files $dot/g4.sh $dot/anset.sh"
 [[ -e /oem ]] || dot_files="$dot_files $dot/ps1bg.sh"
@@ -62,17 +68,17 @@ unset IFS info this_4_real this future_path futur_path_test
 (
 	pkill ps1bg.sh &>/dev/null
 ) &>/dev/null
+killjobs
 #[[ "$(tty 2>/dev/null)" =~ tty ]] ||
-ps1_writer &
+
 disown
 if [[ -e /oem ]]; then
 	[[ -x /bin/nano ]] && export EDITOR="/bin/nano --syntax bash"
 fi
-(fork ps1_writer &) &>/dev/null
-is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval $(dircolors --sh "$dot"/.dir_colors 2>/dev/null)
+ps1_writer &
+is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval $(dircolors --sh "$dot/.dir_colors" 2>/dev/null)
 is_in_path archey && archey
-#hash fortunes &>/dev/null && fortunes
-/usr/bin/quote
-
+hash fortunes &>/dev/null && fortunes
+#is_in_path quote && quote
 . "$dot/setpath.sh"
 [[ $meteo_done ]] || neofetch && export meteo_done=1 && cd / && ls

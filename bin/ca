@@ -4,13 +4,15 @@
 #2#::.. Last edit: - Tue May 15 20:37:34 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.6.9 - #_# #@#150518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 #highlight_fn() { highlight --quiet --out-format=truecolor --style=candy --stdout --plug-in=bash_functions --plug-in=comment_links --syntax=bash --pretty-symbols --validate-input "$@"; }
+highlight_hl() { highlight --quiet --out-format=truecolor --style=zmrok --stdout --plug-in=comment_links --syntax=bash --plug-in=bash_functions --plug-in=bash_ref_man7_org --pretty-symbols --validate-input "$@"; }
+export -f highlight_hl
 if is_in_path bat; then
-	highlight_fn() { bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
+	highlight_bat() { bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
 else
-	highlight_fn() { highlight --quiet --out-format=truecolor --style=zmrok --stdout --plug-in=comment_links --syntax=bash --plug-in=bash_functions --plug-in=bash_ref_man7_org --pretty-symbols --validate-input "$@"; }
-	is_in_path highlight || highlight_fn() { cat "$@"; }
+	highlight_bat() { highlight_hl "$@"; }
 fi
-export -f highlight_fn
+
+is_in_path highlight || highlight_hl() { cat "$@"; }
 if [[ $1 == show ]]; then
 	cd /usr/share/highlight/themes || exit
 	for i in ./*; do
@@ -21,11 +23,11 @@ if [[ $1 == show ]]; then
 	exit
 fi
 if [[ ! -t 0 ]]; then
-	highlight_fn "$1"
+	highlight_hl "$1"
 	exit
 fi
 if [[ ! -e $1 ]]; then
 	search="$(on "$1" echo)"
-	is_text "$search" && highlight_fn "$search" && exit
+	is_text "$search" && highlight_bat "$search" && exit
 fi
-highlight_fn "$1"
+highlight_bat "$1"

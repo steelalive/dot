@@ -1,4 +1,3 @@
-#!/data/dot/slash/sbin/bash
 PMU="com.sec.android.emergencylauncher
 cm.aptoide.pt
 com.android.bookmarkprovider
@@ -174,7 +173,7 @@ if [[ $1 ]]; then
     VpnDialogs"
 fi
 
-for dir in '/' /data/app /system/app /system/priv-app; do
+for dir in '/' /data/app /system/app /system/priv-app $PWD/ $PWD/data/app $PWD/system/app $PWD/system/priv-app $PWD/app $PWD/priv-app; do
 	cd "$dir"
 	for crap in $DELETE $PMU; do
 		full="$(echo ${dir}/*${crap}*)"

@@ -7,11 +7,12 @@
 [[ $HOSTNAME != PC ]] && exit
 files_to_copy="/dot/*.sh /dot/bin /dot/slash"
 adb=/usr/bin/adb
-ex=/sdcard
+ex=/storage/B5A4-1BFB
 su_bin=/sbin/su
 tmp_serial=/tmp/adbserial
-ex=/sdcard
 [[ -e $tmp_serial ]] || touch /tmp/adbserial
+ADB_KEYS_LOCATION=/last/misc-android/adb_keys
+export ADB_KEYS_LOCATION tmp_serial su_bin ex adb files_to_copy
 #eval $(<$tmp_serial)
 #if grep 5555 /tmp/adbserial; then
 #	adbconnect
@@ -83,7 +84,8 @@ apk_to_() {
 	adbsu pm install -r -g "$apk"
 	return
 }
-adbsu() { $adb shell su 0 "$@"; }
+#adbsu() { $adb shell su 0 "$@"; }
+adbsu() { $adb shell "$@"; }
 export -f adbsu
 adb_read() {
 	adbsu /data/dot/bin/remnt && return 0
@@ -126,13 +128,13 @@ export -f adb_info
 if [[ ! $su_bin ]]; then
 	sutest /sbin/su && su_bin=/sbin/su
 	[[ ! $su_bin ]] && sutest /su/bin/su &>/dev/null && su_bin=/su/bin/su
-	[[ ! $su_bin ]] && su_bin=$($adb shell su -c "command -v su")
+	[[ ! $su_bin ]] && su_bin=$($adb shell su -c "command -v su" 2>/dev/null)
 	[[ ! $su_bin ]] && grep -q "/usr/bin" <<<$su_bin && su_bin=su
 
 	export su_bin
 fi
 if [[ ! $ex ]]; then
-	if ! { ex=$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null) && sutest $ex; }; then
+	if ! { ex="$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null)" && sutest "$ex"; }; then
 		if $adb devices | grep -q recovery &>/dev/null; then
 			adbde shell '[ -d /external_sd ]' 2>/dev/null && export ex=/external_sd
 		elif adbde shell '[[ -d "$(echo /mnt/media_rw/????-???? 2>/dev/null)" ]]' 2>/dev/null; then
@@ -146,7 +148,7 @@ if [[ ! $ex ]]; then
 		fi
 	fi
 fi
-export ex=/sdcard
+#export ex=/sdcard
 case $1 in
 tv)
 	shift
@@ -181,7 +183,7 @@ tabip | adbtab)
 \
 	g4u* | g4_* | usb)
 	shift
-	export ANDROID_SERIAL=1015fa08983d3602
+	export ANDROID_SERIAL=POWER201903030255
 	ANG "Connected to usb adb\n"
 	if ! grep -q "$ANDROID_SERIAL" <<<"$($adb devices 2>/dev/null)" &>/dev/null; then
 		$adb disconnect
@@ -189,7 +191,7 @@ tabip | adbtab)
 	fi
 	adb root 2>/dev/null
 	echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
-	ex='/sdcard'
+	#ex='/sdcard'
 	return
 	;;
 esac
@@ -245,7 +247,7 @@ i | install | /data/app)
 	return
 	;;
 pullapk | apkpull)
-	for i in $(adbsu '. /data/dot/slash/etc/rc; for i in $(find $ex -name "*.apk" 2>/dev/null); do realpath "$i";done'); do echo 'adb-sync -2 -R '\"$i\"' /last/APK;'; done
+	for i in $(adbsu '. /data/dot/slash/etc/rc &>/dev/null; for i in $(find $ex/titanium -name "*.apk" 2>/dev/null); do realpath "$i";done'); do echo 'adb-sync -2 -R '\"$i\"' /last/power/APK;'; done
 	return
 	;;
 e | vim)
@@ -268,8 +270,8 @@ push)
 	shift
 	download=$ex
 	[[ $ex ]] || ANRED "$ex \$ex is not defined.\n"
-	echo $adb push "$@" /sdcard/Download/
-	$adb push "$@" /sdcard/Download/
+	echo $adb push "$@" $ex/Download/
+	$adb push "$@" $ex/Download/
 	return
 	;;
 pull)

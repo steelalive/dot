@@ -7,7 +7,13 @@
 cpu_freq_max="$(lscpu | awk '/CPU max/ { print $4 }')"
 cpu_freq_max="${cpu_freq_max::4}"
 cpu_temp_max='80'
-mem_raw="$(awk '/MemTotal:/ {print $2}' /proc/meminfo)"
+[[ $HOSTNAME == GA ]] && sys_color_options="freq mem load temp" seconds_timer=10 limit_ps1=750
+[[ $HOSTNAME == PC ]] && sys_color_options="freq mem load temp" seconds_timer=10 limit_ps1=1000
+[[ "$sys_color_options" ]] || sys_color_options="mem load temp" seconds_timer=10 limit_ps1=500
+sys_color_options="${sys_color_options:-"mem load temp"}"
+seconds_timer="${seconds_timer:-5}"
+limit_ps1="${limit_ps1:-250}"
+em_raw="$(awk '/MemTotal:/ {print $2}' /proc/meminfo)"
 export mem_total="$((mem_raw / 1024))"
 unset mem_raw
 export cpu_freq_max cpu_temp_max mem_total
@@ -35,9 +41,9 @@ sys_color() {
 		fi
 		if [[ $section == mem ]]; then
 			local mem_free memload total
-			mem_free="$(($(awk 'FNR==2 {print $4}' <(\free -m))))"
+			mem_free="$(($(awk 'FNR==2 {print $4}' <(\free -m 2>/dev/null))))"
 			memload="$((mem_total - mem_free))"
-			SYSLOAD="$(\free -m | awk 'NR==2{printf "%s%s\n%.f\n", $3,$2,$3*100/$2 }' | tail -n1)"
+			SYSLOAD="$(\free -m | awk 'NR==2{printf "%s%s\n%.f\n", $3,$2,$3*100/$2 }' | tail -n1 2>/dev/null)"
 			total="$((mem_free / 1024))"
 			echo_out="$(\free -m | awk 'NR==2{printf "%s/%sMB %.2f%%\n", $3,$2,$3*100/$2 }')"
 		fi
@@ -50,6 +56,10 @@ sys_color() {
 		if [[ $section == load ]]; then
 			SYSLOAD="$(tail -n 1 /tmp/loadcpu)"
 			echo_out="LOAD: ${SYSLOAD:-0}%"
+		fi
+		if [[ $section == count ]]; then
+			SYSLOAD="${count_bg}"
+			echo_out="PS1=${SYSLOAD}"
 		fi
 		SYSLOAD="${SYSLOAD:-err}"
 		case "$SYSLOAD" in
@@ -163,23 +173,16 @@ sys_color() {
 	done
 }
 
-[[ $HOSTNAME == GA ]] && sys_color_options="freq mem load temp" seconds_timer=10 limit_ps1=750
-[[ $HOSTNAME == PC ]] && sys_color_options="freq mem load temp" seconds_timer=10 limit_ps1=1000
-[[ "$sys_color_options" ]] || sys_color_options="mem load temp" seconds_timer=10 limit_ps1=375
-sys_color_options="${sys_color_options:-"load temp"}"
-seconds_timer="${seconds_timer:-5}"
-limit_ps1="${limit_ps1:-400}"
 touch /tmp/prompt /tmp/loadcpu /tmp/START.1
-((UID > 0)) && sudo chmod 777 /tmp/prompt /tmp/loadcpu /tmp/START*.* "$dot"
-count_bg=0
+((UID > 0)) && sudo chmod 777 /tmp/prompt /tmp/loadcpu /tmp/START*.* "$dot" &>/dev/null
 ps1_writer() {
+	count_bg=0
 	while ((count_bg < limit_ps1)); do
 		{
 			count_bg=$((count_bg + 1))
 			load_cpu &
-			sys_color $sys_color_options
-			[[ $count_bg -gt $((limit_ps1 - 20)) ]] && ANBR "|$count_bg|" && echo "1" >/tmp/prompt_restart
-			[[ $count_bg -lt $((limit_ps1 - 19)) ]] && ANG "|$count_bg|"
+			sys_color $sys_color_options count
+			[[ $count_bg -gt $((limit_ps1 - 20)) ]] && echo "1" >/tmp/prompt_restart
 		} >/tmp/prompt
 		sleep "$seconds_timer"
 	done

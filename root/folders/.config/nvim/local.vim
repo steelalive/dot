@@ -39,6 +39,9 @@ call dein#add('tpope/vim-surround')
 call dein#add('veloce/vim-aldmeris')
 call dein#add('vim-scripts/industry.vim')
 call dein#add('w0ng/vim-hybrid')
+call dein#add('Shougo/deoplete.nvim')
+call dein#add('roxma/nvim-yarp')
+call dein#add('roxma/vim-hug-neovim-rpc')
 call dein#add('w0rp/ale')
 call dein#add('wokalski/autocomplete-flow')
 call dein#add('yuttie/hydrangea-vim')
@@ -51,7 +54,7 @@ call dein#add('mkarmona/colorsbox')
 call dein#add('dracula/vim')
 call dein#add('jacoborus/tender.vim')
 call dein#add('kyoz/purify')
-"call dein#add('')
+call dein#add('neomake/neomake')
 "call dein#add('')
 "call dein#add('')
 "call dein#add('')
@@ -86,6 +89,7 @@ let g:ycm_filetype_blacklist = {
 " powerline symbols
 let g:airline_left_alt_sep = ''
 let g:airline_left_sep = ''
+call neomake#configure#automake('nrwi', 1000)
 let g:airline_right_alt_sep = ''
 let g:airline_right_sep = ''
 let g:airline_symbols.branch = ''
@@ -109,6 +113,7 @@ let g:deoplete#enable_at_startup = 1
 let g:gruvbox_contrast_dark  = 'hard'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'always'
+let g:deoplete#enable_at_startup = 1
 let g:ale_lint_delay = 1000
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -872,7 +877,7 @@ function! CreatePrivateHeader( privateHeader )
     :normal Gkko
 #include "h"
 
-class p
+class p
 Q_DECLARE_PUBLIC(c)
 protected:
 c *q_ptr;

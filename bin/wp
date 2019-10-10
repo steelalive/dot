@@ -53,16 +53,16 @@ which_network() {
 which_network $1
 TXPOWER=${TXPOWER:-20}
 NET=${NET:-wlan0}
-#case $(ip link | command grep -o -E "wlan[0-9]" | wc -l) in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac
-#if ip link | grep -o "wlp.*:" &>/dev/null; then NET=$(ip link | grep -o "wlp.*:" | sed "s/://"); fi
-#if ip link | grep "24:05:0f:ea:36:6c" &>/dev/null; then
-#	NET=$(ip link | grep "24:05:0f:ea:36:6c" --before-context=1 | head -n1 | awk '{print $2}' | sed 's/://')
-#which_network 5G
-#fi
+case $(ip link | command grep -o -E "wlan[0-9]" | wc -l) in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac
+if ip link | grep -o "wlp.*:" &>/dev/null; then NET=$(ip link | grep -o "wlp.*:" | sed "s/://"); fi
+if ip link | grep "24:05:0f:ea:36:6c" &>/dev/null; then
+	NET=$(ip link | grep "24:05:0f:ea:36:6c" --before-context=1 | head -n1 | awk '{print $2}' | sed 's/://')
+	which_network 5G
+fi
 
 if [[ $1 =~ wlan ]]; then NET=$1; fi
 export WPCONF NET
-echo $WPCONF
+echo $WPCONF NET
 #######################################
 while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	((CUNT > 4)) && CUNT=0
