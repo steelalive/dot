@@ -21,9 +21,9 @@ else
 fi
 shopt &>/dev/null || {
 	echo "Sorry, this file is not compatible with ${SHELL}. You have to use bash.
-Do you want to launch $(which bash 2>/dev/null)?
+Do you want to launch $(command -v bash 2>/dev/null)?
 "
-	yorn && $(which bash) -il --init-file $dot/init.sh || return 0
+	yorn && $(command -v bash) -il --init-file $dot/init.sh || return 0
 }
 
 sh $dot/bin/base16.bash
@@ -61,24 +61,20 @@ done
 printf %b "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\\n\\n"
 
 is_there /tmp/ssh-agent && . /tmp/ssh-agent &>/dev/null
-is_in_path env_parallel.bash && . "$(command -v env_parallel.bash)"
 unalias ps
-killjobs
 unset IFS info this_4_real this future_path futur_path_test
 (
-	pkill ps1bg.sh &>/dev/null
+	pkill ps1bg.sh ps1_writer &>/dev/null
 ) &>/dev/null
 killjobs
-#[[ "$(tty 2>/dev/null)" =~ tty ]] ||
-
-disown
 if [[ -e /oem ]]; then
 	[[ -x /bin/nano ]] && export EDITOR="/bin/nano --syntax bash"
 fi
 ps1_writer &
-is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval $(dircolors --sh "$dot/.dir_colors" 2>/dev/null)
+disown &>/dev/null
+is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval "$(dircolors --sh "$dot/.dir_colors")"
 is_in_path archey && archey
-hash fortunes &>/dev/null && fortunes
-#is_in_path quote && quote
+is_in_path fortunes &>/dev/null && fortunes
 . "$dot/setpath.sh"
 [[ $meteo_done ]] || neofetch && export meteo_done=1 && cd / && ls
+src_post.bash

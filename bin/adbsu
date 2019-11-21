@@ -1,0 +1,5 @@
+adbsu () 
+{ 
+    adb shell /sbin/su 0 -c "$@"
+}
+adbsu "$@"

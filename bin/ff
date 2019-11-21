@@ -5,6 +5,6 @@
 #3#vi ft=fsee ::..#####################_/dot/bin/ff_#######################..::#3#
 ff() {
 	path="$(realpath ./)"
-	find $path -iname '*'"$*"'*'
+	fd --hidden "$*"
 }
 ff "$@"

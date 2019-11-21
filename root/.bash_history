@@ -1,110 +1,3 @@
-export ARCH=arm
-export CROSS_COMPILE=/src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androidkernel-
-make VARIANT_DEFCONFIG=jf_can_defconfig SELINUX_DEFCONFIG=selinux_defconfig
-make VARIANT_DEFCONFIG=jf_defconfig SELINUX_DEFCONFIG=selinux_defconfig
-make distclean
-make VARIANT_DEFCONFIG=jf_defconfig SELINUX_DEFCONFIG=selinux_defconfig
-ca README_Kernel.txt 
-ls
-cat README_Platform.txt 
-ls
-cat README
-ls
-lk
-export VARIANT_DEFCONFIG=jf_defconfig SELINUX_DEFCONFIG=selinux_defconfig
-e make_defconfig.sh 
-e make_defconfig.sh 
-./make_defconfig.sh jf_defconfig
-make VARIANT_DEFCONFIG=jf_defconfig SELINUX_DEFCONFIG=selinux_defconfig
-env
-unset CFLAGS CC CXX CXXFLAGS 
-make VARIANT_DEFCONFIG=jf_defconfig SELINUX_DEFCONFIG=selinux_defconfig
-cd /src
-e env.sh
-ls 
-make mrproper
-cd $kernel
-make distclean
-gitreset
-cd /src
-ls
-. env.sh
-ls /tmp
-rm -rf /tmp/*
-ls
-makeclean
-. env.sh
-e env.sh
-. env.sh
-ls
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-makepkgsu
-heimdall
-ls
-rm heimdall-git-1.4.2.r7.ga2cfdaa-1-x86_64.pkg.tar
-makepkgsu
-heimdall
-exity
-exit
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-ls
-make clean
-ls
-./autogen.sh 
-ls
-./configure --prefix=/usr
-ls
-ls
-make
-ls
-make install
-pacman
-ls
-./configure --help
-cd /last/pacman/pkg
-rm -rf /out
-ls
-. env.sh
-./make_defconfig.sh lineageos_jf_defconfig
-ls
-make
-ls
-make
-. /dot/setpath.sh 
-make
-ls
-export CROSS_COMPILE=arm-linux-androideabi-
-make
-typea arm-linux-androideabi-ld 
-type -a arm-linux-androideabi-ld 
-ls /ext/opt/build-tools/28.0.3
-ls /ext/opt/build-tools/28.0.3/bin
-exit
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-ls
-./make_defconfig.sh jf_defconfig
-nano make_defconfig.sh 
-./make_defconfig.sh jf_defconfig
-./build-all.py jf
-./build-all.py jf_can
-gitreset
 exit
 mkdir -p /usr/local/bin
 curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
@@ -498,3 +391,110 @@ ls
 sudo su
 src
 nvim /dot/init.sh 
+ls
+env
+clear && clear && ./superr
+export TERM=xterm-256color
+clear && clear && ./superr
+clear && clear && ./superr
+clear && clear && ./superr
+systemctl
+exit
+lsblk
+mount /last
+pacman -Syu
+reboot
+ls
+mount /last
+nano /etc/fstab/
+nano /etc/fstab
+exit
+journalctl
+systemctl
+ls
+ls  /lib/modules
+ls  /lib/modules/5.3.8-arch1-1/
+modprobe
+modinfo
+modutil
+ls
+exit
+lsblk
+mount /
+mount /bppy
+mount /boot
+ls /boot
+ls -l /boot
+ls
+nano /etc/fstab
+exit
+nano /dot/ps1bg.sh 
+ls
+lk
+iwconfig
+lsblk
+reboot
+ls
+nvim /dot/ps1bg.sh 
+ls
+nvim /dot/ps1bg.sh 
+bash /dot/init.sh 
+bash /dot/ps1bg.sh 
+bash -xv /dot/ps1bg.sh 
+bash -x /dot/ps1bg.sh 
+. /dot/ps1bg.sh 
+ca /dot/ps1bg.sh 
+typea ps1_writer 
+type -a ps1_writer 
+load_cpu & sys_color ${sys_color_options} count
+load_cpu & sys_color ${sys_color_options} count
+load_cpu & sys_color ${sys_color_options} 
+load_cpu & sys_color ${sys_color_options} 
+load_cpu & sys_color ${sys_color_options} 
+load_cpu & sys_color  count
+load_cpu & sys_color  count
+load_cpu & sys_color  count
+echo ${sys_color_options} 
+load_cpu & sys_color freq
+load_cpu & sys_color freq
+load_cpu & sys_color mem
+load_cpu & sys_color mem
+echo ${sys_color_options} 
+load_cpu & sys_color load
+load_cpu & sys_color load
+load_cpu & sys_color temp
+nvim /dot/ps1bg.sh 
+. /dot/ps1bg.sh 
+load_cpu & sys_color temp
+load_cpu & sys_color temp
+load_cpu & sys_color temp
+load_cpu & sys_color temp
+load_cpu & sys_color temp
+load_cpu & sys_color temp
+load_cpu & sys_color temp
+src
+sudo su
+nvim /dot/shell/etc/mk
+nvim /dot/slash/etc/mk
+nvim /dot/slash/etc/mk
+su
+su 
+chmod 755 /tmp
+su
+su
+s
+sudo su
+pacman -S terminator
+su
+sudo su
+ls
+su 
+su -
+su -
+src
+su
+su -
+su
+su -
+su --
+exec sudo bash -il

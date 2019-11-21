@@ -5,11 +5,10 @@
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/trimall_#######################..::#3#
 trim_all() {
-    # Usage: trim_all "   example   string    "
-    set -f
-    set -- $*
-    printf '%s\n' "$*"
-    set +f
+	# Usage: trim_all "   example   string    "
+	set -f
+	set -- $*
+	printf '%s\n' "$*"
+	set +f
 }
 trim_all "$@"
-

@@ -31,24 +31,31 @@ Like 'more', but operate on the uncompressed contents of any compressed FILEs.
 Report bugs to <bug-gzip@gnu.org>."
 
 case $1 in
-  --h*) printf '%s\n' "$usage"   || exit 1; exit;;
-  --v*) printf '%s\n' "$version" || exit 1; exit;;
-  --) shift;;
-  -?*) printf >&2 '%s\n' "$0: $1: unknown option; try '$0 --help' for help"
-       exit 1;;
+--h*)
+	printf '%s\n' "$usage" || exit 1
+	exit
+	;;
+--v*)
+	printf '%s\n' "$version" || exit 1
+	exit
+	;;
+--) shift ;;
+-?*)
+	printf >&2 '%s\n' "$0: $1: unknown option; try '$0 --help' for help"
+	exit 1
+	;;
 esac
 
 if test $# = 0; then
-    if test -t 0; then
-        printf >&2 '%s\n' "$0: missing operands; try '$0 --help' for help"
-        exit 1
-    fi
-    set -- -
+	if test -t 0; then
+		printf >&2 '%s\n' "$0: missing operands; try '$0 --help' for help"
+		exit 1
+	fi
+	set -- -
 fi
 
-for FILE
-do
-  test $# -lt 2 ||
-    printf '::::::::::::::\n%s\n::::::::::::::\n' "$FILE" || break
-  gzip -cdfq -- "$FILE"
+for FILE; do
+	test $# -lt 2 ||
+		printf '::::::::::::::\n%s\n::::::::::::::\n' "$FILE" || break
+	gzip -cdfq -- "$FILE"
 done 2>&1 | eval ${PAGER-more}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profile>
+ <version>LibreOffice v1</version>
+ <device>
+  <type>opencl</type>
+  <name>GeForce GTX 1060 6GB</name>
+  <driver>440.31</driver>
+  <time>37262</time>
+  <errors>false</errors>
+ </device>
+ <device>
+  <type>native</type>
+  <time>3700224</time>
+  <errors>false</errors>
+ </device>
+</profile>

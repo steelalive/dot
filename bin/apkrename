@@ -1,0 +1,13 @@
+#!/bin/bash
+rename_apk() {
+	for apk in "$@"; do
+		unset real_name
+		real_name="$(aapt2 dump badging "$apk" | grep -m1 "original-package:" | sed -e "s|original-package:||" -e "s|'||g")"
+		test -z $real_name && real_name="$(aapt2 dump badging "$apk" | grep -m1 -o "name='[a-z.]*' " | sed -e "s|name=||" -e "s|'||g")"
+		real_name="$(trimall "$real_name")"
+		[[ $real_name == .apk ]] && ANBR "Package $apk renaming malcunfionned.${R}\n"
+		test -z $real_name || ANG mv -v "${apk} ${ORANGE}${real_name}.apk\n"
+		test -z $real_name || mv -v "${apk}" "${real_name}.apk"
+	done
+}
+rename_apk "$@"

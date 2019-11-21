@@ -5,5 +5,3 @@
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/rsync-delete_#######################..::#3#
 mkdir empty && rsync -r --delete empty/ "$@" && rmdir empty
-
-

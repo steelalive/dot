@@ -4,13 +4,10 @@
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Thu May 31 11:56:56 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.9 - #_# #@#310518#@# #2#
 #3#vi ft=fsee ::..#####################_/dot/bin/on_#######################..::#3#
-for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
-for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
-for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath; do
-	builtin shopt -s "$shopt_opt" &>/dev/null
-done
-unset shopt_opt set_minus set_plus
-
+if [[ $1 == "-s" ]] || [[ $1 == "silent" ]]; then
+	shift
+	export silence=1
+fi
 if [[ ${!#} == echo ]]; then
 	export silence=1
 elif [[ ${!#} == rm ]]; then
@@ -24,10 +21,6 @@ ${W}on accept -s as argument for silent${R}\n"
 		exit "${LINENO}"
 	}
 fi
-if [[ $1 == "-s" ]] || [[ $1 == "silent" ]]; then
-	shift
-	export silence=1
-fi
 if [[ $1 == "dir" ]]; then
 	shift
 	export skip_search=1 silence=1
@@ -35,22 +28,31 @@ fi
 arg1_untouched="${1}"
 arg1="${1}"
 execute="${2}"
-#execute_test="$(which "${execute}" 2>/dev/null)" && execute="$(realpath -q "$execute_test" 2>/dev/null)"
-if [[ -e $arg1 ]]; then
-	"${execute}" "${arg1}" $2
-	exit
-fi
+test_result() {
+	if [[ -e $file_path ]]; then
+		shift 1
+		"${execute}" "${file_path}" $2
+		exit
+	fi
 
+}
+
+for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
+for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
+for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath; do
+	builtin shopt -s "$shopt_opt" &>/dev/null
+done
+unset shopt_opt set_minus set_plus
+test_result "$1" "$2"
 case "$arg1" in
+ad | adp) arg1=$dot/bin/adp ;;
 amlogic) arg1="/mnt/win/Program Files (x86)/Amlogic/CustomizationTool" ;;
 journal) arg1=/etc/systemd/journald.conf.d/journal.conf ;;
 kdelogout) arg1=${dot}/bin/kdelogout ;;
 loss) arg1=/src/.repo/local_manifests/loss.xml ;;
 manifest) arg1=/src/.repo/manifest.xml ;;
 cron) arg1=${dot}/etc/cron.daily/daily.sh ;;
-mk) arg1=/system/etc/mkshrc ;;
 g4init | initg4) arg1=/system/etc/init.d/init_mnt.sh ;;
-g4 | G4) arg1=$dot/g4.sh ;;
 bprop) /system/build.prop ;;
 sh) arg1="${dot}/root/.nano/sh.nanorc" ;;
 sshd) arg1=/etc/ssh/sshd ;;
@@ -58,9 +60,7 @@ synergy) arg1="${dot_dir}/bin/synergy.sh" ;;
 xinitex) arg1=$HOME/.extend.xinitrc ;;
 yaourt) arg1=/etc/yaourtrc ;;
 .xres* | xres* | Xres* | .Xres*) arg1=~/.Xresources ;;
-ad) arg1=$dot/bin/ad ;;
 88) arg1=${dot}/bin/88 ;;
-harpia) arg1=${O:-/src/out}/debug/target/product/harpia ;;
 local) arg1="$src/.repo/local_manifests/local.xml" ;;
 amlimg) arg1=${dot}/bin/amlimg ;;
 al) arg1="${dot}/al.sh" ;;
@@ -71,8 +71,6 @@ bashlogout | bash.bash_logout) arg1=/etc/bash.bash_logout ;;
 bashprofile | .bash_*) arg1=~/.bash_profile ;;
 slash) arg1=$slash ;;
 bashrc) arg1=/etc/bash.bashrc ;;
-rc) arg1=$slash/etc/rc ;;
-boot) arg1=/boot/menu.lst ;;
 cheat) arg1=$HOME/.cheat/bash ;;
 chrome) arg1=$dot/root/.config/chromium-flags.conf ;;
 cmd | cmdline)
@@ -86,22 +84,7 @@ etcnanorc) arg1=/etc/nanorc ;;
 PKG*) arg1=$HOME/.cache/PKGDEST ;;
 AUR*) arg1=$HOME/.cache/AURDEST ;;
 ex) arg1="${dot}/ex.sh" ;;
-fn)
-	shopt -s extdebug
-	if declare -qF ${2} &>/dev/null; then
-		arg1="$(
-			shopt -s extdebug
-			declare -F ${2} | awk '{print $3}'
-		)"
-		arg2="$(
-			shopt -s extdebug
-			declare -F ${2} | awk '{print $2}'
-		)"
-	else
-		arg1="${dot}/fn.sh"
-	fi
-	shopt -u extdebug
-	;;
+fn) arg1="${dot}/fn.sh" ;;
 fstab) arg1=/etc/fstab ;;
 getty) arg1=/etc/systemd/system/getty.target.wants/getty@tty1.service ;;
 grub) arg1=/etc/default/grub ;;
@@ -122,6 +105,10 @@ ls_col* | lscol* | LS_COLORS)
 	arg1="/dot/.dir_colors"
 	;;
 make | makepkg) arg1=/etc/makepkg.conf ;;
+mk) arg1=$dot/slash/etc/mk ;;
+rc) arg1=$dot/slash/etc/rc ;;
+pushthem) arg1=$dot/slash/pushthem ;;
+
 mkinit*)
 	arg1="$(grep _config /etc/mkinitcpio.d/linux.preset | tail -n1 | cut -d= -f2)"
 	;;
@@ -180,57 +167,35 @@ zsh) arg1=$HOME/.zshrc ;;
 esac
 
 [[ $file_path ]] || file_path="$arg1"
-if [[ -e $arg1 ]]; then
-	"${execute}" "${arg1}" $arg2
-	exit
-fi
-type -P "${arg1}" &>/dev/null || file_path="$(type -P "${arg1}" | head -n1)"
-if [[ -e $file_path ]]; then
-	▏ "${execute}" "${file_path}" $arg2
-	▏ exit
-	exit
-fi
-
+test_result "$@"
 [[ $skip_search ]] && exit 2
-#shopt -s globstar extglob extquote
-
-#[[ -e ${file_path} ]] || for i in ${dot}/**/ /last/**/ /etc/**/ $dot/slash/**/ $HOME/.config/**/ /system/**/ $HOME/.cache/**/ /data/local/**/ /bin/**/ /usr/share/**/; do        file_path="${i}${arg1_untouched}";echo file_path="${i}${arg1_untouched}";  [[ -e ${file_path} ]] && break; done
-#	file_path="${i}${arg1_untouched}"
-#	[[ -e ${file_path} ]] && break
-#done
 findtmp=/tmp/find.tmp
 [[ -e $findtmp ]] || {
-	find /dot -type d -printf '"%p"\n' 2>/dev/null >"$findtmp"
-	fd --hidden --type d -a . /dot /etc /root /shell /usr /tmp 2>/dev/null >>"$findtmp"
+	find $dot -type d -printf '"%p"\n' 2>/dev/null >"$findtmp"
+	is_in_path fd && fd --hidden --max-depth 5 --type d -a $dot /etc /root /shell /tmp /usr 2>/dev/null >>"$findtmp"
 }
 for dir in $(<${findtmp:-/tmp/find.tmp}); do
-	[[ -e "$dir/$arg1_untouched" ]] &&
-		file_path="$dir/$arg1_untouched" &&
-		((silence = 1)) &&
-		"${execute}" "${file_path}" "$arg2" &&
-		exit
+	if [[ -e "$dir/$arg1_untouched" ]]; then
+		file_path="$dir/$arg1_untouched"
+		test_result "$@"
+	fi
 done
 
-#file_path=$(grep -m1 "$arg1_untouched$" /tmp/find.tmp 2>/dev/null)
-
-#for i in /*; do [[ -d $i ]] && [[ ! -h $i ]] && printf "%s " "$i"/;done
-#/BACKUP/ /boot/ /dev/ /dot/ /etc/ /home/ /last/ /lineage/ /lost+found/ /mnt/ /opt/ /out/ /proc/ /prog/ /root/ /run/ /sdk/ /srv/ /sys/ /tmp/ /usr/ /var/
-#[[ -e ${file_path} ]] || file_path=${fzf}
-#	fd --hidden --type f -a "${arg1_untouched}" /dot | fz +m --query="${arg1_untouched}" | read file_path ||
-#	exit "${LINENO}"
-IFS=$'\n' fd --full-path --hidden --type f -a . /dot | fz --query="$arg1_untouched" --exit-0 | read file_path
+is_in_path fd && is_in_path fzf && IFS=$'\n' fd --full-path --hidden --max-depth 5 --type f -a . $dot | fz --query="$arg1_untouched" --exit-0 >/tmp/file_path
 unset IFS
+
+file_path="$(</tmp/file_path)"
 [[ -e ${file_path} ]] || exit "${LINENO}"
 if ((silence == 1)); then
-	ANRED "${execute} ${C}${file_path} $arg2$R\n${execute} ${file_path} $arg2"
-	"${execute}" "${file_path[@]}" "$arg2"
+	#ANRED "${execute} ${C}${file_path} $arg2$R\n${execute} ${file_path} $arg2"
+	test_result "$@"
 	exit
 else
 	is_text "${file_path}" || ANBR "${UNDER}${file_path} IS NOT TEXT!!!\n"
 	ANBR "EXECUTE?${R} ${RED}${UNDER}${execute}${RES} ${C}${file_path}\n"
 
 	if yorn y; then
-		${execute} "${file_path}" || exit "${LINENO}"
+		test_result "$@" || exit "${LINENO}"
 		exit
 	fi
 

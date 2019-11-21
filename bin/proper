@@ -2,24 +2,42 @@
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Thu May 31 08:12:29 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.7.3 - #_# #@#310518#@# #2#
 #3#::..#####################_/dot/bin/propper_#######################..::#3#
+# vi: set filetype=sh:
 export cmd=' androidboot.selinux=permissive buildvariant=eng threadirqs nowatchdog fsck.repair=yes commit=30 errors=remount-ro rootfstype=ext4 raid=noautodetect plymouth.enable=0 smsc95xx.turbo_mode=N net.ifnames=0 noatime libahci.ignore_sss=1 cgroup_disable=memory sysrq_always_enabled'
 
-[[ -e /system ]] && mount -o remount,rw /system
-for i in /prog/AIK-Linux/ramdisk/default.prop ramdisk/default.prop ramdisk/build.prop /system/build.prop /default.prop default.prop build.prop /system/vendor/build.prop /vendor/build.prop "$@"; do
+[[ -e /system/build.prop ]] && mount -o remount,rw /system
+for i in /prog/AIK-Linux/ramdisk/default.prop \
+	ramdisk/default.prop \
+	ramdisk/build.prop \
+	/system/build.prop \
+	/default.prop \
+	default.prop \
+	build.prop \
+	/system/vendor/build.prop \
+	/vendor/build.prop \
+	/system/system/build.prop \
+	/system/system/vendor/build.prop \
+	/system/system/etc/prop.default "$@"; do
 	[[ -r $i ]] || continue
 	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
 		-e "s/ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
-		-e "s/ro.debuggable=0$/ro.debuggable=1/" \
+		-e "s/ro.debuggable=0/ro.debuggable=1/" \
+		-e "s/ro.secure=1/ro.secure=0/" \
+		-e "s/ro.adb.secure=1/ro.adb.secure=0/" \
+		-e "s/ro.build.type=user$/ro.build.type=userdebug/" \
+		-e "s/release-keys/test-keys/" \
+		-e "s/persist.sys.usb.config=.*/persist.sys.usb.config=mtp,adb/" \
+		-e "s/#ro.boot.selinux=disable/ro.boot.selinux=disable/" \
+		-e "s/ro.selinux=0/ro.selinux=1/" \
 		-e "s/MM-dd-yyyy/dd-MM-yyyy/" \
+		-e "s/ro.storage_manager.enabled=1/ro.storage_manager.enabled=0/" \
 		-e "s/=en-US$/=en-CA/" \
-		-e "s|persist.sys.timezone=.*|persist.sys.timezone=America/Toronto|" \
 		-e "s/dalvik.vm.isa.arm.variant=cortex-a9/dalvik.vm.isa.arm.variant=cortex-a53/" \
-		-e "s/ro.platform.keepbackground.app=.*/#ro.platform.keepbackground.app=/" \
+		-e "s/^ro.platform.keepbackground.app=.*/#ro.platform.keepbackground.app=/" \
 		-e "s/ro.net.pppoe=true/ro.net.pppoe=false/" \
 		-e "s/ro.platform.has.pppoe.*/ro.platform.has.pppoe=false/" \
 		-e "s/ro.product.locale=.*/ro.product.locale=en-CA/" \
 		-e "s/=US$/=CA/" \
-		-e "s/ro.sf.lcd_density=.*/ro.sf.lcd_density=640/" \
 		-e "s|=q201$|=S912|" \
 		-e "s|=q9377$|=S912|" \
 		-e "s/=cortex-a7$/=cortex-a53/" \
@@ -37,36 +55,39 @@ for i in init.rc ramdisk/init.rc output/initrd/init.rc; do
 	sed -e "s|write /proc/sys/kernel/sysrq 0|write /proc/sys/kernel/sysrq 1|" -i "$i"
 done
 
-to_edit=split_img/boot.img-cmdline
-if [[ -e $to_edit ]] && ! grep sysrq_always_enabled $to_edit; then
-	cmdline=${TMPDIR:-/tmp}/cmdline
-	sed 's/ buildvariant=user //' -i $to_edit
-	rm $cmdline 2>/dev/null
-	echo "$(<$to_edit)${cmd}" >>$cmdline
-	cat $cmdline >$to_edit
-fi
+#to_edit=split_img/boot.img-cmdline
+#if [[ -e $to_edit ]] && ! grep sysrq_always_enabled $to_edit; then
+#	cmdline=${TMPDIR:-/tmp}/cmdline
+#	sed 's/ buildvariant=user //' -i $to_edit
+#	rm $cmdline 2>/dev/null
+#	echo "$(<$to_edit)${cmd}" >>$cmdline
+#	cat $cmdline >$to_edit
+#i
 
 if [[ -e /system/etc/gps.conf ]]; then
 	sed -e "s|SUPL_HOST=NONE|SUPL_HOST=supl.google.com|" -i /system/etc/gps.conf
 fi
 
-for fstab in fstab.amlogic ramdisk/fstab.amlogic initrd/fstab.amlogic ramdisk/fstab fstab ramdisk/fstab.qcom fstab.qcom; do
-	[[ -e $fstab ]] || continue
-	sed -e "s|barrier=1|barrier=0|" -e "s|discard|nodiscard|" -e "s|/dev/block/zram0.*|##|" -i "$fstab"
-done
+#for fstab in fstab.amlogic ramdisk/fstab.amlogic initrd/fstab.amlogic ramdisk/fstab fstab ramdisk/fstab.qcom fstab.qcom; do
+#	[[ -e $fstab ]] || continue
+#	sed -e "s|barrier=1|barrier=0|" -e "s|discard|nodiscard|" -e "s|/dev/block/zram0.*|##|" -i "$fstab"
+#done
 
 if [[ ! -e /sdcard/bbx.conf ]] && [[ -e /sdcard ]]; then
+	ANLG "What folllows, friends, is bullshit comin from $V$dot/bin/proper$LG I should concatanate in a better suited file$R\n"
 	cd /external_sd 2>/dev/null || cd $ex || cd /storage/????-???? || cd /sdcard || echo "Error!"
-	cp -av 2ndLine Open-GApps TWRP XposedInstaller smartbar_configs ssh bbx.conf /sdcard/ 2>/dev/null
+	mkdir -p /sdcard/TWRP
+	/data/sbin/cp -avu sdcard/* /sdcard/ || cp -av sdcard/* /sdcard/
+	cp -av Open-GApps XposedInstaller smartbar_configs ssh bbx.conf /sdcard/ 2>/dev/null
 fi
 
-i=boot/bootimg.cfg
-[[ -e $i ]] && {
-	name="$(grep ro.build.fingerprint system/build.prop | cut -d= -f2)"
-	sed -e "s/bootsize = .*/bootsize =/" \
-		-e "s|name =.*|name = $name|" -i "$i"
-	sed -e "s|cmdline =.*|cmdline = $cmd|" -i "$i"
-}
+#i=boot/bootimg.cfg
+#[[ -e $i ]] && {
+#	name="$(grep ro.build.fingerprint system/build.prop | cut -d= -f2)"
+#	sed -e "s/bootsize = .*/bootsize =/" \
+#		-e "s|name =.*|name = $name|" -i "$i"
+#	sed -e "s|cmdline =.*|cmdline = $cmd|" -i "$i"
+#}
 pathfix() {
 	[[ -e $1 ]] || return
 	sed -e "s|export PATH.*|export PATH /sbin:/vendor/bin:/system/bin:/su/xbin:/system/xbin:/system/sbin:/su/bin:/su/xbin:/data/dot/slash/sbin:/data/dot/bin:/data/dot/bin/final:/data/dot/slash/etc|" -i $1
@@ -82,19 +103,29 @@ pathfix() {
 #		pathfix $file
 #	fi
 #done
+#for dir in /system/etc /system/system/etc /system/vendor/etc /system/system/vendor/etc /system/system /system; do
+#	for files in bash.bash_logout bash.bashrc gps.conf group hosts mkshrc nanorc prop.default timezone fstab.mt6765 fstab.enableswap $(
+#		cd $ex/rootdir/
+#		echo **
+#	); do
+#		[[ -e $files ]] && chmod 644 "$files"
+#		dirfile="$dir/$files"
+#		[[ -e $dirfile ]] && chmod 644 "$dirfile"
+#	done
+#done
 
-if [[ ! -e /oem ]] && [[ $1 == boot ]]; then
-	for target in initrd/default.prop ramdisk/default.prop /default.prop default.prop "$@"; do
-		string="PROPER"
-		[[ -r $target ]] || continue
-		#	grep -q "$string" "$build" && continue
-		prop-replace "$dot/bin/default.prop" "$string" "$target"
-	done
-fi
+#if [[ ! -e /oem ]] && [[ $1 == boot ]]; then
+#	for target in initrd/default.prop ramdisk/default.prop /default.prop /prop.default /system/prop.default default.prop $(find /system -name prop.default | head -n1) "$@"; do
+#		string="PROPER"
+#		[[ -r $target ]] || continue
+#		#	grep -q "$string" "$build" && continue
+#		prop-replace "$dot/bin/default.prop" "$string" "$target"
+#	done
+#fi
 
-for target in ramdisk/system/build.prop /vendor/build.prop /system/vendor/build.prop /system/build.prop system/build.prop build.prop "$@"; do
-	string='PROPER_SYS'
-	[[ -r $target ]] || continue
-	prop-replace "$dot/bin/build.prop" "$string" "$target" &&  ANG ""Prop values changed: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
-#    ANY ""Proper NOT done.: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
-done
+#for target in ramdisk/system/build.prop /system/system/build.prop /system/build.prop system/build.prop build.prop $(find /system -name build.prop | head -n1) "$@"; do
+#	string='PROPER_SYS'
+#	[[ -r $target ]] || continue
+#	prop-replace "$dot/bin/build.prop" "$string" "$target" && ANG ""Prop values changed: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
+#	#    ANY ""Proper NOT done.: ${W}$dot/bin/build.prop" "$string" "$target"${R}\\n"
+#done

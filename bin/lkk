@@ -1,0 +1,67 @@
+#-*- coding: utf-8 -*-
+# vim: set filetype=sh:
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Sun Oct 13 18:42:16 EDT 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-10-13#@# #2#
+##3#::..#####################_/dot/bin/lkk_#######################..::#3#
+lkk() {
+	if [[ -e /oem ]]; then
+		adbhell="adb shell "
+		lk1_5="$(find /storage/????-????/ -iname 1.5_lk.img | head -n1)"
+		block="/dev/block/mmcblk0p23"
+		lk="$(find /storage/????-????/rooted-rom/ -name lk.img | head -n1)"
+		recovery="/dev/block/by-name/recovery"
+	else
+		adbhell=
+		recovery="/dev/block/by-name/recovery"
+		lk="$($adbhell 'readlink "$(find /dev/block -iname lk | tail -n1)"')"
+		lk1_5="$(find /last/power -name 1.5_lk.img | tail -n1)"
+		block="$($adbhell 'readlink "$(find /dev/block -name $search | tail -n1)"')"
+	fi
+	case $1 in
+	lk | lk2)
+		$adbhell dd if="$lk1_5" of="${block}" status=progress conv=notrunc
+		$adbhell dd if="$lk1_5" of="/dev/block/by-name/lk2" status=progress conv=notrunc
+		$adbhell dd if="recovery-mod.img" of="${recovery}" status=progress conv=notrunc
+
+		;;
+	twrp | recovery)
+		cd $ex/rooted-rom || return
+		for search in recovery lk lk2; do
+			block="$(readlink "$(find /dev/block -name $search | tail -n1)")"
+			[[ -e $block ]] || continue
+			echo "dd if=\"${search}-mod.img\" of=\"${block}\" status=progress conv=notrunc"
+			dd if="${search}-mod.img" of="${block}" status=progress conv=notrunc
+		done
+
+		;;
+	normal | restore)
+		cd $ex/rooted-rom || return
+
+		for search in recovery lk lk2; do
+			block="$(readlink "$(find /dev/block -name $search | tail -n1)")"
+			[[ -e $block ]] || continue
+			echo "dd if=\"${search}.img\" of=\"${block}\" status=progress conv=notrunc"
+			dd if="${search}.img" of="${block}" status=progress conv=notrunc
+		done
+
+		;;
+	*)
+
+		echo select img to flash
+		select img in ./*.img q; do break; done
+		[[ $img == q ]] && quit
+
+		echo select partition to flash
+		select part in /dev/block/by-name/*; do break; done
+		part_real="$(readlink $part)"
+		echo "dd $img in $part_real ?"
+		if yorn; then
+			set -x
+			dd if="$img" of="$part_real" seek=0 conv=notrunc
+			set +x
+		fi
+		;;
+
+	esac
+}
+lkk "$@"

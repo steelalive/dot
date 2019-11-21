@@ -1,0 +1,2056 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/45968eff/
+#id	root/folders/.nano/nanorc/examples/CSS.css	/^body, .class, #id {$/;"	i
+$NVIM_TUI_ENABLE_TRUE_COLOR	root/folders/.config/nvim/local.vim	/^  let $NVIM_TUI_ENABLE_TRUE_COLOR=1$/;"	v
+$NVIM_TUI_ENABLE_TRUE_COLOR	root/folders/.config/nvim/local.vim	/^let $NVIM_TUI_ENABLE_TRUE_COLOR=1$/;"	v
+--	al.sh	/^alias -- -='builtin \\cd - && lk '$/;"	a
+.class	root/folders/.nano/nanorc/examples/CSS.css	/^body, .class, #id {$/;"	c
+.hl.com	bin/highlight.css	/^.hl.com { color:#8a8a8a; }$/;"	c
+.hl.esc	bin/highlight.css	/^.hl.esc { color:#ffa500; }$/;"	c
+.hl.ipl	bin/highlight.css	/^.hl.ipl { color:#d084ce; }$/;"	c
+.hl.kwa	bin/highlight.css	/^.hl.kwa { color:#a56a30; font-weight:bold; }$/;"	c
+.hl.kwb	bin/highlight.css	/^.hl.kwb { color:#c7ca87; }$/;"	c
+.hl.kwc	bin/highlight.css	/^.hl.kwc { color:#30a630; }$/;"	c
+.hl.kwd	bin/highlight.css	/^.hl.kwd { color:#3b84cc; }$/;"	c
+.hl.kwe	bin/highlight.css	/^.hl.kwe { color:#ff0000; font-weight:bold; }$/;"	c
+.hl.lin	bin/highlight.css	/^.hl.lin { color:#777777; }$/;"	c
+.hl.mark	bin/highlight.css	/^a.hl, a.hl:visited {color:inherit;font-weight:inherit;}.hl.mark { background-color:#ffffff; widt/;"	c
+.hl.num	bin/highlight.css	/^.hl.num { color:#face43; }$/;"	c
+.hl.opt	bin/highlight.css	/^.hl.opt { color:#5e99c4; }$/;"	c
+.hl.ppc	bin/highlight.css	/^.hl.ppc { color:#6f77f3; }$/;"	c
+.hl.pps	bin/highlight.css	/^.hl.pps { color:#1cee69; }$/;"	c
+.hl.slc	bin/highlight.css	/^.hl.slc { color:#36d9b8; }$/;"	c
+.hl.str	bin/highlight.css	/^.hl.str { color:#d9ff77; }$/;"	c
+0	root/.repo_.gitconfig.json	/^    "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \\"if [[ $`echo $VAR/;"	s	array:alias.change-commits
+0	root/.repo_.gitconfig.json	/^    "!f() { git fetch $1 $2; git branch _FETCH_HEAD FETCH_HEAD && git rebase HEAD _FETCH_HEAD &&/;"	s	array:alias.merge-pr
+0	root/.repo_.gitconfig.json	/^    "!git config -l | grep alias | cut -c 7-"$/;"	s	array:alias.la
+0	root/.repo_.gitconfig.json	/^    "10"$/;"	s	array:help.autocorrect
+0	root/.repo_.gitconfig.json	/^    "\/root\/.gitignore_global"$/;"	s	array:core.excludesfile
+0	root/.repo_.gitconfig.json	/^    "always"$/;"	s	array:branch.autosetuprebase
+0	root/.repo_.gitconfig.json	/^    "auto"$/;"	s	array:color.branch
+0	root/.repo_.gitconfig.json	/^    "auto"$/;"	s	array:color.diff
+0	root/.repo_.gitconfig.json	/^    "auto"$/;"	s	array:color.grep
+0	root/.repo_.gitconfig.json	/^    "auto"$/;"	s	array:color.interactive
+0	root/.repo_.gitconfig.json	/^    "auto"$/;"	s	array:color.status
+0	root/.repo_.gitconfig.json	/^    "cache --timeout=86400"$/;"	s	array:credential.helper
+0	root/.repo_.gitconfig.json	/^    "cyan"$/;"	s	array:color.status.untracked
+0	root/.repo_.gitconfig.json	/^    "demers.francis@hotmail.com"$/;"	s	array:user.email
+0	root/.repo_.gitconfig.json	/^    "diff-so-fancy | less --tabs=4 -RFX"$/;"	s	array:core.pager
+0	root/.repo_.gitconfig.json	/^    "false"$/;"	s	array:core.legacyheaders
+0	root/.repo_.gitconfig.json	/^    "false"$/;"	s	array:http.sslverify
+0	root/.repo_.gitconfig.json	/^    "full"$/;"	s	array:log.decorate
+0	root/.repo_.gitconfig.json	/^    "github:"$/;"	s	array:url.git@github.com.insteadof
+0	root/.repo_.gitconfig.json	/^    "green bold"$/;"	s	array:color.diff.new
+0	root/.repo_.gitconfig.json	/^    "green"$/;"	s	array:color.branch.remote
+0	root/.repo_.gitconfig.json	/^    "green"$/;"	s	array:color.status.changed
+0	root/.repo_.gitconfig.json	/^    "input"$/;"	s	array:core.autocrl
+0	root/.repo_.gitconfig.json	/^    "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C/;"	s	array:alias.clog
+0	root/.repo_.gitconfig.json	/^    "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold bl/;"	s	array:alias.lg
+0	root/.repo_.gitconfig.json	/^    "log --oneline --graph --decorate --all"$/;"	s	array:alias.lol
+0	root/.repo_.gitconfig.json	/^    "log --pretty=format:%C(yellow)%h\\\\ %ad%Cred%d\\\\ %Creset%s%Cblue\\\\ [%cn] --decorate --/;"	s	array:alias.l
+0	root/.repo_.gitconfig.json	/^    "magenta bold"$/;"	s	array:color.diff.frag
+0	root/.repo_.gitconfig.json	/^    "oneline"$/;"	s	array:format.pretty
+0	root/.repo_.gitconfig.json	/^    "push --force-with-lease"$/;"	s	array:alias.fpush
+0	root/.repo_.gitconfig.json	/^    "red bold"$/;"	s	array:color.diff.old
+0	root/.repo_.gitconfig.json	/^    "simple"$/;"	s	array:push.default
+0	root/.repo_.gitconfig.json	/^    "status"$/;"	s	array:alias.st
+0	root/.repo_.gitconfig.json	/^    "steelalive"$/;"	s	array:user.name
+0	root/.repo_.gitconfig.json	/^    "steelalive", $/;"	s	array:github.user
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:advice.statushints
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:color.ui
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:core.filemode
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:interactive.singlekey
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:push.followtags
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:repack.usedeltabaseoffset
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:rerere.autoupdate
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:rerere.enabled
+0	root/.repo_.gitconfig.json	/^    "true"$/;"	s	array:stash.showpatch
+0	root/.repo_.gitconfig.json	/^    "xz -c"$/;"	s	array:tar.tar.xz.command
+0	root/.repo_.gitconfig.json	/^    "yellow bold"$/;"	s	array:color.diff.meta
+0	root/.repo_.gitconfig.json	/^    "yellow reverse"$/;"	s	array:color.branch.current
+0	root/.repo_.gitconfig.json	/^    "yellow"$/;"	s	array:color.branch.local
+0	root/.repo_.gitconfig.json	/^    "yellow"$/;"	s	array:color.status.added
+0Å‚	slash/Busybox-installer-arm.bin	/^†Ü‡∞†„0†·ˇÄÖ‡ †·ˇ	êÜ‡∞†„0†·ˇ∞à‡ †·ˇ!êÂ0ñÂ*^ˆˇÎ1îÂ*5ˆˇÎQÑÂ.†„0Å‚: †„ˇ É‚:†„Ç/;"	f
+1	root/.repo_.gitconfig.json	/^    "steelalive"$/;"	s	array:github.user
+8	bin/spark	/^  local f=$(( (($max-$min)<<8)\/(${#ticks[@]}-1) ))$/;"	h
+;	root/folders/.config/nvim/local.vim	/^nnoremap ; :$/;"	m
+<F8>	root/folders/.config/nvim/local.vim	/^ map <F8>        :call SwitchColor(1)<CR>$/;"	m
+<F8>	root/folders/.config/nvim/local.vim	/^imap <F8>   <Esc>:call SwitchColor(1)<CR>$/;"	m
+<S-F8>	root/folders/.config/nvim/local.vim	/^ map <S-F8>      :call SwitchColor(-1)<CR>$/;"	m
+<S-F8>	root/folders/.config/nvim/local.vim	/^imap <S-F8> <Esc>:call SwitchColor(-1)<CR>$/;"	m
+<leader>q	root/folders/.config/nvim/local.vim	/^nmap <silent> <leader>q :wq $MYVIMRC<CR>$/;"	m
+A spiffy collection of nano syntax highlighting files	root/folders/.nano/README.md	/^A spiffy collection of nano syntax highlighting files$/;"	s
+ACCURACY_THRES	slash/etc/bash/gps.conf	/^ACCURACY_THRES=0$/;"	k
+ACCURACY_THRES	slash/etc/gps.conf	/^ACCURACY_THRES=0$/;"	k
+AGPS_CONFIG_INJECT	slash/etc/bash/gps.conf	/^AGPS_CONFIG_INJECT = 1$/;"	k
+AGPS_CONFIG_INJECT	slash/etc/gps.conf	/^AGPS_CONFIG_INJECT = 1$/;"	k
+ALL	root/folders/.nano/nanorc/Makefile	/^ALL    = $(addprefix build\/, $(FILES)) build\/ALL.nanorc$/;"	m
+ANH	anset.sh	/^alias ANH='. "${dot}"\/anset.sh;${dot}\/anset.sh h'$/;"	a
+APT_INSTALL	bin/insit	/^	APT_INSTALL(){$/;"	f
+AP_CLOCK_PPM	slash/etc/bash/gps.conf	/^AP_CLOCK_PPM = 100$/;"	k
+AP_CLOCK_PPM	slash/etc/gps.conf	/^AP_CLOCK_PPM = 100$/;"	k
+AP_TIMESTAMP_UNCERTAINTY	slash/etc/bash/gps.conf	/^AP_TIMESTAMP_UNCERTAINTY = 10$/;"	k
+AP_TIMESTAMP_UNCERTAINTY	slash/etc/gps.conf	/^AP_TIMESTAMP_UNCERTAINTY = 10$/;"	k
+ARG_SUPPRESS	bin/speedtest.py	/^    from argparse import SUPPRESS as ARG_SUPPRESS$/;"	x
+ARG_SUPPRESS	bin/speedtest.py	/^    from optparse import SUPPRESS_HELP as ARG_SUPPRESS$/;"	x
+AWK_PARAMS=	bin/prettyping	/^	AWK_PARAMS=()$/;"	f
+A_GLONASS_POS_PROTOCOL_SELECT	slash/etc/bash/gps.conf	/^A_GLONASS_POS_PROTOCOL_SELECT = 0x4$/;"	k
+A_GLONASS_POS_PROTOCOL_SELECT	slash/etc/gps.conf	/^A_GLONASS_POS_PROTOCOL_SELECT = 0x4$/;"	k
+Abs	root/folders/.nano/nanorc/examples/Go.go	/^func (v *Vertex) Abs() float64 {$/;"	f	unknown:main.Vertex	typeref:typename:float64
+App::Ack	bin/final/ack2	/^package App::Ack;$/;"	p
+App::Ack::ConfigDefault	bin/final/ack2	/^package App::Ack::ConfigDefault;$/;"	p
+App::Ack::ConfigFinder	bin/final/ack2	/^package App::Ack::ConfigFinder;$/;"	p
+App::Ack::ConfigLoader	bin/final/ack2	/^package App::Ack::ConfigLoader;$/;"	p
+App::Ack::Filter	bin/final/ack2	/^package App::Ack::Filter;$/;"	p
+App::Ack::Filter::Collection	bin/final/ack2	/^package App::Ack::Filter::Collection;$/;"	p
+App::Ack::Filter::Default	bin/final/ack2	/^package App::Ack::Filter::Default;$/;"	p
+App::Ack::Filter::Extension	bin/final/ack2	/^package App::Ack::Filter::Extension;$/;"	p
+App::Ack::Filter::ExtensionGroup	bin/final/ack2	/^package App::Ack::Filter::ExtensionGroup;$/;"	p
+App::Ack::Filter::FirstLineMatch	bin/final/ack2	/^package App::Ack::Filter::FirstLineMatch;$/;"	p
+App::Ack::Filter::Inverse	bin/final/ack2	/^package App::Ack::Filter::Inverse;$/;"	p
+App::Ack::Filter::Is	bin/final/ack2	/^package App::Ack::Filter::Is;$/;"	p
+App::Ack::Filter::IsGroup	bin/final/ack2	/^package App::Ack::Filter::IsGroup;$/;"	p
+App::Ack::Filter::IsPath	bin/final/ack2	/^package App::Ack::Filter::IsPath;$/;"	p
+App::Ack::Filter::IsPathGroup	bin/final/ack2	/^package App::Ack::Filter::IsPathGroup;$/;"	p
+App::Ack::Filter::Match	bin/final/ack2	/^package App::Ack::Filter::Match;$/;"	p
+App::Ack::Filter::MatchGroup	bin/final/ack2	/^package App::Ack::Filter::MatchGroup;$/;"	p
+App::Ack::Resource	bin/final/ack2	/^package App::Ack::Resource;$/;"	p
+App::Ack::Resources	bin/final/ack2	/^package App::Ack::Resources;$/;"	p
+Architecture	info/pacman.conf	/^Architecture = auto$/;"	k	section:options
+ArgParser	bin/speedtest.py	/^    from argparse import ArgumentParser as ArgParser$/;"	x
+ArgParser	bin/speedtest.py	/^    from optparse import OptionParser as ArgParser$/;"	x
+Array operations	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#array-operations" aria-hidden="true" class="anchor" id="user-content-array-operati/;"	i
+BACKUP_PROMPT	bin/insit	/^						BACKUP_PROMPT(){$/;"	f
+BINARIES	info/mkinitcpio-systemd.conf	/^BINARIES=()$/;"	k
+BINARIES	info/mkinitcpio.conf	/^BINARIES=()$/;"	k
+BUILDDIR	info/makepkg.conf	/^BUILDDIR=\/tmp\/makepkg$/;"	k
+BUILDENV	info/makepkg.conf	/^BUILDENV=(!distcc color ccache check !sign)$/;"	k
+BUILD_EXAMPLES	root/folders/.nano/nanorc/examples/CMakeLists.txt	/^OPTION(BUILD_EXAMPLES "Build examples" OFF)$/;"	D
+Backup_Partition_Enable	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Backup_Partition_Enable=$/;"	k	section:System
+BeautifyBash	bin/beautify.rb	/^module BeautifyBash$/;"	m
+Bookmarks	info/bookmarks_6_13_17.html	/^<H1>Bookmarks<\/H1>$/;"	h
+Bookmarks bar	info/bookmarks_6_13_17.html	/^    <DT><H3 ADD_DATE="1497286844" LAST_MODIFIED="1496560427" PERSONAL_TOOLBAR_FOLDER="true">Book/;"	j
+Bourne shell scripts	root/folders/.nano/README.md	/^## Bourne shell scripts$/;"	s
+BytesIO	bin/speedtest.py	/^        BytesIO = None$/;"	v
+BytesIO	bin/speedtest.py	/^    BytesIO = None$/;"	v
+C/C++	root/folders/.nano/README.md	/^## C\/C++$/;"	s
+CAPABILITIES	slash/etc/bash/gps.conf	/^CAPABILITIES=0x35$/;"	k
+CAPABILITIES	slash/etc/gps.conf	/^CAPABILITIES=0x35$/;"	k
+CARCH	info/makepkg.conf	/^CARCH="x86_64"$/;"	k
+CERT_ERROR	bin/speedtest.py	/^        CERT_ERROR = tuple()$/;"	v
+CFLAGS	info/makepkg.conf	/^CFLAGS="-march=native -mtune=native -O2 -pipe -fno-plt --param=ssp-buffer-size=4"$/;"	k
+CHOST	info/makepkg.conf	/^CHOST="x86_64-pc-linux-gnu"$/;"	k
+CHROOT_ACTIVE_MOUNTS=	bin/arch-chroot	/^	CHROOT_ACTIVE_MOUNTS=()$/;"	f
+CLUT	bin/hextoxterm	/^CLUT = [  # color look-up table$/;"	v
+COMPREPLY=	completion.bash	/^    COMPREPLY=()$/;"	f
+COMPRESSBZ2	info/makepkg.conf	/^COMPRESSBZ2=(bzip2 -c -f)$/;"	k
+COMPRESSGZ	info/makepkg.conf	/^COMPRESSGZ=(gzip -c -f -n)$/;"	k
+COMPRESSION	info/mkinitcpio-systemd.conf	/^COMPRESSION=(cat)$/;"	k
+COMPRESSION	info/mkinitcpio.conf	/^COMPRESSION="cat"$/;"	k
+COMPRESSLRZ	info/makepkg.conf	/^COMPRESSLRZ=(lrzip -q)$/;"	k
+COMPRESSLZO	info/makepkg.conf	/^COMPRESSLZO=(lzop -q)$/;"	k
+COMPRESSXZ	info/makepkg.conf	/^COMPRESSXZ=(xz -c -z - --threads=4)$/;"	k
+COMPRESSZ	info/makepkg.conf	/^COMPRESSZ=(compress -c -f)$/;"	k
+CSS	root/folders/.nano/README.md	/^## CSS$/;"	s
+CXXFLAGS	info/makepkg.conf	/^CXXFLAGS="$CFLAGS"$/;"	k
+CacheDir	info/pacman.conf	/^CacheDir = \/last\/pacman\/pkg\/$/;"	k	section:options
+Changing record separators	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#changing-record-separators" aria-hidden="true" class="anchor" id="user-content-cha/;"	i
+CleanMethod	info/pacman.conf	/^CleanMethod = KeepCurrent KeepInstalled$/;"	k	section:options
+Code Example	root/folders/.nano/nanorc/examples/README.md	/^Code Example$/;"	s
+ConfigRetrievalError	bin/speedtest.py	/^class ConfigRetrievalError(SpeedtestHTTPError):$/;"	c
+Creating new fields	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#creating-new-fields" aria-hidden="true" class="anchor" id="user-content-creating-n/;"	i
+DBGSRCDIR	info/makepkg.conf	/^DBGSRCDIR="\/usr\/src\/debug"$/;"	k
+DEBUG	bin/speedtest.py	/^DEBUG = False$/;"	v
+DEBUG_CFLAGS	info/makepkg.conf	/^DEBUG_CFLAGS="-g -fvar-tracking-assignments"$/;"	k
+DEBUG_CXXFLAGS	info/makepkg.conf	/^DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"$/;"	k
+DEBUG_LEVEL	slash/etc/bash/gps.conf	/^DEBUG_LEVEL = 0$/;"	k
+DEBUG_LEVEL	slash/etc/gps.conf	/^DEBUG_LEVEL = 0$/;"	k
+DIR	root/folders/.nano/nanorc/Makefile	/^DIR    = $(HOME)\/.nano\/ALL$/;"	m
+DLAGENTS	info/makepkg.conf	/^DLAGENTS=('file::\/usr\/bin\/curl -gqC - -o %o %u'$/;"	k
+DOC_DIRS	info/makepkg.conf	/^DOC_DIRS=(usr\/{,local\/}{,share\/}{doc,gtk-doc} opt\/*\/{doc,gtk-doc})$/;"	k
+DOM	bin/speedtest.py	/^        from xml.dom import minidom as DOM$/;"	x
+DOWNLOAD	info/bookmarks_6_13_17.html	/^        <DT><H3 ADD_DATE="1497286923" LAST_MODIFIED="1497286923">DOWNLOAD<\/H3>$/;"	j
+DR_SYNC_ENABLED	slash/etc/bash/gps.conf	/^DR_SYNC_ENABLED = 0$/;"	k
+DR_SYNC_ENABLED	slash/etc/gps.conf	/^DR_SYNC_ENABLED = 0$/;"	k
+Dealing with duplicates	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#dealing-with-duplicates" aria-hidden="true" class="anchor" id="user-content-dealin/;"	i
+Description	root/folders/.nano/nanorc/README.md	/^Description$/;"	s
+ENABLE_WIPER	slash/etc/bash/gps.conf	/^ENABLE_WIPER=1$/;"	k
+ENABLE_WIPER	slash/etc/gps.conf	/^ENABLE_WIPER=1$/;"	k
+END	bin/git-cheat	/^	cat <<END$/;"	h
+EOF	bin/arch-chroot	/^	cat <<EOF$/;"	h
+EOF	bin/debug	/^	cat <<'EOF'$/;"	h
+EOF	bin/debug	/^	cat <<EOF$/;"	h
+EOF	bin/debug	/^	fmt <<EOF$/;"	h
+EOF	bin/emojify	/^	cat <<EOF$/;"	h
+EOF	bin/final/catall	/^cat <<'EOF'$/;"	h
+EOF	bin/insit	/^								done <<-EOF$/;"	h
+EOF	bin/insit	/^				done <<-EOF$/;"	h
+EOF	bin/insit	/^			done <<-EOF$/;"	h
+EOF	bin/insit	/^	done <<-EOF$/;"	h
+EOF	bin/prettyping	/^	cat <<EOF$/;"	h
+EOF	bin/script.bash	/^			cat <<'EOF'$/;"	h
+EOF	bin/script.bash	/^			cat <<EOF$/;"	h
+EOF	bin/script.bash	/^			fmt <<EOF$/;"	h
+EOF	bin/tldr	/^	cat <<EOF$/;"	h
+EOF	bin/wppw	/^cat <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$p199 <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$p238 <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$p685 <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$p743 <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$p803 <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$pchalet4 <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$pdemande <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$pencore <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$plavigne <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$pmk <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$ppimbana <<EOF$/;"	h
+EOF	bin/wpreconf	/^		\/usr\/bin\/cat >$ptremblant <<EOF$/;"	h
+EOF	bin/wpreconf	/^\/usr\/bin\/cat >\/root\/bin\/wpa\/11head <<EOF$/;"	h
+ERR	bin/insit	/^ERR(){ printf "[L%0.4d] ERROR: %s\\n" "$1" "$2" 1>&2; }$/;"	f
+ERR_ESTIMATE	slash/etc/bash/gps.conf	/^ERR_ESTIMATE=0$/;"	k
+ERR_ESTIMATE	slash/etc/gps.conf	/^ERR_ESTIMATE=0$/;"	k
+ET	bin/speedtest.py	/^        ET = None$/;"	v
+ET	bin/speedtest.py	/^        import xml.etree.ElementTree as ET$/;"	I
+ET	bin/speedtest.py	/^    import xml.etree.cElementTree as ET$/;"	I
+Example	bin/final/ack2	/^Example: ack -i select$/;"	l
+Examples	root/folders/.nano/nanorc/examples/README.md	/^Examples$/;"	c
+Executing Perl code	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#executing-perl-code" aria-hidden="true" class="anchor" id="user-content-executing-/;"	i
+FAQ	root/folders/.nano/nanorc/README.md	/^FAQ$/;"	s
+FILE	bin/insit	/^	FILE(){$/;"	f
+FILES	info/mkinitcpio-systemd.conf	/^FILES=()$/;"	k
+FILES	info/mkinitcpio.conf	/^FILES=()$/;"	k
+FILES	root/folders/.nano/nanorc/Makefile	/^FILES  = $(addsuffix .nanorc, $(LANGS))$/;"	m
+FILTER	root/folders/.nano/nanorc/Makefile	/^FILTER = sed -f mixins.sed | sed -f $(THEME)$/;"	m
+FacuM/android_kernel_motorola_msm8916-2	info/local_manifests/local.xml	/^  <project name="FacuM\/android_kernel_motorola_msm8916-2" path="kernel\/motorola\/msm8916" revi/;"	p
+FakeShutdownEvent	bin/speedtest.py	/^class FakeShutdownEvent(object):$/;"	c
+Field processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#field-processing" aria-hidden="true" class="anchor" id="user-content-field-process/;"	i
+File	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^File=Image\/FlashData.bin,Image\/FlashBoot.bin$/;"	k	section:UserPart1
+File	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^File=Image\/boot.img$/;"	k	section:UserPart4
+File	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^File=Image\/kernel.img$/;"	k	section:UserPart3
+File	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^File=Image\/uboot.img$/;"	k	section:UserPart2
+File::Next	bin/final/ack2	/^package File::Next;$/;"	p
+FileMapping	slash/etc/highlight/filetypes.conf	/^FileMapping = {$/;"	k
+Files found 'round the net (see the file for more info)	root/folders/.nano/README.md	/^### Files found 'round the net (see the file for more info)$/;"	S
+Files from [aaronhamilton / coffeescript-nano](https://github.com/aaronhamilton/coffeescript-nano)	root/folders/.nano/README.md	/^### Files from [aaronhamilton \/ coffeescript-nano](https:\/\/github.com\/aaronhamilton\/coffees/;"	S
+Files from [nanosyntax](http://code.google.com/p/nanosyntax/) (New BSD license)	root/folders/.nano/README.md	/^### Files from [nanosyntax](http:\/\/code.google.com\/p\/nanosyntax\/) (New BSD license)$/;"	S
+Files from [scopatz / nanorc](https://github.com/scopatz/nanorc) ('do whatever you want' licence)	root/folders/.nano/README.md	/^### Files from [scopatz \/ nanorc](https:\/\/github.com\/scopatz\/nanorc) ('do whatever you want/;"	S
+Flag	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Flag=$/;"	k	section:UserPart2
+Flag	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Flag=$/;"	k	section:UserPart3
+Flag	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Flag=$/;"	k	section:UserPart4
+Flag	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Flag=0$/;"	k	section:UserPart1
+Foo	root/folders/.nano/nanorc/examples/Python.py	/^class Foo():$/;"	c
+Further Reading	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#further-reading" aria-hidden="true" class="anchor" id="user-content-further-readin/;"	i
+FwVersion	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^FwVersion=$/;"	k	section:System
+GZIP_BASE	bin/speedtest.py	/^    GZIP_BASE = gzip.GzipFile$/;"	v
+GZIP_BASE	bin/speedtest.py	/^    GZIP_BASE = object$/;"	v
+Gpt_Enable	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Gpt_Enable=$/;"	k	section:System
+GzipDecodedResponse	bin/speedtest.py	/^class GzipDecodedResponse(GZIP_BASE):$/;"	c
+HOOKS	info/mkinitcpio-systemd.conf	/^HOOKS=(base systemd autodetect modconf block sd-vconsole filesystems keyboard fsck)$/;"	k
+HOOKS	info/mkinitcpio.conf	/^HOOKS=( base systemd autodetect modconf block keyboard sd-vconsole fsck filesystems )$/;"	k
+HTML	root/folders/.nano/README.md	/^## HTML$/;"	s
+HTTPDownloader	bin/speedtest.py	/^class HTTPDownloader(threading.Thread):$/;"	c
+HTTPSConnection	bin/speedtest.py	/^        HTTPSConnection = None$/;"	v
+HTTPUploader	bin/speedtest.py	/^class HTTPUploader(threading.Thread):$/;"	c
+HTTPUploaderData	bin/speedtest.py	/^class HTTPUploaderData(object):$/;"	c
+HTTP_ERRORS	bin/speedtest.py	/^    HTTP_ERRORS = ($/;"	v
+HTTP_ERRORS	bin/speedtest.py	/^    HTTP_ERRORS = (HTTPError, URLError, socket.error, BadStatusLine)$/;"	v
+Heading	root/folders/.nano/nanorc/examples/HTML.html	/^    <h1 id="firstheading">Heading<\/h1>$/;"	h
+Hello	root/folders/.nano/nanorc/examples/CSharp.cs	/^public class Hello {$/;"	c
+HelloWorldApp	root/folders/.nano/nanorc/examples/Java.java	/^class HelloWorldApp {$/;"	c
+How to use	bin/final/README.md	/^#  How to use$/;"	c
+INTEGRITY_CHECK	info/makepkg.conf	/^INTEGRITY_CHECK=(md5)$/;"	k
+INTERMEDIATE_POS	slash/etc/bash/gps.conf	/^INTERMEDIATE_POS=0$/;"	k
+INTERMEDIATE_POS	slash/etc/gps.conf	/^INTERMEDIATE_POS=0$/;"	k
+Improved Nano Syntax Highlighting Files	root/folders/.nano/Readme.rst	/^Improved Nano Syntax Highlighting Files$/;"	c
+Include	info/pacman.conf	/^Include = \/etc\/pacman.d\/mirrorlist$/;"	k	section:community
+Include	info/pacman.conf	/^Include = \/etc\/pacman.d\/mirrorlist$/;"	k	section:core
+Include	info/pacman.conf	/^Include = \/etc\/pacman.d\/mirrorlist$/;"	k	section:extra
+Include	info/pacman.conf	/^Include = \/etc\/pacman.d\/mirrorlist$/;"	k	section:multilib
+Installation	bin/final/README.md	/^# Installation$/;"	c
+Installation	root/folders/.nano/nanorc/README.md	/^Installation$/;"	s
+InvalidServerIDType	bin/speedtest.py	/^class InvalidServerIDType(SpeedtestException):$/;"	c
+InvalidSpeedtestMiniServer	bin/speedtest.py	/^class InvalidSpeedtestMiniServer(SpeedtestException):$/;"	c
+LANGS	root/folders/.nano/nanorc/Makefile	/^LANGS  = awk c cmake coffeescript colortest csharp css cython default dot \\$/;"	m
+LDFLAGS	info/makepkg.conf	/^LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"$/;"	k
+LOGIT	bin/insit	/^LOGIT(){$/;"	f
+LPPE_CP_TECHNOLOGY	slash/etc/bash/gps.conf	/^LPPE_CP_TECHNOLOGY = 0x2$/;"	k
+LPPE_CP_TECHNOLOGY	slash/etc/gps.conf	/^LPPE_CP_TECHNOLOGY = 0x2$/;"	k
+LPPE_UP_TECHNOLOGY	slash/etc/bash/gps.conf	/^LPPE_UP_TECHNOLOGY = 0x2$/;"	k
+LPPE_UP_TECHNOLOGY	slash/etc/gps.conf	/^LPPE_UP_TECHNOLOGY = 0x2$/;"	k
+LPP_PROFILE	slash/etc/bash/gps.conf	/^LPP_PROFILE = 3$/;"	k
+LPP_PROFILE	slash/etc/gps.conf	/^LPP_PROFILE = 3$/;"	k
+Line filtering	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#line-filtering" aria-hidden="true" class="anchor" id="user-content-line-filtering"/;"	i
+LineageOS/android_device_motorola_harpia	info/local_manifests/local.xml	/^  <project name="LineageOS\/android_device_motorola_harpia" path="device\/motorola\/harpia" remo/;"	p
+LineageOS/android_device_motorola_msm8916-common	info/local_manifests/local.xml	/^  <project name="LineageOS\/android_device_motorola_msm8916-common" path="device\/motorola\/msm8/;"	p
+LineageOS/android_device_qcom_common	info/local_manifests/local.xml	/^  <project name="LineageOS\/android_device_qcom_common" path="device\/qcom\/common" remote="gith/;"	p
+LineageOS/android_device_samsung_espresso-common	info/local_manifests/local.xml	/^  <project name="LineageOS\/android_device_samsung_espresso-common" path="device\/samsung\/espre/;"	p
+LineageOS/android_device_samsung_espressowifi	info/local_manifests/local.xml	/^  <project name="LineageOS\/android_device_samsung_espressowifi" path="device\/samsung\/espresso/;"	p
+LineageOS/android_packages_resources_devicesettings	info/local_manifests/local.xml	/^  <project name="LineageOS\/android_packages_resources_devicesettings" path="packages\/resources/;"	p
+Lines between two REGEXPs	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#lines-between-two-regexps" aria-hidden="true" class="anchor" id="user-content-line/;"	i
+Linux	info/bookmarks_6_13_17.html	/^        <DT><H3 ADD_DATE="1497286923" LAST_MODIFIED="1497286923">Linux<\/H3>$/;"	j
+Linux version of Amlogic USB Burning Tool	bin/final/README.md	/^# Linux version of Amlogic USB Burning Tool$/;"	c
+List Example	root/folders/.nano/nanorc/examples/README.md	/^List Example$/;"	s
+LocalFileSigLevel	info/pacman.conf	/^LocalFileSigLevel = Optional TrustAll$/;"	k	section:options
+MACRO	root/folders/.nano/nanorc/examples/C.c	/^#define MACRO /;"	d	file:
+MAIN	bin/final/ack2	/^MAIN: {$/;"	l
+MAKEFLAGS	info/makepkg.conf	/^MAKEFLAGS="-j2"$/;"	k
+MAN_DIRS	info/makepkg.conf	/^MAN_DIRS=({usr{,\/local}{,\/share},opt\/*}\/{man,info})$/;"	k
+MEET	info/bookmarks_6_13_17.html	/^        <DT><H3 ADD_DATE="1497286923" LAST_MODIFIED="1497286923">MEET<\/H3>$/;"	j
+MISSING_PULSE_TIME_DELTA	slash/etc/bash/gps.conf	/^MISSING_PULSE_TIME_DELTA = 900$/;"	k
+MISSING_PULSE_TIME_DELTA	slash/etc/gps.conf	/^MISSING_PULSE_TIME_DELTA = 900$/;"	k
+MIXINS	root/folders/.nano/nanorc/Makefile	/^MIXINS = $(wildcard mixins\/*.nanorc)$/;"	m
+MODULES	info/mkinitcpio-systemd.conf	/^MODULES=(sd_mod crc32c-intel ahci ehci_pci usb_storage)$/;"	k
+MODULES	info/mkinitcpio.conf	/^MODULES=( crc32c-intel nouveau )$/;"	k
+Main	root/folders/.nano/nanorc/examples/CSharp.cs	/^    public static void Main(string[] args) {$/;"	m	class:Hello
+Markdown	root/folders/.nano/README.md	/^## Markdown$/;"	s
+Miscellaneous	bin/final/ack2	/^Miscellaneous:$/;"	l
+Miscellaneous	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#miscellaneous" aria-hidden="true" class="anchor" id="user-content-miscellaneous"></;"	i
+Multiline processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#multiline-processing" aria-hidden="true" class="anchor" id="user-content-multiline/;"	i
+My arch dotfiles.	README.md	/^# My arch dotfiles.$/;"	c
+MyType	root/folders/.nano/nanorc/examples/Cython.pyx	/^cdef class MyType:$/;"	c
+NANOVER	root/folders/.nano/nanorc/Makefile	/^NANOVER = $(shell nano -V | sed -n 's\/^.* version \\([0-9\\.]*\\).*\/\\1\/p')$/;"	m
+NEW_DATA_FILE	bin/final/sdat2img.py	/^        NEW_DATA_FILE = str(sys.argv[2])$/;"	v
+NMEA_PROVIDER	slash/etc/bash/gps.conf	/^NMEA_PROVIDER=1$/;"	k
+NMEA_PROVIDER	slash/etc/gps.conf	/^NMEA_PROVIDER=1$/;"	k
+NTP_SERVER	slash/etc/bash/gps.conf	/^NTP_SERVER=pool.ntp.org$/;"	k
+NTP_SERVER	slash/etc/gps.conf	/^NTP_SERVER=ca.pool.ntp.org$/;"	k
+NTP_SERVER_1	slash/etc/bash/gps.conf	/^NTP_SERVER_1=0.pool.ntp.org$/;"	k
+NTP_SERVER_1	slash/etc/gps.conf	/^NTP_SERVER_1=1.ca.pool.ntp.org$/;"	k
+NTP_SERVER_2	slash/etc/bash/gps.conf	/^NTP_SERVER_2=1.pool.ntp.org$/;"	k
+NTP_SERVER_2	slash/etc/gps.conf	/^NTP_SERVER_2=2.ca.pool.ntp.org$/;"	k
+NTP_SERVER_3	slash/etc/bash/gps.conf	/^NTP_SERVER_3=2.pool.ntp.org$/;"	k
+NTP_SERVER_3	slash/etc/gps.conf	/^NTP_SERVER_3=3.ca.pool.ntp.org$/;"	k
+NTP_SERVER_4	slash/etc/bash/gps.conf	/^NTP_SERVER_4=3.pool.ntp.org$/;"	k
+NTP_SERVER_4	slash/etc/gps.conf	/^NTP_SERVER_4=4.ca.pool.ntp.org$/;"	k
+Name	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Name=IDBlock$/;"	k	section:UserPart1
+Name	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Name=boot$/;"	k	section:UserPart4
+Name	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Name=kernel$/;"	k	section:UserPart3
+Name	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Name=uboot$/;"	k	section:UserPart2
+Nano	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Nano=$/;"	k	section:System
+NoMatchedServers	bin/speedtest.py	/^class NoMatchedServers(SpeedtestException):$/;"	c
+Note	bin/final/README.md	/^#  Note$/;"	c
+OPTIONS	info/makepkg.conf	/^OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge optipng !debug)$/;"	k
+OUTPUT_IMAGE_FILE	bin/final/sdat2img.py	/^        OUTPUT_IMAGE_FILE = 'system.img'$/;"	v
+PARSER_TYPE_FLOAT	bin/speedtest.py	/^    PARSER_TYPE_FLOAT = 'float'$/;"	v
+PARSER_TYPE_FLOAT	bin/speedtest.py	/^    PARSER_TYPE_FLOAT = float$/;"	v
+PARSER_TYPE_INT	bin/speedtest.py	/^    PARSER_TYPE_INT = 'int'$/;"	v
+PARSER_TYPE_INT	bin/speedtest.py	/^    PARSER_TYPE_INT = int$/;"	v
+PARSER_TYPE_STR	bin/speedtest.py	/^    PARSER_TYPE_STR = 'string'$/;"	v
+PARSER_TYPE_STR	bin/speedtest.py	/^    PARSER_TYPE_STR = str$/;"	v
+PASS	bin/adaway.sh	/^cat >\/tmp\/pass.sh <<'PASS'$/;"	h
+PING_PARAMS=	bin/prettyping	/^	PING_PARAMS=()$/;"	f
+PKGEXT	info/makepkg.conf	/^PKGEXT="${PKGEXT:-.pkg.tar}"$/;"	k
+PPS_DEVICENAME	slash/etc/bash/gps.conf	/^PPS_DEVICENAME = \/dev\/pps0$/;"	k
+PPS_DEVICENAME	slash/etc/gps.conf	/^PPS_DEVICENAME = \/dev\/pps0$/;"	k
+PROPAGATION_TIME_UNCERTAINTY	slash/etc/bash/gps.conf	/^PROPAGATION_TIME_UNCERTAINTY = 1/;"	k
+PROPAGATION_TIME_UNCERTAINTY	slash/etc/gps.conf	/^PROPAGATION_TIME_UNCERTAINTY = 1$/;"	k
+PURGE_TARGETS	info/makepkg.conf	/^PURGE_TARGETS=(usr\/{,share}\/info\/dir .packlist *.pod)$/;"	k
+PartOffset	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartOffset=0x2440$/;"	k	section:UserPart3
+PartOffset	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartOffset=0x40$/;"	k	section:UserPart1
+PartOffset	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartOffset=0x440$/;"	k	section:UserPart2
+PartOffset	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartOffset=0xA440$/;"	k	section:UserPart4
+PartSize	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartSize=0x2000$/;"	k	section:UserPart2
+PartSize	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartSize=0x400$/;"	k	section:UserPart1
+PartSize	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartSize=0x4000$/;"	k	section:UserPart4
+PartSize	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^PartSize=0x8000$/;"	k	section:UserPart3
+Perl one liners	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^    <article class="markdown-body entry-content" itemprop="text"><h1><a href="#perl-one-liners" /;"	h
+Perl regular expressions	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#perl-regular-expressions" aria-hidden="true" class="anchor" id="user-content-perl-/;"	i
+Python	root/folders/.nano/README.md	/^## Python$/;"	s
+REPLACE_PROMPT	bin/insit	/^	REPLACE_PROMPT(){$/;"	f
+REPORT_POSITION_USE_SUPL_REFLOC	slash/etc/bash/gps.conf	/^REPORT_POSITION_USE_SUPL_REFLOC=1$/;"	k
+REPORT_POSITION_USE_SUPL_REFLOC	slash/etc/gps.conf	/^REPORT_POSITION_USE_SUPL_REFLOC=1$/;"	k
+RESOURCES	bin/final/ack2	/^RESOURCES:$/;"	l
+RET	ps1.sh	/^RET() {$/;"	f
+RGB2SHORT_DICT	bin/hextoxterm	/^RGB2SHORT_DICT, SHORT2RGB_DICT = _create_dicts()$/;"	v
+RemoteFileSigLevel	info/pacman.conf	/^RemoteFileSigLevel = Optional TrustAll$/;"	k	section:options
+Ruby	root/folders/.nano/README.md	/^## Ruby$/;"	s
+SGLTE_TARGET	slash/etc/bash/gps.conf	/^SGLTE_TARGET=1$/;"	k
+SGLTE_TARGET	slash/etc/gps.conf	/^SGLTE_TARGET=1$/;"	k
+SHORT2RGB_DICT	bin/hextoxterm	/^RGB2SHORT_DICT, SHORT2RGB_DICT = _create_dicts()$/;"	v
+SRCEXT	info/makepkg.conf	/^SRCEXT='.src.tar.gz'$/;"	k
+STORES	info/bookmarks_6_13_17.html	/^        <DT><H3 ADD_DATE="1497286923" LAST_MODIFIED="1497286923">STORES<\/H3>$/;"	j
+STRIP_BINARIES	info/makepkg.conf	/^STRIP_BINARIES="--strip-all"$/;"	k
+STRIP_SHARED	info/makepkg.conf	/^STRIP_SHARED="--strip-unneeded"$/;"	k
+STRIP_STATIC	info/makepkg.conf	/^STRIP_STATIC="--strip-debug"$/;"	k
+SUPL_ES	slash/etc/bash/gps.conf	/^SUPL_ES=1$/;"	k
+SUPL_ES	slash/etc/gps.conf	/^SUPL_ES=1$/;"	k
+SUPL_HOST	slash/etc/bash/gps.conf	/^SUPL_HOST=supl.google.com$/;"	k
+SUPL_HOST	slash/etc/gps.conf	/^SUPL_HOST=supl.google.com$/;"	k
+SUPL_MODE	slash/etc/bash/gps.conf	/^SUPL_MODE=0X2$/;"	k
+SUPL_MODE	slash/etc/gps.conf	/^SUPL_MODE=0X2$/;"	k
+SUPL_NO_SECURE_PORT	slash/etc/gps.conf	/^SUPL_NO_SECURE_PORT=7276$/;"	k
+SUPL_PORT	slash/etc/bash/gps.conf	/^SUPL_PORT=7275$/;"	k
+SUPL_PORT	slash/etc/gps.conf	/^SUPL_PORT=7276$/;"	k
+SUPL_SECURE_PORT	slash/etc/gps.conf	/^SUPL_SECURE_PORT=7276$/;"	k
+SUPL_VER	slash/etc/bash/gps.conf	/^SUPL_VER=0x30000$/;"	k
+SUPL_VER	slash/etc/gps.conf	/^SUPL_VER=0x30000$/;"	k
+Scale	root/folders/.nano/nanorc/examples/Go.go	/^func (v *Vertex) Scale(f float64) {$/;"	f	unknown:main.Vertex
+Searching	bin/final/ack2	/^Searching:$/;"	l
+Section 1	root/folders/.nano/nanorc/examples/INI.ini	/^[Section 1]$/;"	s
+Section 2	root/folders/.nano/nanorc/examples/INI.ini	/^[Section 2]$/;"	s
+Server	info/pacman.conf	/^Server = http:\/\/repo.archlinux.fr\/$arch$/;"	k	section:archlinuxfr
+ServersRetrievalError	bin/speedtest.py	/^class ServersRetrievalError(SpeedtestHTTPError):$/;"	c
+ShareResultsConnectFailure	bin/speedtest.py	/^class ShareResultsConnectFailure(SpeedtestException):$/;"	c
+ShareResultsSubmitFailure	bin/speedtest.py	/^class ShareResultsSubmitFailure(SpeedtestException):$/;"	c
+SigLevel	info/pacman.conf	/^SigLevel    = Optional TrustAll$/;"	k	section:options
+SigLevel	info/pacman.conf	/^SigLevel = Never$/;"	k	section:archlinuxfr
+SigLevel	info/pacman.conf	/^SigLevel = PackageRequired$/;"	k	section:community
+SigLevel	info/pacman.conf	/^SigLevel = PackageRequired$/;"	k	section:core
+SigLevel	info/pacman.conf	/^SigLevel = PackageRequired$/;"	k	section:extra
+SigLevel	info/pacman.conf	/^SigLevel = PackageRequired$/;"	k	section:multilib
+Simple search and replace	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#simple-search-and-replace" aria-hidden="true" class="anchor" id="user-content-simp/;"	i
+SinOfSquareFunction	root/folders/.nano/nanorc/examples/Cython.pyx	/^cdef class SinOfSquareFunction(Function):$/;"	c
+SlimRoms/kernel_samsung_espresso10	info/local_manifests/local.xml	/^  <project name="SlimRoms\/kernel_samsung_espresso10" path="kernel\/samsung\/espresso10" remote=/;"	p
+So HTF do i use these things???	root/folders/.nano/README.md	/^So HTF do i use these things???$/;"	s
+Speedtest	bin/speedtest.py	/^class Speedtest(object):$/;"	c
+SpeedtestBestServerFailure	bin/speedtest.py	/^class SpeedtestBestServerFailure(SpeedtestException):$/;"	c
+SpeedtestCLIError	bin/speedtest.py	/^class SpeedtestCLIError(SpeedtestException):$/;"	c
+SpeedtestConfigError	bin/speedtest.py	/^class SpeedtestConfigError(SpeedtestException):$/;"	c
+SpeedtestException	bin/speedtest.py	/^class SpeedtestException(Exception):$/;"	c
+SpeedtestHTTPConnection	bin/speedtest.py	/^class SpeedtestHTTPConnection(HTTPConnection):$/;"	c
+SpeedtestHTTPError	bin/speedtest.py	/^class SpeedtestHTTPError(SpeedtestException):$/;"	c
+SpeedtestHTTPHandler	bin/speedtest.py	/^class SpeedtestHTTPHandler(AbstractHTTPHandler):$/;"	c
+SpeedtestHTTPSConnection	bin/speedtest.py	/^    class SpeedtestHTTPSConnection(HTTPSConnection,$/;"	c
+SpeedtestHTTPSHandler	bin/speedtest.py	/^class SpeedtestHTTPSHandler(AbstractHTTPHandler):$/;"	c
+SpeedtestMiniConnectFailure	bin/speedtest.py	/^class SpeedtestMiniConnectFailure(SpeedtestException):$/;"	c
+SpeedtestMissingBestServer	bin/speedtest.py	/^class SpeedtestMissingBestServer(SpeedtestException):$/;"	c
+SpeedtestResults	bin/speedtest.py	/^class SpeedtestResults(object):$/;"	c
+SpeedtestServersError	bin/speedtest.py	/^class SpeedtestServersError(SpeedtestException):$/;"	c
+SpeedtestUploadTimeout	bin/speedtest.py	/^class SpeedtestUploadTimeout(SpeedtestException):$/;"	c
+SsY	slash/Busybox-installer-arm.bin	/^lµRÄTΩM$õ3ﬁ8º\\-ÈgÍä”{ÁÏ¨qógx!`ŒsqÂñ?í6`1a¯§J≥®ÀáyÀn$/;"	h
+SwitchColor	root/folders/.config/nvim/local.vim	/^function! SwitchColor(swinc)$/;"	f
+System	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^[System]$/;"	s
+TARGET_OS_LIBRARIES	root/folders/.nano/nanorc/examples/CMakeLists.txt	/^FUNCTION(TARGET_OS_LIBRARIES target)$/;"	f
+THEME	root/folders/.nano/nanorc/Makefile	/^  THEME = ~\/.nanotheme$/;"	m
+THEME	root/folders/.nano/nanorc/Makefile	/^THEME  = theme.sed$/;"	m
+THREADSAFE	root/folders/.nano/nanorc/examples/CMakeLists.txt	/^OPTION(THREADSAFE "Build threadsafe" ON)$/;"	D
+TheMuppets/proprietary_vendor_motorola	info/local_manifests/local.xml	/^  <project name="TheMuppets\/proprietary_vendor_motorola" path="vendor\/motorola" remote="github/;"	p
+TheMuppets/proprietary_vendor_samsung	info/local_manifests/local.xml	/^   <project name="TheMuppets\/proprietary_vendor_samsung" path="vendor\/samsung" remote="github"/;"	p
+Theme System	root/folders/.nano/nanorc/README.md	/^Theme System$/;"	s
+This is the end	root/folders/.nano/README.md	/^## This is the end ##$/;"	s
+Two file processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#two-file-processing" aria-hidden="true" class="anchor" id="user-content-two-file-p/;"	i
+Type	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Type=0x2$/;"	k	section:UserPart1
+Type	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Type=0x4$/;"	k	section:UserPart3
+Type	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Type=0x8$/;"	k	section:UserPart4
+Type	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^Type=0x80000000$/;"	k	section:UserPart2
+USAGE	bin/insit	/^USAGE(){$/;"	f
+USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL	slash/etc/bash/gps.conf	/^USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL=1$/;"	k
+USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL	slash/etc/gps.conf	/^USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL=1$/;"	k
+Unlicense	root/folders/.nano/nanorc/README.md	/^Unlicense$/;"	s
+Unmaintained	root/folders/.nano/nanorc/README.md	/^Unmaintained$/;"	c
+Usage	bin/final/ack2	/^Usage: ack [OPTION]... PATTERN [FILES OR DIRECTORIES]$/;"	l
+UserPart1	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^[UserPart1]$/;"	s
+UserPart2	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^[UserPart2]$/;"	s
+UserPart3	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^[UserPart3]$/;"	s
+UserPart4	bin/final/rk-flash-tool/tools/firmware_merger/setting.ini	/^[UserPart4]$/;"	s
+Users who have contributed to this file	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^      <h2 class="facebox-header" data-facebox-id="facebox-header">Users who have contributed to /;"	i
+Using modules	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#using-modules" aria-hidden="true" class="anchor" id="user-content-using-modules"></;"	i
+VCSCLIENTS	info/makepkg.conf	/^VCSCLIENTS=('bzr::bzr'$/;"	k
+Vertex	root/folders/.nano/nanorc/examples/Go.go	/^type Vertex struct {$/;"	s	package:main
+WTF do i need these stupid things for???	root/folders/.nano/README.md	/^WTF do i need these stupid things for???$/;"	s
+Why do I get weird errors when running nano < 2.1.5 on *BSD systems?	root/folders/.nano/nanorc/README.md	/^### Why do I get weird errors when running nano < 2.1.5 on *BSD systems?$/;"	S
+Why does syntax highlighting only work for a subset of supported files?	root/folders/.nano/nanorc/README.md	/^### Why does syntax highlighting only work for a subset of supported files?$/;"	S
+Why not use `\\s` instead of the verbose `[[:space:]]` pattern?	root/folders/.nano/nanorc/README.md	/^### Why not use `\\s` instead of the verbose `[[:space:]]` pattern?$/;"	S
+X	root/folders/.nano/nanorc/examples/Go.go	/^    X, Y float64$/;"	m	struct:main.Vertex	typeref:typename:float64
+XERR	bin/insit	/^XERR(){ printf "[L%0.4d] ERROR: %s\\n" "$1" "$2" 1>&2; exit 1; }$/;"	f
+XTRA_CA_PATH	slash/etc/bash/gps.conf	/^XTRA_CA_PATH=\/system\/etc\/security\/cacerts$/;"	k
+XTRA_CA_PATH	slash/etc/gps.conf	/^XTRA_CA_PATH=\/system\/etc\/security\/cacerts$/;"	k
+XTRA_SERVER_1	slash/etc/bash/gps.conf	/^XTRA_SERVER_1=https:\/\/xtrapath1.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_1	slash/etc/gps.conf	/^XTRA_SERVER_1=https:\/\/xtrapath1.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_2	slash/etc/bash/gps.conf	/^XTRA_SERVER_2=https:\/\/xtrapath2.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_2	slash/etc/gps.conf	/^XTRA_SERVER_2=https:\/\/xtrapath2.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_3	slash/etc/bash/gps.conf	/^XTRA_SERVER_3=https:\/\/xtrapath3.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_3	slash/etc/gps.conf	/^XTRA_SERVER_3=https:\/\/xtrapath3.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_4	slash/etc/bash/gps.conf	/^XTRA_SERVER_4=https:\/\/ssl.gpsonextra.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_4	slash/etc/gps.conf	/^XTRA_SERVER_4=https:\/\/ssl.gpsonextra.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_5	slash/etc/bash/gps.conf	/^XTRA_SERVER_5=https:\/\/ssl.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_SERVER_5	slash/etc/gps.conf	/^XTRA_SERVER_5=https:\/\/ssl.izatcloud.net\/xtra3grc.bin$/;"	k
+XTRA_TEST_ENABLED	slash/etc/bash/gps.conf	/^XTRA_TEST_ENABLED = 1$/;"	k
+XTRA_TEST_ENABLED	slash/etc/gps.conf	/^XTRA_TEST_ENABLED = 1$/;"	k
+XTRA_VERSION_CHECK	slash/etc/bash/gps.conf	/^XTRA_VERSION_CHECK=3$/;"	k
+XTRA_VERSION_CHECK	slash/etc/gps.conf	/^XTRA_VERSION_CHECK=3$/;"	k
+Y	root/folders/.nano/nanorc/examples/Go.go	/^    X, Y float64$/;"	m	struct:main.Vertex	typeref:typename:float64
+\x20CLI	slash/etc/highlight/filetypes.conf	/^--  - CLI: the first association listed here will be used$/;"	k
+\x20GUI	slash/etc/highlight/filetypes.conf	/^--  - GUI: a syntax selection prompt will be shown$/;"	k
+\x20and Qt GUI builds handle ambiguous assigments as follows	slash/etc/highlight/filetypes.conf	/^-- The command line (CKI) and Qt GUI builds handle ambiguous assigments as follows:$/;"	k
+_EOF_	bin/fortunes	/^	cat <<-_EOF_$/;"	h
+_EOF_	bin/new_script	/^	cat <<-_EOF_$/;"	h
+_EOF_	bin/new_script	/^	cat <<_EOF_$/;"	h
+_EOF_	bin/script_gen	/^	cat <<-_EOF_$/;"	h
+_EOF_	bin/script_gen	/^	cat <<_EOF_$/;"	h
+_EOF_	bin/this	/^	cat <<-_EOF_$/;"	h
+_GLOBAL_DEFAULT_TIMEOUT	bin/speedtest.py	/^_GLOBAL_DEFAULT_TIMEOUT = object()$/;"	v
+_Py3Utf8Output	bin/speedtest.py	/^    class _Py3Utf8Output(TextIOWrapper):$/;"	c
+__author__	bin/hextoxterm	/^__author__    = 'Micah Elliott http:\/\/MicahElliott.com'$/;"	v
+__colour	bin/powerline_simple	/^	__colour() {$/;"	f
+__copyright__	bin/hextoxterm	/^__copyright__ = 'Copyright (C) 2011 Micah Elliott.  All rights reserved.'$/;"	v
+__end_block	bin/powerline_simple	/^	function __end_block() {$/;"	f
+__expand_tilde_by_ref	completion.bash	/^__expand_tilde_by_ref()$/;"	f
+__extract	bin/final/extract	/^__extract() {$/;"	f
+__get_cword_at_cursor_by_ref	completion.bash	/^__get_cword_at_cursor_by_ref()$/;"	f
+__git_block	bin/powerline_simple	/^	__git_block() {$/;"	f
+__git_eread	bin/final/git_prompt	/^__git_eread() {$/;"	f
+__git_eread	bin/gitprompt	/^__git_eread ()$/;"	f
+__git_info	bin/.bash-powerline.sh	/^	__git_info() {$/;"	f
+__git_ps1	bin/final/git_prompt	/^__git_ps1() {$/;"	f
+__git_ps1	bin/gitprompt	/^__git_ps1 ()$/;"	f
+__git_ps1_colorize_gitstring	bin/final/git_prompt	/^__git_ps1_colorize_gitstring() {$/;"	f
+__git_ps1_colorize_gitstring	bin/gitprompt	/^__git_ps1_colorize_gitstring ()$/;"	f
+__git_ps1_show_upstream	bin/final/git_prompt	/^__git_ps1_show_upstream() {$/;"	f
+__git_ps1_show_upstream	bin/gitprompt	/^__git_ps1_show_upstream ()$/;"	f
+__init__	bin/speedtest.py	/^        def __init__(self, *args, **kwargs):$/;"	m	class:SpeedtestHTTPSConnection
+__init__	bin/speedtest.py	/^        def __init__(self, f, **kwargs):$/;"	m	class:_Py3Utf8Output
+__init__	bin/speedtest.py	/^    def __init__(self, *args, **kwargs):$/;"	m	class:SpeedtestHTTPConnection
+__init__	bin/speedtest.py	/^    def __init__(self, config=None, source_address=None, timeout=10,$/;"	m	class:Speedtest
+__init__	bin/speedtest.py	/^    def __init__(self, debuglevel=0, context=None, source_address=None,$/;"	m	class:SpeedtestHTTPSHandler
+__init__	bin/speedtest.py	/^    def __init__(self, debuglevel=0, source_address=None, timeout=10):$/;"	m	class:SpeedtestHTTPHandler
+__init__	bin/speedtest.py	/^    def __init__(self, download=0, upload=0, ping=0, server=None, client=None,$/;"	m	class:SpeedtestResults
+__init__	bin/speedtest.py	/^    def __init__(self, i, request, start, size, timeout, opener=None,$/;"	m	class:HTTPUploader
+__init__	bin/speedtest.py	/^    def __init__(self, i, request, start, timeout, opener=None,$/;"	m	class:HTTPDownloader
+__init__	bin/speedtest.py	/^    def __init__(self, length, start, timeout, shutdown_event=None):$/;"	m	class:HTTPUploaderData
+__init__	bin/speedtest.py	/^    def __init__(self, response):$/;"	m	class:GzipDecodedResponse
+__init__	root/folders/.nano/nanorc/examples/Python.py	/^    def __init__(self, name = "World!"):$/;"	m	class:Foo
+__len__	bin/speedtest.py	/^    def __len__(self):$/;"	m	class:HTTPUploaderData
+__license__	bin/hextoxterm	/^__license__   = 'WTFPL http:\/\/sam.zoy.org\/wtfpl\/'$/;"	v
+__load_completion	completion.bash	/^__load_completion()$/;"	f
+__ltrim_colon_completions	completion.bash	/^__ltrim_colon_completions()$/;"	f
+__newline	root/.tmux.conf	/^__newline='$/;"	k
+__parse_options	completion.bash	/^__parse_options()$/;"	f
+__powerline	bin/.bash-powerline.sh	/^__powerline() {$/;"	f
+__powerline	bin/powerline_simple	/^__powerline() {$/;"	f
+__prompt_block	bin/powerline_simple	/^	__prompt_block() {$/;"	f
+__promptline	bin/prompt_powerlin2	/^function __promptline {$/;"	f
+__promptline	bin/shell_prompt.bash	/^function __promptline {$/;"	f
+__promptline_cwd	bin/prompt_powerlin2	/^function __promptline_cwd {$/;"	f
+__promptline_cwd	bin/shell_prompt.bash	/^function __promptline_cwd {$/;"	f
+__promptline_git_status	bin/prompt_powerlin2	/^function __promptline_git_status {$/;"	f
+__promptline_git_status	bin/shell_prompt.bash	/^function __promptline_git_status {$/;"	f
+__promptline_host	bin/prompt_powerlin2	/^function __promptline_host {$/;"	f
+__promptline_host	bin/shell_prompt.bash	/^function __promptline_host {$/;"	f
+__promptline_last_exit_code	bin/prompt_powerlin2	/^function __promptline_last_exit_code {$/;"	f
+__promptline_last_exit_code	bin/shell_prompt.bash	/^function __promptline_last_exit_code {$/;"	f
+__promptline_left_prompt	bin/prompt_powerlin2	/^function __promptline_left_prompt {$/;"	f
+__promptline_left_prompt	bin/shell_prompt.bash	/^function __promptline_left_prompt {$/;"	f
+__promptline_ps1	bin/prompt_powerlin2	/^function __promptline_ps1 {$/;"	f
+__promptline_ps1	bin/shell_prompt.bash	/^function __promptline_ps1 {$/;"	f
+__promptline_right_prompt	bin/prompt_powerlin2	/^function __promptline_right_prompt {$/;"	f
+__promptline_right_prompt	bin/shell_prompt.bash	/^function __promptline_right_prompt {$/;"	f
+__promptline_vcs_branch	bin/prompt_powerlin2	/^function __promptline_vcs_branch {$/;"	f
+__promptline_vcs_branch	bin/shell_prompt.bash	/^function __promptline_vcs_branch {$/;"	f
+__promptline_wrapper	bin/prompt_powerlin2	/^function __promptline_wrapper {$/;"	f
+__promptline_wrapper	bin/shell_prompt.bash	/^function __promptline_wrapper {$/;"	f
+__pwd_block	bin/powerline_simple	/^	__pwd_block() {$/;"	f
+__reassemble_comp_words_by_ref	completion.bash	/^__reassemble_comp_words_by_ref()$/;"	f
+__repr__	bin/speedtest.py	/^    def __repr__(self):$/;"	m	class:SpeedtestResults
+__status_block	bin/powerline_simple	/^	__status_block() {$/;"	f
+__user_block	bin/powerline_simple	/^	__user_block() {$/;"	f
+__version__	bin/hextoxterm	/^__version__   = '0.1'$/;"	v
+__version__	bin/speedtest.py	/^__version__ = '2.0.2'$/;"	v
+__virtualenv_block	bin/powerline_simple	/^	__virtualenv_block() {$/;"	f
+_allowed_groups	completion.bash	/^_allowed_groups()$/;"	f
+_allowed_users	completion.bash	/^_allowed_users()$/;"	f
+_available_interfaces	completion.bash	/^_available_interfaces()$/;"	f
+_bad_invocation	bin/final/ack2	/^sub _bad_invocation {$/;"	s
+_bash_prompt_config	bin/prompt.sh	/^_bash_prompt_config() {$/;"	f
+_build_connection	bin/speedtest.py	/^def _build_connection(connection, source_address, timeout, context=None):$/;"	f
+_candidate_files	bin/final/ack2	/^sub _candidate_files {$/;"	s
+_cd	completion.bash	/^_cd()$/;"	f
+_cd_devices	completion.bash	/^_cd_devices()$/;"	f
+_check_for_ackrc	bin/final/ack2	/^sub _check_for_ackrc {$/;"	s
+_command	completion.bash	/^_command()$/;"	f
+_command_offset	completion.bash	/^_command_offset()$/;"	f
+_compile_descend_filter	bin/final/ack2	/^sub _compile_descend_filter {$/;"	s
+_compile_file_filter	bin/final/ack2	/^sub _compile_file_filter {$/;"	s
+_complete_as_root	completion.bash	/^_complete_as_root()$/;"	f
+_complete_goto_aliases	bin/goto.sh	/^_complete_goto_aliases() {$/;"	f
+_complete_goto_bash	bin/goto.sh	/^_complete_goto_bash() {$/;"	f
+_complete_goto_commands	bin/goto.sh	/^_complete_goto_commands() {$/;"	f
+_complete_goto_zsh	bin/goto.sh	/^_complete_goto_zsh() {$/;"	f
+_completion_loader	completion.bash	/^_completion_loader()$/;"	f
+_configured_interfaces	completion.bash	/^_configured_interfaces()$/;"	f
+_context_value	bin/final/ack2	/^    sub _context_value {$/;"	s
+_count_args	completion.bash	/^_count_args()$/;"	f
+_create_dicts	bin/hextoxterm	/^def _create_dicts():$/;"	f
+_dvd_devices	completion.bash	/^_dvd_devices()$/;"	f
+_echo	bin/spark	/^_echo()$/;"	f
+_expand	completion.bash	/^_expand()$/;"	f
+_fetch_sources	root/folders/.nano/install.sh	/^_fetch_sources(){$/;"	f
+_fetch_sources	root/folders/.nano/syntax/install.sh	/^_fetch_sources() {$/;"	f
+_filedir	completion.bash	/^_filedir()$/;"	f
+_filedir_xspec	completion.bash	/^_filedir_xspec()$/;"	f
+_fstypes	completion.bash	/^_fstypes()$/;"	f
+_generate_error_handler	bin/final/ack2	/^sub _generate_error_handler {$/;"	s
+_generate_ignore_dir	bin/final/ack2	/^sub _generate_ignore_dir {$/;"	s
+_get_comp_words_by_ref	completion.bash	/^_get_comp_words_by_ref()$/;"	f
+_get_cword	completion.bash	/^_get_cword()$/;"	f
+_get_first_arg	completion.bash	/^_get_first_arg()$/;"	f
+_get_pword	completion.bash	/^_get_pword()$/;"	f
+_gids	completion.bash	/^_gids()$/;"	f
+_goto_cleanup	bin/goto.sh	/^_goto_cleanup() {$/;"	f
+_goto_directory	bin/goto.sh	/^_goto_directory() {$/;"	f
+_goto_directory_pop	bin/goto.sh	/^_goto_directory_pop() {$/;"	f
+_goto_directory_push	bin/goto.sh	/^_goto_directory_push() {$/;"	f
+_goto_error	bin/goto.sh	/^_goto_error() {$/;"	f
+_goto_expand_alias	bin/goto.sh	/^_goto_expand_alias() {$/;"	f
+_goto_expand_directory	bin/goto.sh	/^_goto_expand_directory() {$/;"	f
+_goto_find_alias_directory	bin/goto.sh	/^_goto_find_alias_directory() {$/;"	f
+_goto_find_duplicate	bin/goto.sh	/^_goto_find_duplicate() {$/;"	f
+_goto_list_aliases	bin/goto.sh	/^_goto_list_aliases() {$/;"	f
+_goto_print_similar	bin/goto.sh	/^_goto_print_similar() {$/;"	f
+_goto_register_alias	bin/goto.sh	/^_goto_register_alias() {$/;"	f
+_goto_resolve_alias	bin/goto.sh	/^_goto_resolve_alias() {$/;"	f
+_goto_resolve_db	bin/goto.sh	/^_goto_resolve_db() {$/;"	f
+_goto_unregister_alias	bin/goto.sh	/^_goto_unregister_alias() {$/;"	f
+_goto_usage	bin/goto.sh	/^_goto_usage() {$/;"	f
+_goto_version	bin/goto.sh	/^_goto_version() {$/;"	f
+_goto_warning	bin/goto.sh	/^_goto_warning() {$/;"	f
+_have	completion.bash	/^_have()$/;"	f
+_included_ssh_config_files	completion.bash	/^_included_ssh_config_files()$/;"	f
+_init_completion	completion.bash	/^_init_completion()$/;"	f
+_install_xspec	completion.bash	/^_install_xspec()$/;"	f
+_installed_modules	completion.bash	/^_installed_modules()$/;"	f
+_ip_addresses	completion.bash	/^_ip_addresses()$/;"	f
+_kernel_versions	completion.bash	/^_kernel_versions()$/;"	f
+_known_hosts	completion.bash	/^_known_hosts()$/;"	f
+_known_hosts_real	completion.bash	/^_known_hosts_real()$/;"	f
+_longopt	completion.bash	/^_longopt()$/;"	f
+_mac_addresses	completion.bash	/^_mac_addresses()$/;"	f
+_minimal	completion.bash	/^_minimal()$/;"	f
+_modules	completion.bash	/^_modules()$/;"	f
+_my_program	bin/final/ack2	/^sub _my_program {$/;"	s
+_ncpus	completion.bash	/^_ncpus()$/;"	f
+_options_block	bin/final/ack2	/^sub _options_block {$/;"	s
+_p4_commands	ps4.sh	/^_p4_commands() {$/;"	f
+_parse_help	completion.bash	/^_parse_help()$/;"	f
+_parse_usage	completion.bash	/^_parse_usage()$/;"	f
+_pci_ids	completion.bash	/^_pci_ids()$/;"	f
+_pgids	completion.bash	/^_pgids()$/;"	f
+_pic_decode	bin/final/ack2	/^sub _pic_decode {$/;"	s
+_pids	completion.bash	/^_pids()$/;"	f
+_pnames	completion.bash	/^_pnames()$/;"	f
+_printLog	bin/shtrace	/^_printLog() {$/;"	f
+_py3_print	bin/speedtest.py	/^    _py3_print = getattr(builtins, 'print')$/;"	v
+_py3_utf8_stderr	bin/speedtest.py	/^        _py3_utf8_stderr = _Py3Utf8Output(sys.stderr)$/;"	v
+_py3_utf8_stderr	bin/speedtest.py	/^        _py3_utf8_stderr = sys.stderr$/;"	v
+_py3_utf8_stdout	bin/speedtest.py	/^        _py3_utf8_stdout = sys.stdout$/;"	v
+_quote_readline_by_ref	completion.bash	/^_quote_readline_by_ref()$/;"	f
+_realcommand	completion.bash	/^_realcommand()$/;"	f
+_remove_redundancies	bin/final/ack2	/^sub _remove_redundancies {$/;"	s
+_rl_enabled	completion.bash	/^_rl_enabled()$/;"	f
+_root_command	completion.bash	/^_root_command()$/;"	f
+_service	completion.bash	/^_service()$/;"	f
+_services	completion.bash	/^_services()$/;"	f
+_setaf	bin/prompt.sh	/^		_setaf() { echo "\\033[0;$(($1 + 30))m"; }$/;"	f
+_setaf	bin/prompt.sh	/^		_setaf() { tput setaf "$1"; }$/;"	f
+_setup	bin/final/ack2	/^sub _setup {$/;"	s
+_shTrace	bin/shtrace	/^_shTrace() {$/;"	f
+_shUsage	bin/shtrace	/^_shUsage() {$/;"	f
+_shells	completion.bash	/^_shells()$/;"	f
+_signals	completion.bash	/^_signals()$/;"	f
+_split_longopt	completion.bash	/^_split_longopt()$/;"	f
+_str2hex	bin/hextoxterm	/^def _str2hex(hexstr):$/;"	f
+_strip_hash	bin/hextoxterm	/^def _strip_hash(rgb):$/;"	f
+_sysvdirs	completion.bash	/^_sysvdirs()$/;"	f
+_terms	completion.bash	/^_terms()$/;"	f
+_tilde	completion.bash	/^_tilde()$/;"	f
+_uids	completion.bash	/^_uids()$/;"	f
+_update_nanorc	root/folders/.nano/install.sh	/^_update_nanorc(){$/;"	f
+_update_nanorc	root/folders/.nano/syntax/install.sh	/^_update_nanorc() {$/;"	f
+_update_nanorc_lite	root/folders/.nano/install.sh	/^_update_nanorc_lite(){$/;"	f
+_update_nanorc_lite	root/folders/.nano/syntax/install.sh	/^_update_nanorc_lite() {$/;"	f
+_upvar	completion.bash	/^_upvar()$/;"	f
+_upvars	completion.bash	/^_upvars()$/;"	f
+_usb_ids	completion.bash	/^_usb_ids()$/;"	f
+_user_at_host	completion.bash	/^_user_at_host()$/;"	f
+_usergroup	completion.bash	/^_usergroup()$/;"	f
+_userland	completion.bash	/^_userland()$/;"	f
+_variables	completion.bash	/^_variables()$/;"	f
+_xfunc	completion.bash	/^_xfunc()$/;"	f
+_xinetd_services	completion.bash	/^_xinetd_services()$/;"	f
+a.hl	bin/highlight.css	/^a.hl, a.hl:visited {color:inherit;font-weight:inherit;}.hl.mark { background-color:#ffffff; widt/;"	c
+a.hl:visited	bin/highlight.css	/^a.hl, a.hl:visited {color:inherit;font-weight:inherit;}.hl.mark { background-color:#ffffff; widt/;"	c
+a:active	root/folders/.nano/nanorc/examples/CSS.css	/^a:hover, a:active {$/;"	s
+a:hover	root/folders/.nano/nanorc/examples/CSS.css	/^a:hover, a:active {$/;"	s
+abbr[title]	root/folders/.nano/nanorc/examples/CSS.css	/^abbr[title] {$/;"	s
+abort	update.sh	/^abort() {$/;"	f
+abs	bin/prettyping	/^function abs(x) {$/;"	f
+accept_local	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.accept_local = 1$/;"	k
+accept_local	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.accept_local = 1$/;"	k
+accept_redirects	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.accept_redirects = 0$/;"	k
+accept_redirects	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.accept_redirects = 0$/;"	k
+accept_redirects	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.accept_redirects = 0$/;"	k
+accept_redirects	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.accept_redirects = 0$/;"	k
+accept_redirects	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.all.accept_redirects=0;$/;"	k
+accept_redirects	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.default.accept_redirects=0;$/;"	k
+accept_source_route	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.accept_source_route = 0$/;"	k
+accept_source_route	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.accept_source_route = 0$/;"	k
+accept_source_route	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.accept_source_route = 0$/;"	k
+accept_source_route	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.accept_source_route = 0$/;"	k
+accept_source_route	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.all.accept_source_route=0;$/;"	k
+accept_source_route	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.default.accept_source_route=0 ;$/;"	k
+ackbar	bin/final/ack2	/^sub ackbar {$/;"	s
+ad	al.sh	/^alias ad=". $dot\/bin\/ad "$/;"	a
+adb	slash/etc/passwd	/^adb:x:1011:1011::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+adb_info	bin/ad	/^adb_info() {$/;"	f
+adb_read	bin/ad	/^adb_read() {$/;"	f
+adbcmd	bin/bootcopy	/^adbcmd() { $adb -d "$@"; }$/;"	f
+adbconnect	bin/ad	/^adbconnect() {$/;"	f
+adbde	bin/ad	/^adbde() {$/;"	f
+adbserial	bin/adbserial	/^adbserial() {$/;"	f
+adbsu	bin/ad	/^adbsu() { adb shell $su_bin -c "$@"; }$/;"	f
+adbsyncdot	bin/ad	/^adbsyncdot() {$/;"	f
+add	bin/final/ack2	/^sub add {$/;"	s
+add	bin/git-cheat	/^function add() {$/;"	f
+advice.statushints	root/.repo_.gitconfig.json	/^  "advice.statushints": [$/;"	a
+alias.change-commits	root/.repo_.gitconfig.json	/^  "alias.change-commits": [$/;"	a
+alias.clog	root/.repo_.gitconfig.json	/^  "alias.clog": [$/;"	a
+alias.fpush	root/.repo_.gitconfig.json	/^  "alias.fpush": [$/;"	a
+alias.l	root/.repo_.gitconfig.json	/^  "alias.l": [$/;"	a
+alias.la	root/.repo_.gitconfig.json	/^  "alias.la": [$/;"	a
+alias.lg	root/.repo_.gitconfig.json	/^  "alias.lg": [$/;"	a
+alias.lol	root/.repo_.gitconfig.json	/^  "alias.lol": [$/;"	a
+alias.merge-pr	root/.repo_.gitconfig.json	/^  "alias.merge-pr": [$/;"	a
+alias.st	root/.repo_.gitconfig.json	/^  "alias.st": [$/;"	a
+all	root/folders/.nano/nanorc/Makefile	/^all: $(ALL)$/;"	t
+all_aliases=	bin/goto.sh	/^	local all_aliases=()$/;"	f
+amlflash	bin/amlflash	/^amlflash() {$/;"	f
+ansih	bin/qqdb	/^alias ansih='echo -e "\\033[1;37m" ANW;\\$/;"	a
+answerclean	root/folders/.config/yay/config.json	/^	"answerclean": "no",$/;"	s
+answerdiff	root/folders/.config/yay/config.json	/^	"answerdiff": "no",$/;"	s
+answeredit	root/folders/.config/yay/config.json	/^	"answeredit": "no",$/;"	s
+answerupgrade	root/folders/.config/yay/config.json	/^	"answerupgrade": "",$/;"	s
+apk_to_	bin/ad	/^apk_to_() {$/;"	f
+application	root/folders/.nano/nanorc/examples/JSON.json	/^    "application": {$/;"	o
+apply_patch	update.sh	/^apply_patch() {$/;"	f
+apply_patch_check	update.sh	/^apply_patch_check() {$/;"	f
+apply_patch_space	update.sh	/^apply_patch_space() {$/;"	f
+apti	al.sh	/^	alias apti='apt install '$/;"	a
+apts	al.sh	/^	alias apts='apt search '$/;"	a
+aptu	al.sh	/^	alias aptu='apt update; apt-get upgrade '$/;"	a
+aquote	bin/aquote	/^aquote() {$/;"	f
+arch	slash/etc/passwd	/^arch:x:1002:1002::\/home\/arch:\/bin\/bash$/;"	u	home:/home/arch	shell:/bin/bash
+archive	bin/git-cheat	/^function archive() {$/;"	f
+archlinuxfr	info/pacman.conf	/^[archlinuxfr]$/;"	s
+arg	bin/hextoxterm	/^    arg = sys.argv[1]$/;"	v
+arg_needed	bin/init_helper	/^arg_needed() {$/;"	f
+arr_add_to_stack	bin/final/arr_add_to_stack	/^arr_add_to_stack(){$/;"	f
+assert	update.sh	/^assert() {$/;"	f
+audio	slash/etc/passwd	/^audio:x:1005:1005::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+audioserver	slash/etc/passwd	/^audioserver:x:1041:1041::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+aur	fn.sh	/^function aur() {$/;"	f
+auto_update_index	bin/tldr	/^auto_update_index() {$/;"	f
+backup_files	update.sh	/^backup_files() {$/;"	f
+base16colorspace	root/folders/.config/nvim/local.vim	/^let base16colorspace=256$/;"	v
+basename	bin/final/ack2	/^sub basename {$/;"	s
+bash_prompt_command	bin/prompt.sh	/^bash_prompt_command() {$/;"	f
+bashnorc	fn.sh	/^bashnorc() {$/;"	f
+bb	bin/bb	/^bb() { command "$bb" "$@"; }$/;"	f
+beautify_file	bin/beautify.rb	/^   def BeautifyBash.beautify_file(path)$/;"	S	module:BeautifyBash
+beautify_string	bin/beautify.rb	/^   def BeautifyBash.beautify_string(data,path)$/;"	S	module:BeautifyBash
+best	bin/speedtest.py	/^    def best(self):$/;"	m	class:Speedtest
+blobber	bin/env.sh	/^alias blobber='for i in $src\/device\/qcom\/common $src\/vendor\/cm\/build\/templates $src\/devi/;"	a
+block_dump	slash/etc/sysctl.conf	/^sysctl -w vm.block_dump=0$/;"	k
+block_dump	slash/etc/sysctl.conf	/^sysctl -w vm.block_dump=0;$/;"	k
+bluetooth	slash/etc/passwd	/^bluetooth:x:1002:1002::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+body	root/folders/.nano/nanorc/examples/CSS.css	/^body, .class, #id {$/;"	s
+body.hl	bin/highlight.css	/^body.hl	{ background-color:#91e39a; }$/;"	c
+boot	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^boot=$/;"	k
+bootargs	info/uEnv.ini	/^bootargs=root=LABEL=ROOTFS rootflags=data=writeback rw console=ttyS0,115200n8 console=tty0 no_co/;"	k
+branch	bin/git-cheat	/^function branch() {$/;"	f
+branch.autosetuprebase	root/.repo_.gitconfig.json	/^  "branch.autosetuprebase": [$/;"	a
+build/	root/folders/.nano/nanorc/Makefile	/^build\/:$/;"	t
+build/%.nanorc	root/folders/.nano/nanorc/Makefile	/^build\/%.nanorc: %.nanorc $(MIXINS) $(THEME) | build\/$/;"	t
+build/ALL.nanorc	root/folders/.nano/nanorc/Makefile	/^build\/ALL.nanorc: $(FILES) $(MIXINS) $(THEME) | build\/$/;"	t
+buildDir	root/folders/.config/yay/config.json	/^	"buildDir": "\/prog\/yay",$/;"	s
+buildZImageTar	bin/repack-zImage.sh	/^buildZImageTar() {$/;"	f
+build_opener	bin/speedtest.py	/^def build_opener(source_address=None, timeout=10):$/;"	f
+build_regex	bin/final/ack2	/^sub build_regex {$/;"	s
+build_request	bin/speedtest.py	/^def build_request(url, data=None, headers=None, bump='0', secure=False):$/;"	f
+build_user_agent	bin/speedtest.py	/^def build_user_agent():$/;"	f
+buildtime	bin/final/version.properties	/^buildtime=11\/09\/2015 01\\:58 PM$/;"	k
+cache	slash/etc/passwd	/^cache:x:2001:2001::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+calc	bin/calc	/^function calc() {$/;"	f
+camera	slash/etc/passwd	/^camera:x:1006:1006::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+cameraserver	slash/etc/passwd	/^cameraserver:x:1047:1047::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+catch_request	bin/speedtest.py	/^def catch_request(request, opener=None):$/;"	f
+cathy	bin/final/ack2	/^sub cathy {$/;"	s
+cdls	fn.sh	/^cdls() {$/;"	f
+cdp	al.sh	/^alias cdp="builtin \\cd -P"$/;"	a
+ceil	bin/prettyping	/^function ceil(x) {$/;"	f
+ch_con	bin/susetup	/^ch_con() {$/;"	f
+ch_con	update.sh	/^ch_con() {$/;"	f
+ch_con_ext	bin/susetup	/^ch_con_ext() {$/;"	f
+ch_con_recursive	update.sh	/^ch_con_recursive() {$/;"	f
+char	bin/selecta	/^        new_query_chars << char$/;"	h
+checkNUL	bin/repack-zImage.sh	/^checkNUL() {$/;"	f
+check_bash_version	bin/colorscript	/^function check_bash_version() {$/;"	f
+check_file	bin/final/aml-flash	/^check_file()$/;"	f
+check_file	bin/final/aml-flash-tool/flash-tool	/^check_file()$/;"	f
+check_file	bin/final/flash-tool.sh	/^check_file() {$/;"	f
+check_filename	bin/new_script	/^check_filename() {$/;"	f
+check_filename	bin/script_gen	/^check_filename() {$/;"	f
+check_for_mutually_exclusive_options	bin/final/ack2	/^sub check_for_mutually_exclusive_options {$/;"	s
+check_source_files	ps1.sh	/^check_source_files() {$/;"	f
+check_version	bin/emojify	/^check_version() {$/;"	f
+chroot_add_mount	bin/arch-chroot	/^chroot_add_mount() {$/;"	f
+chroot_add_resolv_conf	bin/arch-chroot	/^chroot_add_resolv_conf() {$/;"	f
+chroot_args=	bin/arch-chroot	/^chroot_args=()$/;"	f
+chroot_maybe_add_mount	bin/arch-chroot	/^chroot_maybe_add_mount() {$/;"	f
+chroot_setup	bin/arch-chroot	/^chroot_setup() {$/;"	f
+chroot_teardown	bin/arch-chroot	/^chroot_teardown() {$/;"	f
+clat	slash/etc/passwd	/^clat:x:1029:1029::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+clean	root/folders/.nano/nanorc/Makefile	/^clean:$/;"	t
+cleanAfter	root/folders/.config/yay/config.json	/^	"cleanAfter": false,$/;"	b
+clean_up	bin/fortunes	/^clean_up() { # Perform pre-exit housekeeping$/;"	f
+clean_up	bin/new_script	/^clean_up() { # Perform pre-exit housekeeping$/;"	f
+clean_up	bin/script_gen	/^clean_up() { # Perform pre-exit housekeeping$/;"	f
+clean_up	bin/this	/^clean_up() { # Perform pre-exit housekeeping$/;"	f
+cleanmenu	root/folders/.config/yay/config.json	/^	"cleanmenu": true,$/;"	b
+cleanup	bin/final/aml-flash	/^cleanup()$/;"	f
+cleanup	bin/final/aml-flash-tool/flash-tool	/^cleanup()$/;"	f
+cleanup	bin/final/flash-tool.sh	/^cleanup() {$/;"	f
+cleanup	bin/git-new-workdir	/^cleanup () {$/;"	f
+cleanup_trap	bin/final/aml-flash	/^cleanup_trap()$/;"	f
+cleanup_trap	bin/final/aml-flash-tool/flash-tool	/^cleanup_trap()$/;"	f
+cleanup_trap	bin/final/flash-tool.sh	/^cleanup_trap() {$/;"	f
+clear	bin/prettyping	/^function clear(d) {$/;"	f
+clone	bin/final/ack2	/^sub clone {$/;"	s
+close	bin/final/ack2	/^sub close {$/;"	s
+close	bin/speedtest.py	/^    def close(self):$/;"	m	class:GzipDecodedResponse
+clrln	bin/build.sh	/^function clrln() {$/;"	f
+cluster	slash/etc/sysctl.conf	/^sysctl -w vm.page-cluster=3$/;"	k
+cluster	slash/etc/sysctl.conf	/^sysctl -w vm.page-cluster=3;$/;"	k
+cmd	bin/repack-zImage.sh	/^cmd() {$/;"	f
+cmd_exist	bin/lesspipe.sh	/^cmd_exist() {$/;"	f
+code	bin/tldr	/^code() {$/;"	f
+color.branch	root/.repo_.gitconfig.json	/^  "color.branch": [$/;"	a
+color.branch.current	root/.repo_.gitconfig.json	/^  "color.branch.current": [$/;"	a
+color.branch.local	root/.repo_.gitconfig.json	/^  "color.branch.local": [$/;"	a
+color.branch.remote	root/.repo_.gitconfig.json	/^  "color.branch.remote": [$/;"	a
+color.diff	root/.repo_.gitconfig.json	/^  "color.diff": [$/;"	a
+color.diff.frag	root/.repo_.gitconfig.json	/^  "color.diff.frag": [$/;"	a
+color.diff.meta	root/.repo_.gitconfig.json	/^  "color.diff.meta": [$/;"	a
+color.diff.new	root/.repo_.gitconfig.json	/^  "color.diff.new": [$/;"	a
+color.diff.old	root/.repo_.gitconfig.json	/^  "color.diff.old": [$/;"	a
+color.grep	root/.repo_.gitconfig.json	/^  "color.grep": [$/;"	a
+color.interactive	root/.repo_.gitconfig.json	/^  "color.interactive": [$/;"	a
+color.status	root/.repo_.gitconfig.json	/^  "color.status": [$/;"	a
+color.status.added	root/.repo_.gitconfig.json	/^  "color.status.added": [$/;"	a
+color.status.changed	root/.repo_.gitconfig.json	/^  "color.status.changed": [$/;"	a
+color.status.untracked	root/.repo_.gitconfig.json	/^  "color.status.untracked": [$/;"	a
+color.ui	root/.repo_.gitconfig.json	/^  "color.ui": [$/;"	a
+color_that	bin/cata	/^color_that() {$/;"	f
+colorgrid	bin/colors.sh	/^function colorgrid() {$/;"	f
+colors256	bin/colors.sh	/^colors256() {$/;"	f
+colorxcapes	bin/final/colandformat.sh	/^colorxcapes() {$/;"	f
+combinedupgrade	root/folders/.config/yay/config.json	/^	"combinedupgrade": false,$/;"	b
+combo	bin/env.sh	/^combo() { choosecombo 2 lineage_harpia eng; }$/;"	f
+command_line_parameter	bin/colorscript	/^function command_line_parameter() {$/;"	f
+commit	bin/git-cheat	/^function commit() {$/;"	f
+community	info/pacman.conf	/^[community]$/;"	s
+compare_opts	bin/final/ack2	/^sub compare_opts {$/;"	s
+compass	slash/etc/passwd	/^compass:x:1008:1008::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+completionrefreshtime	root/folders/.config/yay/config.json	/^	"completionrefreshtime": 7,$/;"	n
+config	bin/git-cheat	/^function config() {$/;"	f
+config	bin/tldr	/^config() {$/;"	f
+conflict	bin/git-cheat	/^function conflict() {$/;"	f
+congrats	bin/edsc	/^congrats() {$/;"	f
+connect	bin/speedtest.py	/^        def connect(self):$/;"	m	class:SpeedtestHTTPSConnection
+connect	bin/speedtest.py	/^    def connect(self):$/;"	m	class:SpeedtestHTTPConnection
+consolidate-path	setpath.sh	/^hash consolidate-path &>\/dev\/null || consolidate-path() {$/;"	f
+consumer	bin/speedtest.py	/^        def consumer(q, request_count):$/;"	f	member:Speedtest.download	file:
+consumer	bin/speedtest.py	/^        def consumer(q, request_count):$/;"	f	member:Speedtest.upload	file:
+contrast_colour	bin/colors.sh	/^function contrast_colour() {$/;"	f
+core	info/pacman.conf	/^[core]$/;"	s
+core.autocrl	root/.repo_.gitconfig.json	/^  "core.autocrl": [$/;"	a
+core.excludesfile	root/.repo_.gitconfig.json	/^  "core.excludesfile": [$/;"	a
+core.filemode	root/.repo_.gitconfig.json	/^  "core.filemode": [$/;"	a
+core.legacyheaders	root/.repo_.gitconfig.json	/^  "core.legacyheaders": [$/;"	a
+core.pager	root/.repo_.gitconfig.json	/^  "core.pager": [$/;"	a
+core_uses_pid	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.core_uses_pid = 1$/;"	k
+core_uses_pid	etc/sysctl.d/98-sysctl.conf	/^kernel.core_uses_pid = 1$/;"	k
+count_matches_in_resource	bin/final/ack2	/^sub count_matches_in_resource {$/;"	s
+cp_perm	bin/susetup	/^cp_perm() {$/;"	f
+cpav	al.sh	/^alias cpav='command \\cp -av  '$/;"	a
+cpv	al.sh	/^alias cpv="cp -av --dereference --strip-trailing-slashes --update --context "$/;"	a
+create_connection	bin/speedtest.py	/^def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,$/;"	f
+create_filter	bin/final/ack2	/^sub create_filter {$/;"	s
+create_group	bin/final/ack2	/^sub create_group {$/;"	s
+credential.helper	root/.repo_.gitconfig.json	/^  "credential.helper": [$/;"	a
+csv	bin/speedtest.py	/^    def csv(self, delimiter=','):$/;"	m	class:SpeedtestResults
+csv_header	bin/speedtest.py	/^    def csv_header(delimiter=','):$/;"	m	class:SpeedtestResults
+csv_header	bin/speedtest.py	/^def csv_header(delimiter=','):$/;"	f
+ctrl_c	bin/speedtest.py	/^def ctrl_c(shutdown_event):$/;"	f
+ctrl_interface	bin/wpa_supplicant.conf	/^ctrl_interface=DIR=\/var\/run\/wpa_supplicant GROUP=users$/;"	k
+cutoff_percentage	bin/final/dutop	/^cutoff_percentage=5$/;"	v
+d	fn.sh	/^d() {$/;"	f
+data	bin/speedtest.py	/^    def data(self):$/;"	m	class:HTTPUploaderData
+date_diff	slash/sbin/fixperm.sh	/^date_diff() {$/;"	f
+date_func	fn.sh	/^date_func() { date +%d%b%Hh%M; }$/;"	f
+dbus	slash/etc/passwd	/^dbus:x:1038:1038::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+ddv	bin/ddv.sh	/^ddv() {$/;"	f
+debug	bin/git-cheat	/^function debug() {$/;"	f
+debug	bin/init_helper	/^debug() {$/;"	f
+debug_cmd	bin/debug	/^debug_cmd() {$/;"	f
+debug_cmd	bin/script.bash	/^		debug_cmd() {$/;"	f
+debuggerd	slash/etc/passwd	/^debuggerd:x:1045:1045::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+delete	bin/git-cheat	/^function delete() {$/;"	f
+delete	update.sh	/^delete() { rm -f "$@"; }$/;"	f
+delete_recursive	update.sh	/^delete_recursive() { rm -rf "$@"; }$/;"	f
+dequote	completion.bash	/^dequote()$/;"	f
+dev-harsh1998/GCC_BUILDS	info/local_manifests/local.xml	/^  <project name="dev-harsh1998\/GCC_BUILDS" path="prebuilts\/gcc\/linux-x86\/arm\/arm-eabi-7.3" /;"	p
+devel	root/folders/.config/yay/config.json	/^	"devel": true,$/;"	b
+df	al.sh	/^alias df="\/usr\/bin\/grc -es --colour=auto \/usr\/bin\/df -h"$/;"	a
+df	al.sh	/^alias df='command \\df -h '$/;"	a
+dhcp	slash/etc/passwd	/^dhcp:x:1014:1014::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+diag	slash/etc/passwd	/^diag:x:2002:2002::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+dict	bin/speedtest.py	/^    def dict(self):$/;"	m	class:SpeedtestResults
+die	bin/arch-chroot	/^die() {$/;"	f
+die	bin/chrootall.sh	/^die() {$/;"	f
+die	bin/final/ack2	/^sub die {$/;"	s
+die	bin/git-new-workdir	/^die () {$/;"	f
+diff	ex.sh	/^is_in_path colordiff &>\/dev\/null && alias diff="colordiff"$/;"	a
+diffmenu	root/folders/.config/yay/config.json	/^	"diffmenu": true,$/;"	b
+dir	al.sh	/^alias dir='command \\dir --group-directories-first -ApFChHbL --color=always '$/;"	a
+dir	al.sh	/^alias dir='dir --color=auto '$/;"	a
+dirty_background_bytes	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_background_bytes = 8388608$/;"	k
+dirty_background_bytes	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_background_bytes = 8388608$/;"	k
+dirty_background_ratio	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_background_ratio = 10$/;"	k
+dirty_background_ratio	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_background_ratio = 2$/;"	k
+dirty_background_ratio	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_background_ratio = 10$/;"	k
+dirty_background_ratio	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_background_ratio = 2$/;"	k
+dirty_background_ratio	slash/etc/sysctl.conf	/^sysctl -w vm.dirty_background_ratio=80$/;"	k
+dirty_bytes	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_bytes = 8388608$/;"	k
+dirty_bytes	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_bytes = 8388608$/;"	k
+dirty_expire_centisecs	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_expire_centisecs = 12000$/;"	k
+dirty_expire_centisecs	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_expire_centisecs = 600$/;"	k
+dirty_expire_centisecs	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_expire_centisecs = 12000$/;"	k
+dirty_expire_centisecs	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_expire_centisecs = 600$/;"	k
+dirty_expire_centisecs	slash/etc/sysctl.conf	/^sysctl -w vm.dirty_expire_centisecs=500;$/;"	k
+dirty_ratio	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_ratio = 60$/;"	k
+dirty_ratio	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_ratio = 60$/;"	k
+dirty_ratio	slash/etc/sysctl.conf	/^sysctl -w vm.dirty_ratio=90;$/;"	k
+dirty_writeback_centisecs	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_writeback_centisecs = 1500$/;"	k
+dirty_writeback_centisecs	etc/folders/sysctl.d/98-sysctl.conf	/^vm.dirty_writeback_centisecs = 6000$/;"	k
+dirty_writeback_centisecs	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_writeback_centisecs = 1500$/;"	k
+dirty_writeback_centisecs	etc/sysctl.d/98-sysctl.conf	/^vm.dirty_writeback_centisecs = 6000$/;"	k
+dirty_writeback_centisecs	slash/etc/sysctl.conf	/^sysctl -w vm.dirty_writeback_centisecs=3000;$/;"	k
+display_tldr	bin/tldr	/^display_tldr() {$/;"	f
+distance	bin/speedtest.py	/^def distance(origin, destination):$/;"	f
+dm_name_for_devnode	bin/arch-chroot	/^dm_name_for_devnode() {$/;"	f
+dns	slash/etc/passwd	/^dns:x:1051:1051::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+dns_tether	slash/etc/passwd	/^dns_tether:x:1052:1052::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+do_meteo	ps1.sh	/^do_meteo() {$/;"	f
+do_nothing	bin/speedtest.py	/^def do_nothing(*args, **kwargs):$/;"	f
+does_match	bin/final/ack2	/^sub does_match {$/;"	s
+dot	README.md	/^# dot$/;"	c
+dot_root	bin/setup-arch.sh	/^dot_root() {$/;"	f
+download	bin/speedtest.py	/^    def download(self, callback=do_nothing):$/;"	m	class:Speedtest
+drive_mapper	bin/umnt	/^drive_mapper() {$/;"	f
+drm	slash/etc/passwd	/^drm:x:1019:1019::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+drmrpc	slash/etc/passwd	/^drmrpc:x:1026:1026::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+du	al.sh	/^if unalias du &>\/dev\/null; then alias du='\/usr\/bin\/grc -es --colour=auto \/usr\/bin\/du --s/;"	a
+dump_options	bin/final/ack2	/^sub dump_options {$/;"	s
+dunc	al.sh	/^alias dunc='ncdu --color dark '$/;"	a
+e	al.sh	/^alias e='. $dot\/bin\/e'$/;"	a
+echoArg	bin/echo-args.sh	/^echoArg() {$/;"	f
+echo_adbconnect	bin/ad	/^echo_adbconnect() {$/;"	f
+edit_file	bin/e	/^edit_file() {$/;"	f
+editmenu	root/folders/.config/yay/config.json	/^	"editmenu": false,$/;"	b
+editor	root/folders/.config/yay/config.json	/^	"editor": "",$/;"	s
+editorflags	root/folders/.config/yay/config.json	/^	"editorflags": "",$/;"	s
+egrep	al.sh	/^	alias egrep='LANG=C command \\egrep --color=auto '$/;"	a
+eight_color	bin/colors.sh	/^eight_color() {$/;"	f
+email	bin/git-cheat	/^function email() {$/;"	f
+env force_hostname	etc/dhcpcd.conf	/^env force_hostname=YES$/;"	k
+env wpa_supplicant_driver	etc/dhcpcd.conf	/^env wpa_supplicant_driver=nl80211$/;"	k
+eousage	bin/shtrace	/^	cat <<-eousage$/;"	h
+err	fn.sh	/^err() {$/;"	f
+error	bin/arch-chroot	/^error() { out "==> ERROR:" "$@"; } >&2$/;"	f
+error	slash/Busybox-installer-arm.bin	/^error() {$/;"	f
+error_exit	bin/fortunes	/^error_exit() {$/;"	f
+error_exit	bin/new_script	/^error_exit() {$/;"	f
+error_exit	bin/script_gen	/^error_exit() {$/;"	f
+error_exit	bin/this	/^error_exit() {$/;"	f
+error_message	bin/colorscript	/^function error_message() {$/;"	f
+error_msg	bin/final/INSTALL	/^error_msg() {$/;"	f
+error_msg	bin/final/UNINSTALL	/^error_msg() {$/;"	f
+error_msg	bin/final/aml-flash-tool/INSTALL	/^error_msg() {$/;"	f
+error_msg	bin/final/aml-flash-tool/UNINSTALL	/^error_msg() {$/;"	f
+error_msg	bin/final/aml-flash-tool/aml-burn-tool	/^error_msg() {$/;"	f
+error_msg	bin/final/burn-tool	/^error_msg() {$/;"	f
+error_msg	bin/final/rk-flash-tool/INSTALL	/^error_msg() {$/;"	f
+error_msg	bin/final/rk-flash-tool/UNINSTALL	/^error_msg() {$/;"	f
+error_msg	bin/final/rk-flash-tool/rk-burn-tool	/^error_msg() {$/;"	f
+etc	root/folders/.nano/nanorc/examples/INI.ini	/^etc = "a quoted string"$/;"	k	section:Section 2
+evaluate	root/folders/.nano/nanorc/examples/Cython.pyx	/^    cpdef double evaluate(self, double x) except *:$/;"	m	class:SinOfSquareFunction
+evaluate_parameter	bin/colorscript	/^function evaluate_parameter() {$/;"	f
+everybody	slash/etc/passwd	/^everybody:x:9997:9997::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+example	root/folders/.nano/nanorc/examples/CMakeLists.txt	/^PROJECT(example C)$/;"	p
+example	root/folders/.nano/nanorc/examples/Lua.lua	/^function example(x)$/;"	f
+exit_from_ack	bin/final/ack2	/^sub exit_from_ack {$/;"	s
+exp	fn.sh	/^exp() {$/;"	f
+explode_sources	bin/final/ack2	/^sub explode_sources {$/;"	s
+extra	info/pacman.conf	/^[extra]$/;"	s
+extract	bin/final/extract	/^function extract() {$/;"	f
+f	root/folders/.nano/nanorc/examples/Cython.pyx	/^cdef double f(double x):$/;"	f
+fail	bin/build.sh	/^function fail() {$/;"	f
+fail	bin/symlinks	/^fail() {$/;"	f
+failed	bin/git-new-workdir	/^failed () {$/;"	f
+fatal	bin/final/dequote	/^fatal() {$/;"	f
+fatal	bin/repack-zImage.sh	/^fatal() {$/;"	f
+fce	al.sh	/^alias fce='fc -e nano '$/;"	a
+ff	bin/ff	/^ff() { find "$(realpath .)" -type f -iname '*'"$*"'*'; }$/;"	f
+ffd	bin/ffd	/^ffd() { find "$(realpath .)" -type d -iname '*'"$*"'*'; }$/;"	f
+fflush	bin/prettyping	/^	fflush()$/;"	f
+fgrep	al.sh	/^	alias fgrep='LANG=C command \\fgrep --color=auto '$/;"	a
+file_getprop	update.sh	/^file_getprop() { grep "^$2=" "$1" | cut -d= -f2; }$/;"	f
+filecmd	bin/lesspipe.sh	/^filecmd() {$/;"	f
+files	bin/final/ack2	/^sub files {$/;"	s
+filetype	bin/lesspipe.sh	/^filetype() {$/;"	f
+filetypes	bin/final/ack2	/^sub filetypes {$/;"	s
+filetypes_supported	bin/final/ack2	/^sub filetypes_supported {$/;"	s
+filter	bin/final/ack2	/^sub filter {$/;"	s
+finalize	bin/amlimg	/^finalize() {$/;"	f
+findByteSequence	bin/repack-zImage.sh	/^findByteSequence() {$/;"	f
+find_config_files	bin/final/ack2	/^sub find_config_files {$/;"	s
+finish	bin/final/rk-flash-tool/flash-tool	/^finish() {$/;"	f
+firewall	slash/etc/passwd	/^firewall:x:1048:1048::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+firmware	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^firmware=$/;"	k
+firstliney	bin/final/ack2	/^sub firstliney {$/;"	s
+fix-mistakes	bin/git-cheat	/^function fix-mistakes() {$/;"	f
+fixnvim	fn.sh	/^fixnvim() {$/;"	f
+flash_sdcard	bin/final/aml-flash-tool/aml-burn-tool	/^flash_sdcard() {$/;"	f
+flash_sdcard	bin/final/rk-flash-tool/flash-tool	/^flash_sdcard() {$/;"	f
+flash_upgt	bin/final/rk-flash-tool/flash-tool	/^flash_upgt() {$/;"	f
+flush	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.route.flush=1$/;"	k
+flush	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.route.flush=1$/;"	k
+flush	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.route.flush=1;$/;"	k
+fn_increment_version	bin/increment_version	/^fn_increment_version() {$/;"	f
+foo	root/folders/.nano/nanorc/examples/INI.ini	/^foo = false$/;"	k	section:Section 1
+foo\\=bar	root/folders/.nano/nanorc/examples/Properties.properties	/^foo\\=bar = foobar$/;"	k
+for	slash/Busybox-installer-arm.bin	/^  -scrc[CRC32|CRC64|SHA1|SHA256|*] : set hash function for x, e, h commands$/;"	f
+for_sed	bin/for_sed	/^for_sed(){$/;"	f
+fork	bin/fork	/^fork() {$/;"	f
+format.pretty	root/.repo_.gitconfig.json	/^  "format.pretty": [$/;"	a
+forwarding	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.forwarding = 0$/;"	k
+forwarding	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv6.conf.all.forwarding=1$/;"	k
+forwarding	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv6.conf.default.forwarding=1$/;"	k
+forwarding	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.forwarding = 0$/;"	k
+forwarding	etc/sysctl.d/98-sysctl.conf	/^net.ipv6.conf.all.forwarding=1$/;"	k
+forwarding	etc/sysctl.d/98-sysctl.conf	/^net.ipv6.conf.default.forwarding=1$/;"	k
+fp_all	slash/sbin/fixperm.sh	/^fp_all() {$/;"	f
+fp_chmod	slash/sbin/fixperm.sh	/^fp_chmod() {$/;"	f
+fp_chown_gid	slash/sbin/fixperm.sh	/^fp_chown_gid() {$/;"	f
+fp_chown_uid	slash/sbin/fixperm.sh	/^fp_chown_uid() {$/;"	f
+fp_end	slash/sbin/fixperm.sh	/^fp_end() {$/;"	f
+fp_package	slash/sbin/fixperm.sh	/^fp_package() {$/;"	f
+fp_parseargs	slash/sbin/fixperm.sh	/^fp_parseargs() {$/;"	f
+fp_print	slash/sbin/fixperm.sh	/^fp_print() {$/;"	f
+fp_single	slash/sbin/fixperm.sh	/^fp_single() {$/;"	f
+fp_start	slash/sbin/fixperm.sh	/^fp_start() {$/;"	f
+fp_usage	slash/sbin/fixperm.sh	/^fp_usage() {$/;"	f
+from_argv	bin/final/ack2	/^sub from_argv {$/;"	s
+from_file	bin/final/ack2	/^sub from_file {$/;"	s
+from_stdin	bin/final/ack2	/^sub from_stdin {$/;"	s
+fstype_has_fsck	bin/arch-chroot	/^fstype_has_fsck() {$/;"	f
+fstype_is_pseudofs	bin/arch-chroot	/^fstype_is_pseudofs() {$/;"	f
+g:airline#extensions#tabline#enabled	root/folders/.config/nvim/local.vim	/^let g:airline#extensions#tabline#enabled = 1$/;"	v
+g:airline#extensions#tabline#formatter	root/folders/.config/nvim/local.vim	/^let g:airline#extensions#tabline#formatter = 'unique_tail_improved'$/;"	v
+g:airline_detect_paste	root/folders/.config/nvim/local.vim	/^let g:airline_detect_paste=1$/;"	v
+g:airline_highlighting_cache	root/folders/.config/nvim/local.vim	/^let g:airline_highlighting_cache = 1$/;"	v
+g:airline_powerline_fonts	root/folders/.config/nvim/local.vim	/^let g:airline_powerline_fonts=1$/;"	v
+g:deoplete#enable_at_startup	root/folders/.config/nvim/local.vim	/^let g:deoplete#enable_at_startup = 1$/;"	v
+g:gruvbox_contrast_dark	root/folders/.config/nvim/local.vim	/^let g:gruvbox_contrast_dark  = "soft"$/;"	v
+g:powerline_pycmd	root/.vimrc	/^let g:powerline_pycmd = 'py3'$/;"	v
+g:powerline_pycmd	root/folders/.config/nvim/local.vim	/^let g:powerline_pycmd = 'py3'$/;"	v
+g:solarized_bold	root/folders/.config/nvim/local.vim	/^let  g:solarized_bold      =   1$/;"	v
+g:solarized_contrast	root/folders/.config/nvim/local.vim	/^let  g:solarized_contrast  =  "normal"$/;"	v
+g:solarized_degrade	root/folders/.config/nvim/local.vim	/^let    g:solarized_degrade   =   0$/;"	v
+g:solarized_italic	root/folders/.config/nvim/local.vim	/^let    g:solarized_italic    =   1$/;"	v
+g:solarized_termcolors	root/folders/.config/nvim/local.vim	/^let  g:solarized_termcolors= 256$/;"	v
+g:solarized_termtrans	root/folders/.config/nvim/local.vim	/^let  g:solarized_termtrans =   0$/;"	v
+g:solarized_underline	root/folders/.config/nvim/local.vim	/^let   g:solarized_underline =   1$/;"	v
+g:solarized_visibility	root/folders/.config/nvim/local.vim	/^let    g:solarized_visibility=  "normal"$/;"	v
+g:tex_flavor	root/folders/.config/nvim/local.vim	/^let g:tex_flavor = 'latex'$/;"	v
+getFileSize	bin/repack-zImage.sh	/^getFileSize() {$/;"	f
+get_arg_spec	bin/final/ack2	/^sub get_arg_spec {$/;"	s
+get_attributes_by_tag_name	bin/speedtest.py	/^def get_attributes_by_tag_name(dom, tag_name):$/;"	f
+get_best_server	bin/speedtest.py	/^    def get_best_server(self, servers=None):$/;"	m	class:Speedtest
+get_branches	ps4.sh	/^function get_branches() {$/;"	f
+get_closest_servers	bin/speedtest.py	/^    def get_closest_servers(self, limit=5):$/;"	m	class:Speedtest
+get_cmd	bin/lesspipe.sh	/^get_cmd() {$/;"	f
+get_commands	ps4.sh	/^function get_commands() {$/;"	f
+get_config	bin/speedtest.py	/^    def get_config(self):$/;"	m	class:Speedtest
+get_copyright	bin/final/ack2	/^sub get_copyright {$/;"	s
+get_depot_completion	ps4.sh	/^function get_depot_completion() {$/;"	f
+get_exception	bin/speedtest.py	/^def get_exception():$/;"	f
+get_fg_color	bin/colorscript	/^function get_fg_color() {$/;"	f
+get_file_id	bin/final/ack2	/^sub get_file_id {$/;"	s
+get_git_branch	bin/powerlinelatest	/^get_git_branch() { _git_branch_ps1="$(__git_ps1 %s)"; } # sobad$/;"	f
+get_local_ip	bin/qr-filetransfer.py	/^def get_local_ip():$/;"	f
+get_match_column	bin/final/ack2	/^sub get_match_column {$/;"	s
+get_platform	bin/tldr	/^get_platform() {$/;"	f
+get_response_stream	bin/speedtest.py	/^def get_response_stream(response):$/;"	f
+get_script_dir	bin/info_script	/^get_script_dir() {$/;"	f
+get_script_dir	bin/init_helper	/^get_script_dir() {$/;"	f
+get_servers	bin/speedtest.py	/^    def get_servers(self, servers=None, exclude=None):$/;"	m	class:Speedtest
+get_session	root/.xinitrc	/^get_session(){$/;"	f
+get_terminal_size	bin/prettyping	/^		get_terminal_size()$/;"	f
+get_terminal_size	bin/prettyping	/^	get_terminal_size()$/;"	f
+get_terminal_size	bin/prettyping	/^function get_terminal_size(SIZE, SIZEA, HAS_DETECTED, CMD) {$/;"	f
+get_tldr	bin/tldr	/^get_tldr() {$/;"	f
+get_users	ps4.sh	/^function get_users() {$/;"	f
+get_version_statement	bin/final/ack2	/^sub get_version_statement {$/;"	s
+getprop	update.sh	/^getprop() { test -e \/sbin\/getprop && \/sbin\/getprop $1 || grep "^$1=" \/default.prop | cut -d/;"	f
+git	al.sh	/^alias git='git --no-pager'$/;"	a
+git_clone	bin/gitclone	/^git_clone() {$/;"	f
+git_prompt	ps1.sh	/^git_prompt() {$/;"	f
+gitbin	root/folders/.config/yay/config.json	/^	"gitbin": "git",$/;"	s
+gitclone	al.sh	/^alias gitclone=". $dot\/bin\/gitclone"$/;"	a
+gitclone	root/folders/.config/yay/config.json	/^	"gitclone": true,$/;"	b
+gitflags	root/folders/.config/yay/config.json	/^	"gitflags": "",$/;"	s
+github.user	root/.repo_.gitconfig.json	/^  "github.user": [$/;"	a
+global	etc/folders/samba/smb.conf	/^[global]$/;"	s
+global	etc/samba/smb.conf	/^[global]$/;"	s
+goto	bin/goto.sh	/^goto() {$/;"	f
+gpgbin	root/folders/.config/yay/config.json	/^	"gpgbin": "gpg",$/;"	s
+gpgflags	root/folders/.config/yay/config.json	/^	"gpgflags": "",$/;"	s
+gps	slash/etc/passwd	/^gps:x:1021:1021::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+graceful_exit	bin/fortunes	/^graceful_exit() {$/;"	f
+graceful_exit	bin/new_script	/^graceful_exit() {$/;"	f
+graceful_exit	bin/script_gen	/^graceful_exit() {$/;"	f
+graceful_exit	bin/this	/^graceful_exit() {$/;"	f
+graphics	slash/etc/passwd	/^graphics:x:1003:1003::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+greater_than_int	update.sh	/^greater_than_int() { test $1 -gt $2 && echo 1 || echo 0; }$/;"	f
+grep	al.sh	/^	alias grep='LANG=C command \\grep --color=auto '$/;"	a
+grep_line	bin/edsc	/^		grep_line() { grep -n "${1}" "${2}" | tail -1 | cut --delimiter=':' --fields=1; }$/;"	f
+gui_ed_sc	bin/edsc	/^gui_ed_sc() {$/;"	f
+gunzipWithTrailer	bin/repack-zImage.sh	/^gunzipWithTrailer() {$/;"	f
+gzip	bin/speedtest.py	/^    gzip = None$/;"	v
+h	fn.sh	/^h() {$/;"	f
+have	completion.bash	/^have()$/;"	f
+hd	al.sh	/^alias hd='\\od -Ax -tx1z -v '$/;"	a
+head_line	bin/colorscript	/^function head_line() {$/;"	f
+heading	bin/tldr	/^heading() {$/;"	f
+height	root/folders/.nano/nanorc/examples/JSON.json	/^            "height": 500,$/;"	n	object:application.window
+help	bin/emojify	/^help() {$/;"	f
+help.autocorrect	root/.repo_.gitconfig.json	/^  "help.autocorrect": [$/;"	a
+help_message	bin/fortunes	/^help_message() {$/;"	f
+help_message	bin/new_script	/^help_message() {$/;"	f
+help_message	bin/script_gen	/^help_message() {$/;"	f
+help_message	bin/this	/^help_message() {$/;"	f
+helpinfo	bin/rcss	/^helpinfo() {$/;"	f
+here	bin/snippets	/^  << here document                  >> append output$/;"	h
+highlight_fn	bin/ca	/^	highlight_fn() { cat "$@"; }$/;"	f
+highlight_fn	bin/ca	/^	highlight_fn() { highlight --quiet --out-format=truecolor --style=candy --stdout --plug-in=comm/;"	f
+http.sslverify	root/.repo_.gitconfig.json	/^  "http.sslverify": [$/;"	a
+http_open	bin/speedtest.py	/^    def http_open(self, req):$/;"	m	class:SpeedtestHTTPHandler
+http_request	bin/speedtest.py	/^    http_request = AbstractHTTPHandler.do_request_$/;"	v	class:SpeedtestHTTPHandler
+https	bin/final/ls++.conf	/^Report bugs and\/or feature requests on L<https:\/\/github.com\/trapd00r\/ls--\/issues>$/;"	k
+https	root/folders/.config/ls++/ls++.conf	/^Report bugs and\/or feature requests on L<https:\/\/github.com\/trapd00r\/ls--\/issues>$/;"	k
+https_open	bin/speedtest.py	/^    def https_open(self, req):$/;"	m	class:SpeedtestHTTPSHandler
+https_request	bin/speedtest.py	/^    https_request = AbstractHTTPHandler.do_request_$/;"	v	class:SpeedtestHTTPSHandler
+human	bin/final/dutop	/^def human(num, power="K"):$/;"	f
+hung_task_timeout_secs	slash/etc/sysctl.conf	/^sysctl -w kernel.hung_task_timeout_secs=0;$/;"	k
+icmp_echo_ignore_all	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.icmp_echo_ignore_all=1;$/;"	k
+icmp_echo_ignore_broadcasts	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.icmp_echo_ignore_broadcasts = 1$/;"	k
+icmp_echo_ignore_broadcasts	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.icmp_echo_ignore_broadcasts = 1$/;"	k
+icmp_ignore_bogus_error_responses	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.icmp_ignore_bogus_error_responses = 1$/;"	k
+icmp_ignore_bogus_error_responses	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.icmp_ignore_bogus_error_responses = 1$/;"	k
+icmp_ignore_bogus_error_responses	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1;$/;"	k
+iconv	bin/lesspipe.sh	/^iconv() {$/;"	f
+ignore_error	bin/arch-chroot	/^ignore_error() {$/;"	f
+in_array	bin/arch-chroot	/^in_array() {$/;"	f
+inet	slash/etc/passwd	/^inet:x:3003:3003::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+info	bin/symlinks	/^info() {$/;"	f
+init	bin/git-cheat	/^function init() {$/;"	f
+init_term_cmds	bin/tldr	/^init_term_cmds() {$/;"	f
+inner	bin/speedtest.py	/^    def inner(current, total, start=False, end=False):$/;"	f	function:print_dots	file:
+inner	bin/speedtest.py	/^    def inner(host, **kwargs):$/;"	f	function:_build_connection	file:
+inner	bin/speedtest.py	/^    def inner(signum, frame):$/;"	f	function:ctrl_c	file:
+input	slash/etc/passwd	/^input:x:1004:1004::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+insert_help_message	bin/new_script	/^insert_help_message() {$/;"	f
+insert_help_message	bin/script_gen	/^insert_help_message() {$/;"	f
+insert_license	bin/new_script	/^insert_license() {$/;"	f
+insert_license	bin/script_gen	/^insert_license() {$/;"	f
+insert_parser	bin/new_script	/^insert_parser() {$/;"	f
+insert_parser	bin/script_gen	/^insert_parser() {$/;"	f
+insert_root_check	bin/new_script	/^insert_root_check() {$/;"	f
+insert_root_check	bin/script_gen	/^insert_root_check() {$/;"	f
+insert_usage	bin/new_script	/^insert_usage() {$/;"	f
+insert_usage	bin/script_gen	/^insert_usage() {$/;"	f
+inspect	bin/final/ack2	/^sub inspect {$/;"	s
+inspect	bin/git-cheat	/^function inspect() {$/;"	f
+install	root/folders/.nano/nanorc/Makefile	/^install: all$/;"	t
+install	slash/etc/passwd	/^install:x:1012:1012::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+install-global	root/folders/.nano/nanorc/Makefile	/^install-global:$/;"	t
+install_dotfiles	bin/symlinks	/^install_dotfiles() {$/;"	f
+instance	root/folders/.nano/nanorc/examples/Python.py	/^    instance = Foo()$/;"	v
+interactive.singlekey	root/.repo_.gitconfig.json	/^  "interactive.singlekey": [$/;"	a
+invert	bin/final/ack2	/^sub invert {$/;"	s
+invert_color	bin/colorscript	/^function invert_color() {$/;"	f
+ip	al.sh	/^alias ip="command \\ip -c -a -p -d -h "$/;"	a
+ip_forward	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_forward = 0$/;"	k
+ip_forward	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_forward = 1$/;"	k
+ip_forward	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_forward=1$/;"	k
+ip_forward	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_forward = 0$/;"	k
+ip_forward	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_forward = 1$/;"	k
+ip_forward	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_forward=1$/;"	k
+ip_forward	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.ip_forward=0;$/;"	k
+ip_no_pmtu_disc	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_no_pmtu_disc=0$/;"	k
+ip_no_pmtu_disc	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.ip_no_pmtu_disc=0$/;"	k
+ip_no_pmtu_disc	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.ip_no_pmtu_disc=0;$/;"	k
+isSet	bin/speedtest.py	/^    def isSet():$/;"	m	class:FakeShutdownEvent
+is_bash	bin/final/is_bash	/^is_bash() {$/;"	f
+is_blacklisted	slash/Busybox-installer-arm.bin	/^is_blacklisted() {$/;"	f
+is_in_path	bin/updateall	/^is_in_path() { hash "$@" &>\/dev\/null; }$/;"	f
+is_installed	slash/Busybox-installer-arm.bin	/^is_installed() {$/;"	f
+is_inverted	bin/final/ack2	/^sub is_inverted {$/;"	s
+is_mounted	slash/sbin/aditor	/^is_mounted() {$/;"	f
+is_mounted	update.sh	/^is_mounted() { test "$(mount | grep " $1 ")" && echo 1 || echo 0; }$/;"	f
+is_substring	update.sh	/^is_substring() {$/;"	f
+iscab	bin/lesspipe.sh	/^iscab() {$/;"	f
+isdvi	bin/lesspipe.sh	/^isdvi() {$/;"	f
+isfinal	bin/lesspipe.sh	/^isfinal() {$/;"	f
+isjar	bin/lesspipe.sh	/^isjar() {$/;"	f
+isrpm	bin/lesspipe.sh	/^isrpm() {$/;"	f
+istar	bin/lesspipe.sh	/^istar() {$/;"	f
+istemp	bin/lesspipe.sh	/^istemp() {$/;"	f
+iterate	bin/final/ack2	/^sub iterate {$/;"	s
+jacksetup	bin/env.sh	/^alias jacksetup='cd $src; rm -rf \/root\/.jack-se*;  $src\/prebuilts\/sdk\/tools\/jack-admin ins/;"	a
+jackstart	bin/env.sh	/^alias jackstart='$src\/prebuilts\/sdk\/tools\/jack-admin start-server '$/;"	a
+json	bin/speedtest.py	/^        import simplejson as json$/;"	I
+json	bin/speedtest.py	/^        json = None$/;"	v
+json	bin/speedtest.py	/^    def json(self, pretty=False):$/;"	m	class:SpeedtestResults
+katesu	bin/katesu	/^katesu() {$/;"	f
+katesu	fn.sh	/^katesu() {$/;"	f
+kernel	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^kernel=$/;"	k
+kernelconfig	bin/kernelconfig	/^kernelconfig() {$/;"	f
+key	etc/tmux.conf	/^bind-key : command-prompt$/;"	k
+key	etc/tmux.conf	/^bind-key = select-layout main-vertical$/;"	k
+key	root/folders/.nano/nanorc/examples/INI.ini	/^key = value$/;"	k	section:Section 1
+key\\ name	root/folders/.nano/nanorc/examples/Properties.properties	/^key\\ name value$/;"	k
+keystore	slash/etc/passwd	/^keystore:x:1017:1017::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+kh=	completion.bash	/^    kh=()$/;"	f
+killjobs	fn.sh	/^killjobs() {$/;"	f
+l	al.sh	/^alias l="command \\ls $LS_OPTIONS "$/;"	a
+language	root/folders/.nano/nanorc/examples/Properties.properties	/^language = English$/;"	k
+laptop_mode	slash/etc/sysctl.conf	/^sysctl -w vm.laptop_mode=0$/;"	k
+lc	fn.sh	/^lc() { ruby colorls.rb "$@"; }$/;"	f
+learnbyexample/Command-line-text-processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<\/h1>$/;"	h
+less	ex.sh	/^alias less='less -m -g -i -J --underline-special'$/;"	a
+less_than_int	update.sh	/^less_than_int() { test $1 -lt $2 && echo 1 || echo 0; }$/;"	f
+li	bin/li	/^li() {$/;"	f
+liner	bin/liner	/^liner() {$/;"	f
+linerl	bin/linerl	/^linerl() {$/;"	f
+link_files	bin/symlinks	/^link_files() {$/;"	f
+list_item	bin/tldr	/^list_item() {$/;"	f
+ll	al.sh	/^alias ll=lk$/;"	a
+ll	fn.sh	/^function ll() { command ls -l --color=always "$@" | awk '$/;"	f
+ln_con	bin/susetup	/^ln_con() {$/;"	f
+lnkernel	bin/lnkernel	/^lnkernel () $/;"	f
+lnr	al.sh	/^alias lnr='command \\ln -srfv '$/;"	a
+load_colors	bin/final/ack2	/^sub load_colors {$/;"	s
+load_cpu	ps1bg.sh	/^load_cpu() {$/;"	f
+loaded_switchcolor	root/folders/.config/nvim/local.vim	/^let loaded_switchcolor = 1$/;"	v
+loader	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^loader=$/;"	k
+log	slash/etc/passwd	/^log:x:1007:1007::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+log.decorate	root/.repo_.gitconfig.json	/^  "log.decorate": [$/;"	a
+log_martians	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.log_martians = 1$/;"	k
+log_martians	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.log_martians = 1$/;"	k
+log_martians	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.log_martians = 1$/;"	k
+log_martians	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.log_martians = 1$/;"	k
+logd	slash/etc/passwd	/^logd:x:1036:1036::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+lolcat	al.sh	/^alias lolcat="command \\lolcat --truecolor "$/;"	a
+loop_radio	slash/etc/passwd	/^loop_radio:x:1030:1030::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+lost_a_packet	bin/prettyping	/^			lost_a_packet()$/;"	f
+lost_a_packet	bin/prettyping	/^		lost_a_packet()$/;"	f
+lost_a_packet	bin/prettyping	/^function lost_a_packet() {$/;"	f
+ls	fn.sh	/^[[ -e \/oem ]] && ls() {$/;"	f
+ls	fn.sh	/^ls() {$/;"	f
+lscolor	bin/lscol	/^lscolor() {$/;"	f
+lscolor	bin/lscolor	/^lscolor() {$/;"	f
+lsd	fn.sh	/^lsd() {$/;"	f
+lsdate	al.sh	/^alias lsdate="command \\ls --color=auto -AhHlrt "$/;"	a
+lsl	al.sh	/^alias lsl='ls -l '$/;"	a
+lsr	fn.sh	/^lsr() {$/;"	f
+lssize	al.sh	/^alias lssize="command \\ls -lhHAr --color=auto  --sort size "$/;"	a
+lt	al.sh	/^alias lt='command \\ls --color=always -alt | head -20 '$/;"	a
+main	bin/beautify.rb	/^   def BeautifyBash.main$/;"	S	module:BeautifyBash
+main	bin/final/ack2	/^package main;$/;"	p
+main	bin/final/ack2	/^sub main {$/;"	s
+main	bin/final/sdat2img.py	/^def main(TRANSFER_LIST_FILE, NEW_DATA_FILE, OUTPUT_IMAGE_FILE):$/;"	f
+main	bin/qr-filetransfer.py	/^def main():$/;"	f
+main	bin/speedtest.py	/^def main():$/;"	f
+main	root/folders/.nano/nanorc/examples/C.c	/^int main(void)$/;"	f	typeref:typename:int
+main	root/folders/.nano/nanorc/examples/Go.go	/^func main() {$/;"	f	package:main
+main	root/folders/.nano/nanorc/examples/Go.go	/^package main$/;"	p
+main	root/folders/.nano/nanorc/examples/Java.java	/^    public static void main(String[] args) {$/;"	m	class:HelloWorldApp
+makeclean	bin/env.sh	/^alias makeclean='cd $src; m clobber; choosecombo 2 lineage_harpia eng'$/;"	a
+makepkgbin	root/folders/.config/yay/config.json	/^	"makepkgbin": "makepkg",$/;"	s
+makepkgconf	root/folders/.config/yay/config.json	/^	"makepkgconf": "",$/;"	s
+man	bin/wat	/^man() {$/;"	f
+manc	fn.sh	/^manc() {$/;"	f
+manf	fn.sh	/^manf() {$/;"	f
+mangle	bin/arch-chroot	/^mangle() {$/;"	f
+mapleader	root/folders/.config/nvim/local.vim	/^let mapleader=","$/;"	v
+max	etc/folders/sysctl.d/98-sysctl.conf	/^fs.file-max = 2097152$/;"	k
+max	etc/sysctl.d/98-sysctl.conf	/^fs.file-max = 2097152$/;"	k
+max	slash/etc/sysctl.conf	/^sysctl -w fs.file-max=65536;$/;"	k
+max	slash/etc/sysctl.conf	/^sysctl -w kernel.threads-max=10000;$/;"	k
+max	slash/etc/sysctl.conf	/^sysctl -w kernel.threads-max=525810$/;"	k
+max_dgram_qlen	slash/etc/sysctl.conf	/^sysctl -w net.unix.max_dgram_qlen=50;$/;"	k
+max_queued_events	slash/etc/sysctl.conf	/^sysctl -w fs.inotify.max_queued_events=32000$/;"	k
+max_user_instances	slash/etc/sysctl.conf	/^sysctl -w fs.inotify.max_user_instances=256$/;"	k
+max_user_watches	etc/folders/sysctl.d/98-sysctl.conf	/^fs.inotify.max_user_watches = 524288$/;"	k
+max_user_watches	etc/sysctl.d/98-sysctl.conf	/^fs.inotify.max_user_watches = 524288$/;"	k
+max_user_watches	slash/etc/sysctl.conf	/^sysctl -w fs.inotify.max_user_watches=10240$/;"	k
+mdnsr	slash/etc/passwd	/^mdnsr:x:1020:1020::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+media	slash/etc/passwd	/^media:x:1013:1013::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+media_rw	slash/etc/passwd	/^media_rw:x:1023:1023::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+mediacodec	slash/etc/passwd	/^mediacodec:x:1046:1046::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+mediadrm	slash/etc/passwd	/^mediadrm:x:1031:1031::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+mediaex	slash/etc/passwd	/^mediaex:x:1040:1040::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+merge	bin/git-cheat	/^function merge() {$/;"	f
+message	root/folders/.nano/nanorc/examples/Properties.properties	/^message = Hello, \\$/;"	k
+meteo	ps1.sh	/^meteo() {$/;"	f
+metrics_coll	slash/etc/passwd	/^metrics_coll:x:1042:1042::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+metricsd	slash/etc/passwd	/^metricsd:x:1043:1043::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+mflags	root/folders/.config/yay/config.json	/^	"mflags": "",$/;"	s
+min_free_kbytes	etc/folders/sysctl.d/98-sysctl.conf	/^vm.min_free_kbytes = 100768$/;"	k
+min_free_kbytes	etc/sysctl.d/98-sysctl.conf	/^vm.min_free_kbytes = 100768$/;"	k
+min_free_kbytes	slash/etc/sysctl.conf	/^sysctl -w vm.min_free_kbytes=4096$/;"	k
+min_free_order_shift	slash/etc/sysctl.conf	/^sysctl -w vm.min_free_order_shift=4$/;"	k
+min_free_order_shift	slash/etc/sysctl.conf	/^sysctl -w vm.min_free_order_shift=4;$/;"	k
+misc	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^misc=$/;"	k
+misc	slash/etc/passwd	/^misc:x:9998:9998::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+mkcd	fn.sh	/^mkcd() {$/;"	f
+more	al.sh	/^alias more='less '$/;"	a
+more	ex.sh	/^alias more='less'$/;"	a
+most	al.sh	/^alias most='less '$/;"	a
+mount	slash/etc/passwd	/^mount:x:1009:1009::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+mount_	slash/Busybox-installer-arm.bin	/^mount_() {$/;"	f
+mount_em	slash/sbin/aditor	/^mount_em() {$/;"	f
+msc_id	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^msc_id=$/;"	k
+msg	bin/arch-chroot	/^msg() { out "==>" "$@"; }$/;"	f
+msg	bin/final/dequote	/^msg() {$/;"	f
+msg	bin/lesspipe.sh	/^msg() {$/;"	f
+msg2	bin/arch-chroot	/^msg2() { out "  ->" "$@"; }$/;"	f
+msgmax	slash/etc/sysctl.conf	/^sysctl -w kernel.msgmax=64000;$/;"	k
+msgmni	slash/etc/sysctl.conf	/^sysctl -w kernel.msgmni=2048;$/;"	k
+mtp	slash/etc/passwd	/^mtp:x:1024:1024::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+multilib	info/pacman.conf	/^[multilib]$/;"	s
+mvv	al.sh	/^alias mvv='command \\mv -v '$/;"	a
+mvv	al.sh	/^alias mvv='mv -v '$/;"	a
+my awesome ~/.nanorc file!!!	root/folders/.nano/README.md	/^## my awesome ~\/.nanorc file!!!$/;"	s
+name	bin/final/ack2	/^sub name {$/;"	s
+name	root/folders/.nano/nanorc/examples/JSON.json	/^            "name": "main_window",$/;"	s	object:application.window
+name	root/folders/.nano/nanorc/examples/JSON.json	/^            "name": "text1"$/;"	s	object:application.text
+nano	g4.sh	/^alias nano='$EDITOR '$/;"	a
+nano-highlight	root/folders/.nano/README.md	/^nano-highlight$/;"	c
+needs_line_scan	bin/final/ack2	/^sub needs_line_scan {$/;"	s
+net_admin	slash/etc/passwd	/^net_admin:x:3005:3005::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+net_bt	slash/etc/passwd	/^net_bt:x:3002:3002::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+net_bt_admin	slash/etc/passwd	/^net_bt_admin:x:3001:3001::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+net_bt_stack	slash/etc/passwd	/^net_bt_stack:x:3008:3008::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+net_bw_acct	slash/etc/passwd	/^net_bw_acct:x:3007:3007::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+net_bw_stats	slash/etc/passwd	/^net_bw_stats:x:3006:3006::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+net_raw	slash/etc/passwd	/^net_raw:x:3004:3004::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+netdev_max_backlog	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.netdev_max_backlog = 1024$/;"	k
+netdev_max_backlog	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.netdev_max_backlog = 5000 # Default Socket Receive Buffer$/;"	k
+netdev_max_backlog	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.netdev_max_backlog = 65536 # Increase the maximum amount of option memory buffers$/;"	k
+netdev_max_backlog	etc/sysctl.d/98-sysctl.conf	/^net.core.netdev_max_backlog = 1024$/;"	k
+netdev_max_backlog	etc/sysctl.d/98-sysctl.conf	/^net.core.netdev_max_backlog = 5000 # Default Socket Receive Buffer$/;"	k
+netdev_max_backlog	etc/sysctl.d/98-sysctl.conf	/^net.core.netdev_max_backlog = 65536 # Increase the maximum amount of option memory buffers$/;"	k
+network	bin/wpa_supplicant.conf	/^network={$/;"	k
+new	bin/final/ack2	/^sub new {$/;"	s
+newbash	bin/rcss	/^newbash() {$/;"	f
+newclphp	bin/rcss	/^newclphp() {$/;"	f
+newperl	bin/rcss	/^newperl() {$/;"	f
+newphp	bin/rcss	/^newphp() {$/;"	f
+newpython	bin/rcss	/^newpython() {$/;"	f
+next	bin/final/ack2	/^sub next {$/;"	s
+nexttmp	bin/lesspipe.sh	/^	nexttmp() {$/;"	f
+nfc	slash/etc/passwd	/^nfc:x:1027:1027::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+nmi_watchdog	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.nmi_watchdog = 0$/;"	k
+nmi_watchdog	etc/sysctl.d/98-sysctl.conf	/^kernel.nmi_watchdog = 0$/;"	k
+nobody	slash/etc/passwd	/^nobody:x:9999:9999::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+nodash	bin/lesspipe.sh	/^nodash() {$/;"	f
+noexit	fn.sh	/^noexit() {$/;"	f
+num	root/folders/.nano/nanorc/examples/INI.ini	/^num = 100$/;"	k	section:Section 2
+nvim-config	bin/setup-nvim	/^nvim-config() {$/;"	f
+nvram	slash/etc/passwd	/^nvram:x:1050:1050::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+ok	bin/build.sh	/^function ok() {$/;"	f
+oom_dump_tasks	slash/etc/sysctl.conf	/^sysctl -w vm.oom_dump_tasks=1;$/;"	k
+oom_kill_allocating_task	slash/etc/sysctl.conf	/^sysctl -w vm.oom_kill_allocating_task=0$/;"	k
+open	bin/final/ack2	/^sub open {$/;"	s
+options	bin/final/ack2	/^sub options {$/;"	s
+options	info/pacman.conf	/^[options]$/;"	s
+options_clean	bin/final/ack2	/^sub options_clean {$/;"	s
+optmem_max	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.optmem_max = 25165824 # Increase the maximum total buffer-space allocatable$/;"	k
+optmem_max	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.optmem_max = 40960$/;"	k
+optmem_max	etc/sysctl.d/98-sysctl.conf	/^net.core.optmem_max = 25165824 # Increase the maximum total buffer-space allocatable$/;"	k
+optmem_max	etc/sysctl.d/98-sysctl.conf	/^net.core.optmem_max = 40960$/;"	k
+optmem_max	slash/etc/sysctl.conf	/^sysctl -w net.core.optmem_max=20480;$/;"	k
+optstring_append_option	bin/arch-chroot	/^optstring_append_option() {$/;"	f
+optstring_get_option	bin/arch-chroot	/^optstring_get_option() {$/;"	f
+optstring_has_option	bin/arch-chroot	/^optstring_has_option() {$/;"	f
+optstring_match_option	bin/arch-chroot	/^optstring_match_option() {$/;"	f
+optstring_normalize	bin/arch-chroot	/^optstring_normalize() {$/;"	f
+optstring_prepend_option	bin/arch-chroot	/^optstring_prepend_option() {$/;"	f
+optstring_remove_option	bin/arch-chroot	/^optstring_remove_option() {$/;"	f
+ord	fn.sh	/^ord() { printf "0x%x\\n" "'$1"; }$/;"	f
+other_line_finished_repeating	bin/prettyping	/^			other_line_finished_repeating()$/;"	f
+other_line_finished_repeating	bin/prettyping	/^function other_line_finished_repeating() {$/;"	f
+other_line_is_printed	bin/prettyping	/^		other_line_is_printed()$/;"	f
+other_line_is_printed	bin/prettyping	/^function other_line_is_printed() {$/;"	f
+other_line_is_repeated	bin/prettyping	/^				other_line_is_repeated()$/;"	f
+other_line_is_repeated	bin/prettyping	/^			other_line_is_repeated()$/;"	f
+other_line_is_repeated	bin/prettyping	/^function other_line_is_repeated() {$/;"	f
+out	bin/arch-chroot	/^out() { printf "$1 $2\\n" "${@:3}"; }$/;"	f
+out=	bin/emojify	/^	out=()$/;"	f
+output_to_pipe	bin/final/ack2	/^sub output_to_pipe {$/;"	s
+overcommit_memory	etc/folders/sysctl.d/98-sysctl.conf	/^vm.overcommit_memory = 2$/;"	k
+overcommit_memory	etc/sysctl.d/98-sysctl.conf	/^vm.overcommit_memory = 2$/;"	k
+overcommit_memory	slash/etc/sysctl.conf	/^sysctl -w vm.overcommit_memory=1$/;"	k
+overcommit_memory	slash/etc/sysctl.conf	/^sysctl -w vm.overcommit_memory=1;$/;"	k
+pack	bin/repack-zImage.sh	/^pack() {$/;"	f
+package_extract_dir	update.sh	/^package_extract_dir() {$/;"	f
+package_extract_file	update.sh	/^package_extract_file() {$/;"	f
+package_info	slash/etc/passwd	/^package_info:x:1032:1032::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+pacmanbin	root/folders/.config/yay/config.json	/^	"pacmanbin": "\/usr\/bin\/pacman",$/;"	s
+pacmanconf	root/folders/.config/yay/config.json	/^	"pacmanconf": "\/etc\/pacman.conf",$/;"	s
+pacq	fn.sh	/^pacq() {$/;"	f
+pacr	al.sh	/^	alias pacr='command \\pacmatic -Rcsn '$/;"	a
+pacr	al.sh	/^alias pacr='command \\pacman -Rcsn '$/;"	a
+pacs	al.sh	/^	alias pacs='command \\pacmatic -S --needed --noconfirm '$/;"	a
+pacs	al.sh	/^alias pacs='command \\pacman -S --needed --noconfirm '$/;"	a
+pacss	al.sh	/^alias pacss="pacman -Ss"$/;"	a
+pacu	al.sh	/^	alias pacu='command \\pacmatic --force --needed -U *.tar.xz '$/;"	a
+pacu	al.sh	/^alias pacu='command \\pacman --force --needed -U *.tar.xz '$/;"	a
+padTo	bin/repack-zImage.sh	/^padTo() {$/;"	f
+padToMod	bin/repack-zImage.sh	/^padToMod() {$/;"	f
+panic	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.panic = 30$/;"	k
+panic	etc/sysctl.d/98-sysctl.conf	/^kernel.panic = 30$/;"	k
+panic	slash/etc/sysctl.conf	/^sysctl -w kernel.panic=30;$/;"	k
+panic	slash/etc/sysctl.conf	/^sysctl -w kernel.panic=5$/;"	k
+panic_on_io_nmi	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.panic_on_io_nmi = 0$/;"	k
+panic_on_io_nmi	etc/sysctl.d/98-sysctl.conf	/^kernel.panic_on_io_nmi = 0$/;"	k
+panic_on_oom	slash/etc/sysctl.conf	/^sysctl -w vm.panic_on_oom=0$/;"	k
+panic_on_oops	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.panic_on_oops = 0$/;"	k
+panic_on_oops	etc/sysctl.d/98-sysctl.conf	/^kernel.panic_on_oops = 0$/;"	k
+panic_on_oops	slash/etc/sysctl.conf	/^sysctl -w kernel.panic_on_oops=1$/;"	k
+panic_on_oops	slash/etc/sysctl.conf	/^sysctl -w kernel.panic_on_oops=1;$/;"	k
+panic_on_unrecovered_nmi	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.panic_on_unrecovered_nmi = 0$/;"	k
+panic_on_unrecovered_nmi	etc/sysctl.d/98-sysctl.conf	/^kernel.panic_on_unrecovered_nmi = 0$/;"	k
+parameter	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^parameter=$/;"	k
+parse_args	bin/speedtest.py	/^def parse_args():$/;"	f
+parse_arguments	bin/prettyping	/^parse_arguments() {$/;"	f
+parse_git_branch	bin/prompt.sh	/^parse_git_branch() {$/;"	f
+parse_line	bin/emojify	/^parse_line() {$/;"	f
+parse_transfer_list_file	bin/final/sdat2img.py	/^    def parse_transfer_list_file(path):$/;"	f	function:main	file:
+parsehtml	bin/lesspipe.sh	/^parsehtml() {$/;"	f
+part_mapper	bin/mnt	/^part_mapper() {$/;"	f
+pas	bin/pas	/^pas() {$/;"	f
+passw	bin/wpa	/^passw() {$/;"	f
+patch	bin/git-cheat	/^function patch() {$/;"	f
+path_append	fn.sh	/^path_append() {$/;"	f
+path_default	fn.sh	/^path_default() {$/;"	f
+path_for_cmd	bin/tldr	/^path_for_cmd() {$/;"	f
+path_prepend	fn.sh	/^path_prepend() {$/;"	f
+paths	root/folders/.config/nvim/local.vim	/^let paths = split(globpath(&runtimepath, 'colors\/*.vim'), "\\n")$/;"	v
+pato	fn.sh	/^pato() {$/;"	f
+pgpfetch	root/folders/.config/yay/config.json	/^	"pgpfetch": true,$/;"	b
+ping	bin/p	/^ping() { if [[ -x \/usr\/bin\/grc ]]; then$/;"	f
+ping_10	bin/p	/^ping_10() {$/;"	f
+ping_address	bin/p	/^ping_address() {$/;"	f
+ping_g4	bin/p	/^ping_g4() {$/;"	f
+ping_ga	bin/p	/^ping_ga() {$/;"	f
+ping_google	bin/p	/^ping_google() {$/;"	f
+ping_hp	bin/p	/^ping_hp() {$/;"	f
+ping_pi	bin/p	/^ping_pi() {$/;"	f
+ping_router	bin/p	/^ping_router() {$/;"	f
+ping_tv	bin/p	/^ping_tv() {$/;"	f
+pmi	bin/pmi	/^pmi() {$/;"	f
+pmu	bin/pmu	/^pmu() {$/;"	f
+pos	bin/qqdb	/^pos() {$/;"	f
+pos_alt	bin/qqdb	/^alias pos_alt='export posglob="${@)"$/;"	a
+posecho	bin/qqdb	/^posecho() {$/;"	f
+posset	bin/qqdb	/^posset() {$/;"	f
+pre.hl	bin/highlight.css	/^pre.hl	{ color:#f8f8f8; background-color:#91e39a; font-size:10pt; font-family:'Courier New',mono/;"	c
+pre_allocate	bin/speedtest.py	/^    def pre_allocate(self):$/;"	m	class:HTTPUploaderData
+prepare	bin/amlimg	/^prepare() {$/;"	f
+print	bin/final/ack2	/^sub print                   { print {$fh} @_; return; }$/;"	s
+print_	bin/speedtest.py	/^    def print_(*args, **kwargs):$/;"	f
+print_all	bin/hextoxterm	/^def print_all():$/;"	f
+print_args	bin/testing.sh	/^print_args() {$/;"	f
+print_blank_line	bin/final/ack2	/^sub print_blank_line        { App::Ack::print( "\\n" ); return; }$/;"	s
+print_blocks	bin/colors.sh	/^function print_blocks() {$/;"	f
+print_color_table	bin/colorscript	/^function print_color_table() {$/;"	f
+print_colour	bin/colors.sh	/^function print_colour() {$/;"	f
+print_debug	bin/final/aml-flash	/^print_debug()$/;"	f
+print_debug	bin/final/aml-flash-tool/flash-tool	/^print_debug()$/;"	f
+print_debug	bin/final/flash-tool.sh	/^print_debug() {$/;"	f
+print_dots	bin/speedtest.py	/^def print_dots(shutdown_event):$/;"	f
+print_du	bin/final/dutop	/^def print_du(path):$/;"	f
+print_filename	bin/final/ack2	/^sub print_filename          { App::Ack::print( $_[0], $_[1] ); return; }$/;"	s
+print_help	bin/init_helper	/^print_help() {$/;"	f
+print_help	bin/prettyping	/^print_help() {$/;"	f
+print_last_n	bin/prettyping	/^		print_last_n()$/;"	f
+print_last_n	bin/prettyping	/^function print_last_n(i, percentage_lost, sum, min, avg, max, diffs) {$/;"	f
+print_line_if_context	bin/final/ack2	/^sub print_line_if_context {$/;"	s
+print_line_with_context	bin/final/ack2	/^sub print_line_with_context {$/;"	s
+print_line_with_options	bin/final/ack2	/^sub print_line_with_options {$/;"	s
+print_matches_in_resource	bin/final/ack2	/^sub print_matches_in_resource {$/;"	s
+print_missing_response	bin/prettyping	/^	print_missing_response()$/;"	f
+print_missing_response	bin/prettyping	/^function print_missing_response(rtt) {$/;"	f
+print_newlines_if_needed	bin/prettyping	/^			print_newlines_if_needed()$/;"	f
+print_newlines_if_needed	bin/prettyping	/^		print_newlines_if_needed()$/;"	f
+print_newlines_if_needed	bin/prettyping	/^	print_newlines_if_needed()$/;"	f
+print_newlines_if_needed	bin/prettyping	/^function print_newlines_if_needed() {$/;"	f
+print_overall	bin/prettyping	/^		print_overall()$/;"	f
+print_overall	bin/prettyping	/^function print_overall(percentage_lost, avg_rtt) {$/;"	f
+print_proc	bin/exit_if_running.sh	/^print_proc() {$/;"	f
+print_proc_error	bin/exit_if_running.sh	/^print_proc_error() {$/;"	f
+print_qr_code	bin/qr-filetransfer.py	/^def print_qr_code(address):$/;"	f
+print_received_response	bin/prettyping	/^function print_received_response(rtt, block_index) {$/;"	f
+print_response_legend	bin/prettyping	/^	print_response_legend()$/;"	f
+print_response_legend	bin/prettyping	/^function print_response_legend(i, n, w) {$/;"	f
+print_run	bin/colors.sh	/^function print_run() {$/;"	f
+print_statistics_bar	bin/prettyping	/^			print_statistics_bar()$/;"	f
+print_statistics_bar	bin/prettyping	/^		print_statistics_bar()$/;"	f
+print_statistics_bar	bin/prettyping	/^function print_statistics_bar() {$/;"	f
+print_statistics_bar_if_terminal	bin/prettyping	/^			print_statistics_bar_if_terminal()$/;"	f
+print_statistics_bar_if_terminal	bin/prettyping	/^		print_statistics_bar_if_terminal()$/;"	f
+print_statistics_bar_if_terminal	bin/prettyping	/^function print_statistics_bar_if_terminal() {$/;"	f
+print_version_statement	bin/final/ack2	/^sub print_version_statement {$/;"	s
+printer	bin/speedtest.py	/^def printer(string, quiet=False, debug=False, error=False, **kwargs):$/;"	f
+process_args	bin/final/ack2	/^sub process_args {$/;"	s
+process_filetypes	bin/final/ack2	/^sub process_filetypes {$/;"	s
+process_filter_spec	bin/final/ack2	/^sub process_filter_spec {$/;"	s
+process_other	bin/final/ack2	/^sub process_other {$/;"	s
+process_rtt	bin/prettyping	/^function process_rtt(rtt) {$/;"	f
+producer	bin/speedtest.py	/^        def producer(q, requests, request_count):$/;"	f	member:Speedtest.download	file:
+producer	bin/speedtest.py	/^        def producer(q, requests, request_count):$/;"	f	member:Speedtest.upload	file:
+prompt	bin/powerline_simple	/^	prompt() {$/;"	f
+prompt_command	ps1.sh	/^	prompt_command() {$/;"	f
+prompt_command	ps1.sh	/^prompt_command() {$/;"	f
+prompt_powerline	bin/powerlinelatest	/^prompt_powerline() {$/;"	f
+prompt_svn_stats	bin/prompt2.sh	/^function prompt_svn_stats() {$/;"	f
+prompt_timer_start	bin/prompt2.sh	/^function prompt_timer_start() {$/;"	f
+prompt_timer_stop	bin/prompt2.sh	/^function prompt_timer_stop() {$/;"	f
+provides	root/folders/.config/yay/config.json	/^	"provides": true,$/;"	b
+ps1	bin/.bash-powerline.sh	/^	ps1() {$/;"	f
+ps1_hist_clean	ps1.sh	/^ps1_hist_clean() {$/;"	f
+ps1_timer	ps1.sh	/^ps1_timer() {$/;"	f
+ps1_writer	ps1bg.sh	/^ps1_writer() {$/;"	f
+pscpu	fn.sh	/^pscpu() {$/;"	f
+push.default	root/.repo_.gitconfig.json	/^  "push.default": [$/;"	a
+push.followtags	root/.repo_.gitconfig.json	/^  "push.followtags": [$/;"	a
+push_key	bin/ad	/^push_key() {$/;"	f
+pyg_choose	bin/cata	/^	pyg_choose() {$/;"	f
+python_highlight_all	root/folders/.config/nvim/local.vim	/^let python_highlight_all = 1$/;"	v
+quotation	bin/tldr	/^quotation() {$/;"	f
+quote	completion.bash	/^quote()$/;"	f
+quote_readline	completion.bash	/^quote_readline()$/;"	f
+radio	slash/etc/passwd	/^radio:x:1001:1001::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+random_port	bin/qr-filetransfer.py	/^def random_port():$/;"	f
+rangeset	bin/final/sdat2img.py	/^    def rangeset(src):$/;"	f	function:main	file:
+rb_check_off	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^rb_check_off=true$/;"	k
+read	bin/speedtest.py	/^    def read(self, n=10240):$/;"	m	class:HTTPUploaderData
+read_option	bin/new_script	/^read_option() {$/;"	f
+read_option	bin/script_gen	/^read_option() {$/;"	f
+read_rcfile	bin/final/ack2	/^sub read_rcfile {$/;"	s
+read_wakeup_threshold	slash/etc/sysctl.conf	/^sysctl -w kernel.random.read_wakeup_threshold=128$/;"	k
+readproc	slash/etc/passwd	/^readproc:x:3009:3009::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+rebase	bin/git-cheat	/^function rebase() {$/;"	f
+reboot	al.sh	/^alias reboot='systemctl reboot '$/;"	a
+rebuild	root/folders/.config/yay/config.json	/^	"rebuild": "no",$/;"	s
+recent	bin/tldr	/^recent() {$/;"	f
+recordFileSize	bin/repack-zImage.sh	/^recordFileSize() {$/;"	f
+recordPackingFileSize	bin/repack-zImage.sh	/^recordPackingFileSize() ($/;"	f
+recordVars	bin/repack-zImage.sh	/^recordVars() {$/;"	f
+recovery	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^recovery=$/;"	k
+recovery_miracle	bin/recovery_miracle	/^recovery_miracle() {$/;"	f
+redEcho	bin/echo-args.sh	/^redEcho() {$/;"	f
+redownload	root/folders/.config/yay/config.json	/^	"redownload": "no",$/;"	s
+register_filter	bin/final/ack2	/^sub register_filter {$/;"	s
+relentless_ping	bin/p	/^relentless_ping() {$/;"	f
+relpath	bin/repack-zImage.sh	/^relpath() {$/;"	f
+remnt	bin/ad	/^remnt() {$/;"	f
+remote	bin/git-cheat	/^function remote() {$/;"	f
+remove_default_options_if_needed	bin/final/ack2	/^sub remove_default_options_if_needed {$/;"	s
+remove_dir_sep	bin/final/ack2	/^sub remove_dir_sep {$/;"	s
+removed_option	bin/final/ack2	/^sub removed_option {$/;"	s
+removemake	root/folders/.config/yay/config.json	/^	"removemake": "ask",$/;"	s
+rename	update.sh	/^rename() { mv -f "$1" "$2"; }$/;"	f
+reorderInitramfsList	bin/repack-zImage.sh	/^reorderInitramfsList() {$/;"	f
+rep	bin/rep	/^rep() { [[ -r $3 ]] && perl -i -pe "s\/$1\/$2\/g" "$3"; }$/;"	f
+repack.usedeltabaseoffset	root/.repo_.gitconfig.json	/^  "repack.usedeltabaseoffset": [$/;"	a
+replaces	bin/increment_version	/^replaces() {$/;"	f
+repoinit	bin/repoinit	/^repoinit() {$/;"	f
+requestsplitn	root/folders/.config/yay/config.json	/^	"requestsplitn": 150,$/;"	n
+rerere.autoupdate	root/.repo_.gitconfig.json	/^  "rerere.autoupdate": [$/;"	a
+rerere.enabled	root/.repo_.gitconfig.json	/^  "rerere.enabled": [$/;"	a
+reset	bin/final/ack2	/^sub reset {$/;"	s
+reset	bin/git-cheat	/^function reset() {$/;"	f
+reset_screen	bin/debug	/^reset_screen() {$/;"	f
+reset_screen	bin/script.bash	/^		reset_screen() {$/;"	f
+reslash	bin/final/ack2	/^sub reslash {$/;"	s
+resource_has_match	bin/final/ack2	/^sub resource_has_match {$/;"	s
+restore_con	bin/fix-sdcard-perm.sh	/^restore_con() {$/;"	f
+restore_con	slash/sbin/sdcard_fix_perm.sh	/^restore_con() {$/;"	f
+restore_con	update.sh	/^restore_con() {$/;"	f
+restore_files	update.sh	/^restore_files() {$/;"	f
+restrict	etc/ntp.conf	/^restrict ::1$/;"	k
+results_at_min=	bin/repack-zImage.sh	/^	local results_at_min=()$/;"	f
+resync	bin/resync	/^resync() {$/;"	f
+retrieve_arg_sources	bin/final/ack2	/^sub retrieve_arg_sources {$/;"	s
+retu	bin/debug	/^retu() {$/;"	f
+revert	bin/git-cheat	/^function revert() {$/;"	f
+revertversion	bin/rcss	/^revertversion() {$/;"	f
+rgb	bin/hextoxterm	/^        rgb = short2rgb(arg)$/;"	v
+rgb2short	bin/hextoxterm	/^def rgb2short(rgb):$/;"	f
+rm_dir	bin/rm_empty_dir	/^rm_dir() {$/;"	f
+rmem_default	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.rmem_default = 31457280 # Maximum Socket Receive Buffer$/;"	k
+rmem_default	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.rmem_default = 65535$/;"	k
+rmem_default	etc/sysctl.d/98-sysctl.conf	/^net.core.rmem_default = 31457280 # Maximum Socket Receive Buffer$/;"	k
+rmem_default	etc/sysctl.d/98-sysctl.conf	/^net.core.rmem_default = 65535$/;"	k
+rmem_default	slash/etc/sysctl.conf	/^sysctl -w net.core.rmem_default=256960;$/;"	k
+rmem_max	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.rmem_max = 12582912 # Default Socket Send Buffer$/;"	k
+rmem_max	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.rmem_max = 8388608$/;"	k
+rmem_max	etc/sysctl.d/98-sysctl.conf	/^net.core.rmem_max = 12582912 # Default Socket Send Buffer$/;"	k
+rmem_max	etc/sysctl.d/98-sysctl.conf	/^net.core.rmem_max = 8388608$/;"	k
+rmem_max	slash/etc/sysctl.conf	/^sysctl -w net.core.rmem_max=524288;$/;"	k
+rmrf	al.sh	/^alias rmrf='command \\rm -rvf --preserve-root --one-file-system '$/;"	a
+rmshit	bin/rmshit.py	/^def rmshit():$/;"	f
+rmv	al.sh	/^alias rmv="rm -rfv --one-file-system --preserve-root --dir "$/;"	a
+ro root	info/refind_linux.conf	/^"Boot ARCH-LINUX with kernel optimizations" "ro root=\/dev\/sda3 quiet threadirqs nowatchdog fsc/;"	k
+ro root	info/refind_linux.conf	/^"Boot FALLBACK ARCH-LINUX single-user"  "ro root=LABEL=ARCH cgroup_disable=memory commit=60 data/;"	k
+ro root	info/refind_linux.conf	/^"Boot with to multi-users console"   "ro root=\/dev\/sda3 barrier=0 cgroup_disable=memory commit/;"	k
+rockusb_id	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^rockusb_id=$/;"	k
+roomer	bin/roomer	/^roomer() {$/;"	f
+root	etc/folders/samba/smb.conf	/^[root]$/;"	s
+root	etc/samba/smb.conf	/^[root]$/;"	s
+root	slash/etc/passwd	/^root:x:0:0::\/data\/local\/cron:\/data\/dot\/slash\/sbin\/bash$/;"	u	home:/data/local/cron	shell:/data/dot/slash/sbin/bash
+rp_filter	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.rp_filter = 1$/;"	k
+rp_filter	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.rp_filter = 1$/;"	k
+rp_filter	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.all.rp_filter = 1$/;"	k
+rp_filter	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.conf.default.rp_filter = 1$/;"	k
+rp_filter	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.all.rp_filter=1;$/;"	k
+rp_filter	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.default.rp_filter=1;$/;"	k
+rqd	bin/repack-zImage.sh	/^rqd() {$/;"	f
+run	bin/speedtest.py	/^    def run(self):$/;"	m	class:HTTPDownloader
+run	bin/speedtest.py	/^    def run(self):$/;"	m	class:HTTPUploader
+run_update	bin/final/aml-flash	/^run_update()$/;"	f
+run_update	bin/final/aml-flash-tool/flash-tool	/^run_update()$/;"	f
+run_update	bin/final/flash-tool.sh	/^run_update() {$/;"	f
+run_update_assert	bin/final/aml-flash	/^run_update_assert()$/;"	f
+run_update_assert	bin/final/aml-flash-tool/flash-tool	/^run_update_assert()$/;"	f
+run_update_assert	bin/final/flash-tool.sh	/^run_update_assert() {$/;"	f
+run_update_return	bin/final/aml-flash	/^run_update_return()$/;"	f
+run_update_return	bin/final/aml-flash-tool/flash-tool	/^run_update_return()$/;"	f
+run_update_return	bin/final/flash-tool.sh	/^run_update_return() {$/;"	f
+s1	bin/wp	/^s1() {$/;"	f
+s1	fn.sh	/^s1() {$/;"	f
+s:swback	root/folders/.config/nvim/local.vim	/^let s:swback = 0    " background variants light\/dark was not yet switched$/;"	v
+s:swcolors	root/folders/.config/nvim/local.vim	/^let s:swcolors = map(paths, 'fnamemodify(v:val, ":t:r")')$/;"	v
+s:swindex	root/folders/.config/nvim/local.vim	/^let s:swindex = 0$/;"	v
+s:swskip	root/folders/.config/nvim/local.vim	/^let s:swskip = [ '256-jungle', '3dglasses', 'calmar256-light', 'coots-beauty-256', 'grb256' ]$/;"	v
+sched_child_runs_first	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_child_runs_first=0;$/;"	k
+sched_compat_yield	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_compat_yield=1$/;"	k
+sched_compat_yield	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_compat_yield=1;$/;"	k
+sched_features	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_features=15834233;$/;"	k
+sched_features	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_features=24189;$/;"	k
+sched_latency_ns	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_latency_ns=18000000;$/;"	k
+sched_min_granularity_ns	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_min_granularity_ns=1500000;$/;"	k
+sched_shares_ratelimit	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_shares_ratelimit=256000;$/;"	k
+sched_wakeup_granularity_ns	slash/etc/sysctl.conf	/^sysctl -w kernel.sched_wakeup_granularity_ns=3000000;$/;"	k
+sdcard_all	slash/etc/passwd	/^sdcard_all:x:1035:1035::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+sdcard_av	slash/etc/passwd	/^sdcard_av:x:1034:1034::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+sdcard_pics	slash/etc/passwd	/^sdcard_pics:x:1033:1033::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+sdcard_r	slash/etc/passwd	/^sdcard_r:x:1028:1028::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+sdcard_rw	slash/etc/passwd	/^sdcard_rw:x:1015:1015::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+secure_redirects	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.all.secure_redirects=0;$/;"	k
+secure_redirects	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.conf.default.secure_redirects=0;/;"	k
+sem	slash/etc/sysctl.conf	/^sysctl -w kernel.sem="500 512000 100 2048";$/;"	k
+set_ip	bin/qqlan	/^set_ip() {$/;"	f
+set_metadata	update.sh	/^set_metadata() {$/;"	f
+set_metadata_recursive	update.sh	/^set_metadata_recursive() {$/;"	f
+set_mini_server	bin/speedtest.py	/^    def set_mini_server(self, server):$/;"	m	class:Speedtest
+set_perm	bin/fix-sdcard-perm.sh	/^set_perm() {$/;"	f
+set_perm	bin/susetup	/^set_perm() {$/;"	f
+set_perm	slash/sbin/sdcard_fix_perm.sh	/^set_perm() {$/;"	f
+set_perm	update.sh	/^set_perm() {$/;"	f
+set_perm_recursive	bin/fix-sdcard-perm.sh	/^set_perm_recursive() {$/;"	f
+set_perm_recursive	slash/sbin/sdcard_fix_perm.sh	/^set_perm_recursive() {$/;"	f
+set_perm_recursive	update.sh	/^set_perm_recursive() {$/;"	f
+set_permissions	slash/Busybox-installer-arm.bin	/^set_permissions() {$/;"	f
+set_progress	bin/fix-sdcard-perm.sh	/^set_progress() { echo "set_progress $1" >$OUTFD; }$/;"	f
+set_progress	slash/sbin/sdcard_fix_perm.sh	/^set_progress() { echo "set_progress $1" >$OUTFD; }$/;"	f
+set_progress	update.sh	/^set_progress() { echo "set_progress $1" >>$OUTFD; }$/;"	f
+set_up_line_context	bin/final/ack2	/^sub set_up_line_context {$/;"	s
+set_up_line_context_for_file	bin/final/ack2	/^sub set_up_line_context_for_file {$/;"	s
+set_up_pager	bin/final/ack2	/^sub set_up_pager {$/;"	s
+setenv	fn.sh	/^setenv() { export "$1=$2"; }$/;"	f
+setenv	init.sh	/^setenv() { export "$1=$2"; }$/;"	f
+setperms	bin/rcss	/^setperms() {$/;"	f
+setx	bin/setx	/^setx() {$/;"	f
+sha1_check	update.sh	/^sha1_check() {$/;"	f
+share	bin/speedtest.py	/^    def share(self):$/;"	m	class:SpeedtestResults
+shared_relro	slash/etc/passwd	/^shared_relro:x:1037:1037::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+shell	bin/speedtest.py	/^def shell():$/;"	f
+shell	slash/etc/passwd	/^shell:x:2000:2000::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+shell_edit_check	bin/edsc	/^shell_edit_check() {$/;"	f
+shellc	bin/sc	/^shellc() {$/;"	f
+shfmtw	al.sh	/^shfmtw() {$/;"	f
+shfmtw	bin/shfmtw	/^shfmtw() {$/;"	f
+shittyfiles	bin/rmshit.py	/^shittyfiles = [$/;"	v
+shmall	slash/etc/sysctl.conf	/^sysctl -w kernel.shmall=2097152;$/;"	k
+shmmax	slash/etc/sysctl.conf	/^sysctl -w kernel.shmmax=268435456;$/;"	k
+short2rgb	bin/hextoxterm	/^def short2rgb(short):$/;"	f
+should_dump_options	bin/final/ack2	/^sub should_dump_options {$/;"	s
+show	bin/lesspipe.sh	/^show() {$/;"	f
+show_help	bin/final/ack2	/^sub show_help {$/;"	s
+show_help	bin/final/aml-flash	/^show_help()$/;"	f
+show_help	bin/final/aml-flash-tool/flash-tool	/^show_help()$/;"	f
+show_help	bin/final/flash-tool.sh	/^show_help() {$/;"	f
+show_help	slash/Busybox-installer-arm.bin	/^show_help() {$/;"	f
+show_help_types	bin/final/ack2	/^sub show_help_types {$/;"	s
+show_man	bin/final/ack2	/^sub show_man {$/;"	s
+show_progress	bin/fix-sdcard-perm.sh	/^show_progress() { echo "progress $1 $2" >$OUTFD; }$/;"	f
+show_progress	slash/sbin/sdcard_fix_perm.sh	/^show_progress() { echo "progress $1 $2" >$OUTFD; }$/;"	f
+show_progress	update.sh	/^show_progress() { echo "progress $1 $2" >>$OUTFD; }$/;"	f
+show_types	bin/final/ack2	/^sub show_types {$/;"	s
+show_user	ps1.sh	/^show_user() {$/;"	f
+showlog	bin/rcss	/^showlog() {$/;"	f
+signal_exit	bin/fortunes	/^signal_exit() { # Handle trapped signals$/;"	f
+signal_exit	bin/new_script	/^signal_exit() { # Handle trapped signals$/;"	f
+signal_exit	bin/script_gen	/^signal_exit() { # Handle trapped signals$/;"	f
+signal_exit	bin/this	/^signal_exit() { # Handle trapped signals$/;"	f
+size	root/folders/.nano/nanorc/examples/JSON.json	/^            "size": 36,$/;"	n	object:application.text
+somaxconn	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.somaxconn = 4096 # Increase number of incoming connections backlog$/;"	k
+somaxconn	etc/sysctl.d/98-sysctl.conf	/^net.core.somaxconn = 4096 # Increase number of incoming connections backlog$/;"	k
+something_fast	root/folders/.nano/nanorc/examples/Cython.pyx	/^cdef inline int something_fast(int a, int b):$/;"	f
+sort_reverse	bin/final/ack2	/^sub sort_reverse($$)    { return $_[1]->[1] cmp $_[0]->[1] }$/;"	s
+sort_standard	bin/final/ack2	/^sub sort_standard($$)   { return $_[0]->[1] cmp $_[1]->[1] }$/;"	s
+sortby	root/folders/.config/yay/config.json	/^	"sortby": "votes",$/;"	s
+sortmode	root/folders/.config/yay/config.json	/^	"sortmode": 0,$/;"	n
+spark	bin/spark	/^spark()$/;"	f
+spifftastic nano highlighting nano!!	root/folders/.nano/README.md	/^## spifftastic nano highlighting nano!!$/;"	s
+src	fn.sh	/^src() {$/;"	f
+src	g4.sh	/^src() {$/;"	f
+src	init.sh	/^src() {$/;"	f
+srcenv	bin/env.sh	/^srcenv() {$/;"	f
+ssl	bin/speedtest.py	/^    ssl = None$/;"	v
+start_server	bin/qr-filetransfer.py	/^def start_server(fname):$/;"	f
+stash	bin/git-cheat	/^function stash() {$/;"	f
+stash.showpatch	root/.repo_.gitconfig.json	/^  "stash.showpatch": [$/;"	a
+stde	fn.sh	/^stde() {$/;"	f
+store	bin/prettyping	/^function store(d, value) {$/;"	f
+style	root/folders/.nano/nanorc/examples/JSON.json	/^            "style": "bold",$/;"	s	object:application.text
+submodules	bin/git-cheat	/^function submodules() {$/;"	f
+success	bin/symlinks	/^success() {$/;"	f
+sudo	fn.sh	/^	sudo() { su -s bash -c "$@"; }$/;"	f
+sudoloop	root/folders/.config/yay/config.json	/^	"sudoloop": true,$/;"	b
+suedit	al.sh	/^alias suedit='SUDO_EDITOR=kate sudoedit '$/;"	a
+suid_dumpable	etc/folders/sysctl.d/98-sysctl.conf	/^fs.suid_dumpable = 0$/;"	k
+suid_dumpable	etc/sysctl.d/98-sysctl.conf	/^fs.suid_dumpable = 0$/;"	k
+suppress	bin/p	/^suppress() { "$@" >\/dev\/null 2>&1; }$/;"	f
+sutest	bin/ad	/^sutest() {$/;"	f
+svn_remote=	bin/final/git_prompt	/^	svn_remote=()$/;"	f
+svn_remote=	bin/gitprompt	/^	svn_remote=()$/;"	f
+swappiness	etc/folders/sysctl.d/98-sysctl.conf	/^vm.swappiness = 60$/;"	k
+swappiness	etc/sysctl.d/98-sysctl.conf	/^vm.swappiness = 60$/;"	k
+swappiness	slash/etc/sysctl.conf	/^sysctl -w vm.swappiness=0;$/;"	k
+symlink	update.sh	/^symlink() { ln -s "$@"; }$/;"	f
+sync_both_ways	bin/ad	/^sync_both_ways() {$/;"	f
+sync_delete	bin/ad	/^sync_delete() {$/;"	f
+sys_color	ps1bg.sh	/^sys_color() {$/;"	f
+sysrq	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.sysrq = 1$/;"	k
+sysrq	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.sysrq=1$/;"	k
+sysrq	etc/sysctl.d/98-sysctl.conf	/^kernel.sysrq = 1$/;"	k
+sysrq	etc/sysctl.d/98-sysctl.conf	/^kernel.sysrq=1$/;"	k
+system	bin/final/rk-flash-tool/tools/Linux_Upgrade_Tool_v1.34/config.ini	/^system=$/;"	k
+system	slash/etc/passwd	/^system:x:1000:1000::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+sysvdirs=	completion.bash	/^    sysvdirs=( )$/;"	f
+t	etc/tmux.conf	/^bind-key -T root WheelDownPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t/;"	k
+t	etc/tmux.conf	/^bind-key -T root WheelUpPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t =/;"	k
+tab	root/folders/.nano/nanorc/examples/Properties.properties	/^tab : \\u0009$/;"	k
+tag	root/folders/.nano/nanorc/examples/JSON.json	/^            "tag": null$/;"	z	object:application.window
+tags	bin/git-cheat	/^function tags() {$/;"	f
+tar.tar.xz.command	root/.repo_.gitconfig.json	/^  "tar.tar.xz.command": [$/;"	a
+tarbin	root/folders/.config/yay/config.json	/^	"tarbin": "bsdtar",$/;"	s
+targz	bin/targz	/^function targz() {$/;"	f
+tcp_congestion_control	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_congestion_control=cubic;$/;"	k
+tcp_ecn	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_ecn=0$/;"	k
+tcp_ecn	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_ecn=0$/;"	k
+tcp_ecn	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_ecn=0;$/;"	k
+tcp_fack	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fack = 1$/;"	k
+tcp_fack	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fack=1$/;"	k
+tcp_fack	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fack = 1$/;"	k
+tcp_fack	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fack=1$/;"	k
+tcp_fack	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_fack=1;$/;"	k
+tcp_fin_timeout	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fin_timeout = 10 # Decrease fin timeout. After telling the client we are closing, h/;"	k
+tcp_fin_timeout	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fin_timeout = 25$/;"	k
+tcp_fin_timeout	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fin_timeout = 10 # Decrease fin timeout. After telling the client we are closing, h/;"	k
+tcp_fin_timeout	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_fin_timeout = 25$/;"	k
+tcp_fin_timeout	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_fin_timeout=15;$/;"	k
+tcp_keepalive_intvl	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_intvl = 15$/;"	k
+tcp_keepalive_intvl	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_intvl = 15$/;"	k
+tcp_keepalive_probes	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_probes = 5$/;"	k
+tcp_keepalive_probes	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_probes = 5$/;"	k
+tcp_keepalive_time	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_time = 1200$/;"	k
+tcp_keepalive_time	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_time = 300# Decrease the time default value for connections to keep alive$/;"	k
+tcp_keepalive_time	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_time = 1200$/;"	k
+tcp_keepalive_time	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_keepalive_time = 300# Decrease the time default value for connections to keep alive$/;"	k
+tcp_keepalive_time	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_keepalive_time=1800;$/;"	k
+tcp_max_syn_backlog	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_max_syn_backlog = 2048$/;"	k
+tcp_max_syn_backlog	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_max_syn_backlog = 2048$/;"	k
+tcp_max_syn_backlog	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_max_syn_backlog=1024;$/;"	k
+tcp_max_tw_buckets	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_max_tw_buckets = 1440000 # Increase the tcp-time-wait buckets pool size to prevent /;"	k
+tcp_max_tw_buckets	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_max_tw_buckets = 360000$/;"	k
+tcp_max_tw_buckets	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_max_tw_buckets = 1440000 # Increase the tcp-time-wait buckets pool size to prevent /;"	k
+tcp_max_tw_buckets	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_max_tw_buckets = 360000$/;"	k
+tcp_max_tw_buckets	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_max_tw_buckets=16384;$/;"	k
+tcp_mem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_mem = 65536 131072 262144 # This is measured in units of pages (4096 bytes)$/;"	k
+tcp_mem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_mem = 8388608 8388608 8388608$/;"	k
+tcp_mem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_mem=187000 187000 187000$/;"	k
+tcp_mem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_mem = 65536 131072 262144 # This is measured in units of pages (4096 bytes)$/;"	k
+tcp_mem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_mem = 8388608 8388608 8388608$/;"	k
+tcp_mem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_mem=187000 187000 187000$/;"	k
+tcp_moderate_rcvbuf	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_moderate_rcvbuf=1$/;"	k
+tcp_moderate_rcvbuf	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_moderate_rcvbuf=1$/;"	k
+tcp_moderate_rcvbuf	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_moderate_rcvbuf=1;$/;"	k
+tcp_no_metrics_save	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_no_metrics_save=1$/;"	k
+tcp_no_metrics_save	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_no_metrics_save=1$/;"	k
+tcp_no_metrics_save	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_no_metrics_save=1;$/;"	k
+tcp_reordering	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_reordering = 5$/;"	k
+tcp_reordering	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_reordering = 5$/;"	k
+tcp_rfc1337	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_rfc1337=1$/;"	k
+tcp_rfc1337	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_rfc1337=1$/;"	k
+tcp_rfc1337	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_rfc1337=1;$/;"	k
+tcp_rmem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_rmem = 4096 87380 8388608$/;"	k
+tcp_rmem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_rmem = 8192 87380 16777216 # Increase the read-buffer space allocatable$/;"	k
+tcp_rmem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_rmem = 4096 87380 8388608$/;"	k
+tcp_rmem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_rmem = 8192 87380 16777216 # Increase the read-buffer space allocatable$/;"	k
+tcp_sack	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_sack = 1$/;"	k
+tcp_sack	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_sack=1$/;"	k
+tcp_sack	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_sack = 1$/;"	k
+tcp_sack	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_sack=1$/;"	k
+tcp_sack	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_sack=1;$/;"	k
+tcp_slow_start_after_idle	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_slow_start_after_idle = 0 # keeps our cwnd large with the keep alive connections$/;"	k
+tcp_slow_start_after_idle	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_slow_start_after_idle = 0 # keeps our cwnd large with the keep alive connections$/;"	k
+tcp_syn_retries	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_syn_retries = 3$/;"	k
+tcp_syn_retries	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_syn_retries = 3$/;"	k
+tcp_syn_retries	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_syn_retries=2;$/;"	k
+tcp_synack_retries	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_synack_retries = 2$/;"	k
+tcp_synack_retries	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_synack_retries = 2$/;"	k
+tcp_synack_retries	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_synack_retries=2;$/;"	k
+tcp_syncookies	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_syncookies = 1$/;"	k
+tcp_syncookies	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_syncookies = 1$/;"	k
+tcp_syncookies	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.tcp_syncookies=1;$/;"	k
+tcp_timestamps	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_timestamps = 1$/;"	k
+tcp_timestamps	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_timestamps=1$/;"	k
+tcp_timestamps	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_timestamps = 1$/;"	k
+tcp_timestamps	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_timestamps=1$/;"	k
+tcp_tw_recycle	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_tw_recycle = 1$/;"	k
+tcp_tw_recycle	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_tw_recycle = 1$/;"	k
+tcp_tw_reuse	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_tw_reuse = 1$/;"	k
+tcp_tw_reuse	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_tw_reuse = 1$/;"	k
+tcp_window_scaling	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_window_scaling = 1$/;"	k
+tcp_window_scaling	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_window_scaling=1$/;"	k
+tcp_window_scaling	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_window_scaling = 1$/;"	k
+tcp_window_scaling	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_window_scaling=1$/;"	k
+tcp_wmem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_wmem = 4096 65535 8388608$/;"	k
+tcp_wmem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_wmem = 8192 65536 16777216 # Increase the write-buffer-space allocatable$/;"	k
+tcp_wmem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_wmem = 4096 65535 8388608$/;"	k
+tcp_wmem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.tcp_wmem = 8192 65536 16777216 # Increase the write-buffer-space allocatable$/;"	k
+test_ip	bin/qqlan	/^test_ip() {$/;"	f
+text	bin/tldr	/^text() {$/;"	f
+text	root/folders/.nano/nanorc/examples/JSON.json	/^        "text": {$/;"	o	object:application
+thpppt	bin/final/ack2	/^sub thpppt {$/;"	s
+time	slash/etc/sysctl.conf	/^sysctl -w fs.lease-break-time=10;$/;"	k
+time_echo	ps1.sh	/^time_echo() {$/;"	f
+timeupdate	root/folders/.config/yay/config.json	/^	"timeupdate": true,$/;"	b
+title	fn.sh	/^title() { # change title of window$/;"	f
+tlsdate	slash/etc/passwd	/^tlsdate:x:1039:1039::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+to_emoji	bin/emojify	/^to_emoji() {$/;"	f
+to_string	bin/final/ack2	/^sub to_string {$/;"	s
+to_utf8	bin/speedtest.py	/^    def to_utf8(v):$/;"	f
+tog4	bin/tog4	/^tog4() {$/;"	f
+toolbox_mount	bin/susetup	/^toolbox_mount() {$/;"	f
+toolchain	bin/toolchain	/^toolchain() {$/;"	f
+top	al.sh	/^is_in_path htop && alias top=htop$/;"	a
+tree	al.sh	/^alias tree='tree --dirsfirst -pshF -C '$/;"	a
+trunks	slash/etc/passwd	/^trunks:x:1049:1049::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+try_cast	bin/arch-chroot	/^try_cast() ($/;"	f
+tune	fn.sh	/^tune() { for i; do$/;"	f
+typea	fn.sh	/^typea() {$/;"	f
+udevreload	al.sh	/^alias udevreload='udevadm control --reload-rules; systemctl restart systemd-udevd.service;udevad/;"	a
+udp_mem	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.udp_mem = 65536 131072 262144$/;"	k
+udp_mem	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.udp_mem = 65536 131072 262144$/;"	k
+udp_rmem_min	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.udp_rmem_min = 16384$/;"	k
+udp_rmem_min	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.udp_rmem_min = 16384$/;"	k
+udp_rmem_min	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.udp_rmem_min=6144;$/;"	k
+udp_wmem_min	etc/folders/sysctl.d/98-sysctl.conf	/^net.ipv4.udp_wmem_min = 16384$/;"	k
+udp_wmem_min	etc/sysctl.d/98-sysctl.conf	/^net.ipv4.udp_wmem_min = 16384$/;"	k
+udp_wmem_min	slash/etc/sysctl.conf	/^sysctl -w net.ipv4.udp_wmem_min=6144;$/;"	k
+ui_print	bin/fix-sdcard-perm.sh	/^ui_print() { echo -e "ui_print $1\\nui_print" >$OUTFD; }$/;"	f
+ui_print	bin/susetup	/^ui_print() {$/;"	f
+ui_print	slash/sbin/sdcard_fix_perm.sh	/^ui_print() { echo -e "ui_print $1\\nui_print" >$OUTFD; }$/;"	f
+ui_print	update.sh	/^ui_print() {$/;"	f
+uninvert_filter	bin/final/ack2	/^sub uninvert_filter {$/;"	s
+unknown_nmi_panic	etc/folders/sysctl.d/98-sysctl.conf	/^kernel.unknown_nmi_panic = 0$/;"	k
+unknown_nmi_panic	etc/sysctl.d/98-sysctl.conf	/^kernel.unknown_nmi_panic = 0$/;"	k
+unlux	g4.sh	/^unlux() {$/;"	f
+unlzmaWithTrailer	bin/repack-zImage.sh	/^unlzmaWithTrailer() {$/;"	f
+unmangle	bin/arch-chroot	/^unmangle() {$/;"	f
+unmount	update.sh	/^unmount() { umount "$1"; }$/;"	f
+unpack	bin/repack-zImage.sh	/^unpack() ($/;"	f
+unpack_cmd	bin/lesspipe.sh	/^unpack_cmd() {$/;"	f
+unps	fn.sh	/^unps() {$/;"	f
+unsetenv	fn.sh	/^unsetenv() { unset "$1"; }$/;"	f
+unsetenv	init.sh	/^unsetenv() { unset "$1"; }$/;"	f
+unzipl	bin/unzipl	/^unzipl() {$/;"	f
+upargs=	completion.bash	/^    local upargs=() upvars=() vcur vcword vprev vwords$/;"	f
+update	bin/git-cheat	/^function update() {$/;"	f
+update_config	bin/wpa_supplicant.conf	/^update_config=1$/;"	k
+update_index	bin/tldr	/^update_index() {$/;"	f
+upgrademenu	root/folders/.config/yay/config.json	/^	"upgrademenu": true,$/;"	b
+upload	bin/speedtest.py	/^    def upload(self, callback=do_nothing, pre_allocate=True):$/;"	m	class:Speedtest
+upvars=	completion.bash	/^    local upargs=() upvars=() vcur vcword vprev vwords$/;"	f
+url.git@github.com.insteadof	root/.repo_.gitconfig.json	/^  "url.git@github.com.insteadof": [$/;"	a
+usage	bin/arch-chroot	/^usage() {$/;"	f
+usage	bin/debug	/^usage() {$/;"	f
+usage	bin/emote	/^usage() {$/;"	f
+usage	bin/final/aml-flash-tool/aml-burn-tool	/^usage() {$/;"	f
+usage	bin/final/burn-tool	/^usage() {$/;"	f
+usage	bin/final/dequote	/^usage() {$/;"	f
+usage	bin/final/rk-flash-tool/flash-tool	/^usage() {$/;"	f
+usage	bin/final/rk-flash-tool/rk-burn-tool	/^usage() {$/;"	f
+usage	bin/fortunes	/^usage() {$/;"	f
+usage	bin/git-cheat	/^function usage() {$/;"	f
+usage	bin/git-new-workdir	/^usage () {$/;"	f
+usage	bin/new_script	/^usage() {$/;"	f
+usage	bin/repack-zImage.sh	/^usage() {$/;"	f
+usage	bin/samesize	/^usage() {$/;"	f
+usage	bin/script.bash	/^		usage() {$/;"	f
+usage	bin/script_gen	/^usage() {$/;"	f
+usage	bin/this	/^usage() {$/;"	f
+usage	bin/tldr	/^usage() {$/;"	f
+usage	slash/sbin/aditor	/^usage() {$/;"	f
+usb	slash/etc/passwd	/^usb:x:1018:1018::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+useage	bin/colors.sh	/^useage() {$/;"	f
+useask	root/folders/.config/yay/config.json	/^	"useask": false$/;"	b
+user	bin/symlinks	/^user() {$/;"	f
+user-content-all-unbroken-blocks	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#all-unbroken-blocks" aria-hidden="true" class="anchor" id="user-content-all-unbrok/;"	a
+user-content-array-operations	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#array-operations" aria-hidden="true" class="anchor" id="user-content-array-operati/;"	a
+user-content-backslash-sequences	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#backslash-sequences" aria-hidden="true" class="anchor" id="user-content-backslash-/;"	a
+user-content-broken-blocks	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#broken-blocks" aria-hidden="true" class="anchor" id="user-content-broken-blocks"></;"	a
+user-content-changing-record-separators	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#changing-record-separators" aria-hidden="true" class="anchor" id="user-content-cha/;"	a
+user-content-comparing-specific-fields	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#comparing-specific-fields" aria-hidden="true" class="anchor" id="user-content-comp/;"	a
+user-content-comparing-whole-lines	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#comparing-whole-lines" aria-hidden="true" class="anchor" id="user-content-comparin/;"	a
+user-content-creating-new-fields	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#creating-new-fields" aria-hidden="true" class="anchor" id="user-content-creating-n/;"	a
+user-content-dealing-with-duplicates	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#dealing-with-duplicates" aria-hidden="true" class="anchor" id="user-content-dealin/;"	a
+user-content-executing-external-commands	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#executing-external-commands" aria-hidden="true" class="anchor" id="user-content-ex/;"	a
+user-content-executing-perl-code	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#executing-perl-code" aria-hidden="true" class="anchor" id="user-content-executing-/;"	a
+user-content-field-comparison	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#field-comparison" aria-hidden="true" class="anchor" id="user-content-field-compari/;"	a
+user-content-field-processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#field-processing" aria-hidden="true" class="anchor" id="user-content-field-process/;"	a
+user-content-fixed-string-matching	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#fixed-string-matching" aria-hidden="true" class="anchor" id="user-content-fixed-st/;"	a
+user-content-fixed-width-processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#fixed-width-processing" aria-hidden="true" class="anchor" id="user-content-fixed-w/;"	a
+user-content-further-reading	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#further-reading" aria-hidden="true" class="anchor" id="user-content-further-readin/;"	a
+user-content-ignoring-specific-matches	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#ignoring-specific-matches" aria-hidden="true" class="anchor" id="user-content-igno/;"	a
+user-content-inplace-editing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#inplace-editing" aria-hidden="true" class="anchor" id="user-content-inplace-editin/;"	a
+user-content-input-record-separator	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#input-record-separator" aria-hidden="true" class="anchor" id="user-content-input-r/;"	a
+user-content-iteration-and-filtering	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#iteration-and-filtering" aria-hidden="true" class="anchor" id="user-content-iterat/;"	a
+user-content-line-filtering	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#line-filtering" aria-hidden="true" class="anchor" id="user-content-line-filtering"/;"	a
+user-content-line-number-based-filtering	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#line-number-based-filtering" aria-hidden="true" class="anchor" id="user-content-li/;"	a
+user-content-line-number-matching	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#line-number-matching" aria-hidden="true" class="anchor" id="user-content-line-numb/;"	a
+user-content-lines-between-two-regexps	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#lines-between-two-regexps" aria-hidden="true" class="anchor" id="user-content-line/;"	a
+user-content-lookarounds	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#lookarounds" aria-hidden="true" class="anchor" id="user-content-lookarounds"><svg /;"	a
+user-content-matching-position	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#matching-position" aria-hidden="true" class="anchor" id="user-content-matching-pos/;"	a
+user-content-miscellaneous	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#miscellaneous" aria-hidden="true" class="anchor" id="user-content-miscellaneous"></;"	a
+user-content-modifiers	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#modifiers" aria-hidden="true" class="anchor" id="user-content-modifiers"><svg aria/;"	a
+user-content-multiline-processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#multiline-processing" aria-hidden="true" class="anchor" id="user-content-multiline/;"	a
+user-content-non-greedy-quantifier	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#non-greedy-quantifier" aria-hidden="true" class="anchor" id="user-content-non-gree/;"	a
+user-content-output-record-separator	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#output-record-separator" aria-hidden="true" class="anchor" id="user-content-output/;"	a
+user-content-perl-one-liners	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^    <article class="markdown-body entry-content" itemprop="text"><h1><a href="#perl-one-liners" /;"	a
+user-content-perl-regular-expressions	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#perl-regular-expressions" aria-hidden="true" class="anchor" id="user-content-perl-/;"	a
+user-content-quoting-metacharacters	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#quoting-metacharacters" aria-hidden="true" class="anchor" id="user-content-quoting/;"	a
+user-content-regular-expressions-based-filtering	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#regular-expressions-based-filtering" aria-hidden="true" class="anchor" id="user-co/;"	a
+user-content-sed-vs-perl-subtle-differences	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#sed-vs-perl-subtle-differences" aria-hidden="true" class="anchor" id="user-content/;"	a
+user-content-simple-search-and-replace	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#simple-search-and-replace" aria-hidden="true" class="anchor" id="user-content-simp/;"	a
+user-content-sorting	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#sorting" aria-hidden="true" class="anchor" id="user-content-sorting"><svg aria-hid/;"	a
+user-content-special-capture-groups	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#special-capture-groups" aria-hidden="true" class="anchor" id="user-content-special/;"	a
+user-content-specific-blocks	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#specific-blocks" aria-hidden="true" class="anchor" id="user-content-specific-block/;"	a
+user-content-specifying-different-input-field-separator	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#specifying-different-input-field-separator" aria-hidden="true" class="anchor" id="/;"	a
+user-content-specifying-different-output-field-separator	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#specifying-different-output-field-separator" aria-hidden="true" class="anchor" id=/;"	a
+user-content-split	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#split" aria-hidden="true" class="anchor" id="user-content-split"><svg aria-hidden=/;"	a
+user-content-string-and-file-replication	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#string-and-file-replication" aria-hidden="true" class="anchor" id="user-content-st/;"	a
+user-content-transforming	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h4><a href="#transforming" aria-hidden="true" class="anchor" id="user-content-transforming"><sv/;"	a
+user-content-two-file-processing	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#two-file-processing" aria-hidden="true" class="anchor" id="user-content-two-file-p/;"	a
+user-content-using-modules	info/Command-line-text-processing_perl_the_swiss_knife.md at master ¬∑ learnbyexample_Command-line-text-processing ¬∑ GitHub.html	/^<h2><a href="#using-modules" aria-hidden="true" class="anchor" id="user-content-using-modules"></;"	a
+user.email	root/.repo_.gitconfig.json	/^  "user.email": [$/;"	a
+user.name	root/.repo_.gitconfig.json	/^  "user.name": [$/;"	a
+valid_number_of_base	bin/arch-chroot	/^valid_number_of_base() {$/;"	f
+validate_optional_args	bin/speedtest.py	/^def validate_optional_args(args):$/;"	f
+var_show	bin/var_show.sh	/^var_show() {$/;"	f
+verbose	bin/colors.sh	/^verbose() {$/;"	f
+version	bin/speedtest.py	/^def version():$/;"	f
+version	etc/folders/fonts/local.conf	/^<?xml version='1.0'?>$/;"	k
+version	etc/fonts/local.conf	/^<?xml version='1.0'?>$/;"	k
+versiondiff	bin/rcss	/^versiondiff() {$/;"	f
+vfs_cache_pressure	etc/folders/sysctl.d/98-sysctl.conf	/^vm.vfs_cache_pressure = 50$/;"	k
+vfs_cache_pressure	etc/folders/sysctl.d/98-sysctl.conf	/^vm.vfs_cache_pressure = 60$/;"	k
+vfs_cache_pressure	etc/sysctl.d/98-sysctl.conf	/^vm.vfs_cache_pressure = 50$/;"	k
+vfs_cache_pressure	etc/sysctl.d/98-sysctl.conf	/^vm.vfs_cache_pressure = 60$/;"	k
+vfs_cache_pressure	slash/etc/sysctl.conf	/^sysctl -w vm.vfs_cache_pressure=10$/;"	k
+viewversion	bin/rcss	/^viewversion() {$/;"	f
+vim	ex.sh	/^is_in_path nvim && EDITOR="$(command -v nvim)" && alias vim="$EDITOR"$/;"	a
+visible	root/folders/.nano/nanorc/examples/JSON.json	/^            "visible": true,$/;"	b	object:application.window
+vnstat	al.sh	/^alias vnstat="vnstat -i wlan0 "$/;"	a
+vpn	slash/etc/passwd	/^vpn:x:1016:1016::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+wakelock	slash/etc/passwd	/^wakelock:x:3010:3010::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+warn	bin/final/ack2	/^sub warn {$/;"	s
+wch	fn.sh	/^wch() {$/;"	f
+webserv	slash/etc/passwd	/^webserv:x:1044:1044::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+website	root/folders/.nano/nanorc/examples/Properties.properties	/^website = http\\:\/\/en.wikipedia.org\/$/;"	k
+webview_zygote	slash/etc/passwd	/^webview_zygote:x:1053:1053::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+which_network	bin/wp	/^which_network() {$/;"	f
+width	root/folders/.nano/nanorc/examples/JSON.json	/^            "width": 500,$/;"	n	object:application.window
+wifi	slash/etc/passwd	/^wifi:x:1010:1010::\/system:\/system\/bin\/false$/;"	u	home:/system	shell:/system/bin/false
+wifiip	ps1.sh	/^wifiip() {$/;"	f
+window	root/folders/.nano/nanorc/examples/JSON.json	/^        "window": {$/;"	o	object:application
+wmem_default	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.wmem_default = 31457280 # Maximum Socket Send Buffer$/;"	k
+wmem_default	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.wmem_default = 65535$/;"	k
+wmem_default	etc/sysctl.d/98-sysctl.conf	/^net.core.wmem_default = 31457280 # Maximum Socket Send Buffer$/;"	k
+wmem_default	etc/sysctl.d/98-sysctl.conf	/^net.core.wmem_default = 65535$/;"	k
+wmem_default	slash/etc/sysctl.conf	/^sysctl -w net.core.wmem_default=256960;$/;"	k
+wmem_max	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.wmem_max = 12582912 # Increase number of incoming connections$/;"	k
+wmem_max	etc/folders/sysctl.d/98-sysctl.conf	/^net.core.wmem_max = 8388608$/;"	k
+wmem_max	etc/sysctl.d/98-sysctl.conf	/^net.core.wmem_max = 12582912 # Increase number of incoming connections$/;"	k
+wmem_max	etc/sysctl.d/98-sysctl.conf	/^net.core.wmem_max = 8388608$/;"	k
+wmem_max	slash/etc/sysctl.conf	/^sysctl -w net.core.wmem_max=524288;$/;"	k
+words=	completion.bash	/^    local cur cword words=()$/;"	f
+words=	completion.bash	/^    local cword words=()$/;"	f
+write	bin/speedtest.py	/^        def write(data):$/;"	f	function:print_	file:
+write	bin/speedtest.py	/^        def write(self, s):$/;"	m	class:_Py3Utf8Output
+write_header	bin/colorscript	/^function write_header() {$/;"	f
+write_raw_image	update.sh	/^write_raw_image() { dd if="$1" of="$2"; }$/;"	f
+write_script	bin/new_script	/^write_script() {$/;"	f
+write_script	bin/script_gen	/^write_script() {$/;"	f
+write_wakeup_threshold	slash/etc/sysctl.conf	/^sysctl -w kernel.random.write_wakeup_threshold=256$/;"	k
+xv	fn.sh	/^xv() {$/;"	f
+yesno	bin/rmshit.py	/^def yesno(question, default="n"):$/;"	f
+yornq	fn.sh	/^yornq() {$/;"	f
+{	completion.bash	/^        option2=${option2%%[<{().[]*}$/;"	f
+{	completion.bash	/^    option=${option%%[<{().[]*}$/;"	f
+õÏqi/Ò∂≈ÖèÅ-≈≠≥Ÿ3⁄ôWïaƒIÎœ	slash/Busybox-installer-arm.bin	/^õÏqi\/Ò∂≈ÖèÅ-≈≠≥Ÿ3⁄ôWïaƒIÎœ()OK,1-ªã™„(X¸œÙ»æVâàwê? Ï;¡PÙÿy¯ëvÕU†i{O$/;"	f
+Í•àÒ\x15dÈ\x05,/k\x05ÉHıÚÆ“9Cª\x19	slash/Busybox-installer-arm.bin	/^Í•àÒdÈ,\/kÉHıÚÆ“9Cª()ëÇxÿœÀV	vëÕèÁ¸ıΩüõ§w!çÚ{„$Ä,'û*ö”HH ì $/;"	f

@@ -1,3 +1,4 @@
+# vi: set ft=sh
 proper-replace() {
 	[[ -e /system ]] && mount -o remount,rw /system
 	local source target work

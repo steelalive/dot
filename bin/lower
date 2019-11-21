@@ -5,8 +5,7 @@
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/lower_#######################..::#3#
 lower() {
-    # Usage: lower "string"
-    printf '%s\n' "${1,,}"
+	# Usage: lower "string"
+	printf '%s\n' "${1,,}"
 }
 lower "$@"
-

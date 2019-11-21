@@ -26,6 +26,7 @@ if [[ $1 == aosp ]]; then
 /sbin
 /usr/local/bin
 /usr/local/sbin
+/data/sbin
 /ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin
 /ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin
 /ext/opt/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabi/bin
@@ -45,6 +46,7 @@ $O/host/linux-x86/bin
 /ext/opt/prebuilt/linux-x86_64/bin"
 fi
 allpath+="/usr/lib/cw
+/data/sbin
 /sbin/supersu/xbin
 /sbin/supersu/bin
 /data/adb/su/xbin
@@ -56,8 +58,8 @@ allpath+="/usr/lib/cw
 /su
 /system/xbin
 /system/bin
-/vendor/bin
 /vendor/xbin
+/vendor/bin
 /usr/bin
 /usr/sbin
 /bin
@@ -75,6 +77,7 @@ allpath+="/usr/lib/cw
 $HOME/toolchain/bin
 /root/.gem/ruby/2.6.0/bin
 /shell/.gem/ruby/2.6.0/bin
+/ext/opt/build-tools/29.0.2
 /root/.cargo/bin
 /ext/opt/crosstool-ng-build/bin
 /ext/opt/platform-tools
@@ -85,7 +88,7 @@ $HOME/toolchain/bin
 /system/sbin
 /data/dot/slash/sbin
 /usr/lib/bash-utils
-$(printf "%s\n" /ext/opt/build-tools/**/bin)
+$(echo $(printf "%s\n" /ext/opt/build-tools/* | sort | head -n1)/bin)
 $dot/bin
 $dot/bin/final
 $dot"

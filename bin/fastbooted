@@ -1,0 +1,152 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Tue Oct 15 02:14:29 EDT 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-10-15#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/fastbooted_#######################..::#3#
+is_in_path adb && adb=\adb
+is_in_path adb.exe && adb=\adb.exe
+is_in_path fastboot && fastboot=\flastboot
+is_there /opt/platform-tools/fastboot && fastboot=/opt/platform-tools/fastboot
+[[ -e /last/power ]] && last=/last
+[[ -e /e/power ]] && last=/e
+[[ -e /mnt/e ]] && last=/mnt/e
+power=$last/power
+recovery_mod="$power/rooted-rom/recovery.img"
+recovery_stock="$power/rom/recovery.img"
+recovery_aik="/ext/AIK-Linux/image-new.img"
+preloader_mod="$power/rooted-rom/preloader_bm65_bsp.bin"
+lk_mod="$power/rooted-rom/1.5_lk.img"
+lk_stock="$power/rom/lk_no5.img"
+boot="$power/rooted-rom/boot.img"
+by_name='boot 
+boot_para 
+cache 
+dtbo 
+expdb 
+flashinfo 
+frp 
+gz1 
+gz2 
+lk 
+lk2 
+logo 
+md1img 
+metadata 
+nvcfg 
+nvdata 
+nvram 
+otp 
+para 
+proinfo
+protect1 
+protect2 
+recovery
+scp1 
+scp2 
+sec1 
+seccfg 
+spmfw 
+sspm_1 
+sspm_2 
+system 
+tee1 
+tee2 
+userdata 
+vbmeta 
+vendor'
+fastb() { $fastboot --disable-verity --verbose "$@"; }
+fastreboot() {
+	shift
+	[[ $1 ]] || command=reboot
+	ANG "Finished! Rebooting...\n"
+	$fastboot $command "$@"
+	ANW "Please hold volume UP.\n"
+	exit
+}
+fasterase() {
+	for partition in "$@"; do
+		fastb erase "$partition"
+	done
+}
+ANY "Rebooting to fastboot mode...${R}\n"
+$adb reboot-bootloader 2>/dev/null && ANBG "Success rebooting${R}\n"
+case $1 in
+unlock)
+	fastb flashing unlock
+	fastb flashing unlock_critical
+	;;
+
+lk)
+	fasterase lk lk2
+	fastb flash lk "$lk_mod"
+	fastb flash lk2 "$lk_mod"
+	fastreboot "$@"
+	;;
+aik)
+	fasterase lk lk2 recovery
+	fastb flash lk "$lk_mod"
+	fastb flash lk2 "$lk_mod"
+	fastb flash recovery "$recovery_aik"
+	fastreboot "$@" && exit
+	#	fastb flash boot "$boot"
+	#	fastb boot "$recovery_aik"
+	;;
+normal)
+	#	fasterase lk lk2 	fasterase lk
+	fasterase lk
+	fastb flash lk "$lk_stock"
+	#	fastb flash lk2 "$lk_stock"
+	#	fastb flash recovery "$recovery_stock"
+	#	fastb flash boot "$boot"
+	fastreboot "$@" && exit
+	;;
+reboot)
+	fastreboot "$@"
+	;;
+twrp)
+	fasterase recovery lk lk2
+	fastb flash lk "$lk_mod"
+	fastb flash lk2 "$lk_mod"
+	fastb flash preloader "$preloader_mod"
+	fastb flash recovery "$recovery_mod"
+	#	fastb flash boot "$boot"
+	#	fastb boot "$recovery_mod" &&
+	fastreboot "$@"
+	;;
+twrpboot | tmp | temp)
+	fastb flash lk "$lk_mod"
+	fastb flash lk2 "$lk_mod"
+	fastb boot "$recovery_mod" && ANG "Finished! Rebooting to temporary image.\n" && exit
+	;;
+*)
+	ANW "Flash image in this directory: \n ${C}*.img${R}\n"
+	while yorn y; do
+		ANW "Flash image in this directory: \n ${C}*.img${R}\n"
+		ANRED "select img to flash...${R}\n"
+		select img in q ./*.bin ./*.img /last/power/rooted-rom/*.img /last/misc-android/*.img; do break; done
+		[[ $img == q ]] && exit
+		label=$(cut -d. -f1 <<<"$img")
+		if grep $label <<<by_name; then
+			part=$label
+		else
+			ANRED "select partition to flash...${R}\n"
+
+			select part in $by_name; do
+				break
+			done
+		fi
+		ANRED "Erase ${ORANGE}$part${Y} ?${R}\n"
+		yorn y && fasterase "$part"
+		ANW "fastboot ${C}$img${Y} in ${ORANGE}$part${Y} ?${R}\n"
+		if yorn y; then
+			set -x
+			fastb flash "$part" "$img"
+			set +x
+		fi
+		ANW "Flash image in this directory: \n ${C}*.img${R}\n"
+	done
+
+	;;
+esac
+fastreboot "$@"

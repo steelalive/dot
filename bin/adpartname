@@ -1,0 +1,7 @@
+#vim:set ft=sh:
+
+for i in /dev/block/by-name/*;do 
+    mmc=$(readlink $i) 
+    mmc_base="$(basename $mmc)";
+    ANG "$i : ${Y}$(readlink $i)${R} ${W}Size: ${Y}$(grep "$mmc_base$" /proc/partitions | awk '{print $3/1024}')${ORANGE}M${R}\n";
+done

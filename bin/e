@@ -4,44 +4,41 @@
 #3#::..#####################_MAIN_#######################..::#3#
 # vi: ft=sh:noro:
 unset skip arg1 arg2 arg3 onarg
-arg1=
-#[[ $1 == skip ]] || . testing.sh "$@"
-#[[ $1 == skip ]] && shift
 base_name="$(basename "${1}")"
 arg1="${1}"
 arg2="${2}"
 arg3="${3}"
 mkdir -p $HOME/.local/share/nano
-if [[ $SHELL == *zsh* ]] || [[ -e /oem ]]; then
-	#hash nvim &>/dev/null && EDITOR=${EDITOR:-nvim}
-	export EDITOR="nano"
-	true
-fi
-if [[ -d /oem ]]; then
-	export EDITOR="nano"
-	#[[ -x $lux/usr/bin/nano ]] && export EDITOR=$lux/usr/bin/nano
-fi
-
+export EDITOR=nano VISUAL=$EDITOR
 edit_file() {
-	hash $1 &>/dev/null && if ! file -L "${1}" | grep -q -e text -e ascii -e link -e script -e data &>/dev/null; then
-		ANRED "ERROR! ${1} is not text\n"
-		file -L "$1" 2>/dev/null
-		return 2
-	fi
-	"$dot/bin/edsc" "$@"
-	shfmtw "$1"
-	sharden "$1"
-	skip=1
-	return || exit
-}
-if [[ -e $arg1 ]]; then
-	edit_file "$@" && return || exit
-	export skip=1
-fi
+	#	if [[ -e $1 ]]; then
+	#
+	#		echo "${G}Editing ${C}$1${R}"
+	#	else
+	##		return 1
+	#	fi
 
-on "$arg1" echo && onarg1="$(on "$arg1" echo 2>/dev/null)"
-sleep 1
-[[ -f $onarg1 ]] && shift && edit_file "$onarg1" "$@" && skip=1
+	#hash $1 &>/dev/null && if ! file -L "${1}" | grep -q -e text -e ascii -e link -e script -e data &>/dev/null; then
+	#		ANRED "ERROR! ${1} is not text\n"
+	#		file -L "$1" 2>/dev/null
+	#		return 2
+	#	else
+	[[ -e $1 ]] || return
+	"$dot/bin/edsc" "$@"
+	shfmtw "$@"
+	sharden "$@"
+	skip=1
+	return
+	#	fi
+
+}
+#if [[ -e $arg1 ]]; then
+#	edit_file "$@" && return || exit
+#	export skip=1
+#fi
+#[[ -f $1 ]] && edit_file "$@" && skip=true || return || exit
+read onarg1 <<<"$(on -s $1 echo)"
+edit_file "$onarg1" $2 $3 $4 || edit_file "$@"
 
 if [[ "$skip" ]]; then
 	true

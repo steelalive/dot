@@ -28,7 +28,15 @@ fi
 case $1 in
 -r | r | -R | $recurse | R | --recursive | recursive | lickmypussy)
 	shift
-	[[ -e $1 ]] || exit 1
+	if ! [[ -e $1 ]]; then
+		ANORANGE "Chown your current path: ${C}$PWD${ORANGE}?\n"
+		yornq y && set -- "$PWD"
+	fi
+
+	if [[ $1 =~ "^/$" ]] || [[ $1 =~ "^/usr" ]] || [[ $1 =~ "^/etc" ]]; then
+		ANORANGE "I do not recommand chowning this path, do you still want to continue?\n"
+		yornq n || quit
+	fi
 	echo -en "${LO}"
 	$sudo find "$@" -type d -exec \chown "$chowned" --preserve-root --changes -R {} +
 	echo -en "${LY}"

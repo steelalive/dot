@@ -15,46 +15,33 @@ if [[ $SHELL == *bash* ]]; then
 	unset shopt_opt set_minus set_plus
 	is_in_path hh && bind '"\C-r": "\C-a hh \C-j"'
 fi
-is_pc && is_root && {
-	#zip -urq /last/BACKUP/etc.zip /etc &>/dev/null
-	#zip -urq /last/BACKUP/dot.zip /dot &>/dev/nullglob
-	if tty | grep 1 &>/dev/null; then
-		zip -rq -FS /last/dot.zip /dot
-	fi
-}
-is_android && {
-	[[ -e $lux ]] && zip -rq -FS $ex/dot.zip /data/dot
-}
+#is_pc && is_root && {
+#zip -urq /last/BACKUP/etc.zip /etc &>/dev/null
+#zip -urq /last/BACKUP/dot.zip /dot &>/dev/nullglob
+#	if tty | grep 1 &>/dev/null; then
+#		zip -rq -FS /last/dot.zip /dot
+#	fi
+#}
 
 set -a
 eval "$(dircolors --sh $dot/.dir_colors)"
 if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
-
-	$dot/bin/wp
+	#$dot/bin/wp
 	touch /tmp/INIT
 	mkdir -p /tmp &>/dev/null
 	sysctl --load="$dot"/etc/sysctl.d/98-sysctl.conf &>/dev/null
 	(("$(</proc/sys/kernel/sysrq)" == 1)) || echo 1 >>/proc/sys/kernel/sysrq 2>/dev/null
-	#[[ -e /usr/lib/systemd/system/getty@.service ]] && sed -i "s|ExecStart=-/sbin/agetty -o.*|ExecStart=-/sbin/agetty --noclear -a shell %I $TERM|" /usr/lib/systemd/system/getty@.service
 	[[ -e "$dot/bin/initmnt" ]] && "$dot/bin/initmnt"
 	[[ -e /sys/devices/system/memory/power/async ]] && echo enabled >/sys/devices/system/memory/power/async
 	is_in_path dbus-launch && eval "$(dbus-launch 2>/dev/null)"
 	if tty | grep 1 &>/dev/null; then
-		#		zip -rq -FS /last/BACKUP/etc.zip /etc &>/dev/null
 		ANG "Please be patient, file backup in progress...\n"
 		zip -rq -FS /last/BACKUP/dot.zip /dot &>/dev/null
 		ANG "$dot backed up!\n"
 		cp -au --backup=numbered /last/Google\ Drive/Acreation /ext/
 		ANG "Google drive backed up!\n"
 	fi
-	#	mount /dev/sda4 /boot
-	#for i in /dot/etc/cron.daily/*; do
-	#	ANBB "Daily task $i ...${R}\n"
-	#	bash $i
-	#done
-	#tar -cf /last/dot.tar ${dot} &>/dev/null
-	#+all /dot
-	rm_empty_dir /* /.* /root/* /shell/* /root/.* /shell/.*
+	rm_empty_dir /* /??.* /root/* /shell/* /root/??.* /shell/??.*
 	ANBG "One-time init completed.$R\\n"
 fi
 
@@ -83,7 +70,7 @@ if ! findmnt /last &>/dev/null; then
 fi
 
 ###############################shopt and shits##############################################
-is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval "$(dircolors --sh "$dot"/.dir_colors 2>/dev/null)"
+is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && $(dircolors --sh "$dot"/.dir_colors 2>/dev/null)
 is_there /usr/lib/libstderred.so && LD_PRELOAD="/usr/lib/libstderred.so" STDERRED_ESC_CODE=$(ANRED) STDERRED_BLACKLIST="^(test.*)$"
 is_in_path colordiff &>/dev/null && alias diff="colordiff"
 is_in_path iwgetid && SSID="$(iwgetid -r 2>/dev/null)"
@@ -94,9 +81,7 @@ is_in_path ls++ || LSPLUS="command ls $LS_OPTIONS"
 is_in_path nproc && COMPRESSXZ="xz -c -z - --threads=$(nproc --all)"
 is_in_path numlockx && stfu numlockx
 is_in_path nvim && EDITOR="$(command -v nvim)" && alias vim="$EDITOR"
-# if this is interactive shell, then bind hstr to Ctrl-r (for Vi mode check doc)
 if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hstr -- \C-j"'; fi
-# if this is interactive shell, then bind 'kill last command' to Ctrl-x k
 if [[ $- =~ .*i.* ]]; then bind '"\C-xk": "\C-a hstr -k \C-j"'; fi
 [[ -r "/usr/share/z/z.sh" ]] && source /usr/share/z/z.sh
 VISUAL="$EDITOR"
@@ -116,35 +101,28 @@ fi
 ulimit -S -n 1024
 stfu ulimit -S -c 0
 [[ "$(tty 2>/dev/null)" =~ tty ]] && export EDITOR=nano && export VISUAL=nano
-#is_in_path yay && for pacfolders in AURDEST SRCDEST SRCPKGDEST EXPORTSRC SRCPKGDEST; do
-#	folder="/ext/yay/$pacfolders"
-#	[[ $pacfolders == PKGDEST ]] && folder=/last/pacman/PKGDEST
-##	[[ $pacfolders == SRCDEST ]] && folder=/last/pacman/SRCDEST
-#	declare -x "${pacfolders}=${folder}"
-#	if [[ ! -e $folder ]]; then
-#		mkdir -p "$folder"
-#		chmod 755 -R "$folder" 2>/dev/null
-#		+user -R "$folder" 2>/dev/null
-#	fi
-#one
 
 is_in_path xdg-user-dirs-update && XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}" \
 	XDG_CACHE_HOME="$HOME/.cache" XDG_DATA_HOME="$HOME/.local/share" XDG_CONFIG_DIRS=/etc/xdg \
 	XDG_DATA_DIRS=/usr/share XDG_DESKTOP_DIR="$HOME/Desktop" XDG_MUSIC_DIR=/last/mp3 \
 	XDG_PICTURES_DIR='/last/wallpapers'
 mkdir -p "$HOME/doc"
+
 for i in XDG_TEMPLATES_DIR XDG_PUBLICSHARE_DIR XDG_DOCUMENTS_DIR XDG_VIDEOS_DIR; do
 	declare -x "$i=$HOME/doc"
 done
 
 [[ -e /last/Downloads ]] && XDG_DOWNLOAD_DIR=/last/Downloads
+
 is_in_path xdg-user-dirs-update && {
 	XDG_RUNTIME_DIR=/run/user/"$UID"
 	stfu mkdir -p /run/user/"$UID" "$XDG_RUNTIME_DIR" "$HOME/doc"
 	xdg-user-dirs-update
 	chown 1000 -R /run/user/1000 &>/dev/null
 }
-is_root is_in_path localectl && for locale in LC_COLLATE LC_MEASUREMENT LC_NAME LC_TELEPHONE LANGUAGE LC_CTYPE LC_MESSAGES LC_NUMERIC LC_TIME LC_ADDRESS LC_IDENTIFICATION LC_MONETARY LC_PAPER; do localectl set-locale "$locale"=en_CA.UTF-8; done
+
+is_root && is_in_path localectl && for locale in LC_COLLATE LC_MEASUREMENT LC_NAME LC_TELEPHONE LANGUAGE LC_CTYPE LC_MESSAGES LC_NUMERIC LC_TIME LC_ADDRESS LC_IDENTIFICATION LC_MONETARY LC_PAPER; do localectl set-locale "$locale"=en_CA.UTF-8; done
+
 is_in_path locale-gen && echo " " >/etc/locale.conf && for loc in LANG LC_CTYPE LC_NUMERIC LC_TIME LC_MONETARY LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION; do
 	eval export "$loc=en_CA.UTF-8" &>/dev/null
 	echo "$loc=en_CA.UTF-8" >>/etc/locale.conf
@@ -223,7 +201,6 @@ HOSTFILE="${HOSTFILE:-$HOME/.ssh/known_hosts}"
 IGNOREEOF='2'
 JACK_SERVER_VM_ARGUMENTS='-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx10096m'
 INPUTRC="${INPUTRC:-$dot/root/.inputrc}"
-LAN="$(if ip link | grep eth &>/dev/null; then ip link | grep -o -E "eth[0-9]" | cut -d: -f2; fi)"
 LANGUAGE='en_US'
 LC_COLLATE='C'
 LESS=' -R'
@@ -286,7 +263,7 @@ no_proxy='localhost,127.0.0.1,localaddress,.localdomain.com'
 pc='192.168.0.20'
 tv='192.168.0.9'
 cell='192.168.0.129'
-#[[ ! -e /oem ]] && ex="$(ad ex 2>/dev/null)"
+[[ ! -e /oem ]] && ex="/storage/B5A4-1BFB"
 [[ -e "$dot"/slash ]] && export slash="$dot"/slash
 [[ -e "$dot"/bin/wp ]] && eval "$(grep -m1 'WPCONF' "$dot"/bin/wp | sed 's/\[\[.*&& //')"
 [[ -e /last ]] && last=/last
@@ -303,7 +280,7 @@ else
 	[[ -e /sbin/x ]] && TERMINFO=/sbin
 fi
 
-ldconfig
+is_in_path ldconfig && ldconfig
 TMP=/tmp
 TMPDIR="$TMP"
 mkdir -p "$TMP" || TMP="$HOME"/tmp
@@ -323,10 +300,13 @@ if is_pc || is_ga; then
 		NET="$(ip link | grep "24:05:0f:ea:36:6c" --before-context=1 | head -n1 | awk '{print $2}' | sed 's/://')"
 		#which_network 5G
 	fi
+
+	LAN="$(if ip link | grep eth &>/dev/null; then ip link | grep -o -E "eth[0-9]" | cut -d: -f2; fi)"
 fi
 export NET
 # vi: set noro: ft=sh
 # Check for interactive bash and that we haven't already been sourced.
+
 if [ -n "${BASH_VERSION-}" ] && [ -n "${PS1-}" ] && [ -z "${BASH_COMPLETION_COMPAT_DIR-}" ]; then
 
 	# Check for recent enough version of bash.

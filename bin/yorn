@@ -5,7 +5,7 @@
 #3#::..#####################_MAIN_#######################..::#3#
 #print_args "$@"
 . $dot/anset.sh
-from_process=($(ps -o comm=$PPID))
+from_process=($(ps -o comm=$PPID 2>/dev/null))
 #echo "${from_process[@]}"
 from_process3="${from_process[2]}"
 from_func=${FUNCNAME[1]}

@@ -1,12 +1,12 @@
-if [[ $1 = t ]]; then
-	test -e /data/app  && echo SYSTEMLESS=true >/data/.supersu
-	for i in $(blkid | grep ext4 | cut -d: -f1); do
+if [[ $1 == t ]]; then
+	test -e /data/app && echo SYSTEMLESS=true >/data/.supersu
+	for i in $(/sbin/blkid | grep ext4 | cut -d: -f1); do
 		echo "##############################---${i}---#######################################"
-		umount $i 2>/dev/null
-		e2fsck -fp $i 2>/dev/null
-		e2fsck $i 2>/dev/null
-		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p $i 2>/dev/null
-		tune2fs -O ^has_journal -e remount-ro -c 30 -m 1 -o journal_data_writeback,nobarrier $i
+		umount "$i" 2>/dev/null
+		/sbin/e2fsck -fp "$i" 2>/dev/null
+		/sbin/e2fsck "$i" 2>/dev/null
+		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
+		/sbin/tune2fs -O ^has_journal -e remount-ro -c 30 -m 1 -o journal_data_writeback,nobarrier "$i"
 		echo "##############################---${i}---#######################################"
 	done
 	fat=/dev/block/mmcblk1p1
@@ -17,102 +17,68 @@ if [[ $1 = t ]]; then
 	fsck.vfat $fat 2>/dev/null
 	k1p2=/dev/block/mmcblk1p2 2>/dev/null
 	umount $k1p2 2>/dev/null
-	e2fsck $k1p2 2>/dev/null
+	/sbin/e2fsck $k1p2 2>/dev/null
 	echo "Done!"
 	return
 	exit
 else
-	if test -e /external_sd ; then
-		test $- != *i*  || {
-			mkdir -p /bin
-			cp -av /sbin/bash /bin/
-			test -e /sbin/rc && . /sbin/rc few
-		}
-	fi
+	true
 fi
 if [[ $- != *i* ]]; then
 	# Shell is non-interactive.  Be done now!
 	return
 fi
-MKINIT=/data/local/tmp/MKINIT
-if [[ ! -e $MKINIT ]]; then
-	touch $MKINIT
-	for i in /system/etc/init.d/*; do
-		[[ -e $i ]] || continue
-		echo "Executing $i ...."
-		bash "$i" &>/dev/null
-	done
-fi
 export HOME=/data/dot/root
-alias src='. /etc/mk '
-
+alias src=". /data/dot/slash/etc/mk "
+export dot=/data/dot
 if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 	umask 002
 else
 	umask 022
 fi
 
-unset LD_PRELOAD
+unset LD_PRELOAD LD_LIBRARY_PATH
 shopt -u execfail &>/dev/null
 su_bin=/sbin/su
-[[ -e $su_bin ]] || su_bin="$(command -v su)"
+[[ -x $su_bin ]] || su_bin="$(command -v su 2>/dev/null)"
 if [[ $su_bin ]]; then
-	{ [[ $(whoami) == root ]] || [[ $USER == root ]] || [[ -e /external_sd ]]; } ||
-	exec $su_bin 0 /data/dot/slash/sbin/bash  || su 0 -l 
-	shopt &>/dev/null ||  exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk; 
+	{ [[ $USER == root ]] || [[ -e /external_sd ]]; } ||
+		exec $su_bin 0 /data/dot/slash/sbin/bash || su 0 -l
+	shopt | grep autocd &>/dev/null || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
 fi
-[[ $0 = *bash ]] || return
+#grep "bash" <<<"$0" || /data/dot/slash/sbin/bash.full --init-file /data/dot/slash/etc/mk
 
 for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
 for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
 for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath execfail lithist; do
 	builtin shopt -s "$shopt_opt" &>/dev/null
 done
+rm /bin 2>/dev/null || rmdir /bin 2>/dev/null
+mkdir -p /bin
+ln -s /data/dot/slash/sbin/bash /bin/bash
 [[ $PS1 ]] || return 0
-. /data/dot/anset.sh
-if [[ -e /system/etc/rc ]]; then
-	. /system/etc/rc
-else
-	. /data/dot/slash/etc/rc
-fi
-busybox mount -o rw,remount,rw / &>/dev/null
-busybox mount -o rw,remount,rw /system &>/dev/null
-toybox mount -o rw,remount,rw / &>/dev/null
-toybox mount -o rw,remount,rw /system &>/dev/null
-toolbox mount -o rw,remount,rw / &>/dev/null
-toolbox mount -o rw,remount,rw /system &>/dev/null
-test -f /root/histfile || {
-	chmod 755 /root
-	mount -o rbind $dot/root /root
-}
-test -f /dot/init.sh || {
-	mkdir -p /dot
-	mount -o rbind $dot /dot
-}
-test -x /bin/bash || {
-	mkdir -p /bin
-	ln -s /data/dot/slash/sbin/bash /bin/
-}
-. /data/dot/setpath.sh
+. /data/dot/slash/etc/rc || . "${BASH_SOURCE}/rc"
+#. $dot/setpath.sh
 shopt -s checkwinsize histappend
-export use_color=true
 
-if [[ ${EUID} == 0 ]]; then
-	PS1="\[\033[01;31m\]${HOSTNAME:=$(hostname)}\[\033[01;34m\] \W \$\[\033[00m\] "
-else
-	PS1="\[\033[01;32m\]${USER:=$(id \-un)}@${HOSTNAME:=$(hostname)}\[\033[01;34m\] \W \$\[\033[00m\] "
-fi
-export PATH="/sbin:/data/dot/slash/sbin:/system/xbin:/system/bin:/vendor/bin:/bin:/system/sbin:/data/dot/bin:\
+export PATH="/data/sbin:/data/dot/slash/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/bin:/system/sbin:/data/dot/bin:\
 /data/dot/bin/final:/data/dot"
+[[ -e /data/data/com.termux/files/usr/bin ]] && export PATH=$PATH:/data/data/com.termux/files/usr/bin
 
 unset use_color safe_term match_lhs
 
-test ! -e /data/misc/adb/adb_keys && cp -av $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
+test ! -e /data/misc/adb/adb_keys && cp $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
+. "$dot/anset.sh"
+. "$dot/al.sh"
+. "$dot/ex.sh"
+. "$dot/fn.sh"
 
-hash dircolors &>/dev/null && eval $(dircolors --sh /data/dot/.dir_colors 2>/dev/null)
 if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
 	hash resize &>/dev/null && resize
 fi
-greet
-unalias nano &>/dev/null
+eval $(dircolors --sh /data/dot/.dir_colors)
+#cp -avu $ex/dot /data/
+greet 2>/dev/null
+PS1='$ '
+#export LD_LIBRARY_PATH=/sbin:/system/lib:/system/lib64:/system/system/lib:/system/system/lib64:/data/data/com.termux/files/usr/lib
 # vi: ft=sh:

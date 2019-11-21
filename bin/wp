@@ -4,7 +4,7 @@
 #3#::..#####################_MAIN_#######################..::#3#
 
 dot=${dot:-/dot}
-[[ $1 ]] || { $dot/bin/p www.google.ca && exit; }
+[[ $1 ]] || { $dot/bin/p 8.8.8.8 && exit; }
 [[ $1 ]] && { stfu $dot/bin/p www.google.ca && exit; }
 #exit
 if [[ $NET == eth0 ]]; then

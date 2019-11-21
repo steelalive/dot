@@ -3,11 +3,12 @@
 #1#_SCRIPT_#1#
 #2#::.. Last edit: - Mon Jun  5 21:31:46 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.6 - #_# #@#050617#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
- realp="$@"
+realp="$@"
 is_it_bash="$realp"
-	unset ok
-	[[ -e "$realp" ]] || exit 2
-	head -n1 "$realp" | grep -q -E -w "sh|bash|ksh"  && ok=1
-    [[ ${realp##*.} =~ sh|bash|rc ]] && ok=1
-	[[ $ok ]] && exit 0
-	[[ $ok ]] || exit 2
+unset ok
+[[ -e $realp ]] || exit 2
+head -n1 "$realp" | grep -q -E -w "sh|bash|ksh" && ok=1
+[[ ${realp##*.} =~ sh|bash|rc ]] && ok=1
+grep "vi.*=sh" /dot/bin/lkk &>/dev/null && ok=1
+[[ $ok ]] && exit 0
+[[ $ok ]] || exit 2

@@ -219,7 +219,6 @@ sed -i 's/#Seal=yes/Seal=no/' /etc/systemd/journald.conf
 sed -i "s/COMPRESSXZ=.*/COMPRESSXZ=(xz -c -z - --threads=$(nproc --all))/" /etc/makepkg.conf
 sed -i 's/#DefaultTimeoutStartSec=90s/DefaultTimeoutStartSec=30s/' /etc/systemd/user.conf
 sed -i 's/#DefaultTimeoutStopSec=90s/DefaultTimeoutStopSec=20s/' /etc/systemd/user.conf
-exit
 
 rm -f /arch2.sh
 mkdir /etc/systemd/system/ntpdate.service.d

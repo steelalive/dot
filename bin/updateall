@@ -3,14 +3,23 @@
 #2#::.. Last edit: - Wed May 30 08:24:14 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.5.8 - #_# #@#300518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
 # Author: #noharden
+
+#wp check for wirelless porn. If there is porn still on the internet, we may continue.
 wp || exit
 
+#I like the ccache to proudly display my name.
 [[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR 2>/dev/null
 
-suuser "yay -Syu --devel --needed --noconfirm --force"
+#Here, I update things.
+suuser "yay -Syu --devel --needed --noconfirm" || {
+	ANBRED "Error pamcan -Syu!$R\n"
+	exit
+}
 suuser "yay -S --needed --noconfirm -ua"
 paccache --keep 1 --verbose --remove
+#That's it! We are done!
 
+#Never EVER! execute updateall something.
 [[ $1 ]] && {
 	is_in_path go && go get -u all
 
@@ -23,70 +32,48 @@ paccache --keep 1 --verbose --remove
 	done
 	### Back to relative sanity.
 
+	#This take care of android-studio. I now have duplicated mountain of executables a little more ordered than android source.
 	#[[ $1 ]] && sdkmanager --update
 
+	#When pacman is away, mice dances and maintain the latest of the late ruby code
 	is_in_path bundle && bundle update
 
 	### this line may not fit your config. All the previous lines as well.:
-
 	[[ -d "$HOME"/.cache/pip ]] && chown root:root "$HOME"/.cache/pip "$HOME"/.cache/pip/http
 
+	###This is supposed to save me HOURS if I chmod 777 /usr...
 	pacman -Q | awk '{print $1}' >/packages.list
 
+	#Permissions are taken care of
 	rm -rf /tmp/makepkg
+
+	###I don't know what the following one liners i grabbed on warez do...###
+
+	#Not recommended pip maintenance, alwyas use the package manager...
 	$(ncu -g | grep 'npm -g install ')
-	#python2 -m pip_review --auto
-	#python3 -m pip_review --auto
 	$(pip-check -c pip2 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")
-	$(pip-check -c pip3 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")↵
-	#pip2.7 freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip2.7 install -U
-	#pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip install -U
+	$(pip-check -c pip3 -rfHu 2>/dev/null | grep -o "pip.* install -U .*")
+
+	#Same warning for npm
 	npm install --global --upgrade npm@latest
-	#for i in /usr/lib/node_modules/*; do
-	#	cd "$i" || continue
-	#	ncu --newest --greatest --upgrade
-	#	cd '/usr/lib/node_modules' || cd ..
-	#done
 	npm-check -g -y
 	npm update -g
 	npm doctor
-	#	for i in $(pip list | awk '{print $1}'); do
-	#		pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$i"
-	#	done
 
-	#cat <<'END' >		venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"
-	#		$sudo "$venv/neovim3/bin/pip" install -U pip --upgrade pip
-	#		$sudo "$venv/neovim2/bin/pip" install -U pip --upgrade pip
-	#		$sudo pip3 install --user --upgrade-strategy eager --progress-bar pretty --upgrade PyYAML
-	#		for pipinstall in pycodestyle pyflakes flake8 proselint yamllint; do
-	#			$sudo pip install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-	#			$sudo "$venv/neovim2/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-	#	    	$sudo "$venv/neovim3/bin/pip" install --upgrade-strategy eager --progress-bar pretty --upgrade "$pipinstall"
-	#		done
-	#END
-
-	if cd /ext/sexy-bash-prompt; then
-		gitreset
-	fi
-
+	#Let's do the same mystake with perl scripts. Just use the damned package manager. pacman -Syu and have a baby or make passionate love to a man.
 	if is_in_path cpanm && is_in_path cpanm-outdated; then
 		cpanm --self-upgrade
 		cpan-outdated -p | cpanm
 	fi
-	#+user -R /root /shell /home /dot &>/dev/null
 	cpan -u
-	if cd /dot/root/.SpaceVim; then
-		gitreset
-	fi
-	#	suuser "yay -Y --gendb"
+
 	### Neovim setup ###
-	cd /root/.config/nvim && {
+	cd /root/.config/nvim || echo no && {
 		gitreset
 		local="$dot/root/folders/.config/nvim/local.vim"
 		init="$HOME/.config/nvim/init.vim"
 		if ! grep -q "$local" $init; then
 			echo "source $local" >>"$init"
-			#	lnr $dot/root/folders/.config/nvim/plugins.yaml /root/.config/nvim/config/
 		fi
 		unset local init
 		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es
@@ -94,5 +81,7 @@ paccache --keep 1 --verbose --remove
 			make update
 		fi
 	}
+	###CHeck for mising files or disparities with pacman database
+	paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer"
 }
 ### END Neovim setup ###

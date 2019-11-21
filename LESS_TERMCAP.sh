@@ -2,6 +2,7 @@
 # __INDNYALL__
 # .LESS_TERMCAP
 #{{{ http://superuser.com/questions/146182/colorizing-your-terminal-and-shell-environment
+#This file colorize man pages, there is repetition, if you look, there is repetition.
 export LESS_TERMCAP_mb=$(
 	tput bold
 	tput setaf 2

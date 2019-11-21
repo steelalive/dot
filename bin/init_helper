@@ -52,5 +52,5 @@ arg_needed)
 	help
 	;;
 esac
-#arg_needed
-#debug
+arg_needed
+debug

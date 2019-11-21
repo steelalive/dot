@@ -3,14 +3,81 @@
 syntax "Nanorc" "\.?nanorc$"
 ## Possible errors and parameters
 icolor brightred "^[[:space:]]*((un)?set|include|syntax|i?color).*$"
-## Keywords
-icolor brightgreen "^[[:space:]]*(set|unset)[[:space:]]+(autoindent|backup|backupdir|backwards|boldtext|brackets|casesensitive|const|cut|fill|historylog|matchbrackets|morespace|mouse|multibuffer|noconvert|nofollow|nohelp|nonewlines|nowrap|operatingdir|preserve|punct)\>" "^[[:space:]]*(set|unset)[[:space:]]+(quickblank|quotestr|rebinddelete|rebindkeypad|regexp|smarthome|smooth|speller|suspend|tabsize|tabstospaces|tempfile|undo|view|whitespace|wordbounds)\>"
-icolor green "^[[:space:]]*(set|unset|include|syntax|header)\>"
 ## Colors
-icolor yellow "^[[:space:]]*i?color[[:space:]]*(bright)?(white|black|red|blue|green|yellow|magenta|cyan)?(,(white|black|red|blue|green|yellow|magenta|cyan))?\>"
+icolor yellow "^[[:space:]]*i?color[[:space:]]*(bright)?(white|black|red|blue|green|yellow|magenta|cyan|normal)?(,(white|black|red|blue|green|yellow|magenta|cyan|normal))?\>"
 icolor magenta "^[[:space:]]*i?color\>" "\<(start|end)="
+icolor yellow "^[[:space:]]*(set|unset)[[:space:]]+(errorcolor|functioncolor|keycolor|numbercolor|selectedcolor|statuscolor|stripecolor|titlecolor)[[:space:]]+(bright)?(white|black|red|blue|green|yellow|magenta|cyan|normal)?(,(white|black|red|blue|green|yellow|magenta|cyan|normal))?\>"
+## Keywords
+icolor brightgreen "^[[:space:]]*(set|unset)[[:space:]]+(afterends|allow_insecure_backup|atblanks|autoindent|backup|backupdir|boldtext|brackets|breaklonglines|casesensitive|constantshow|cutfromcursor|emptyline|errorcolor|fill|functioncolor|guidestripe|historylog|jumpyscrolling|keycolor|linenumbers|locking|matchbrackets|morespace|mouse|multibuffer|noconvert|nohelp|nonewlines|nopauses|nowrap|numbercolor|operatingdir|positionlog|preserve|punct|quickblank|quotestr|rawsequences|rebinddelete|regexp|selectedcolor|showcursor|smarthome|smooth|softwrap|speller|statuscolor|stripecolor|suspend|tabsize|tabstospaces|tempfile|titlecolor|trimblanks|unix|view|whitespace|wordbounds|wordchars|zap)\>"
+icolor green "^[[:space:]]*(bind|set|unset|syntax|header|include|magic)\>"
 ## Strings
 icolor white ""(\\.|[^"])*""
 ## Comments
 icolor brightblue "^[[:space:]]*#.*$"
 icolor cyan "^[[:space:]]*##.*$"
+## Setup of syntax coloring.
+##
+## Format:
+##
+## syntax "short description" ["filename regex" ...]
+##
+## The "none" syntax is reserved; specifying it on the command line is
+## the same as not having a syntax at all.  The "default" syntax is
+## special: it takes no filename regexes, and applies to files that
+## don't match any other syntax's filename regexes.
+##
+## color foreground,background "regex" ["regex"...]
+## or
+## icolor foreground,background "regex" ["regex"...]
+##
+## "color" will do case-sensitive matches, while "icolor" will do
+## case-insensitive matches.
+##
+## Valid color names ares: white, black, normal, red, blue, green,
+## yellow, magenta, cyan.  For foreground colors, you may use the
+## prefix "bright" to get a stronger highlight.
+##
+## All regexes (regular expressions) are of the extended type (ERE).
+##
+## To use multi-line regexes, use the start="regex" end="regex"
+## [start="regex" end="regex"...] format.
+##
+## If your system supports transparency, not specifying a background
+## color will use a transparent color.  If you don't want this, be sure
+## to set the background color to black or white.
+##
+## If you wish, you may put your syntax definitions in separate files.
+## You can make use of such files as follows:
+##
+## include "/path/to/syntax_file.nanorc"
+##
+## Unless otherwise noted, the name of the syntax file (without the
+## ".nanorc" extension) should be the same as the "short description"
+## name inside that file.  These names are kept fairly short to make
+## them easier to remember and faster to type using nano's -Y option.
+
+## To include all existing syntax definitions, you can do:
+#red
+icolor cyan,red "red"
+icolor brightred,blue "blue"
+icolor black,green "green"
+icolor black,yellow "yellow"
+icolor brightwhite,magenta "magenta"
+icolor black,cyan "cyan"
+icolor black,white "black"
+icolor brightwhite,black "brightwhite"
+icolor brightblack,white "brightblack"
+icolor black,red "red"
+icolor black,blue "blue"
+icolor black,green "green"
+icolor black,yellow "yellow"
+icolor black,magenta "magenta"
+icolor black,cyan "cyan"
+icolor brightcyan "brightcyan"
+icolor brightred "brightred"
+icolor brightblue "brightblue"
+icolor brightgreen "brightgreen"
+icolor brightyellow "brightyellow"
+icolor brightmagenta "brightmagenta"
+icolor brightcyan "brightcyan"
+

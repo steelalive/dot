@@ -5,6 +5,8 @@
 #e_completion(){ local cur=${COMP_WORDS[COMP_CWORD]};COMPREPLY=( $(compgen -W "$(echo *; cd /dot/bin; echo *)" -- $cur) ); }
 complete -f e
 unalias ls src h d &>/dev/null
+adbsu() { adb shell /sbin/su 0 -c "$@"; }
+export -f adbsu
 d() {
 	unset f lk
 	[[ $1 == LK ]] && LK=1 && shift
@@ -74,7 +76,15 @@ unps() {
 	PS1='\w\ u@\h\$ '
 	echo "PSS{0..3} $PROMPT_COMMAND"
 }
-
+cmdoutput() {
+	ANBG "COMMAND:${R}\n"
+	echo
+	echo " $@"
+	echo
+	ANBR "OUTPUT:$R\n"
+	echo
+	eval "$@" | sed 's/^/ /'
+}
 exp() {
 	if [[ $# -eq 1 ]]; then
 		export "${1}"=1
@@ -145,6 +155,7 @@ command -v sudo &>/dev/null || {
 }
 
 yornq() {
+	printf "\n"
 	[[ "$1" ]] && ANG "Default to$LR $1\n"
 	ANY "Do you want to ${RED}Quit$W(1)$Y or ${G}Continue$W(0)$Y?$R"
 	printf "\n"

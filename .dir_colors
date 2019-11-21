@@ -12,6 +12,7 @@
 # the system defaults.
 
 # Below, there should be one TERM entry for each termtype that is colorizable
+###Hey someone comment my fucking code, it's my beautiful and hideaous baby, LS_COLOR
 TERM Eterm
 TERM ansi
 TERM color-xterm
@@ -104,13 +105,13 @@ TERM xterm-debian
 # This is for files with execute permission:
 #EXEC 1;38;5;6
 ############################
-BLK                   38;5;68
-CAPABILITY            38;5;101
+BLK                   38;5;11
+CAPABILITY            38;5;6
 CHR                   38;5;113;1
 DIR                   38;5;33
-DOOR                  38;5;127
-EXEC                  38;5;208;1
-FIFO                  38;5;126
+DOOR                  38;5;2
+EXEC                  38;5;1;1
+FIFO                  38;5;11
 FILE                  0
 LINK                  target
 MULTIHARDLINK         38;5;222;1

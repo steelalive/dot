@@ -2,15 +2,16 @@
 #	*i*) ;;
 #	*) exit 0 ;;
 #esac
-
-#[[ $PS1 ]] || return 0
-
-#shopt &>/dev/null || return 2
-
-export lux=/mnt/media_rw/c68dcfb1-c438-4f9f-8109-7ce175ca99a3
+# vim: set filetype=sh:
 export dot=/data/dot
-export slash=$dot/slash
-export dot_dir=$dot LANG='en_US.UTF-8'
+export slash="$dot/slash"
+export ex="/mnt/media_rw/????-????"
+[[ -e $ex ]] || ex="/storage/????-????"
+[[ -e $ex ]] || ex=/sdcard
+export termux="/data/data/com.termux/files/usr"
+export termuxbin="/data/data/com.termux/files/usr/bin"
+[[ -e $termux ]] || unset termux termuxbin
+export LANG='en_US.UTF-8'
 export pc=192.168.0.20 s4=192.168.0.8 tv=192.168.0.5
 export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
 result=":"
@@ -18,9 +19,8 @@ IFS=:
 for p in $PATH; do
 	[[ $result == *:"$p":* ]] || result="${result}${p}:"
 done
-result="${result#:}" PATH=$(echo "${result%:}")
+result="${result#:}" PATH="${result%:}"
 unset IFS
-export ANDROID_DATA=/data ANDROID_ROOT=/system
 if shopt &>/dev/null; then
 	for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
 	for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
@@ -35,49 +35,56 @@ export bb
 
 bb() { command \\"$bb" "$@"; }
 
-#for i in /ex $(echo /mnt/media_rw/????-????) $(echo /storage/????-????) /external_sd; do
-#	[[ -e $i/misc-android ]] || continue
-#	export ex=$i
-#done
-ex=/sdcard
+for i in /ex $(echo /mnt/media_rw/????-????) $(echo /storage/????-????) /external_sd; do
+	[[ -e $i/misc-android ]] || continue
+	export ex="$i"
+done
 
-echo /init.* | grep amlogic && export HOSTNAME=TV
-{ echo /* | grep exyn &>/dev/null || grep zeroflte /default.prop; } && export HOSTNAME=S6
-[[ $HOSTNAME ]] || { getprop ro.product.device && export HOSTNAME="$(getprop ro.product.device)"; }
+echo /init.* | grep amlogic &>/dev/null && export HOSTNAME=TV
+echo /init.* | grep mt6765 &>/dev/null && export HOSTNAME=POWER
+[[ $HOSTNAME ]] || {
+	getprop ro.product.name &>/dev/null && HOSTNAME="$(getprop ro.product.name)"
+	export HOSTNAME
+}
 [[ -d $dot/root ]] && HOME=$dot/root
-#[[ -e $HOME ]] || HOME=$ex
-[[ -e $HOME ]] || HOME=/sdcard
+[[ -e $HOME ]] || HOME=$ex
 
 [[ -e /etc/terminfo ]] && TERMINFO=/etc/terminfo
-[[ -e $slash/etc/terminfo ]] && TERMINFO=$slash/etc/terminfo
+[[ -e $slash/etc/terminfo ]] && TERMINFO="$slash/etc/terminfo"
 [[ -e /sbin/terminfo ]] && TERMINFO=/sbin/terminfo
 [[ -e $TERMINFO ]] && export TERMINFO TERM=screen-256color
-#export TERM=xterm-256color
 
 [[ -x $BASH ]] || export BASH=/data/dot/slash/sbin/bash
 [[ -x $BASH ]] || BASH=$(command -v bash)
-[[ -x $BASH ]] || [[ -x $lux/usr/bin/bash ]] && export BASH=$lux/usr/bin/bash
+[[ -x $BASH ]] || [[ -x "$lux/usr/bin/bash" ]] && export BASH=$lux/usr/bin/bash
+
+if [[ -e /external_sd ]]; then
+	export ex=/external_sd sys=/system/system
+else
+	export sys=/system
+fi
 
 mkdir -p /tmp
 [[ -d /data/local/tmp ]] && TMP=/data/local/tmp
 [[ -d /tmp ]] && TMP=/tmp
 
-#[[ $USER ]] || USER=$(whoami 2 &>/dev/null) || USER=$(logname 2 &>/dev/null)
-
 [[ -x $slash/sbin/nano ]] && export EDITOR="$slash/sbin/nano" VISUAL="$EDITOR"
-[[ HOSTNAME == PC ]] && lux=/data/lux
 
 boot="$(find /dev/block -iname boot | tail -1)"
 recovery="$(find /dev/block -iname recovery | tail -1)"
+lk="$(find /dev/block -iname lk | tail -1)"
 
-export TMP TMPDIR=$TMP BASH SHELL=$BASH HISTFILE="${dot}/root/histfile_android" HISTSIZE=50000 USER slash
-test $HOSTNAME && hostname $HOSTNAME
+export TMP TMPDIR="$TMP" BASH SHELL="$BASH" HISTFILE="${dot}/root/histfile_android" HISTSIZE=50000 USER slash lk boot recovery lux
+test "$HOSTNAME" && hostname "$HOSTNAME"
 alias e='. $dot/bin/e'
+
 cmdcompile() {
 	cmd package compile -a -m everything
-	fstrim /system
-	fstrim /data
-	fstrim /cache
+	if command -v fstrim; then
+		fstrim /system
+		fstrim /data
+		fstrim /cache
+	fi
 }
 
 hash remnt &>/dev/null && remnt
@@ -85,7 +92,7 @@ hash remnt &>/dev/null && remnt
 unalias src 2>/dev/null
 
 pminstall() {
-	[[ $1 ]] || command \ls *.apk
+	[[ $1 ]] || command \ls ./*.apk
 	for apk; do
 		ANLO "Installing $apk ...\n"
 		pm install --user 0 -r -g "$apk"
@@ -93,7 +100,6 @@ pminstall() {
 }
 
 unalias ls &>/dev/null
-#if cp --help 2>&1 | grep -o "\-c" ; then alias cp='cp -c ';fi
 unset ls LS_OPTIONS &>/dev/null
 if [[ -e $slash/sbin/ls ]]; then
 	LS_BIN="$slash/sbin/ls"
@@ -110,41 +116,37 @@ fi
 export LS_OPTIONS="$LS_OPTIONS -AHhpFl --color "
 
 ls() { "$LS_BIN" $LS_OPTIONS "$@"; }
-if echo $0 | grep bash; then
-	if [[ ${EUID} == 0 ]]; then
-		PS1='\[\033[01;31m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
-	else
-		PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
-	fi
-fi
-
-remnt
-
-#Check busybox validity and correct.
-if ! busybox | $bb grep '1.29.2'; then
-	echo "Setup a newer busybox..."
-	cd $slash
-	bash $slash/box
+nano=$termuxbin/nano || unset nano
+if [[ -x $nano ]]; then
+	alias nano="$nano "
+	export EDITOR="$nano " VISUAL="$nano "
 fi
 
 [[ -e /system/bin/logd ]] && mv /system/bin/logd /system/bin/logd.bak
 
-[[ -d $ex ]] && rm_empty_dir /sdcard/* $ex/*
-
-for bin_dir in /system/bin /system/xbin; do
-	for fix_bb in su bash; do
-		bin_bb="$bin_dir/$fix_bb"
-
-		if [[ -L $bin_bb ]]; then
-			echo "$bin_bb found delete?"
-
-			mv -v "$bin_bb" "${bin_bb}.back" && echo "Renamed $bin_bb ${bin_bb}.back..."
-		fi
-	done
-done
 #####_MISC_MAINTENANCE_#####
-[[ -e /system/bin/logd ]] && mv /system/bin/logd /system/bin/logd.bak
+[[ -e /system/system/bin/logd ]] && mv /system/system/bin/logd /system/system/bin/logd.bak
 
+test -x /usr/bin/bash || {
+	rm /bin
+	mkdir -p /bin /usr/bin /system/sbin
+	[[ -x /bin/bash ]] || cp -av $slash/sbin/bash /bin/bash
+	#	cp -av $slash/sbin/bash.full /data/sbin/bash
+	#	cp -av $slash/sbin/bash.full /sbin/bash
+	#	mount -o rbind $slash/sbin /usr/bin
+	#	mount -o rbind $slash/sbin /system/xbin
+	#	mount -o rbind $slash/etc/mkshrc /system/etc/mkshrc
+	#	mount -o rbind $slash/etc/terminfo /system/etc/terminfo
+	test -f /root/histfile || {
+		mkdir -p /root
+		chmod 755 /root
+		mount -o rbind $dot/root /root
+	}
+	test -f /dot/init.sh || {
+		mkdir -p /dot
+		mount -o rbind $dot /dot
+	}
+}
 #####_SETUP RC FILES_#####
 
 init_incantation='
@@ -160,11 +162,11 @@ chmod 777 -R /data/dot
 ########## _INIT_ ###########
 '
 
-if ! $bb grep "/data/dot/slash" /system/etc/init.d/90userinit; then
-	echo "$init_incantation" >>/system/etc/init.d/90userinit
-fi
+#if ! $bb grep "/data/dot/slash" /system/etc/init.d/90userinit; then
+#	mkdir -p /system/etc/init.d
+#	echo "$init_incantation" >>/system/etc/init.d/90userinit
+#fi
 #####################################################################################################################
-hash resize &>/dev/null && eval $(resize) &>/dev/null
+hash resize &>/dev/null && eval "$(resize)" &>/dev/null
 
 # vi: ft=sh
-unalias nano 2>/dev/null

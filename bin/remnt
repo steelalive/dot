@@ -10,14 +10,15 @@ remnt() {
 		mount -o rw,remount /system &>/dev/null
 
 	[[ $1 ]] && arg="$*"
-	for fs in "/" "/system" $arg; do
+	for fs in "/" "/system" "/vendor" $arg; do
 		mount -o rw,remount,rw "$fs" &>/dev/null ||
 			hash busybox &>/dev/null && busybox mount -o rw,remount "$fs" &>/dev/null ||
 			hash toybox &>/dev/null && toybox mount -o rw,remount "$fs" &>/dev/null ||
 			hash toybox &>/dev/null && toolbox mount -o rw,remount "$fs" &>/dev/null ||
 			hash busybox &>/dev/null && busybox mount -o rw,remount,rw "$fs" &>/dev/null ||
 			hash busybox &>/dev/null && busybox mount -o remount,rw "$fs" &>/dev/null ||
-			echo "WTF is wrong with this system!"
+			mount -o remount,rw "$fs" &>/dev/null || mount -o rw,remount "$fs" &>/dev/null ||
+			ANRED "Can't remount $fs!${R}\n"
 	done
 	chmod 777 -R /data/dot
 }

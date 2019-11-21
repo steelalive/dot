@@ -53,11 +53,11 @@ else
 fi
 prompt_command() {
 	RET
-	set_title " $(fc -rl | head -n1 | cut -d" " -f2-99) "
+	set_title " ${HOSTNAME%%.*}:${PWD} CMD:$(fc -rl | head -n1 | cut -d" " -f2-99) "
 	if [[ $HOSTNAME == PC ]]; then
 		local has_job tmp_git
 		has_job="$(jobs -l | wc -l)"
-		tmp_git=$(git branch --color 2>/dev/null) && printf "%b" "($tmp_git)"
+		#		tmp_git=$(git branch --color 2>/dev/null) && printf "%b" "($tmp_git)"
 		((has_job > 0)) && ANLG "❨Jobs: ${W}${has_job}${LG}❩${R}"
 		[[ $(</tmp/START.1) == 999 ]] || ps1_timer /dev/null >&2
 		echo 999 >/tmp/START.1
@@ -75,7 +75,6 @@ prompt_command() {
 	#	ANLC " '${PWD}'"
 	history -a
 	history -n
-	printf '\n'
 }
 touch /tmp/prompt
 PROMPT_COMMAND=prompt_command
@@ -141,7 +140,7 @@ do_meteo() {
 	city=mont-tremblant
 	region=quebec
 	[[ -e /tmp/moon ]] || if [[ $(date +%H) -gt 19 ]]; then
-		command curl -s "http://wttr.in/moon"
+		command \curl -s "http://wttr.in/moon"
 		touch /tmp/moon
 	fi
 	time_echo EH
@@ -212,6 +211,7 @@ if is_android; then
 	}
 	PROMPT_COMMAND=prompt_command
 fi
+export -f prompt_command
 
 ##############################Shell#####################################################
 ps1_hist_clean() {
@@ -526,4 +526,5 @@ set_title() {
 
 }
 
+printf "\033]0;${HOSTNAME%%.*}:${PWD}\007"
 #set_title $(fc -rl | head -n1  | cut -d" " -f2-99)

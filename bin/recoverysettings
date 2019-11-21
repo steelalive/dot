@@ -1,0 +1,20 @@
+	for i in $(blkid | grep ext4 | cut -d: -f1); do
+		echo "##############################---${i}---#######################################"
+		umount $i 2>/dev/null
+		e2fsck -fp $i 2>/dev/null
+		e2fsck $i 2>/dev/null
+		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p $i 2>/dev/null
+		tune2fs -O ^has_journal -e remount-ro -c 30 -m 1 -o journal_data_writeback,nobarrier $i
+		echo "##############################---${i}---#######################################"
+	done
+	fat=/dev/block/mmcblk1p1
+	umount $fat 2>/dev/null
+	fsck.exfat $fat 2>/dev/null
+	fsck.fat $fat 2>/dev/null
+	fsck_msdos $fat 2>/dev/null
+	fsck.vfat $fat 2>/dev/null
+	k1p2=/dev/block/mmcblk1p2 2>/dev/null
+	umount $k1p2 2>/dev/null
+	e2fsck $k1p2 2>/dev/null
+	echo "Done!"
+

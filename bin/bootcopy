@@ -21,11 +21,13 @@ else
 	$adb shell su 0 -c "ls /dev/block/$imgtoedit" || $adb shell ls /dev/block/$imgtoedit && boot_path=/dev/block
 fi
 $adb shell su 0 -c "ls /dev/block/platform/msm_sdcc.1/by-name/$imgtoedit" && boot_path=/dev/block/platform/msm_sdcc.1/by-name
-recovery=$(adb shell "su -c 'find /dev/block -iname recovery | head -n1'")
-boot=$(adb shell "su -c 'find /dev/block -iname boot | head -n1'")
+recovery=$(adb shell su -c 'find /dev/block -iname recovery | head -n1')
+boot=$(adb shell su -c 'find /dev/block -iname boot | head -n1')
+[[ $recovery ]] || recovery=$(adb shell find /dev/block -iname recovery | head -n1)
+[[ $boot ]] || boot=$(adb shell find /dev/block -iname boot | head -n1)
 ANRED "Boot is ${W}$boot\n${R}"
 ANRED "Recovery is ${W}$recovery${R}\n"
-if ex=$(. $dot/bin/ad ex) && $adb shell ls $ex &>/dev/null; then
+if ex=$($dot/bin/ad ex) && $adb shell ls $ex &>/dev/null; then
 	work_path=$ex
 else
 	adb shell touch /sdcard/test && work_path=/sdcard
@@ -33,10 +35,10 @@ else
 fi
 $adb shell "su -c mount -o remount,rw /"
 $adb shell "su -c mount -o remount,rw /system"
-export img_orig="${work_path}/${imgtoedit}"
 [[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
 [[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="$boot"
 
+export img_orig="${work_path}/${imgtoedit}"
 case $1 in
 repack*)
 	[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
@@ -47,9 +49,12 @@ repack*)
 	$adb push ${imgtoedit}_mod.img $work_path
 	$adb shell "su -c "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"" ||
 		$adb shell "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"
+	export img_orig=/sdcard/recovery block_to_write=/dev/block/by-name/recovery
+	adb shell "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"
+	adb shell su -c "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"
 	$adb shell "su -c 'sync && sync'" ||
 		$adb shell "sync && sync"
-	bash backup.sh backup
+	$adb reboot recovery
 	exit
 	;;
 cleanup*)

@@ -1,47 +1,45 @@
-#!/data/dot/slash/sbin/bash
+# vim: set filetype=sh:
+[[ -e /oem ]] || return || exit
 . /data/dot/slash/etc/rc
 busybox mount -o rw,remount,rw /system
 busybox mount -o rw,remount,rw /
+busybox mount -o rw,remount,rw /vendor
 . $dot/bin/remnt
 cd $slash
 chown 2000:2000 -R /data/dot
 chmod 777 -R /data/dot
 dot=/data/dot
-ln -sfv $slash/etc/mkshrc /system/etc/
-ln -sfv $dot/root/.nanorc /system/etc/nanorc
+#ln -sfv $slash/etc/mkshrc /system/etc/
+#ln -sfv $dot/root/.nanorc /system/etc/nanorc
 ln -sfv $dot/root/.nanorc /sdcard/
-ln -sfv $slash/etc/bash /system/etc/ 2>/dev/null
-cp -a $slash/etc/terminfo /system/etc/
-ln -sfv $slash/EST5EDT /system/etc/localtime
-ln -sfv $slash/etc/gps.conf /system/etc/gps.conf
-ln -sfv $slash/etc/gps.conf /system/vendor/etc/gps.conf
-ln -sfv $slash/etc/nfsinjector/service.sh /system/etc/init.d/
-ln -sfv $slash/etc/fde.ai /system/etc
-ln -sfv $slash/etc/nfsinjector.sh /system/etc/init.d/
-cat $ex/kernel.sh >/system/etc/init.d/kernel.sh
-cp -av $slash/sbin/bash /system/xbin/
-cp -av $slash/sbin/bash /system/bin/
-ln -sfv $slash/etc/mkshrc /system/etc/
-ln -sfv /proc/self/mounts /system/etc/mtab
-ln -sfv $slash/sbin /data
-ln -sfv $slash /data
+#ln -sfv $slash/etc/bash /system/etc/ 2>/dev/null
+#cp -a $slash/etc/terminfo /system/etc/
+#ln -sfv $slash/EST5EDT /system/etc/localtime
+#ln -sfv $slash/etc/gps.conf /system/etc/gps.conf
+#ln -sfv $slash/etc/gps.conf /system/vendor/etc/gps.conf
+#ln -sfv /proc/self/mounts /system/etc/mtab
 ln -sfv $slash/etc/mk /data/
 ln -sfv $slash/pushthem /data/pu
+rmdir /bin 2>/dev/null || rm /bin
+mkdir /bin
+cp $slash/sbin/bash.full /bin/bash
 echo EST5EDT >/system/etc/timezone
-cd /data/dot/slash || exit
 echo "Initialize system..."
 busybox mount -o rw,remount /system
 bash /data/dot/bin/remnt
-chmod 777 /system/etc/init.d/*
+#chmod 777 /system/etc/init.d/*
 echo "System init completed!"
-cat $dot/bin/build.prop >/data/local.prop
-echo 'SYSTEMLESS=true' >/data/.supersu
-sed -i '/<allow-in-power-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
-sed -i '/<allow-in-data-usage-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
+#cat $dot/bin/build.prop >/data/local.prop
+#sed -i '/<allow-in-power-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
+#sed -i '/<allow-in-data-usage-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
 if ! grep "/system/etc/mk" /system/etc/mkshrc; then
 	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
 	chmod -R 0777 /data/dot
 fi
+echo 'SYSTEMLESS=true' >/data/.supersu
+echo "KEEPVERITY=false
+KEEPFORCEENCRYPT=false
+RECOVERYMODE=false" >>/data/.magisk
 #if ! settings list system | grep 'en-US,fr-CA' ||
 if [[ $1 ]]; then
 	echo "Some defaults settings applied..."
@@ -107,27 +105,14 @@ if [[ $1 ]]; then
 	#settings put secure lockscreen.disabled 1
 	set +x
 fi
-#nocopy=' -e KitanaTweak -e MidnightCore -e PXM -e terminal_debloater -e terminal_systemizer -e xposed'
-#core=/sbin/.core/img
-#[ -e /data/adb/magisk.img ] || { [ -e $ex/magisk.img ] && cp $ex/magisk.* /data/adb/; }
-#if [ ! -e $core ]; then
-#	mkdir -p /magisk
-#	mount $ex/magisk.img /magisk
-#	core=/magisk
-#fi
-#if [[ -e $core ]]; then
-#	cd $core || exit
-#	for i in "$core"/*; do
-#		grep -o $nocopy <<<$i &>/dev/null || continue
-#		folder="$i/system"
-#		[ -e $folder ] || continue
-#		toybox cp -a --preserve=a "$folder" / || busybox cp -au "$folder" /
-#	done
-#	[ -e /data/adb/magisk.img ] && busybox cp -avu /data/adb/magisk.* $ex/
-#fi
+. $dot/fn.sh
 rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
-proper && echo "Proper executed sucessfully"
-rmbloat
+#proper && echo "Proper executed sucessfully"
+#rmbloat
 . $slash/etc/mk
+#setupbox /system/xbin
+setupbox /data/sbin
+setupbox /data/dot/slash/sbin
+setupbox /data/adb/modules/dot/system/xbin
 echo "Done!"
 # vi: ft=sh

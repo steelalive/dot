@@ -5,7 +5,6 @@
 # This can be useful for files with names truncated after a file transfer.
 # 12345678901234 is renamed to 12345678901.gz
 
-
 # Copyright (C) 2002, 2007, 2010-2018 Free Software Foundation, Inc.
 # Copyright (C) 1993 Jean-loup Gailly
 
@@ -38,28 +37,34 @@ not compress them twice.
 Report bugs to <bug-gzip@gnu.org>."
 
 if test $# = 0; then
-  printf >&2 '%s\n' "$0: invalid number of operands; try \`$0 --help' for help"
-  exit 1
+	printf >&2 '%s\n' "$0: invalid number of operands; try \`$0 --help' for help"
+	exit 1
 fi
 
 res=0
-for i do
-  case "$i" in
-  --h*) printf '%s\n' "$usage"   || exit 1; exit;;
-  --v*) printf '%s\n' "$version" || exit 1; exit;;
-  *[-.]z | *[-.]gz | *.t[ag]z) continue;;
-  esac
+for i; do
+	case "$i" in
+	--h*)
+		printf '%s\n' "$usage" || exit 1
+		exit
+		;;
+	--v*)
+		printf '%s\n' "$version" || exit 1
+		exit
+		;;
+	*[-.]z | *[-.]gz | *.t[ag]z) continue ;;
+	esac
 
-  if test ! -f "$i" ; then
-    printf '%s\n' "zforce: $i not a file"
-    res=1
-    continue
-  fi
+	if test ! -f "$i"; then
+		printf '%s\n' "zforce: $i not a file"
+		res=1
+		continue
+	fi
 
-  if gzip -lv < "$i" 2>/dev/null | grep '^defl' > /dev/null; then
+	if gzip -lv <"$i" 2>/dev/null | grep '^defl' >/dev/null; then
 
-    new="$i.gz"
-    mv "$i" "$new" && printf '%s\n' "$i -- replaced with $new" || res=1
-  fi
+		new="$i.gz"
+		mv "$i" "$new" && printf '%s\n' "$i -- replaced with $new" || res=1
+	fi
 done
 exit $res

@@ -3,17 +3,18 @@
 #1#_SCRIPT_#1#
 #2#::.. Last edit: - Sat May 12 19:51:37 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.1.2.3 - #_# #@#120518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
-. $dot/anset.sh
+#exec 2>/dev/null
+. "$dot/anset.sh" || echo dot not defined
 cpu_freq_max="$(lscpu | awk '/CPU max/ { print $4 }')"
-cpu_freq_max="${cpu_freq_max::4}"
-cpu_temp_max='80'
+export cpu_freq_max="${cpu_freq_max::4}"
+export cpu_temp_max='80'
 [[ $HOSTNAME == GA ]] && sys_color_options="freq mem load temp" seconds_timer=10 limit_ps1=750
 [[ $HOSTNAME == PC ]] && sys_color_options="freq mem load temp" seconds_timer=10 limit_ps1=1000
-[[ "$sys_color_options" ]] || sys_color_options="mem load temp" seconds_timer=10 limit_ps1=500
-sys_color_options="${sys_color_options:-"mem load temp"}"
-seconds_timer="${seconds_timer:-5}"
-limit_ps1="${limit_ps1:-250}"
-em_raw="$(awk '/MemTotal:/ {print $2}' /proc/meminfo)"
+[[ "$sys_color_options" ]] || sys_color_options="mem load" seconds_timer=10 limit_ps1=500
+export sys_color_options="${sys_color_options:-"mem load"}"
+export seconds_timer="${seconds_timer:-5}"
+export limit_ps1="${limit_ps1:-250}"
+export mem_raw="$(awk '/MemTotal:/ {print $2}' /proc/meminfo)"
 export mem_total="$((mem_raw / 1024))"
 unset mem_raw
 export cpu_freq_max cpu_temp_max mem_total
@@ -34,23 +35,22 @@ sys_color() {
 		fi
 		if [[ $section == freq ]]; then
 			local freq
-			freq="$(grep 'cpu MHz' /proc/cpuinfo | head -1 | cut -d ' ' -f3 | cut -d '.' -f1)"
-			SYSLOAD="$((200 * freq / ${cpu_freq_max:-1} % 2 + 100 * freq / cpu_freq_max))"
-			SYSLOAD="$((SYSLOAD - 20))"
+			freq="$(grep 'cpu MHz' /proc/cpuinfo | head -1 | cut -d ' ' -f3 | cut -d '.' -f1)" 2>/dev/null
+			SYSLOAD="$((200 * freq / ${cpu_freq_max:-1} % 2 + 100 * freq / cpu_freq_max))" 2>/dev/null
+			SYSLOAD="$((SYSLOAD - 20))" 2>/dev/null
 			echo_out="${freq}MHz"
 		fi
 		if [[ $section == mem ]]; then
-			local mem_free memload total
-			mem_free="$(($(awk 'FNR==2 {print $4}' <(\free -m 2>/dev/null))))"
-			memload="$((mem_total - mem_free))"
-			SYSLOAD="$(\free -m | awk 'NR==2{printf "%s%s\n%.f\n", $3,$2,$3*100/$2 }' | tail -n1 2>/dev/null)"
-			total="$((mem_free / 1024))"
-			echo_out="$(\free -m | awk 'NR==2{printf "%s/%sMB %.2f%%\n", $3,$2,$3*100/$2 }')"
+			#			mem_free="$(($(awk 'FNR==2 {print $4}' <(free -m))))" 2>/dev/null
+			#			memload="$((mem_total - mem_free))" 2>/dev/null
+			SYSLOAD="$(free -m | awk 'NR==2{printf "%s%s\n%.f\n", $3,$2,$3*100/$2 }' | tail -n1 2>/dev/null)" 2>/dev/null
+			#			total="$((mem_free / 1024))" 2>/dev/null
+			echo_out="$(free -m | awk 'NR==2{printf "%s/%sMB %.2f%%\n", $3,$2,$3*100/$2 }')" 2>/dev/null
 		fi
 		if [[ $section == temp ]]; then
-			[[ $HOSTNAME != PC ]] && ldtemp="$(sensors 2>/dev/null | awk '/Core\ 0/ {gsub(/\+/,"",$3); gsub(/\..+/,"",$3)    ; print $3}')" &&
-				SYSLOAD="$((200 * ldtemp / ${cpu_temp_max:-1} % 2 + 100 * ldtemp / ${cpu_temp_max:-1}))"
-			[[ $HOSTNAME == PC ]] && temp="$(</sys/devices/virtual/thermal/thermal_zone2/temp)" && ldtemp="${temp:0:2}" && SYSLOAD="$ldtemp"
+			ldtemp="$(sensors 2>/dev/null | awk '/Core\ 0/ {gsub(/\+/,"",$3); gsub(/\..+/,"",$3); print $3}' 2>/dev/null)" 2>/dev/null &&
+				SYSLOAD="$((200 * ldtemp / ${cpu_temp_max:-1} % 2 + 100 * ldtemp / ${cpu_temp_max:-1}))" 2>/dev/null
+			#[[ $HOSTNAME == PC ]] && temp="$(</sys/devices/virtual/thermal/thermal_zone2/temp)" && ldtemp="${temp:0:2}" && SYSLOAD="$ldtemp"
 			export echo_out="$ldtemp°C"
 		fi
 		if [[ $section == load ]]; then
@@ -179,9 +179,9 @@ ps1_writer() {
 	count_bg=0
 	while ((count_bg < limit_ps1)); do
 		{
-			count_bg=$((count_bg + 1))
+			export count_bg=$((count_bg + 1))
 			load_cpu &
-			sys_color $sys_color_options count
+			sys_color ${sys_color_options} count
 			[[ $count_bg -gt $((limit_ps1 - 20)) ]] && echo "1" >/tmp/prompt_restart
 		} >/tmp/prompt
 		sleep "$seconds_timer"
@@ -208,4 +208,5 @@ ps1_writer() {
 #done
 #}
 #ps1_writer
+#exec 2>&-
 #noharden

@@ -15,8 +15,8 @@ for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -
 for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath execfail lithist; do
 	builtin shopt -s "$shopt_opt" &>/dev/null
 done
-eval $(dircolors --sh $dot/.dir_colors)
-LS_OPTIONS="-v --color=auto --ignore-backups --group-directories-first --classify --ignore-backups --quote-name --quoting-style=shell-escape --indicator-style=slash --escape --human-readable -L"
+#eval $(dircolors --sh $dot/.dir_colors)
+LS_OPTIONS="-v --color=auto --ignore-backups --group-directories-first --classify --ignore-backups --quote-name --quoting-style=shell-escape --indicator-style=slash --escape --human-readable -AL"
 if [[ $1 ]]; then
 	for opt; do
 		case $opt in
@@ -47,7 +47,8 @@ unset search
 	eval "$(dircolors --sh /dot/.dir_colors)"
 }
 if ! [[ $file_count -le $((LINES - 3)) ]]; then
-	command \dir --group-directories-first --color=auto "$@"
+	command \dir --group-directories-first --color=auto $lsopt -A "$@"
+	#is_in_path ls++ && command \ls++ $lsopt --potsf --all "$@"
 elif is_in_path ls++; then
 	command \ls++ $lsopt --potsf --all "$@"
 elif command -v lsd &>/dev/null; then
