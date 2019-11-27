@@ -1,5 +1,7 @@
 #!/bin/bash
 aik=/ext/AIK-Linux
+expath=/data/sbin
+find=$expath/find
 [[ $adb ]] || adb=/usr/bin/adb
 cd $aik || exit
 cd $aik
@@ -10,21 +12,15 @@ cd $aik
 	export imgtoedit=boot
 }
 export imgtoedit
-adbcmd() { $adb -d "$@"; }
+adbcmd() { $adb "$@"; }
 ANRED "imgtoedit=${W}$imgtoedit"
-$adb shell su 0 -c "bash /data/dot/slash/sbin/remnt" &>/dev/null
 cd $aik || exit
 export imgtoedit
-if $adb shell su 0 -c "ls /dev/block/bootdevice/by-name/$imgtoedit" &>/dev/null || $adb shell ls /dev/block/bootdevice/by-name/$imgtoedit; then
-	boot_path=/dev/block/bootdevice/by-name
-else
-	$adb shell su 0 -c "ls /dev/block/$imgtoedit" || $adb shell ls /dev/block/$imgtoedit && boot_path=/dev/block
-fi
-$adb shell su 0 -c "ls /dev/block/platform/msm_sdcc.1/by-name/$imgtoedit" && boot_path=/dev/block/platform/msm_sdcc.1/by-name
+boot_path=/dev/block/by-name
 recovery=$(adb shell su -c 'find /dev/block -iname recovery | head -n1')
 boot=$(adb shell su -c 'find /dev/block -iname boot | head -n1')
-[[ $recovery ]] || recovery=$(adb shell find /dev/block -iname recovery | head -n1)
-[[ $boot ]] || boot=$(adb shell find /dev/block -iname boot | head -n1)
+[[ $recovery ]] || recovery=$(adb shell $find /dev/block -iname recovery | head -n1)
+[[ $boot ]] || boot=$(adb shell $find /dev/block -iname boot | head -n1)
 ANRED "Boot is ${W}$boot\n${R}"
 ANRED "Recovery is ${W}$recovery${R}\n"
 if ex=$($dot/bin/ad ex) && $adb shell ls $ex &>/dev/null; then
@@ -33,12 +29,11 @@ else
 	adb shell touch /sdcard/test && work_path=/sdcard
 	[[ $work_path ]] || work_path=/
 fi
-$adb shell "su -c mount -o remount,rw /"
-$adb shell "su -c mount -o remount,rw /system"
-[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
-[[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="$boot"
-
 export img_orig="${work_path}/${imgtoedit}"
+#ANORANGE "dd recovery image?\n"
+#if yorn; then
+#	adb shell "cat $recovery" >./recovery.img
+#fi
 case $1 in
 repack*)
 	[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
@@ -89,9 +84,13 @@ setuprecovery)
 	if yorn; then
 		proper
 	fi
+	(
+		cd $aik/ramdisk/sbin/ ln -sf ../init watchdogd
+		ln -sf ../init ueventd
+	)
 	if [[ $imgtoedit == recovery ]] && [[ $1 != repack ]]; then
-		ANORANGE "Perform recovery miracle?"
-		recovery_miracle
+		ANORANGE "Perform recovery miracle?\n"
+		yorn && recovery_miracle
 		exit
 	fi
 	;;

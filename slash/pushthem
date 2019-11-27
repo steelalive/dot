@@ -22,7 +22,7 @@ ln -sfv $slash/etc/mk /data/
 ln -sfv $slash/pushthem /data/pu
 rmdir /bin 2>/dev/null || rm /bin
 mkdir /bin
-cp $slash/sbin/bash.full /bin/bash
+cp $slash/sbin/bash /bin/bash
 echo EST5EDT >/system/etc/timezone
 echo "Initialize system..."
 busybox mount -o rw,remount /system
@@ -36,10 +36,12 @@ if ! grep "/system/etc/mk" /system/etc/mkshrc; then
 	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
 	chmod -R 0777 /data/dot
 fi
-echo 'SYSTEMLESS=true' >/data/.supersu
-echo "KEEPVERITY=false
+if [[ ! -e /data/.magisk ]]; then
+	echo 'SYSTEMLESS=true' >/data/.supersu
+	echo "KEEPVERITY=false
 KEEPFORCEENCRYPT=false
 RECOVERYMODE=false" >>/data/.magisk
+fi
 #if ! settings list system | grep 'en-US,fr-CA' ||
 if [[ $1 ]]; then
 	echo "Some defaults settings applied..."

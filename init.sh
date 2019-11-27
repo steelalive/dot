@@ -47,7 +47,7 @@ setenv() { export "$1=$2"; }
 export -f setenv
 
 export source_files="ps1.sh al.sh ps4.sh fn.sh init.sh ex.sh anset.sh setpath.sh"
-export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh $dot/ps1.sh $HOME/.bash_prompt /usr/share/fzf/key-bindings.bash /usr/share/fzf/completion.bash /usr/share/git/git-prompt.sh /usr/share/git/completion/git-prompt.sh" # $dot/ps4.sh  #$dot/bin/goto.sh
+export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh  /usr/share/fzf/key-bindings.bash /usr/share/fzf/completion.bash /usr/share/git/git-prompt.sh /usr/share/git/completion/git-prompt.sh $dot/ps1.sh" # $dot/ps4.sh  #$dot/bin/goto.sh$HOME/.bash_prompt
 
 [[ -e /oem ]] && dot_files="$dot_files $dot/g4.sh $dot/anset.sh"
 [[ -e /oem ]] || dot_files="$dot_files $dot/ps1bg.sh"
@@ -67,12 +67,9 @@ unset IFS info this_4_real this future_path futur_path_test
 	pkill ps1bg.sh ps1_writer &>/dev/null
 ) &>/dev/null
 killjobs
-if [[ -e /oem ]]; then
-	[[ -x /bin/nano ]] && export EDITOR="/bin/nano --syntax bash"
-fi
 ps1_writer &
 disown &>/dev/null
-is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval "$(dircolors --sh "$dot/.dir_colors")"
+is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && $(dircolors --sh "$dot/.dir_colors")
 is_in_path archey && archey
 is_in_path fortunes &>/dev/null && fortunes
 . "$dot/setpath.sh"

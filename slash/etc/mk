@@ -5,7 +5,7 @@ if [[ $1 == t ]]; then
 		umount "$i" 2>/dev/null
 		/sbin/e2fsck -fp "$i" 2>/dev/null
 		/sbin/e2fsck "$i" 2>/dev/null
-		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
+		[[ -e /sbin/fsck.auth.log@ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
 		/sbin/tune2fs -O ^has_journal -e remount-ro -c 30 -m 1 -o journal_data_writeback,nobarrier "$i"
 		echo "##############################---${i}---#######################################"
 	done
@@ -39,14 +39,18 @@ fi
 
 unset LD_PRELOAD LD_LIBRARY_PATH
 shopt -u execfail &>/dev/null
-su_bin=/sbin/su
+#su_bin=/sbin/su
 [[ -x $su_bin ]] || su_bin="$(command -v su 2>/dev/null)"
-if [[ $su_bin ]]; then
-	{ [[ $USER == root ]] || [[ -e /external_sd ]]; } ||
-		exec $su_bin 0 /data/dot/slash/sbin/bash || su 0 -l
-	shopt | grep autocd &>/dev/null || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
+if [[ -x $su_bin ]]; then
+	if [[ $USER == root ]] || [[ -e /external_sd ]]; then
+		true
+	else
+		exec $su_bin 0 /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk || su 0 -l
+		#		shopt | grep autocd &>/dev/null || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
+	fi
+
 fi
-#grep "bash" <<<"$0" || /data/dot/slash/sbin/bash.full --init-file /data/dot/slash/etc/mk
+grep "bash" <<<"$0" || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
 
 for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
 for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
@@ -57,11 +61,11 @@ rm /bin 2>/dev/null || rmdir /bin 2>/dev/null
 mkdir -p /bin
 ln -s /data/dot/slash/sbin/bash /bin/bash
 [[ $PS1 ]] || return 0
-. /data/dot/slash/etc/rc || . "${BASH_SOURCE}/rc"
+. /data/dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc
 #. $dot/setpath.sh
 shopt -s checkwinsize histappend
 
-export PATH="/data/sbin:/data/dot/slash/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/bin:/system/sbin:/data/dot/bin:\
+export PATH="/data/sbin:/data/dot/slash/sbin:/system/xbin:/sbin:/data/adb/magisk:/system/bin:/vendor/bin:/bin:/system/sbin:/data/dot/bin:\
 /data/dot/bin/final:/data/dot"
 [[ -e /data/data/com.termux/files/usr/bin ]] && export PATH=$PATH:/data/data/com.termux/files/usr/bin
 

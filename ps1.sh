@@ -63,7 +63,7 @@ prompt_command() {
 		echo 999 >/tmp/START.1
 		[[ -e /tmp/prompt_restart ]] && {
 			ANLR 'ps1bg restarted\n'
-			fork /dot/ps1bg.sh
+			fork $dot/ps1bg.sh
 			rm /tmp/prompt_restart
 		}
 		check_source_files

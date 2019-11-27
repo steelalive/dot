@@ -1,0 +1,4 @@
+Grammalecte : 1.5.0   
+Dictionnaires orthographiques : 6.4.3   
+Dictionnaire des synonymes : 2.3   
+Règles de césure : 3.0   

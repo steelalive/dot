@@ -9,6 +9,7 @@
   title_transmit_fg_color = "#000000"
   window_state = maximise
 [keybindings]
+  go_next = <Primary>Tab
 [layouts]
   [[default]]
     [[[child0]]]

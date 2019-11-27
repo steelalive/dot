@@ -4,14 +4,14 @@
 if is_in_path adb; then
 	if adb devices | grep recovery; then
 		ex=/external_sd
-		su_bin=/sbin/bash
+		su_bin=/sbin/sh
 		adbsu() {
 			adb shell "$@"
 		}
 
 	else
 		adbsu() {
-			adb shell /sbin/su 0 -c "$@"
+			adb shell /sbin/su 0 -mm -c "$@"
 		}
 
 		ex=/storage/B5A4-1BFB

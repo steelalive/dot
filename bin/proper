@@ -4,20 +4,21 @@
 #3#::..#####################_/dot/bin/propper_#######################..::#3#
 # vi: set filetype=sh:
 export cmd=' androidboot.selinux=permissive buildvariant=eng threadirqs nowatchdog fsck.repair=yes commit=30 errors=remount-ro rootfstype=ext4 raid=noautodetect plymouth.enable=0 smsc95xx.turbo_mode=N net.ifnames=0 noatime libahci.ignore_sss=1 cgroup_disable=memory sysrq_always_enabled'
-
+mount /system
+mount /vendor
+mount /nvdata
 [[ -e /system/build.prop ]] && mount -o remount,rw /system
-for i in /prog/AIK-Linux/ramdisk/default.prop \
-	ramdisk/default.prop \
-	ramdisk/build.prop \
-	/system/build.prop \
-	/default.prop \
-	default.prop \
-	build.prop \
-	/system/vendor/build.prop \
-	/vendor/build.prop \
+mount -o remount,rw /vendor
+mount -o remount,rw /nvdata
+
+for i in /system/default.prop \
 	/system/system/build.prop \
-	/system/system/vendor/build.prop \
-	/system/system/etc/prop.default "$@"; do
+	/system/system/product/build.prop \
+	/vendor/default.prop \
+	/vendor/build.prop \
+	/prog/AIK-Linux/ramdisk/default.prop \
+	ramdisk/default.prop \
+	ramdisk/build.prop "$@"; do
 	[[ -r $i ]] || continue
 	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
 		-e "s/ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
@@ -25,7 +26,7 @@ for i in /prog/AIK-Linux/ramdisk/default.prop \
 		-e "s/ro.secure=1/ro.secure=0/" \
 		-e "s/ro.adb.secure=1/ro.adb.secure=0/" \
 		-e "s/ro.build.type=user$/ro.build.type=userdebug/" \
-		-e "s/release-keys/test-keys/" \
+		-e "s/ro.config.dmverity=.*/ro.config.dmverity=false/" \
 		-e "s/persist.sys.usb.config=.*/persist.sys.usb.config=mtp,adb/" \
 		-e "s/#ro.boot.selinux=disable/ro.boot.selinux=disable/" \
 		-e "s/ro.selinux=0/ro.selinux=1/" \
@@ -43,14 +44,22 @@ for i in /prog/AIK-Linux/ramdisk/default.prop \
 		-e "s/=cortex-a7$/=cortex-a53/" \
 		-e "s/ro.platform.has.pppoe=true$/ro.platform.has.pppoe=false/" \
 		-i "$i"
+	ANBG "Edited $i${R}\n"
 done
+#for file in /nvdata/fstab* /vendor/etc/fstab.mt6765; do
+#	sed -e "s|,encryptable=/dev/block/platform/bootdevice/by-name/metadata||" \
+#		-e "s|,quota||" \
+#		-e "s|,encryptable=userdata||" \
+#		-i "$file"
+#done
+rm -v /vendor/etc/fstab.enableswap
 #	-e "s/ro.secure=1$/ro.secure=0/" \
 #-e "s/adb.secure=1/adb.secure=0/" \
 #	-e "s/persist.sys.usb.config=.*/persist.sys.usb.config=adb/" \
 
 #	-e "s/=verify-profile$/=everything/" \
 #	-e "s/=speed$/=everything/" \
-for i in init.rc ramdisk/init.rc output/initrd/init.rc; do
+for i in init.rc /init.rc ramdisk/init.rc output/initrd/init.rc; do
 	[[ -e $i ]] || continue
 	sed -e "s|write /proc/sys/kernel/sysrq 0|write /proc/sys/kernel/sysrq 1|" -i "$i"
 done
@@ -64,7 +73,7 @@ done
 #	cat $cmdline >$to_edit
 #i
 
-if [[ -e /system/etc/gps.conf ]]; then
+if [[ -e /system/system/etc/gps.conf ]]; then
 	sed -e "s|SUPL_HOST=NONE|SUPL_HOST=supl.google.com|" -i /system/etc/gps.conf
 fi
 
@@ -72,14 +81,6 @@ fi
 #	[[ -e $fstab ]] || continue
 #	sed -e "s|barrier=1|barrier=0|" -e "s|discard|nodiscard|" -e "s|/dev/block/zram0.*|##|" -i "$fstab"
 #done
-
-if [[ ! -e /sdcard/bbx.conf ]] && [[ -e /sdcard ]]; then
-	ANLG "What folllows, friends, is bullshit comin from $V$dot/bin/proper$LG I should concatanate in a better suited file$R\n"
-	cd /external_sd 2>/dev/null || cd $ex || cd /storage/????-???? || cd /sdcard || echo "Error!"
-	mkdir -p /sdcard/TWRP
-	/data/sbin/cp -avu sdcard/* /sdcard/ || cp -av sdcard/* /sdcard/
-	cp -av Open-GApps XposedInstaller smartbar_configs ssh bbx.conf /sdcard/ 2>/dev/null
-fi
 
 #i=boot/bootimg.cfg
 #[[ -e $i ]] && {

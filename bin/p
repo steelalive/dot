@@ -15,12 +15,7 @@ _ping() {
 
 suppress() { "$@" >/dev/null 2>&1; }
 ping_address() {
-	[[ $1 == long ]] && {
-		shift
-		relentless_ping "$@"
-		return "$?"
-	}
-	[[ $1 == long ]] || _ping -c1 -i0.2 -W1 "$1"
+	_ping -c1 -i0.2 -W1 "$1"
 	return $?
 }
 relentless_ping() {

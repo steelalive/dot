@@ -9,7 +9,7 @@ arg1="${1}"
 arg2="${2}"
 arg3="${3}"
 mkdir -p $HOME/.local/share/nano
-export EDITOR=nano VISUAL=$EDITOR
+#export EDITOR=nano VISUAL=$EDITOR
 edit_file() {
 	#	if [[ -e $1 ]]; then
 	#

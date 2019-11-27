@@ -1,6 +1,3 @@
-
-
-  set nocompatible
 " Add the dein installation directory into runtimepath
 set runtimepath+=~/.cache/vim/dein/repos/github.com/Shougo/dein.vim
 if dein#load_state('~/.cache/vim/dein')
@@ -132,7 +129,7 @@ set autoread          " automatically reread the file if it was changed from the
 set background=dark
 set backupdir=~/.cache/vim/backup
 set cindent
-set clipboard=unnamedplus " Copy & Paste with the system clipboard (the * register), no need to use the "* prefix when pasting or copying
+set clipboard=unnamedplus
 set colorcolumn=0
 set completeopt=menu,menuone,preview
 set cpoptions=aAceFs_dB
@@ -140,7 +137,7 @@ set cursorline        " highlight current line
 set directory=~/.cache
 set encoding=utf-8    " usually the case rather than latin1
 set expandtab         " tabs are converted into spaces
-set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+"set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 
 "set fillchars=vert:│,fold:·
 set grepprg=grep\ -nH\ $*
@@ -153,7 +150,7 @@ set history=1000      " save a much longer history (default 50) of commands and 
 set hlsearch          " high light search results
 set ignorecase        " ignore case when searching
 set incsearch         " display search results while writing
-set iskeyword=@,48-57,_,192-255,-
+"set iskeyword=@,48-57,_,192-255,-
 "set iskeyword+=-      " Treat dash separated words as word text objects (for ciw etc)
 "set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
 set nolist
@@ -175,7 +172,7 @@ set noshowmode        " Hide the default mode text (e.g. -- INSERT -- below the 
 set nospell
 set noswapfile
 set noundofile
-set nowb noswf noudf nobackup nowritebackup noswapfile noundofile
+set nowritebackup noswf noudf nobackup nowritebackup noswapfile noundofile
 set nowritebackup
 set pumheight=15
 set scrolloff=9       " center coursor
@@ -205,13 +202,6 @@ let mapleader=','
 let maplocalleader = ','
 syntax enable         " enables syntax highlighting
 
-if (empty($TMUX))
-  if (has('nvim'))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  endif
-  if (has('termguicolors'))
-  endif
-endif
 hi! Normal ctermbg=NONE guibg=NONE
 hi! NonText ctermbg=NONE guibg=NONE
 let  g:solarized_termcolors= 256
@@ -230,7 +220,7 @@ nnoremap ; :
 function! s:super_duper_tab(k, o)
   let line = getline('.')
   let col = col('.') - 2
-  if !empty(line) && line[col] =~ '\k' && line[col + 1] !~ '\k'
+  if !empty(line) && line[col] =~? '\k' && line[col + 1] !~? '\k'
     return a:k
   else
     return a:o

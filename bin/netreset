@@ -59,6 +59,7 @@ for service in NetworkManager.service \
 	connman-vpn.service \
 	kea-idhcp4.service \
 	kea-dhcp6.service \
+	avahi-daemon \
 	wpa_supplicant \
 	dhclient; do
 	case $1 in

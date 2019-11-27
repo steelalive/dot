@@ -53,7 +53,7 @@ which_network() {
 which_network $1
 TXPOWER=${TXPOWER:-20}
 NET=${NET:-wlan0}
-case $(ip link | command grep -o -E "wlan[0-9]" | wc -l) in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac
+case $(ip link | command grep -o -E "wlan[0-9]ip link | command grep -o -E "wlan[0-9]" | wc -l" | wc -l) in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac
 if ip link | grep -o "wlp.*:" &>/dev/null; then NET=$(ip link | grep -o "wlp.*:" | sed "s/://"); fi
 if ip link | grep "24:05:0f:ea:36:6c" &>/dev/null; then
 	NET=$(ip link | grep "24:05:0f:ea:36:6c" --before-context=1 | head -n1 | awk '{print $2}' | sed 's/://')
@@ -74,7 +74,8 @@ while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	ANG "$NET${W} on ${G}$WPCONF${R}\\n"
 	ip link set "$NET" up
 	s1 222
-	wpa_supplicant -Dnl80211 -B -i"$NET" -c"$WPCONF"
+	#	wpa_supplicant -Dnl80211 -B -i"$NET" -C $(wpa_passphrase $(grep '#3' /last/wifi.txt | cut -d' ' -f2-3))
+	wpa_supplicant -Dnl80211 -B -i"$NET" -c$dot/bin/wpa_supplicant.conf
 	s1 133
 	center_string "${RED}${UNDER}DHCPCD${R}\\n"
 	s1 189

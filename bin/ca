@@ -28,6 +28,8 @@ if [[ ! -t 0 ]]; then
 fi
 if [[ -e $1 ]]; then
 	highlight_bat "$1"
+	exit
+
 fi
 if [[ ! -e $1 ]]; then
 	search="$(on -s "$1" echo)"

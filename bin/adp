@@ -20,14 +20,15 @@ export ADB_KEYS_LOCATION tmp_serial su_bin ex adb files_to_copy
 if ! $adb devices | grep 'device$' &>/dev/null; then
 	[[ $1 ]] || exit
 fi
-adb root &>/dev/null
+$adb root &>/dev/null
+$adb remount
 sutest() {
 	$adb shell "su -c ls $1 &>/dev/null && echo $1" | grep $1 &>/dev/null
 
 }
 remnt() {
 	adbsu "busybox mount -o rw,remount,rw /"
-	adbsu "busybox mount -o rw,remount,rw /system"
+	adbsu "busybox mount -o rw,remount,rw /vendor"
 	adbsu "/data/dot/bin/remnt"
 	$adb remount 2>/dev/null
 }
@@ -143,17 +144,12 @@ tabip | adbtab)
 	▏ shift
 	▏ export ANDROID_SERIAL=192.168.0.9:5555
 	▏ adbconnect "$adb"
-	:sa
-
-	:sa
 	▏ echo_adbconnect
 	▏ echo export ANDROID_SERIAL=$ANDROID_SERIAL >$tmp_serial
 	▏ push_key
 	▏ exit
 	;;
-
-\
-	g4u* | g4_* | usb)
+g4u* | g4_* | usb)
 	shift
 	#export ANDROID_SERIAL=0123456789ABCDEF
 	ANG "Connected to usb adb\n"
@@ -256,7 +252,7 @@ push)
 		ANRED "$ex \$ex is not defined.\n"
 		exit
 	}
-	$(($# == 1)) && set -- $1 $ex/Download/
+	(($# == 1)) && set -- $1 $ex/Download/
 	echo $adb push "$@"
 	$adb push "$@"
 	exit
@@ -296,7 +292,9 @@ pushall | sync-delete)
 	adbsu "setenforce 0"
 	ANLO "Full sync in progress...\n"
 	adbsyncdot
-	$adb push --sync /last/misc-android $ex/
+	#	$adb push --sync /last/misc-android $ex/
+	$adb shell bash /data/dot/slash/pushthem
+	adb shell bash /data/dot/slash/etc/rc
 	ANG 'Sync completed! \n'
 	exit
 	;;
@@ -326,18 +324,13 @@ ota)
 	;;
 log)
 	shift
-	adbde shell setenforce 0
-	if $adb logcat --help | grep -q '\--format='; then
-		$adb logcat --format=color
-	else
-		adb logcat -v color "$@"
-	fi
+	adb logcat -v color "$@"
 
 	exit
 	;;
 shell)
 	shift
-	adbde shell "$@"
+	$adb shell "$@"
 	exit
 	;;
 adbkey* | pushkey*)
@@ -360,8 +353,7 @@ skip)
 	}
 	adbsyncdot
 	$adb shell
-	adbsyncdot
-	+user -R /dot
+	#+user -R /dot
 	;;
 esac
 return || exit

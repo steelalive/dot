@@ -8,4 +8,4 @@ is_in_path grc && /usr/bin/grc -es --colour=auto date && /usr/bin/grc -es --colo
 ANBG "Environment updated successfully!$R\n"
 printf "%b" "\x1b]0;$USER@$HOSTNAME $SSH_TTY\007"
 is_in_path fortune && fortunes
-$dot/bin/p &>/dev/null && is_in_path lynx && /bin/lynx -dump http://www.commandlinefu.com/commands/random/plaintext | head -n 5 | tail -n 1 | ca
+$dot/bin/p &>/dev/null && is_in_path lynx && /bin/lynx -dump http://www.commandlinefu.com/commands/random/plaintext | head -n 6 | tail -n 1 | ca

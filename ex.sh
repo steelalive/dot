@@ -50,6 +50,7 @@ pgrep ssh-agent &>/dev/null || ssh-agent >/tmp/ssh-agent 2>/dev/null
 if [[ $HOSTNAME == PC ]]; then
 	SSH_KEY_PATH="/root/.ssh/id_rsa"
 	#	rs /dot /last/Acreation/ &>/dev/null
+	zip -rq -FS /last/dot.zip /dot &>/dev/null
 	stfu ssh-add "$SSH_KEY_PATH"
 fi
 
@@ -129,6 +130,7 @@ is_in_path locale-gen && echo " " >/etc/locale.conf && for loc in LANG LC_CTYPE 
 done
 
 : "${MANPATH=$(manpath 2>/dev/null)}"
+aik=/ext/AIK-Linux
 ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx8G"
 ARG10='arg0 Arg1 aRg2 arG3 ARG4 arg5 ArG6 arg7 arg8 arg9 arg10 ARG11'
 BACKUP="/last/BACKUP"
@@ -187,10 +189,10 @@ DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
 GREP_COLORS='ms=38;5;226:mc=02;33:sl=01;37:cx=01;36:fn=35:ln=32:bn=32:se=36'
 FZF_DEFAULT_COMMAND="fd"
-JAVA_HOME=/usr/lib/jvm/default
+JAVA_HOME='/usr/lib/jvm/default'
 HH_CONFIG='hicolor'
 HIGHLIGHT_DATADIR='/usr/share/highlight'
-HISTCONTROL=ignoredups:ignorespace:erasedups
+HISTCONTROL='ignoredups:ignorespace:erasedups'
 HISTIGNORE="&:cd:..:...:ls:la:lad:lsd:[bf]g:exit:yy"
 HISTFILE="$dot/.histfile"
 HISTFILESIZE=500000
@@ -262,7 +264,7 @@ netmask='255.255.255.0'
 no_proxy='localhost,127.0.0.1,localaddress,.localdomain.com'
 pc='192.168.0.20'
 tv='192.168.0.9'
-cell='192.168.0.129'
+cell='192.168.0.70'
 [[ ! -e /oem ]] && ex="/storage/B5A4-1BFB"
 [[ -e "$dot"/slash ]] && export slash="$dot"/slash
 [[ -e "$dot"/bin/wp ]] && eval "$(grep -m1 'WPCONF' "$dot"/bin/wp | sed 's/\[\[.*&& //')"

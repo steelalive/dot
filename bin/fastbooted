@@ -16,8 +16,8 @@ recovery_mod="$power/rooted-rom/recovery.img"
 recovery_stock="$power/rom/recovery.img"
 recovery_aik="/ext/AIK-Linux/image-new.img"
 preloader_mod="$power/rooted-rom/preloader_bm65_bsp.bin"
-lk_mod="$power/rooted-rom/1.5_lk.img"
-lk_stock="$power/rom/lk_no5.img"
+lk_mod="$power/rooted-rom/lk.img"
+lk_stock="$power/rom/lk.img"
 boot="$power/rooted-rom/boot.img"
 by_name='boot 
 boot_para 
@@ -75,6 +75,9 @@ case $1 in
 unlock)
 	fastb flashing unlock
 	fastb flashing unlock_critical
+	fastboot --disable-verification --disable-verity flash vbmeta /last/power/rom/vbmeta.img
+	fastb format:ext4 userdata
+	exit
 	;;
 
 lk)
@@ -87,6 +90,7 @@ aik)
 	fasterase lk lk2 recovery
 	fastb flash lk "$lk_mod"
 	fastb flash lk2 "$lk_mod"
+	#	fastb flash preloader "$preloader_mod"
 	fastb flash recovery "$recovery_aik"
 	fastreboot "$@" && exit
 	#	fastb flash boot "$boot"
@@ -108,7 +112,6 @@ twrp)
 	fasterase recovery lk lk2
 	fastb flash lk "$lk_mod"
 	fastb flash lk2 "$lk_mod"
-	fastb flash preloader "$preloader_mod"
 	fastb flash recovery "$recovery_mod"
 	#	fastb flash boot "$boot"
 	#	fastb boot "$recovery_mod" &&

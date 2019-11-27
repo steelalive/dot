@@ -6,13 +6,13 @@
 
 #wp check for wirelless porn. If there is porn still on the internet, we may continue.
 wp || exit
-
+ntponce
 #I like the ccache to proudly display my name.
 [[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR 2>/dev/null
 
 #Here, I update things.
 suuser "yay -Syu --devel --needed --noconfirm" || {
-	ANBRED "Error pamcan -Syu!$R\n"
+	ANBR "Error pamcan -Syu!$R\n"
 	exit
 }
 suuser "yay -S --needed --noconfirm -ua"
@@ -67,8 +67,11 @@ paccache --keep 1 --verbose --remove
 	fi
 	cpan -u
 
+	if cd $dot/.dotfiles2; then
+		make update
+	fi
 	### Neovim setup ###
-	cd /root/.config/nvim || echo no && {
+	cd /root/.config/nvim && {
 		gitreset
 		local="$dot/root/folders/.config/nvim/local.vim"
 		init="$HOME/.config/nvim/init.vim"
@@ -77,11 +80,16 @@ paccache --keep 1 --verbose --remove
 		fi
 		unset local init
 		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es
-		if cd $dot/root/.dotfiles2; then
-			make update
-		fi
 	}
 	###CHeck for mising files or disparities with pacman database
 	paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer"
+	pacfixer() {
+		prog=$(paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer" | cut -d: -f1 | sort | uniq)
+		for i in $prog; do
+			ANW "Program ${RED}$i ${W}need fixing\n"
+			suuser yay "$i"
+		done
+	}
+	pacfixer "$@"
 }
 ### END Neovim setup ###
