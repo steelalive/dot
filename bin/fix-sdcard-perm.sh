@@ -1,4 +1,4 @@
-#!/sbin/sh
+#!sh
 # sdcard Fix Permissions: Recovery Flashable Zip
 # osm0sis @ xda-developers
 

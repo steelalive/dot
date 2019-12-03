@@ -84,7 +84,7 @@ paccache --keep 1 --verbose --remove
 	###CHeck for mising files or disparities with pacman database
 	paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer"
 	pacfixer() {
-		prog=$(paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer" | cut -d: -f1 | sort | uniq)
+		prog=$(paccheck --list-broken | grep -v -e "cw" -e "memtest86+" -e "linux" -e "system-config-printer" -e "htop" -e "discover" -e "gtop" -e "how2" | cut -d: -f1 | sort | uniq)
 		for i in $prog; do
 			ANW "Program ${RED}$i ${W}need fixing\n"
 			suuser yay "$i"

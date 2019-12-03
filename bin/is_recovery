@@ -1,0 +1,9 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu Nov 28 12:34:33 EST 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-11-28#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/is_recovery_#######################..::#3#
+[[ -e /external_sd ]]
+
+

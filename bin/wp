@@ -51,6 +51,12 @@ which_network() {
 	esac
 }
 which_network $1
+choose_network() {
+	awk '{print $1"| PASS:|"$2"| BSSID:|"$3"| |"$4"|" }' /last/wifi.txt
+	ANG "Please choose a number...\n"
+	read number
+}
+[[ $1 == sw ]] && choose_network
 TXPOWER=${TXPOWER:-20}
 NET=${NET:-wlan0}
 case $(ip link | command grep -o -E "wlan[0-9]ip link | command grep -o -E "wlan[0-9]" | wc -l" | wc -l) in 4) NET=wlan3 ;; 3) NET=wlan2 ;; 2) NET=wlan1 ;; 1) NET=wlan0 ;; *) echo no wireless ;; esac
@@ -75,7 +81,11 @@ while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	ip link set "$NET" up
 	s1 222
 	#	wpa_supplicant -Dnl80211 -B -i"$NET" -C $(wpa_passphrase $(grep '#3' /last/wifi.txt | cut -d' ' -f2-3))
-	wpa_supplicant -Dnl80211 -B -i"$NET" -c$dot/bin/wpa_supplicant.conf
+	if [[ $number ]]; then
+		wpa_supplicant -Dnl80211 -B -i"$NET" -C$(wpa_passphrase $(grep "#$number" /last/wifi.txt | cut -d' ' -f2-3))
+	else
+		wpa_supplicant -Dnl80211 -B -i"$NET" -c$dot/bin/wpa_supplicant.conf
+	fi
 	s1 133
 	center_string "${RED}${UNDER}DHCPCD${R}\\n"
 	s1 189

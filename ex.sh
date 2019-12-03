@@ -50,7 +50,7 @@ pgrep ssh-agent &>/dev/null || ssh-agent >/tmp/ssh-agent 2>/dev/null
 if [[ $HOSTNAME == PC ]]; then
 	SSH_KEY_PATH="/root/.ssh/id_rsa"
 	#	rs /dot /last/Acreation/ &>/dev/null
-	zip -rq -FS /last/dot.zip /dot &>/dev/null
+	zip -rq -FS /last/dot.zip $dot/* $dot/.dir_colors &>/dev/null
 	stfu ssh-add "$SSH_KEY_PATH"
 fi
 
@@ -220,7 +220,7 @@ MANPAGER='less'
 MOST_EDITOR="$EDITOR %s %d"
 NETMASK='255.255.255.0'
 NOCOLOR_PIPE=1
-PACKAGER="${PACKAGER:-steelalive}"
+PACKAGER="${PACKAGER:-steelalive@github.com}"
 PAGER='less'
 QT_LOGGING_RULES="*=false"
 RESOLV_MULTI='on'

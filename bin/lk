@@ -45,14 +45,18 @@ unset search
 	eval "$(dircolors --sh /dot/.dir_colors)"
 }
 if ! [[ $file_count -le $((LINES - 3)) ]]; then
-	command \dir --group-directories-first --color=auto $lsopt -A "$@"
-	#is_in_path ls++ && command \ls++ $lsopt --potsf --all "$@"
+	if is_recovery; then
+		/sbin/ls --group-directories-first --color=auto $lsopt -A "$@"
+	else
+		command \ls --group-directories-first --color=auto $lsopt -A "$@"
+	fi
+elif command -v exa &>/dev/null; then
+	exa -Fb --git --long --all --group-directories-first --color=auto --color-scale $lsopt "$@"
+#is_in_path ls++ && command \ls++ $lsopt --potsf --all "$@"
 elif is_in_path ls++; then
 	command \ls++ $lsopt --potsf --all "$@"
 elif command -v lsd &>/dev/null; then
 	command \lsd --date relative --group-dirs first --all --classify --long "$@"
-elif command -v exa &>/dev/null; then
-	exa -Fb --git --long --all --group-directories-first --color=auto --color-scale $lsopt "$@"
 else
 	command \ls --group-directories-first -ApFChHbC --color=always --quote-name --quoting-style=shell-escape -L $lsopt "$@"
 fi

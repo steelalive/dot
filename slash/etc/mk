@@ -40,15 +40,17 @@ fi
 unset LD_PRELOAD LD_LIBRARY_PATH
 shopt -u execfail &>/dev/null
 #su_bin=/sbin/su
-[[ -x $su_bin ]] || su_bin="$(command -v su 2>/dev/null)"
-if [[ -x $su_bin ]]; then
-	if [[ $USER == root ]] || [[ -e /external_sd ]]; then
-		true
-	else
-		exec $su_bin 0 /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk || su 0 -l
-		#		shopt | grep autocd &>/dev/null || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
-	fi
+if [[ ! -e /external_sd ]]; then
+	[[ -x $su_bin ]] || su_bin="$(command -v su 2>/dev/null)"
+	if [[ -x $su_bin ]]; then
+		if [[ $USER == root ]] || [[ -e /external_sd ]]; then
+			true
+		else
+			exec $su_bin 0 -mm -s /data/dot/slash/sbin/bash || su 0 -l -mm
+			#		shopt | grep autocd &>/dev/null || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
+		fi
 
+	fi
 fi
 grep "bash" <<<"$0" || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
 
@@ -61,6 +63,7 @@ rm /bin 2>/dev/null || rmdir /bin 2>/dev/null
 mkdir -p /bin
 ln -s /data/dot/slash/sbin/bash /bin/bash
 [[ $PS1 ]] || return 0
+. "$dot/fn.sh"
 . /data/dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc
 #. $dot/setpath.sh
 shopt -s checkwinsize histappend
@@ -75,12 +78,11 @@ test ! -e /data/misc/adb/adb_keys && cp $ex/misc-android/adb_keys /data/misc/adb
 . "$dot/anset.sh"
 . "$dot/al.sh"
 . "$dot/ex.sh"
-. "$dot/fn.sh"
 
 if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
-	hash resize &>/dev/null && resize
+	hash resize &>/dev/null && eval resize
 fi
-eval $(dircolors --sh /data/dot/.dir_colors)
+is_there dircolors && eval $(dircolors --sh $dot/.dir_colors)
 #cp -avu $ex/dot /data/
 greet 2>/dev/null
 PS1='$ '

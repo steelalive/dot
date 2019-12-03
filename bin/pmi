@@ -70,5 +70,6 @@ com.google.android.googlequicksearchbox-*.apk"
 if [[ $1 == backup ]] || [[ $1 == titanium ]]; then
 	cd /sdcard/TitaniumBackup || exit
 	pminstall $ToInstall
+else
+	pminstall "$@"
 fi
-#pmi "$@"

@@ -22,7 +22,7 @@ recovery_miracle() {
 	select toybox in /last/misc-android/toybox*; do
 		break
 	done
-	cp -av "$bbox" .
+	cp -av "$bbox" ./
 	mv "$(basename $bbox)" ./busybox
 	cp -av "$toybox" ./toybox
 	cp -av /last/misc-android/ssl_helper-arm ssl_helper
@@ -41,13 +41,19 @@ recovery_miracle() {
 	ln -svf coreutils ls
 	[[ -e su ]] && echo rm su && rm -v su sulogin
 	ln -svf ../init ueventd
+	ln -svf ../init uevent
 	ln -svf ../init watchdogd
-	ln -svf busybox blkid
+	ln -svf ./busybox blkid
 	rm -v ./*.apk
 	#	chown -R 2000:2000 ./*
-	chmod 4755 busybox coreutils toybox nano nano.bin bash ssl_helper
-	cp -av $aik/ui/* $aik/ramdisk/twres/
+	chown -R 0:0 ./*
+	for exe in ./busybox ./coreutils ./toybox ./nano* ./bash ./ssl_helper; do
+		chmod 4777 "$exe"
+	done
 	cp -av $aik/prop.default $aik/ramdisk/
+	cp -av /last/misc-android/ui.zip $aik/ramdisk/twres/
+	cp -av $aik/ramdisk/sbin/zip $aik/ramdisk/twres/
+	echo mt-6765 >$aik/split_img/recovery.img-board
 }
 
 recovery_miracle "$@"

@@ -37,7 +37,7 @@ alias gitclone=". $dot/bin/gitclone "
 alias git='command \git --no-pager '
 alias l="command $dot/bin/lk $LS_OPTIONS -l "
 alias lkcat='cat /last/power/rooted-rom/lk.img | adb shell "dd of=/dev/block/by-name/lk"; adb reboot recovery'
-alias ll="lk -l "
+alias ll="exa -l "
 alias lh="lk -lH "
 alias lsl='lk -l '
 alias ip="command \ip -c -a -p -d -h "

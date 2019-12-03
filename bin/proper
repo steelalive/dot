@@ -4,6 +4,7 @@
 #3#::..#####################_/dot/bin/propper_#######################..::#3#
 # vi: set filetype=sh:
 export cmd=' androidboot.selinux=permissive buildvariant=eng threadirqs nowatchdog fsck.repair=yes commit=30 errors=remount-ro rootfstype=ext4 raid=noautodetect plymouth.enable=0 smsc95xx.turbo_mode=N net.ifnames=0 noatime libahci.ignore_sss=1 cgroup_disable=memory sysrq_always_enabled'
+export PATH=$PATH:/data/dot/bin:/data/dot/bin/final:/data/dot/slash/sbin
 mount /system
 mount /vendor
 mount /nvdata
@@ -11,25 +12,35 @@ mount /nvdata
 mount -o remount,rw /vendor
 mount -o remount,rw /nvdata
 
-for i in /system/default.prop \
+for i in $(find /vendor -name default.prop) \
+	$(find /system -name default.prop) \
+	$(find /vendor -name prop.default) \
+	$(find /system -name prop.default) \
+	$(find /vendor -name build.prop) \
+	$(find /system -name build.prop) \
+	/system/default.prop \
 	/system/system/build.prop \
 	/system/system/product/build.prop \
-	/vendor/default.prop \
 	/vendor/build.prop \
 	/prog/AIK-Linux/ramdisk/default.prop \
 	ramdisk/default.prop \
+	/system/system/etc/prop.default \
 	ramdisk/build.prop "$@"; do
-	[[ -r $i ]] || continue
+	rpath+="$(realpath "$i")"
+done
+healme="$(sort <<<$rpath | uniq)"
+for tosed in $healme; do
+	[[ -r $tosed ]] || continue
 	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
 		-e "s/ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
 		-e "s/ro.debuggable=0/ro.debuggable=1/" \
 		-e "s/ro.secure=1/ro.secure=0/" \
 		-e "s/ro.adb.secure=1/ro.adb.secure=0/" \
+		-e "s/ro.product.cpu.abilist64=/ro.product.cpu.abilist64=arm64-v8a/" \
+		-e "s/ro.product.cpu.abilist=armeabi-v7a,armeabi/ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi/" \
 		-e "s/ro.build.type=user$/ro.build.type=userdebug/" \
-		-e "s/ro.config.dmverity=.*/ro.config.dmverity=false/" \
-		-e "s/persist.sys.usb.config=.*/persist.sys.usb.config=mtp,adb/" \
+		-e "s|ro.build.tags=release-keys|ro.build.tags=test-keys|" \
 		-e "s/#ro.boot.selinux=disable/ro.boot.selinux=disable/" \
-		-e "s/ro.selinux=0/ro.selinux=1/" \
 		-e "s/MM-dd-yyyy/dd-MM-yyyy/" \
 		-e "s/ro.storage_manager.enabled=1/ro.storage_manager.enabled=0/" \
 		-e "s/=en-US$/=en-CA/" \
@@ -43,8 +54,8 @@ for i in /system/default.prop \
 		-e "s|=q9377$|=S912|" \
 		-e "s/=cortex-a7$/=cortex-a53/" \
 		-e "s/ro.platform.has.pppoe=true$/ro.platform.has.pppoe=false/" \
-		-i "$i"
-	ANBG "Edited $i${R}\n"
+		-i "$tosed"
+	ANBG "Edited ${tosed}${R}...\\n${R}"
 done
 #for file in /nvdata/fstab* /vendor/etc/fstab.mt6765; do
 #	sed -e "s|,encryptable=/dev/block/platform/bootdevice/by-name/metadata||" \
@@ -52,7 +63,7 @@ done
 #		-e "s|,encryptable=userdata||" \
 #		-i "$file"
 #done
-rm -v /vendor/etc/fstab.enableswap
+[[ -e /vendor/etc/fstab.enableswap ]] && rm -v /vendor/etc/fstab.enableswap
 #	-e "s/ro.secure=1$/ro.secure=0/" \
 #-e "s/adb.secure=1/adb.secure=0/" \
 #	-e "s/persist.sys.usb.config=.*/persist.sys.usb.config=adb/" \
@@ -73,9 +84,12 @@ done
 #	cat $cmdline >$to_edit
 #i
 
-if [[ -e /system/system/etc/gps.conf ]]; then
-	sed -e "s|SUPL_HOST=NONE|SUPL_HOST=supl.google.com|" -i /system/etc/gps.conf
-fi
+#if [[ -e /system/system/etc/gps.conf ]]; then
+#	sed -e "s|SUPL_HOST=NONE|SUPL_HOST=supl.google.com|" -i /system/etc/gps.conf
+#fi
+cp -av $slash/etc/gps.conf /vendor/etc/
+cp -av $slash/etc/gps.conf $sys/etc/
+chmod 644 /vendor/etc/gps.conf $sys/etc/gps.conf
 
 #for fstab in fstab.amlogic ramdisk/fstab.amlogic initrd/fstab.amlogic ramdisk/fstab fstab ramdisk/fstab.qcom fstab.qcom; do
 #	[[ -e $fstab ]] || continue

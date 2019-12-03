@@ -84,6 +84,7 @@ cmdcompile() {
 		fstrim /system
 		fstrim /data
 		fstrim /cache
+		fstrim /vendor
 	fi
 }
 
@@ -92,7 +93,7 @@ hash remnt &>/dev/null && remnt
 unalias src 2>/dev/null
 
 pminstall() {
-	[[ $1 ]] || command \ls ./*.apk
+	[[ $1 ]] || select apk in ./*.apk; do yorn y || break; done
 	for apk; do
 		ANLO "Installing $apk ...\n"
 		pm install --user 0 -r -g "$apk"
@@ -115,17 +116,24 @@ if $LS_BIN --help 2>&1 | grep 'group-directories-first'; then
 fi
 export LS_OPTIONS="$LS_OPTIONS -AHhpFl --color "
 
-ls() { "$LS_BIN" $LS_OPTIONS "$@"; }
 command -v coreutils && ls() { coreutils --coreutils-prog=ls $LS_OPTIONS; }
+is_recovery && ls() { /sbin/ls $LS_OPTIONS; }
 fixpart() {
-	for i in $(blkid | cut -d: -f1); do
+	command -v fstrim && {
+		for i in vendor system data cache; do
+			mount "/$i"
+			fstrim "/$i"
+			umount "/$i"
+		done
+	}
+	for i in $(/sbin/busybox blkid | cut -d: -f1); do
 		echo "##############################---${i}---#######################################"
 		umount "$i" 2>/dev/null
 		/sbin/e2fsck -fp "$i" 2>/dev/null
 		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
 		resize2fs $i
 		[[ $1 == t ]] && /sbin/tune2fs -c 30 -m 1 -o journal_data_writeback,nobarrier "$i"
-		echo "###############################---${i}---#######################################"
+		echo "##############################---${i}---#######################################"
 	done
 	fat=/dev/block/mmcblk1p1
 	umount $fat 2>/dev/null
@@ -134,6 +142,12 @@ fixpart() {
 	fsck_msdos $fat 2>/dev/null
 	fsck.vfat $fat 2>/dev/null
 
+}
+2sysEchoApp() {
+	for keyword in "$@"; do
+		datapath="$(printf "%s\n" /data/app/* | grep "$keyword")"
+		echo "$datapath"
+	done
 }
 
 nano=$termuxbin/nano || unset nano
@@ -201,8 +215,10 @@ if [[ -e /external_sd ]] && [[ -x /sbin/sh ]]; then
 	[[ -x /system/bin ]] || cp -a /sbin/sh /system/bin/
 fi
 if ! grep 'KEEPVERITY=false' /data/.magisk; then
-	echo KEEPVERITY=false >>/data/.magisk
-	echo KEEPFORCEENCRYPT=false >>/data/.magisk
+	echo "KEEPVERITY=false
+KEEPFORCEENCRYPT=false
+RECOVERYMODE=false" >>/data/.magisk
+
 fi
 #if ! $bb grep "/data/dot/slash" /system/etc/init.d/90userinit; then
 #	mkdir -p /system/etc/init.d

@@ -293,8 +293,12 @@ pushall | sync-delete)
 	ANLO "Full sync in progress...\n"
 	adbsyncdot
 	#	$adb push --sync /last/misc-android $ex/
+	$adb shell twrp install /external_sd/misc-android/'Decrypt Power.zip'
+	$adb push /last/wifi.txt $ex
 	$adb shell bash /data/dot/slash/pushthem
-	adb shell bash /data/dot/slash/etc/rc
+	$adb shell bash /data/dot/slash/etc/rc
+	$adb push /last/dot.zip $ex
+
 	ANG 'Sync completed! \n'
 	exit
 	;;
@@ -319,7 +323,7 @@ ota)
 	result="$(printf "%s" $O/target/product/*)"
 	$adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip ||
 		$adb push $result/lineage_*-ota-eng.root.zip /sdcard/Download/lineage.zip
-	abg "${G}Reboot recovery?\\n"
+	ANG "${G}Reboot recovery?\\n"
 	yorn && $adb reboot recovery
 	;;
 log)
@@ -356,7 +360,7 @@ skip)
 	#+user -R /dot
 	;;
 esac
-return || exit
+exit
 
 [[ $su_bin ]] && { sutest $su_bin &>/dev/null || unset su_bin; }
 [[ $su_bin ]] || su_bin="$($adb shell command -v su 2>/dev/null)"
