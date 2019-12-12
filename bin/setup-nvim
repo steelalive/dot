@@ -1,9 +1,20 @@
 #!/bin/bash
 #-*- coding: utf-8 -*-
-#1#_SCRIPT_#1# - by: steelalive
+:q#1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Thu May 17 16:56:54 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.0 - #_# #@#170518#@# #2#
 #3#::..#####################_/dot/bin/nvim-setup_#######################..::#3#
 # vi: ft=sh:noro:
+nvim_link() {
+	rm -rf /root/.vim
+	lnr /root/.config/nvim /root/.vim
+	local="$dot/root/folders/.config/nvim/local.vim"
+	init="$HOME/.config/nvim/init.vim"
+	if ! grep -q "$local" $init; then
+		echo "source $local" >>"$init"
+	fi
+	unset local init
+
+}
 nvim-config() {
 	cd /
 	HOME=${HOME:-/root}
@@ -81,7 +92,20 @@ $sudo	pip install --upgrade pycodestyle pyflakes flake8 vim-vint proselint yamll
         venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim3/bin/pip" install -U pip --upgrade pip;venv="${XDG_CACHE_HOME:-$HOME/.cache}/vim/venv"; "$venv/neovim2/bin/pip" install -U pip --upgrade pip' | ca
 
 	;;
+space*)
+	rm -rfv $HOME/.config/nvim
+	lnr $dot/.SpaceVim $HOME/.config/nvim
+	lnr $dot/.SpaceVim.d $HOME/
+	gitreset
+
+	nvim-link
+
+	cd /root/.config/nvim || exit
+	;;
 *)
+
 	nvim-config "$@"
 	;;
 esac
+nvim_link
+nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es

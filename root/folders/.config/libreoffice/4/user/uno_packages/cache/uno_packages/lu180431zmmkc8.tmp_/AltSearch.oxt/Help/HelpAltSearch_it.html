@@ -1,0 +1,1259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1250">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.2  (Win32)">
+	<META NAME="CREATED" CONTENT="20070419;21585700">
+	<META NAME="CHANGED" CONTENT="20100428;10040500">
+	<META NAME="Informace 1" CONTENT="">
+	<META NAME="Informace 2" CONTENT="">
+	<META NAME="Informace 3" CONTENT="">
+	<META NAME="Informace 4" CONTENT="">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin-left: 2.21cm; margin-right: 2.21cm }
+		P { margin-bottom: 0.2cm; line-height: 100% }
+		P.western { font-family: "Arial", sans-serif; font-size: 11pt }
+		H1 { margin-top: 0cm; margin-bottom: 0.31cm; color: #800000; text-align: center }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt; font-style: normal }
+		H6 { margin-top: 0cm; margin-bottom: 0.2cm; color: #2300dc; text-align: left; page-break-before: auto; page-break-after: auto }
+		H6.western { font-family: "Arial", sans-serif; font-size: 12pt; font-style: italic }
+		H6.cjk { font-family: "HG Mincho Light J"; font-size: 10pt }
+		H6.ctl { font-family: "Arial Unicode MS"; font-size: 10pt }
+		TT { color: #00ae00; background: transparent }
+		TT.western { font-size: 11pt; font-weight: bold }
+		DFN { color: #800000 }
+		DFN.western { font-family: "Arial", sans-serif; font-weight: bold }
+		VAR { background: #cccccc; text-decoration: underline }
+		VAR.western { font-size: 10pt; font-style: normal }
+		SAMP.western { font-size: 10pt; font-style: normal; font-weight: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="it-IT" BGCOLOR="#fffacd" DIR="LTR">
+<H1 CLASS="western"><IMG SRC="img/altsearchz_26.png" NAME="graphics2" ALIGN=RIGHT WIDTH=49 HEIGHT=48 BORDER=0>Macro
+AltSearch</H1>
+<P CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT FACE="Arial, sans-serif">(Finestra
+di dialogo alternativa per la voce Cerca e Sostituisci di Writer)</FONT></P>
+<P CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT FACE="Arial, sans-serif">Versione
+1.3.1</FONT></P>
+<P CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" ALIGN=CENTER>| <A HREF="#hlavnif">Che cosa offre
+questa estensione</A> | <A HREF="#hledat">Ricerca</A> | <A HREF="#nahradit">Sostituzione</A>
+| <A HREF="#davky">Modalit&agrave; Batch</A> | <A HREF="#omezeni">Limitazioni</A>
+| <A HREF="#historie">Storia delle modifiche</A> |</P>
+<P CLASS="western" ALIGN=CENTER><BR><BR>
+</P>
+<P CLASS="western"><B>Autore:</B> <A HREF="http://www.volny.cz/macrojtb/">Tomas
+Bilek &ndash; &copy; 2007-20</A>10<BR><B>Licenza:</B> LGPL, vedi
+<A HREF="http://www.volny.cz/macrojtb/0gnu-lgpl_en.html">http://www.volny.cz/macrojtb/0gnu-lgpl_en.html</A></P>
+<P CLASS="western" STYLE="background: transparent"><FONT SIZE=3>Questa
+versione della guida &egrave; stata tradotta in italiano da Leopoldo
+Saggin - &copy; 2009-2010</FONT></P>
+<P CLASS="western" STYLE="background: transparent"><FONT SIZE=3><B>Questa
+macro viene distribuita nella speranza che possa essere utile, ma
+SENZA ALCUN TIPO DI GARANZIA</B></FONT></P>
+<P CLASS="western" STYLE="margin-left: 0.99cm; background: transparent">
+<BR><BR>
+</P>
+<H6 CLASS="western"><A NAME="hlavnif"></A>Che cosa offre questa
+estensione rispetto alla finestra di dialogo Cerca e Sostituisci
+standard di OOo:</H6>
+<UL>
+	<LI><P CLASS="western">Selezione rapida di espressioni regolari
+	predefinite e complesse</P>
+	<LI><P CLASS="western">Conteggio del numero di occorrenze delle
+	espressioni trovate usando il pulsante <VAR CLASS="western">[ Conta
+	]</VAR></P>
+	<LI><P CLASS="western">Ricerca e/o sostituzione di stringhe
+	contenute in uno o pi&ugrave; paragrafi</P>
+	<LI><P CLASS="western">Ricerca e/o sostituzione di stringhe
+	contenenti caratteri decimali o esadecimali</P>
+	<LI><P CLASS="western">Ricerca di interruzioni manuali di pagina o
+	di colonna, loro eventuale inserimento o eliminazione</P>
+	<LI><P CLASS="western">Ricerca di un blocco di paragrafi delimitato
+	da due marcatori di testo</P>
+	<LI><P CLASS="western">Una volta trovata una stringa di testo,
+	possibilit&agrave; di espandere o di ridurre la selezione di uno
+	specifico numero di caratteri</P>
+	<LI><P CLASS="western">Possibilit&agrave; di effettuare ricerche e/o
+	sostituzioni multiple in un colpo solo</P>
+	<LI><P CLASS="western">Possibilit&agrave; di condurre ricerche nelle
+	Note, nei Campi di Testo, nei Riferimenti Incrociati e negli
+	Indicatori di Riferimento incrociato sia per contenuto, sia per
+	nome, sia per bersaglio dell&rsquo;azione degli indicatori;
+	possibilit&agrave; anche di un loro inserimento</P>
+</UL>
+<UL>
+	<LI><P CLASS="western">Possibilit&agrave; di effettuare ricerche in
+	Tabelle, Immagini e Cornici di testo in base al loro nome;
+	possibilit&agrave; di effettuare sostituzioni con qualsiasi testo,
+	contenuto del testo, nome dell&rsquo;oggetto o contenuto degli
+	Appunti (<I>Clipboard</I>)</P>
+	<LI><P CLASS="western">Ricerche e inserimento di Note a pi&egrave;
+	di pagina e di Note di chiusura (richiede OOo 2.3 o superiori).
+	Possibilit&agrave; di selezionare il testo di tutte le Note a pi&egrave;
+	di pagina o di tutte le Note di chiusura contemporaneamente,
+	assegnandogli uno stile qualsiasi</P>
+	<LI><P CLASS="western">Possibilit&agrave; di cercare un testo che
+	abbia formattazione simile o uguale a quella del del testo su cui &egrave;
+	posizionato il cursore</P>
+	<LI><P CLASS="western">Possibilit&agrave; di sostituzione
+	individuale di sotto-espressioni (fino ad un massimo di 9)
+	all&rsquo;interno della stringa di ricerca mediante loro inserimento
+	all&rsquo;interno di parentesi () e, riferendosi ad esse,
+	nell&rsquo;ambito delle stringhe di sostituzione, mediante l&rsquo;uso
+	dei parametri \1, \2 ...fino a \9 (nell&rsquo;ordine)</P>
+	<LI><P CLASS="western">Possibilit&agrave; di definire lo stile del
+	paragrafo, dei caratteri e degli elenchi in cui cercare e/o
+	sostituire testo; sue propriet&agrave; e URL di collegamento
+	ipertestuale (<I>hyperlink</I>)</P>
+	<LI><P CLASS="western">Possibilit&agrave; di sostituire il testo
+	trovato con il contenuto degli Appunti (<I>Clipboard</I>), con un
+	contatore del numero di sostituzioni o con il numero della pagina in
+	cui &egrave; avvenuto il ritrovamento</P>
+	<LI><P CLASS="western">Possibilit&agrave; di ridirigere i risultati
+	della sostituzione su un altro file di testo</P>
+	<LI><P CLASS="western">Modalit&agrave; Batch: possibilit&agrave; di
+	salvare su file e di caricare da questo i parametri di ricerca e di
+	sostituzione; possibilit&agrave; di salvare parecchie operazioni di
+	ricerca e di sostituzione in sequenza e di eseguire rapidamente, in
+	un tempo successivo e con un unico comando, l&rsquo;intero gruppo di
+	operazioni</P>
+	<LI><P CLASS="western">[v1.2] Possibilit&agrave; di assegnare delle
+	scorciatoie da tastiera alle operazioni batch salvate usando
+	direttamente la finestra di dialogo di AltSearch</P>
+	<LI><P CLASS="western">[v1.3] Mantenimento maiuscole: se il testo
+	trovato comincia con una lettera maiuscola, anche il testo
+	sostituito inizier&agrave; con una lettera maiuscola</P>
+	<LI><P CLASS="western">[v1.3] Ricerca per stile di caratteri;
+	possibilit&agrave; di scegliere uno stile dal menu</P>
+	<LI><P CLASS="western">[v1.3.1] Ricerca per stile di paragrafo o di
+	elenco tramite la casella di riepilogo &lsquo;Propriet&agrave;&rsquo;</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western">Se si usa frequentemente AltSearch, ecco un
+suggerimento per configurare le scorciatoie da tastiera:</P>
+<P CLASS="western">1. Aprire la voce di menu <B>Strumenti -
+Personalizza... - Tastiera</B></P>
+<P CLASS="western">2. Nel campo <B>Area</B>, selezionare
+<B>OpenOffice.org Macros - User </B><SPAN STYLE="font-weight: normal">(o
+</SPAN><B>Share</B><SPAN STYLE="font-weight: normal">)</SPAN> <B>-
+AltSearch - AltSearch</B></P>
+<P CLASS="western">3. Nel campo <B>Funzione</B>, conviene selezionare
+e assegnare le seguenti scorciatoie usando il pulsante
+<B>Cambia</B>:<BR>_AltSearch: Ctrl+H (per aprire la finestra di
+ricerca AltSearch);<BR>_FindNext: Ctrl+L (per cercare l&rsquo;occorrenza
+successiva della stringa cercata dopo il punto in cui &egrave;
+posizionato il cursore senza aprire la finestra di dialogo di
+AltSearch);<BR>_FindBack: Ctrl+Shift+L (per cercare l&rsquo;occorrenza
+della stringa cercata prima del punto in cui &egrave; posizionato il
+cursore senza aprire la finestra di dialogo di AltSearch)</P>
+<P CLASS="western">[v1.2] A partire dalla versione 1.2 si possono
+anche assegnare le scorciatoie direttamente dalla finestra di dialogo
+di AltSearch - vedi <A HREF="#davky">Modalit&agrave; Batch</A></P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+<H6 CLASS="western"><IMG SRC="img/altsearch_main_it.png" NAME="obrázky1" ALIGN=RIGHT HSPACE=6 WIDTH=480 HEIGHT=337 BORDER=0>Caselle
+di riepilogo sopra la casella di digitazione della stringa da cercare</H6>
+<P CLASS="western">Contengono le espressioni regolari complesse o
+frequentemente usate e altri parametri di ricerca che possono essere
+inseriti nella casella di digitazione dei criteri di ricerca. Dopo
+avere effettuato la scelta di una delle opzioni presenti nella
+casella di riepilogo, il relativo parametro viene trasferito nella
+casella di digitazione del parametro/stringa da ricercare e, qualora
+si specifichi anche questo criterio, anche nella casella di
+digitazione del parametro/stringa con cui effettuare la sostituzione.
+Le procedure di ricerca/sostituzione possono essere eseguite anche
+specificando ulteriori opzioni: prima o dopo il luogo in cui &egrave;
+posizionato il cursore e con sostituzione o meno dell&rsquo;espressione
+cercata. In ogni caso va contrassegnata la casella di controllo
+&quot;Espressioni regolari&quot;</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="hledat"></A>Ricerca</H6>
+<P CLASS="western">Casella di riepilogo &rsquo;<B>Regolari'</B></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm">Questa casella di
+riepilogo contiene alcune espressioni regolari molto utili che sono
+descritte nella Guida di OOo nell&rsquo;ambito del capitolo
+intitolato <A HREF="vnd.sun.star.help://sbasic/text/shared/01/02100001.xhp?Language=it&amp;System=UNIX">Elenco
+di Espressioni Regolari</A></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><A NAME="skupiny0"></A>
+<DFN CLASS="western">Limitazioni:</DFN> La sintassi usata nelle
+espressioni regolari non &egrave; totalmente compatibile con quella
+originale di OOo. Ci sono dei problemi specialmente nelle ricerche
+che usano i caratteri jolly <TT CLASS="western">*, +, ?</TT> o <TT CLASS="western">{n,n}</TT>
+se questi sono usati subito dopo le sotto-espressioni create
+utilizzando le parentesi ()<BR>Per esempio non &egrave; possibile
+trovare <TT CLASS="western">(Mi)?ster</TT> - questa ricerca funziona
+solo se usata in modo compatibile (v. sotto). In ogni caso per&ograve;,
+se si usa <VAR CLASS="western">[ Conta ]</VAR>, viene restituito il
+conteggio reale delle occorrenze. &Egrave; inoltre possibile cercare
+delle sotto-espressioni del tipo <TT CLASS="western">(.*)any</TT> o
+<TT CLASS="western">(.+)any</TT>, ma viene trovata l&rsquo;occorrenza
+<I>pi&ugrave; corta</I> corrispondente al criterio, contrariamente al
+sistema di ricerca standard di OOo che invece trova l&rsquo;occorrenza
+<I>pi&ugrave; lunga</I> corrispondente al criterio. Se &egrave;
+necessario conservare la compatibilit&agrave; con OOo, si pu&ograve;
+delimitare l&rsquo;intera espressione di ricerca con un ulteriore
+paio di parentesi: <TT CLASS="western">((Mi)?ster)</TT>.
+L&rsquo;inconveniente di questa modalit&agrave; &egrave; che non &egrave;
+possibile citare la sotto-espressione nell&rsquo;ambito della
+espressione di sostituzione; non &egrave; cio&egrave; possibile usare
+<TT CLASS="western">\#</TT> dove # &egrave; il numero di riferimento
+(max. 9) della sotto-espressione. Tanto meno si possono usare tali
+riferimenti alle sotto-espressioni nel caso si stiano eseguendo delle
+operazioni di ricerca e di sostituzione con uso di una espressione
+regolare. Vedi <A HREF="#skupiny">sotto-espressioni</A></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm">Altri parametri
+speciali dei caratteri jolly:</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\l</TT>
+- rappresenta qualsiasi carattere alfabetico; equivale cio&egrave;
+a<TT CLASS="western">[:alpha:]{1,1}</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\d
+</TT>- rappresenta una cifra decimale; equivale a <TT CLASS="western">[0-9]</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\p
+</TT>- rappresenta il segno di fine paragrafo</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">Contrariamente alla
+ricerca standard di OOo, il carattere <TT CLASS="western">$</TT>
+rappresenta anche un paragrafo vuoto. Con <TT CLASS="western">$</TT>
+&egrave; possibile usare anche caratteri jolly quali <TT CLASS="western">+</TT>,
+<TT CLASS="western">*</TT>, o <TT CLASS="western">{min,max}</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">\p{1,}</TT>
+- trova la fine del paragrafo successivo seguita da un numero
+illimitato di paragrafi vuoti. Equivale quindi a <TT CLASS="western">\p*</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">\p{2,4}</TT>
+- trova la fine del paragrafo successivo seguita da almeno uno e da
+un massimo di tre paragrafi vuoti, per un totale di 2-4 paragrafi,
+uno dopo l&rsquo;altro</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+La procedura &egrave; lenta. Possono sorgere dei problemi nel caso di
+in una ricerca a ritroso</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\xhhhh
+</TT>- abilita la ricerca di caratteri in codifica esadecimale (hhhh)</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\#ddddd
+</TT>- abilita la ricerca di caratteri in codifica di numero decimale
+(ddddd)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">Se il carattere
+successivo non &egrave; una cifra, non &egrave; necessario conservare
+tutte 5 le posizioni (ddddd); in caso contrario &egrave; necessario
+riempire le posizioni vuote con degli zero, a partire da sinistra</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\c
+</TT>- rappresenta una interruzione manuale di colonna</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+La procedura &egrave; lenta</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\m
+</TT>- rappresenta una interruzione manuale di pagina</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+La procedura &egrave; lenta. Se si usa anche la sotto-espressione <TT CLASS="western">()</TT>,
+il parametro <TT CLASS="western">\m</TT> deve trovarsi all&rsquo;inizio
+della stringa di ricerca e non deve essere da solo. &Egrave; cio&egrave;
+valida l&rsquo;espressione <TT CLASS="western">\m(...)</TT> ma non
+<TT CLASS="western">(...)\m</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\s
+</TT>- rappresenta qualsiasi spazio: normale, non divisibile,
+determinato da un carattere di tabulazione o da una interruzione
+manuale di riga</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">&Egrave; equivalente a
+<TT CLASS="western">[\xA0\x9\xA]</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\S
+</TT>- rappresenta uno spazio non divisibile (<TT CLASS="western">\x00A0
+</TT>or<TT CLASS="western"> \#160</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><BR><BR>
+</P>
+<P CLASS="western">Casella di riepilogo &rsquo;<B>Estesa'</B></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::BigBlock::]</TT>
+- cerca un blocco di paragrafi (di lunghezza illimitata) delimitato
+da qualche testo noto</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">start[::BigBlock::]end</TT>
+&ndash; in questo caso viene cercata dapprima la stringa <TT CLASS="western">start
+</TT>e quando viene trovata, viene cercata la stringa <TT CLASS="western">end</TT>.
+Se vengono trovate entrambe, viene selezionato l&rsquo;intero blocco
+di testo compreso fra di loro</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">Nella stringa di
+sostituzione si possono usare i parametri <TT CLASS="western">\b</TT>,
+<TT CLASS="western">&amp;</TT> o <TT CLASS="western">\e</TT> per
+inserire il contenuto di <TT CLASS="western">start</TT>,<TT CLASS="western">
+found block of paragraphs</TT> e <TT CLASS="western">end</TT>,
+rispettivamente</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+Nella stringa iniziale e finale non &egrave; possibile usare i segni
+<TT CLASS="western">||</TT> per ricerche e sostituzioni multiple (v.
+sotto)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::Grow
+n1,n2::]</TT> - il blocco di testo trovato viene espanso di <B>n1</B>
+caratteri a sinistra e di <B>n2</B> caratteri a destra</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Grow
+-1,-1::]text</TT> - in questo caso, se nel blocco di testo esiste la
+stringa <TT CLASS="western">text</TT>, essa verr&agrave; trovata, ma
+saranno selezionati solo i caratteri <TT CLASS="western">ex</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+&egrave; sempre necessario porre <TT CLASS="western">[::Grow...</TT>
+all&rsquo;inizio della stringa di ricerca: l&rsquo;espressione da
+cercare va posizionata dopo. Se n1 o n2 sono valori negativi, la
+successiva ricerca pu&ograve; determinare l&rsquo;insorgenza di un
+circolo vizioso perché viene trovata sempre la stessa occorrenza
+della stringa in funzione delle dimensioni e del contenuto
+dell&rsquo;espressione cercata</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">text1||text2||text3||&hellip;</TT>
+- operazione di ricerca e sostituzione multipla in un unico colpo</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">L&rsquo;aggiunta del
+segno <TT CLASS="western">||</TT> alla fine delle espressioni da
+cercare e sostituire serve a delimitare le ricerche e le sostituzioni
+parziali</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">Cerca per:
+<TT CLASS="western">text1||text2||text3</TT> <BR>Sostituisci con:
+<TT CLASS="western">neco1||neco2||neco3</TT> <BR>In questo caso viene
+cercata la stringa <TT CLASS="western">text1</TT> e viene sostituita
+da <TT CLASS="western">neco1</TT>. Poi la ricerca continua per la
+stringa <TT CLASS="western">text2</TT> che viene sostituita da <TT CLASS="western">neco2</TT>,
+ecc...</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+con <TT CLASS="western">||</TT> non si possono usare né il parametro
+<TT CLASS="western">[::BigBlock::]</TT> né le <A HREF="http://www.volny.cz/macrojtb/HelpAltSearch_en.html#skupiny">sotto-espressioni</A></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><DFN CLASS="western">Ricerca
+di Oggetti:</DFN></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::Note::]
+</TT>- cerca le Note di Testo (fumetti gialli) a seconda del loro
+contenuto</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Note::]
+</TT>- trova la nota di testo successiva</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Note::]pozn.
+</TT>- trova qualsiasi nota di testo contenente la sotto-stringa
+<TT CLASS="western">pozn.</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+nel contenuto delle note si possono cercare solo sotto-stringhe. Non
+&egrave; invece possibile usare le espressioni regolari standard</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::Field::]
+</TT>- cerca i Campi di Testo a seconda del loro contenuto</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Field::]
+</TT>- trova qualsiasi campo di testo normale</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Field::]obsah</TT>
+- trova quei campi di testo del documento che hanno il testo <TT CLASS="western">obsah</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+le stesse di <TT CLASS="western">[::Note::]</TT>. (v. sopra)<BR>Inoltre
+qualsiasi campo di tipo speciale (per esempio un campo nascosto) non
+viene trovato</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::TextFrame::]
+</TT>- cerca le Cornici di Testo a seconda del loro nome</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::TextFrame::]
+</TT>- trova qualsiasi cornice di testo</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::TextFrame::]rám1
+</TT>- trova quelle cornici di testo che contengono nel loro nome la
+sotto-stringa <TT CLASS="western">rám1</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">1. Utilizzando il
+pulsante <VAR CLASS="western"><U><B>[ Trova ]</B></U></VAR>, viene
+trovata la successiva cornice di testo solo se essa &egrave;
+selezionata o se il cursore &egrave; all&rsquo;interno della cornice
+stessa.<FONT COLOR="#000000"> Se il cursore non si trova all&rsquo;interno
+di una cornice, viene trovata quella che &egrave; la prima cornice
+secondo l&rsquo;elenco interno delle cornici del documento.<BR></FONT><FONT COLOR="#000000"><B>N.B.</B></FONT><FONT COLOR="#000000">:
+L</FONT>a casella di controllo &quot;Solo nella selezione corrente&quot;
+attualmente non funziona</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">2. Come conseguenza
+del punto precedente, l&rsquo;utilit&agrave; pratica del pulsante <VAR CLASS="western"><B>[
+Sostituisci ]</B></VAR> &egrave; molto limitata</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">3. L&rsquo;ordine di
+ricerca sfortunatamente corrisponde (si spera provvisoriamente)
+all&rsquo;ordine con cui le cornici di testo sono state inserite nel
+documento. <B>Non</B> viene cio&egrave; rispettato l&rsquo;ordine
+progressivo delle pagine del documento (dall&rsquo;inizio alla fine)
+in cui le cornici sono inserite</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">4. Nel nome della
+cornice si possono ricercare solo sotto-stringhe; non &egrave;
+possibile cercare espressioni regolari complete</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">I pulsanti <VAR CLASS="western">[
+Trova tutto ]</VAR> e <VAR CLASS="western">[ Sostituisci tutto ]</VAR>
+sono pienamente operativi, anche se usati in associazione alla
+casella di controllo &quot;Solo nella selezione corrente&quot;</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::Picture::]
+</TT>- cerca le Immagini a seconda del loro nome</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Picture::]</TT>
+- trova qualsiasi immagine</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Picture::]obr1
+</TT>- trova le immagini che contengono nel loro nome la
+sotto-stringa <TT CLASS="western">obr1</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+le stesse presenti nel caso di <TT CLASS="western">[::TextFrame::]</TT>
+(v. sopra)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::TextTable::]
+</TT>- - ricerca le Tabelle a seconda del nome</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::TextTable::]</TT>
+- trova qualsiasi tabella</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::TextTable::]tab1
+</TT>- trova le tabelle che contengono nel loro nome la sotto-stringa
+<TT CLASS="western">tab1</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+le stesse di <TT CLASS="western">[::TextFrame::]</TT> (v. sopra)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::Footnote::]
+</TT>- cerca le Note a Pi&egrave; di Pagina (NPP)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Footnote::]</TT>
+trova il richiamo corrispondente (ancoraggio) di qualsiasi NPP</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Footnote::]5</TT>
+trova il il richiamo corrispondente (ancoraggio) di quelle NPP in cui
+il richiamo corrispondente (ancoraggio) contiene la sotto-stringa <TT CLASS="western">5</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Footnote::]\\text</TT>
+trova le NPP il cui testo contiene la sotto-stringa <TT CLASS="western">text</TT>.
+Cliccando sul pulsante <VAR CLASS="western">[ Trova tutto ]</VAR>
+verr&agrave; selezionato il testo di tutte le NPP che contengono la
+sotto-stringa <TT CLASS="western">text</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">Usando
+<TT CLASS="western">[::Footnote::]\\</TT> e cliccando sul pulsante <VAR CLASS="western">[
+Trova tutto ]</VAR>, verr&agrave; selezionato il testo di tutte le
+NPP: &egrave; un sistema comodo per assegnare uno stile di paragrafo
+a tutte le NPP in colpo solo</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><DFN CLASS="western">Limitazioni:</DFN>
+Funziona solo con la versione 2.3 e superiori di OOo</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::Endnote::]
+</TT>- cerca le Note di chiusura</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">L&rsquo;uso dei
+parametri e le limitazioni sono le medesime di <TT CLASS="western">[::Footnote::]</TT>
+(v. sopra)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::ReferenceMark::]
+</TT>- cerca gli Indicatori di Riferimento Incrociato (IRI) (<I>marker
+of cross-references</I>)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::ReferenceMark::]</TT>
+trova qualsiasi testo configurato come IRI</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::ReferenceMark::]text</TT>
+trova qualsiasi testo configurato come IRI contenente la
+sotto-stringa <TT CLASS="western">text</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::ReferenceMark::]\\ref1</TT>
+trova qualsiasi testo configurato come IRI il cui nome contenga la
+sotto-stringa <TT CLASS="western">ref1</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::ReferenceMark::]\\\\</TT>
+trova qualsiasi testo configurato come IRI il cui testo sia vuoto</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[::Reference::]
+</TT>- cerca all&rsquo;interno dei campi di testo definiti come
+Riferimenti Incrociati (<I>cross-reference</I>) per mezzo degli
+<FONT COLOR="#000000"><SPAN STYLE="font-weight: normal">indicatori
+(</SPAN></FONT><FONT COLOR="#000000"><I><SPAN STYLE="font-weight: normal">markers</SPAN></I></FONT><FONT COLOR="#000000"><SPAN STYLE="font-weight: normal">)</SPAN></FONT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Reference::]
+</TT>trova tutti i campi di testo di tipo riferimento incrociato</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Reference::]above</TT>
+trova tutti i riferimenti incrociati che contengono la sotto-stringa
+<TT CLASS="western">above</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Reference::]\\ref1</TT>
+trova tutti i riferimenti incrociati il cui nome contiene la
+sotto-stringa <TT CLASS="western">ref1</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[::Reference::]\\\\</TT>
+trova tutti i riferimenti incrociati il cui testo &egrave; vuoto</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm">Se <TT CLASS="western">Reference</TT>
+viene scelto a partire dalla casella di riepilogo <B>Estesa</B> e
+contemporaneamente il cursore &egrave; posizionato nell&rsquo;ambito
+di un testo che &egrave; un IRI, il corrispondente nome di origine
+del riferimento incrociato viene aggiunto automaticamente alla
+casella di digitazione <B>Cerca per</B> ed &egrave; quindi possibile
+effettuare delle ricerche predefinite di tipo pi&ugrave; mirato</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><BR><BR>
+</P>
+<P CLASS="western">Casella di riepilogo &rsquo;<B>Propriet&agrave;'</B></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><SPAN STYLE="font-style: normal">Abilita
+le ricerche a seconda delle propriet&agrave; (attributi) e dei loro
+valori<BR>Nella casella di digitazione bisogna dapprima introdurre la
+stringa </SPAN><TT CLASS="western">[:::</TT> <SPAN STYLE="font-style: normal">seguita
+dal</SPAN> <TT CLASS="western"><SPAN STYLE="font-style: normal">nome</SPAN></TT>
+della propriet&agrave;. Se si hanno pi&ugrave; nomi di propriet&agrave;,
+li si possono separare con il segno <TT CLASS="western"><SPAN STYLE="font-style: normal">|</SPAN></TT><SPAN STYLE="font-style: normal">.
+Alla fine bisogna inserire la stringa </SPAN><TT CLASS="western"><SPAN STYLE="font-style: normal">::]</SPAN></TT><SPAN STYLE="font-style: normal">.
+Dopo di che si possono immettere le specifiche dell&rsquo;eventuale
+testo da cercare. Se invece si cerca il valore della propriet&agrave;,
+bisogna usare una sintassi del tipo: </SPAN><TT CLASS="western"><SPAN STYLE="font-style: normal">name=value</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 2.01cm; text-indent: -0.69cm"><TT CLASS="western"><SPAN STYLE="font-style: normal">[:::ParaStyleName::]
+</SPAN></TT><TT CLASS="western"><FONT COLOR="#000000"><FONT FACE="Arial, sans-serif"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">-
+ricerca lo stile di un paragrafo [v1.3.1]</SPAN></SPAN></FONT></FONT></TT></P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><TT CLASS="western">[:::ParaStyleName=::]
+</TT>trova tutti i paragrafi aventi stile di paragrafo diverso dallo
+stile <TT CLASS="western">Default</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><TT CLASS="western">[:::ParaStyleName=Example::]</TT>
+trova tutti i paragrafi aventi lo stile di paragrafo <TT CLASS="western">Example</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><TT CLASS="western">[:::ParaStyleName=Example::]
+something</TT> - trova il testo <TT CLASS="western">something</TT> se
+esso &egrave; formattato con lo stile di paragrafo <TT CLASS="western">Example</TT><TT CLASS="western"><FONT COLOR="#000000"><FONT FACE="Arial, sans-serif"><SPAN STYLE="font-weight: normal">.</SPAN></FONT></FONT></TT></P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><DFN CLASS="western"><SPAN STYLE="font-style: normal">Limitazioni</SPAN></DFN><DFN CLASS="western">:</DFN>
+Non &egrave; possibile cercare del testo avente lunghezza zero
+caratteri; per esempio un paragrafo vuoto.<BR>Non si pu&ograve;
+combinare questo tipo di ricerca con altre propriet&agrave; del
+testo.</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm; text-indent: -0.69cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm; text-indent: -0.69cm"><TT CLASS="western">[:::CharStyleName::]
+</TT>- ricerca lo stile dei caratteri [v1.3]</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><TT CLASS="western">[:::CharStyleName=::]</TT>
+- trova quelle parti di testo che hanno uno stile dei caratteri
+diverso dallo stile <TT CLASS="western">Default</TT></P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><TT CLASS="western">[:::CharStyleName=Example::]</TT>
+- trova qelle parti di testo che hanno lo stile dei caratteri <TT CLASS="western">Example</TT></P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><TT CLASS="western">[:::CharStyleName=Example::]
+something</TT> - trova il testo <TT CLASS="western">something</TT> se
+questo &egrave; formattato con lo stile dei caratteri <TT CLASS="western">Example</TT></P>
+<P CLASS="western" STYLE="margin-left: 4.01cm; text-indent: -0.2cm"><DFN CLASS="western"><SPAN STYLE="font-style: normal">Limitazioni</SPAN></DFN><DFN CLASS="western">:</DFN>
+Funziona solo dalla posizione del cursore in avanti - L&rsquo;opzione
+<B>Indietro</B> non funziona e d&agrave; il messaggio: <I>Non
+trovato.<BR></I><SPAN STYLE="font-style: normal">Non &egrave;
+possibile cercare del testo avente lunghezza zero caratteri; per
+esempio un paragrafo vuoto.<BR>Non si pu&ograve; combinare questo
+tipo di ricerca con altre propriet&agrave; del testo [v1.3.1].</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 1.32cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.32cm"><TT CLASS="western">[:::NumberingStyleName::]
+</TT>- ricerca lo stile di un elenco - L&rsquo;uso &egrave;
+simile a quello della ricerca dello stile di paragrafo, vedi sopra. [v1.3.1]</P>
+<P CLASS="western" STYLE="margin-left: 1.32cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">[:::HyperLinkURL::]
+</TT>- cerca un testo avente l&rsquo;attributo (propriet&agrave;) di
+tipo <TT CLASS="western">HyperLinkURL</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[:::HyperLinkURL::]
+</TT>- trova tutti i testi presenti nel documento aventi propriet&agrave;
+di tipo collegamento ipertestuale (<I>hyperlink</I>)</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[:::HyperLinkURL::]link
+</TT>- trova la parte del collegamento ipertestuale (<I>hyperlink</I>)
+contenente il testo <TT CLASS="western">link</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[:::HyperLinkURL=file:///c:/pokus.odt::]
+</TT>- trova un collegamento ipertestuale (<I>hyperlink</I>) in cui
+l&rsquo;URL &egrave; rappresentata dalla sotto-stringa
+<TT CLASS="western">file:///c:/pokus.odt</TT></P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><TT CLASS="western">[:::HyperLinkURL=file:///c:/pokus.odt::]link
+</TT>- trova parte di un collegamento ipertestuale (<I>hyperlink</I>)
+in cui l&rsquo;URL &egrave; la sotto-stringa <TT CLASS="western">file:///c:/pokus.odt</TT>
+e in cui il testo contiene la stringa <TT CLASS="western">link</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm">L&rsquo;elenco degli
+attributi di testo utilizzabili per le ricerche e i loro valori
+presenti nella selezione corrente possono essere caricati usando il
+pulsante <VAR CLASS="western">[&nbsp;Scegli propriet&agrave;&nbsp;]</VAR>:
+i dati compaiono nella casella di riepilogo vicino a tale pulsante.
+<A HREF="http://api.openoffice.org/docs/common/ref/com/sun/star/style/module-ix.html">Qui</A>
+si pu&ograve; trovare una breve descrizione della maggior parte di
+tali propriet&agrave;</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">Formato
+caratteri simile </TT>- carica qualsiasi propriet&agrave;
+(attribuito) del carattere attualmente selezionato che sia stata
+modificata manualmente e ricerca lungo tutto il documento quelle
+parti che abbiano una formattazione <I>simile</I>. Se, per esempio,
+il cursore si trova su di un testo che ha subito una modificazione
+manuale del nome del carattere, verranno trovate tutte le parti del
+documento in cui &egrave; stata effettuata una analoga modifica
+manuale del nome del carattere. In questo caso, per esempio, la
+casella di ricerca conterr&agrave; <TT CLASS="western">[:::CharFontName::]</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">Stesso
+formato caratteri </TT>- carica qualsiasi propriet&agrave;
+(attribuito) del carattere attualmente selezionato che sia stata
+modificata manualmente e ricerca lungo tutto il documento quelle
+parti che abbiano una formattazione <I>identica</I>. Se, per esempio,
+il cursore si trova su un testo che ha subito una modificazione
+manuale del nome del carattere ad <TT CLASS="western">Arial</TT>,
+verranno trovate tutte quelle parti del documento in cui sia stata
+effettuata una analoga modifica manuale del nome del carattere e che
+abbiano lo <B>stesso</B> nome del carattere. In questo caso,
+pertanto, la casella di ricerca conterr&agrave;
+<TT CLASS="western">[:::CharFontName=Arial::]</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><DFN CLASS="western"><SPAN STYLE="font-style: normal">Limitazioni:</SPAN></DFN>
+<SPAN STYLE="font-style: normal">Il motore di ricerca di OOo non
+supporta tutte le possibili propriet&agrave; di paragrafo e di
+carattere. Inoltre non tutte le combinazioni funzionano come ci si
+potrebbe aspettare</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><BR><BR>
+</P>
+<H6 CLASS="western"><A NAME="nahradit"></A>Sostituzione</H6>
+<P CLASS="western">Casella di riepilogo '<B>Sostituisci'</B></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">&amp;
+\0 </TT>- entrambi questi parametri hanno lo stesso significato:
+nella sostituzione rappresentano l&rsquo;intero testo trovato</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Se si era cercata
+l&rsquo;espressione usando <TT CLASS="western">[::BigBlock::]</TT>,
+questi parametri rappresentano solo il blocco di paragrafi compreso
+fra il marcatore di inizio e di fine blocco</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Se si era cercato
+l&rsquo;oggetto usando <TT CLASS="western">[::Note::]</TT>,
+<TT CLASS="western">[::Field::]</TT>, <TT CLASS="western">[::TextFrame::]</TT>,
+<TT CLASS="western">[::Picture::]</TT> o <TT CLASS="western">[::TextTable::]</TT>,
+questi parametri rappresentano esattamente tali oggetti che vengono
+inseriti per mezzo degli Appunti (<I>Clipboard</I>)</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\b
+\e </TT>- Se l&rsquo;espressione era stata cercata usando
+<TT CLASS="western">[::BigBlock::]</TT>, questi parametri
+rappresentano il contenuto dei marcatori di inizio e di fine</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><DFN CLASS="western">Limitazioni:</DFN>
+non possono essere usati insieme alle <A HREF="#skupiny">sotto-espressioni</A></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><A NAME="skupiny"></A><TT CLASS="western">\1
+\2 \3 \4 \5 \6 \7 \8 \9 </TT>- contenuto delle sotto-espressioni</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Se l&rsquo;espressione
+viene ricercata utilizzando le parentesi <TT CLASS="western">()</TT>,
+<TT CLASS="western">\1</TT> rappresenta il contenuto della prima
+coppia di parentesi, <TT CLASS="western">\2</TT> corrisponde al
+contenuto del secondo paio di parentesi ecc..., fino a <TT CLASS="western">\9</TT>,
+che corrisponde al contenuto del nono paio. &Egrave; valido solo il
+primo livello di parentesi; parentesi nidificate su pi&ugrave;
+livelli vengono ignorate</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Esempio:<BR>Usando
+l&rsquo;espressione <TT CLASS="western">(\d{1,2})\. *(\d{1,2})\.
+*\d{2,2}(\d{2,2})</TT> &egrave; possibile cercare e trovare le date
+presenti nel formato <I>01. 12. 2007</I>; usando l&rsquo;espressione
+di sostituzione <TT CLASS="western">\3-\2-\1</TT> possono essere
+sostituite con date nel formato 07-12-01</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Se &egrave; necessario
+impedire la processazione delle sotto-espressioni (per esempio per
+conservare la compatibilit&agrave; con le espressioni regolari
+standard di OOo), bisogna porre l&rsquo;intera espressione di ricerca
+all&rsquo;interno di una coppia addizionale di parentesi. In tal modo
+tutti i livelli nidificati di parentesi di sostituzione verranno
+ignorati</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm"><DFN CLASS="western">Limitazioni:</DFN>
+L&rsquo;uso delle sotto-espressioni &egrave; relativamente lento e
+non completamente compatibile con le funzioni di ricerca
+originariamente previste in OOo</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">C&rsquo;&egrave; anche
+una incompatibilit&agrave; nell&rsquo;uso dei caratteri jolly posti
+immediatamente dopo una sotto-espressione (ad esempio nel caso di
+<TT CLASS="western">(opak)*</TT>) dovuta al principio della ricerca
+di blocchi sequenziali di testo. Per maggiori informazioni vedi <A HREF="#skupiny0">qui</A>.
+Tuttavia le funzioni <VAR CLASS="western">[ Conta ]</VAR> e <VAR CLASS="western">[
+Trova tutto ]</VAR> consentono di ricavare il numero corretto di
+occorrenze anche in questa situazione. Se per&ograve; non si modifica
+l&rsquo;espressione di ricerca in modo che essa sia compatibile con
+la modalit&agrave; standard di OOo, le altre funzioni non troveranno
+nulla. Nei casi pi&ugrave; complicati &egrave; necessario esaminare
+attentamente ci&ograve; che accade: infatti solo sperimentando si
+potranno ottenere i migliori risultati</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\p
+</TT>- inserisce un paragrafo vuoto</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\t
+</TT>- inserisce un carattere di tabulazione (<TT CLASS="western">\x0009
+\#9</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\s
+</TT>- inserisce uno spazio non divisibile (<TT CLASS="western">\x00A0
+\#160</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\n
+</TT>- inserisce una interruzione manuale di riga (<TT CLASS="western">\x000A
+\#10</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\c
+</TT>- inserisce una interruzione manuale di colonna prima del
+paragrafo trovato</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\m
+</TT>- inserisce una interruzione manuale di pagina prima del testo
+trovato</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\M
+</TT>- inserisce una interruzione manuale di pagina dopo il paragrafo
+trovato</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\r
+</TT>- rimuove le interruzioni manuali di colonna o di pagina<FONT COLOR="#000000">
+nel </FONT>paragrafo trovato</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\xhhhh
+</TT>- inserisce un carattere usando la codifica esadecimale
+simboleggiata da <I>hhhh</I></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\#ddddd
+</TT>- inserisce un carattere usando la codifica decimale
+simboleggiata da <I>ddddd</I></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\h{addressURL}
+</TT>- cambia il testo trovato in un collegamento ipertestuale
+(<I>hyperlink</I>) avente URL <TT CLASS="western">addressURL</TT></P>
+<P CLASS="western" STYLE="margin-left: 2.49cm"><TT CLASS="western">\h{}</TT>,<TT CLASS="western">
+\h </TT>cambiano il testo trovato in un collegamento ipertestuale
+(<I>hyperlink</I>) avente per URL una stringa vuota. Hanno lo scopo
+di eliminare la propriet&agrave; del collegamento ipertestuale
+(<I>hyperlink</I>) da un testo che rimane per&ograve; inalterato</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><A NAME="SwXTextPosition6717"></A>
+<TT CLASS="western">\H{substr} </TT>- sostituisce la sotto-stringa
+dell&rsquo;URL del collegamento ipertestuale (<I>hyperlink</I>)</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Deve essere usata
+contemporaneamente ad un criterio di ricerca del tipo:
+<TT CLASS="western">[:::HyperLinkURL=::]</TT></P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Se, per esempio,
+l&rsquo;espressione cercata &egrave; del tipo
+<TT CLASS="western">[:::HyperLinkURL=substr::]</TT>, verranno trovati
+quei collegamenti ipertestuali (<I>hyperlink</I>) la cui URL include
+la sotto-stringa <TT CLASS="western">substr</TT>. Associando il
+parametro <TT CLASS="western">\H{repl}</TT>, nell&rsquo;espressione
+di sostituzione dell&rsquo;URL verr&agrave; trovato il testo <TT CLASS="western">substr</TT>
+che verr&agrave; sostituito da <TT CLASS="western">repl</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\u
+</TT>- Se viene trovato un collegamento ipertestuale (<I>hyperlink</I>),
+inserisce nell&rsquo;espressione di sostituzione l&rsquo;indirizzo
+dell&rsquo;URL del testo trovato</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\P{Testo}
+</TT>- applica lo Stile di Paragrafo <TT CLASS="western">Testo</TT>
+al(i) paragrafo(i)</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Lo stile viene
+applicato al paragrafo che contiene il testo dell&rsquo;espressione
+di sostituzione. Per applicare lo stile &quot;<I>Defaul</I>t&quot;
+bisogna usare <TT CLASS="western">\P</TT> o <TT CLASS="western">\P{}</TT>.
+Se questo parametro viene usato pi&ugrave; volte, ad ogni paragrafo
+inserito con un diverso stile sar&agrave; cambiato lo stile secondo
+le specifiche inserite. Per esempio, una espressione di sostituzione
+del tipo <TT CLASS="western">block1\P{Subtitle}\p block2\P{Heading 1}</TT>
+inserisce il paragrafo <TT CLASS="western">block1</TT> cui &egrave;
+assegnato lo stile <TT CLASS="western">Subtitle</TT>. Dopo di questo
+viene inserito un nuovo paragrafo avente contenuto <TT CLASS="western">block2</TT>
+cui viene assegnato lo stile <TT CLASS="western">Heading 1</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\C{Citazione}
+</TT>- applica lo Stile di Carattere <TT CLASS="western">Citazione</TT>
+al testo trovato</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Lo stile viene
+applicato all&rsquo;intero testo dell&rsquo;espressione di
+sostituzione. Per applicare lo stile &quot;<I>Default</I>&quot;
+bisogna usare <TT CLASS="western">\C</TT> o <TT CLASS="western">\C{}</TT>.
+Se questo parametro viene usato pi&ugrave; volte, lo stile del
+carattere verr&agrave; modificato ad ogni variazione di questo
+parametro. L&rsquo;ultimo stile applicato rimane valido fino alla
+fine dell&rsquo;espressione di sostituzione. Per esempio: nel caso di
+una espressione di sostituzione del tipo
+<TT CLASS="western">block1\C{Citazione}block2\C{Example}</TT>, <TT CLASS="western">block1</TT>
+verr&agrave; inserito con lo stile di carattere <TT CLASS="western">Quotation</TT>
+mentre a <TT CLASS="western">block2</TT> verr&agrave; invece
+assegnato lo stile di carattere <TT CLASS="western">Example</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\N{Lista
+3} </TT>- applica lo stile di Elenco <TT CLASS="western">Lista 3</TT>
+al(i) paragrafo(i) trovato(i)</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Vengono applicate
+regole d&rsquo;uso analoghe a quelle del parametro <TT CLASS="western">\P{}</TT>.
+Lo stile di Elenco pu&ograve; essere rimosso con <TT CLASS="western">\N</TT>
+o <TT CLASS="western">\N{}</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\D
+</TT>- applica la formattazione di default al testo trovato,
+esattamente come quando si usa Ctrl+Maiusc+Barra Spaziatrice</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Vengono applicate
+regole d&rsquo;uso analoghe a quelle del parametro <TT CLASS="western">\C{}</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\d
+</TT>- riporta gli attributi del testo ai valori di default solo nel
+luogo in cui viene utilizzato</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">Contrariamente a <TT CLASS="western">\D</TT>
+non ha effetto sul testo inserito in precedenza</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\F{New
+footnote} </TT>- nel luogo di sostituzione inserisce una nuova Nota a
+Pi&egrave; di Pagina che contiene il testo <TT CLASS="western">New
+footnote</TT></P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">All&rsquo;interno
+delle parentesi graffe &egrave; possibile usare qualsiasi parametro
+del tipo: <TT CLASS="western">\i</TT>, <TT CLASS="western">\I</TT>,
+<TT CLASS="western">&amp;</TT>, o <TT CLASS="western">\1</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\E{New
+endnote} </TT>- nel luogo di sostituzione inserisce una nuova Nota di
+Chiusura, analogamente a <TT CLASS="western">\F</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\B{ref1|text}
+</TT>- inserisce il testo <TT CLASS="western">text</TT> con
+l&rsquo;indicatore (<I>marker</I>) di riferimento <TT CLASS="western">ref1</TT>
+per un riferimento incrociato</P>
+<P CLASS="western" STYLE="margin-left: 2.49cm">All&rsquo;interno
+delle parentesi graffe &egrave; possibile usare qualsiasi parametro
+del tipo: <TT CLASS="western">\i</TT>, <TT CLASS="western">\I</TT>,
+<TT CLASS="western">&amp;</TT>, o <TT CLASS="western">\1</TT></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><TT CLASS="western">\L{0,0,ref1}</TT>
+- inserisce un campo di riferimento incrociato con parametri <I>0,0</I>
+e con indicatore (<I>marker</I>) di riferimento <I>ref1</I></P>
+<P CLASS="western" STYLE="margin-left: 2.49cm"><B>N.B.</B>:
+Significato dei parametri numerici:</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><I>Primo numero</I> (=
+tipo di riferimento incrociato)<BR>0 - numero di pagina in formato
+numerico di tipo arabo;<BR>1 - numero capitolo;<BR>2 - testo del
+riferimento incrociato;<BR>3 - sopra/sotto;<BR>4 - numero di pagina
+con formato numerico definito all&rsquo;interno dello stile di
+pagina;<BR>5 - categoria e numero dell&rsquo;intestazione;<BR>6 -
+testo dell&rsquo;intestazione;<BR>7 - campo di sequenza numerica
+personalizzata</P>
+<P CLASS="western" STYLE="margin-left: 3.76cm"><I>Secondo numero</I>
+(= tipo di origine del campo di riferimento). L&rsquo;origine pu&ograve;
+essere:<BR>0 - un indicatore di riferimento;<BR>1 <FONT COLOR="#000000">-
+un campo di sequenza numerica personalizzata;<BR></FONT>2 - un
+segnalibro;<BR>3 - una nota a pi&egrave; di pagina;<BR>4 - una nota
+di chiusura</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\o
+</TT>- inserisce il testo contenuto nell&rsquo;oggetto trovato</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Se l&rsquo;espressione
+cercata &egrave; del tipo <TT CLASS="western">[::Note::]</TT>,
+<TT CLASS="western">[::Footnote::]</TT>, <TT CLASS="western">[::Endnote::]</TT>,
+<TT CLASS="western">[::TextFrame::]</TT>, <TT CLASS="western">[::Picture::]</TT>,
+o <TT CLASS="western">[::TextTable::]</TT> viene inserito il testo
+all&rsquo;interno dell&rsquo;oggetto. Nel caso delle tabelle vengono
+inseriti dei caratteri di tabulazione tra colonne e dei segni di fine
+paragrafo tra righe</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><DFN CLASS="western">Limitazioni:</DFN>
+La massima dimensione del testo derivante dalla conversione di una
+tabella &egrave; di 64 kB</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Se l&rsquo;espressione
+cercata &egrave; del tipo <TT CLASS="western">[::Field::]</TT>,
+<TT CLASS="western">[::Reference::]</TT>, o <TT CLASS="western">[::ReferenceMark::]</TT>,
+a seconda della tipologia, verr&agrave; inserito il campo o il testo
+visualizzato nel richiamo corrispondente (ancoraggio)</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\O
+</TT>- inserisce il nome dell&rsquo;oggetto trovato</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Se l&rsquo;espressione
+cercata &egrave; del tipo:</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><TT CLASS="western">[::TextFrame::]</TT>,
+<TT CLASS="western">[::Picture::]</TT> o <TT CLASS="western">[::TextTable::]</TT>
+verr&agrave; inserito il nome di questo oggetto</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><TT CLASS="western">[::Note::]</TT>
+o <TT CLASS="western">[::Field::]</TT> verr&agrave; inserito il tipo
+di campo di testo</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><TT CLASS="western">[::Reference::]</TT>
+o <TT CLASS="western">[::ReferenceMark::]</TT> verr&agrave; inserito
+il nome dell&rsquo;indicatore (<I>marker</I>) di riferimento
+incrociato</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><TT CLASS="western">[::Footnote::]</TT>
+o <TT CLASS="western">[::Endnote::]</TT> verr&agrave; inserito il
+testo visualizzato nel richiamo corrispondente (ancoraggio)</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\i
+</TT>- inserisce, contandole, il numero di occorrenze del testo o
+dell&rsquo;oggetto trovato. Funziona solo se si usa il pulsante
+<VAR CLASS="western">[&nbsp;Sostituisci tutto&nbsp;]</VAR></P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\I
+</TT>- inserisce il numero di pagina in cui &egrave; stata trovata
+l&rsquo;espressione cercata</P>
+<P CLASS="western" ALIGN=LEFT STYLE="margin-left: 4.01cm">Se per
+esempio si usa la ridirezione dell&rsquo;espressione di sostituzione
+in un altro file utilizzando il parametro (<TT CLASS="western">\R</TT>)
+(v. sotto), in tale file viene inserito il numero della pagina
+contenente la posizione iniziale del testo trovato</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm"><DFN CLASS="western">Limitazioni:</DFN>
+non funziona correttamente nelle note a pi&egrave; di pagina, nelle
+righe di intestazione e nei pi&egrave; di pagina</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\v
+</TT>- inserisce il contenuto degli Appunti (<I>Clipboard</I>)</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\V
+</TT>- inserisce il contenuto degli Appunti (<I>Clipboard</I>) in
+formato di testo semplice (non formattato)</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\f
+</TT>- mantiene il formato</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Se nell&rsquo;espressione
+di sostituzione si usano i parametri <TT CLASS="western">&amp;</TT> o
+<TT CLASS="western">\0</TT>, la sostituzione avviene mediante l&rsquo;uso
+degli Appunti (<I>Clipboard</I>). Se il testo trovato contiene campi
+di testo, note, riferimenti ecc..., questi saranno conservati nel
+loro stato originale</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\R
+</TT>- ridirige l&rsquo;espressione di sostituzione su un altro file
+di testo</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Questa opzione
+determina l&rsquo;inserimento dell&rsquo;espressione di sostituzione
+in un nuovo file <I>.odt</I>. Il file originale rimane tal quale,
+senza alcuna modifica. Per assegnare il nome del nuovo file in cui
+viene ridiretta l&rsquo;espressione di sostituzione, bisogna usare il
+parametro <TT CLASS="western">\R{filename}</TT>. Il nome del file
+deve avere un formato identico a quello dell&rsquo;intestazione della
+finestra di OOo ed &egrave; <I>obbligatorio</I> che sia seguito dalla
+stringa: &ldquo;<I><B>- OpenOffice.org Writer</B></I>&ldquo;. Il file
+cos&igrave; generato - che si apre in una nuova finestra di OOo e che
+deve essere salvato a cura dell&rsquo;utente - avr&agrave; estensione
+<B>.odt</B>. Eventuali nuove salvataggi che utilizzino questa
+ridirezione su file vengono aggiunti sempre in coda a tale file</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Esempio:</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Se l'espressione
+cercata &egrave; del tipo: <TT CLASS="western">[:::HyperLinkURL::]</TT>
+e l&rsquo;espressione di sostituzione &egrave; <TT CLASS="western">Link
+\i, page \I: &amp; (URL: \u)\p\R</TT>, quando si clicca il pulsante
+<VAR CLASS="western">[&nbsp;Sostituisci tutto&nbsp;]</VAR> tutti i
+collegamenti ipertestuali (<I>hyperlink</I>) trovati nel file
+originale verranno inseriti, <SPAN STYLE="font-style: normal">ciascuno
+in un paragrafo separato a mo&rsquo;</SPAN> di elenco, in un nuovo
+file avente formato:<BR><I>Link</I> <I>1, page 1: textOfHyperlink
+(URL: URLaddress)</I></P>
+<P CLASS="western" STYLE="margin-left: 1.25cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm">Pulsante e casella di
+riepilogo '<B>Scegli propriet&agrave;'</B></P>
+<P CLASS="western" STYLE="margin-left: 2.01cm">L&rsquo;uso del
+pulsante <VAR CLASS="western">[&nbsp;Scegli propriet&agrave;&nbsp;]</VAR>
+consente di aggiornare l&rsquo;elenco delle (di alcune) propriet&agrave;
+e dei loro rispettivi valori per l&rsquo;oggetto attualmente
+selezionato. Si pu&ograve; quindi scorrere l&rsquo;elenco presente
+nella casella di riepilogo vicino al pulsante e scegliere da l&igrave;
+una propriet&agrave;</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><TT CLASS="western">\A{properties=value}</TT>
+- definisce, nell&rsquo;espressione di sostituzione, il valore della
+propriet&agrave; specificata</P>
+<P CLASS="western" STYLE="margin-left: 4.01cm">Utilizza regole
+analoghe a quelle del parametro <TT CLASS="western">\C{}</TT> (v.
+sopra)</P>
+<P CLASS="western" STYLE="margin-left: 1.25cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2.01cm; margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="davky"></A>Modalit&agrave; Batch<FONT COLOR="#000000">
+</FONT><VAR CLASS="western"><FONT COLOR="#000000"><SPAN STYLE="text-decoration: none"><B>[&nbsp;Batch&nbsp;&gt;&gt;&nbsp;]</B></SPAN></FONT></VAR></H6>
+<P CLASS="western"><IMG SRC="img/altsearch_script_it.png" NAME="obrázky2" ALIGN=RIGHT HSPACE=6 WIDTH=480 HEIGHT=340 BORDER=0>La
+modalit&agrave; Batch che si attiva cliccando sul pulsante <VAR CLASS="western"><FONT COLOR="#000000"><SPAN STYLE="text-decoration: none"><U><SPAN STYLE="font-weight: normal">[
+Batch &gt;&gt; ]</SPAN></U></SPAN></FONT></VAR> abilita il
+salvataggio e il caricamento di parametri di ricerca e di
+sostituzione predefiniti. &Egrave; possibile salvare parecchie
+operazioni di ricerca e di sostituzione in sequenza in un unico file
+e, successivamente, caricare ed eseguire l&rsquo;intero gruppo di
+operazioni</P>
+<P CLASS="western">Mediante il pulsante <VAR CLASS="western">[&nbsp;Salva&nbsp;batch&nbsp;]</VAR>
+&egrave; possibile definire tutti i parametri: compare una finestra
+di dialogo che propone di default il nome utilizzato per l&rsquo;ultimo
+batch. Se si tratta della prima volta, compare il nome &ldquo;<I>Nuova
+ricerca</I>&rdquo;. In ogni caso &egrave; sempre possibile modificare
+tale nome. Se a un batch si assegna un nome gi&agrave; esistente, si
+pu&ograve; scegliere se si vuole che il vecchio contenuto venga
+sovrascritto dal nuovo o se invece lo si vuole conservare aggiungendo
+il nuovo contenuto dopo il vecchio. Assieme alla procedura batch
+viene automaticamente salvato anche il comando &quot;<I>ReplaceAll</I>&quot;
+con cui la procedura batch verr&agrave; successivamente eseguita.
+Anche questo comando pu&ograve; essere modificato, intervenendo
+manualmente sul file delle regole del batch</P>
+<P CLASS="western">Il pulsante <VAR CLASS="western"><B>[&nbsp;Batch&nbsp;&gt;&gt;&nbsp;]</B></VAR>
+attiva la finestra di dialogo &rsquo;<B>Gestione batch'</B><SPAN STYLE="font-weight: normal">,</SPAN>
+che consente l&rsquo;esecuzione o la modifica di procedure batch. Per
+ritornare alla finestra di dialogo AltSearch bisogna cliccare sul
+pulsante <VAR CLASS="western">[&nbsp;&lt;&lt;&nbsp;Cerca e Sost.&nbsp;]</VAR></P>
+<P CLASS="western">Tutti i parametri delle procedure batch vengono
+salvati nel file di testo <SAMP CLASS="western"><SPAN STYLE="font-style: normal">AltSearchScript.txt</SPAN></SAMP>
+che si trova nella directory dell&rsquo;utente
+<SAMP CLASS="western">&hellip;</SAMP><SAMP CLASS="western"><SPAN STYLE="font-style: normal">/OpenOffice.org/3/user/config/</SPAN></SAMP>.
+Il file pu&ograve; essere aperto e modificato usando il pulsante
+<VAR CLASS="western">[&nbsp;Modifica&nbsp;]</VAR> della finestra di
+dialogo <B>Gestione batch</B><SPAN STYLE="font-weight: normal">.</SPAN>
+Per operare le modifiche al testo viene richiamato il programma
+<B>Blocco Note</B>. &Egrave; possibile scegliere qualsiasi altro
+editor modificando il file <SAMP CLASS="western"><SPAN STYLE="font-style: normal">AltSearchEditor.ini
+</SPAN></SAMP>presente nella medesima directory di
+<SAMP CLASS="western"><SPAN STYLE="font-style: normal">AltSearchScript.txt</SPAN></SAMP>.
+Dopo avere modificato manualmente e salvato il file di batch con
+Gestione batch, si pu&ograve; aggiornare l&rsquo;elenco dei nomi dei
+file di batch usando il pulsante <VAR CLASS="western">[&nbsp;Aggiorna&nbsp;]</VAR>.
+La sintassi utilizzata nel file <SAMP CLASS="western">AltSearchScript.txt</SAMP>
+&egrave; descritta all&rsquo;inizio di tale file che utilizza la
+codifica UTF-8 (a partire dalla versione 1.1.1)</P>
+<P CLASS="western">Quando si clicca due volte su un elemento
+dell&rsquo;elenco delle procedure o quando si clicca sul pulsante
+<VAR CLASS="western"><B>[&nbsp;Esegui&nbsp;]</B></VAR><SPAN STYLE="font-weight: normal">,</SPAN>
+la sequenza scelta viene caricata e vengono eseguite le relative
+operazioni di ricerca e sostituzione. Se si usano delle procedure
+batch su selezioni di testo &egrave; consigliabile lasciare 1-2
+paragrafi vuoti all&rsquo;inizio e alla fine della selezione</P>
+<P CLASS="western"><IMG SRC="img/altsearch_shortcuts_it.png" NAME="obrázky3" ALIGN=RIGHT HSPACE=5 WIDTH=417 HEIGHT=304 BORDER=0>Il
+pulsante <VAR CLASS="western">[&nbsp;Trasferisci&nbsp;]</VAR> viene
+usato per trasferire nella finestra di dialogo, senza che vengano
+eseguiti, i parametri di ricerca e di sostituzione e le loro
+definizioni. Se la procedura batch &egrave; costituita da una
+sequenza di numerose ricerche e sostituzioni, viene trasferita solo
+l&rsquo;ultima parte della sequenza</P>
+<P CLASS="western">[v1.2] Il pulsante <VAR CLASS="western">[&nbsp;Combinazione
+di tasti&nbsp;]</VAR> apre una finestra di dialogo che consente di
+assegnare scorciatoie da tastiera alle procedure batch esistenti. Per
+usare tale pulsante:<BR><B>1.</B> <SPAN STYLE="font-weight: normal">Selezionare
+il nome della procedura batch dalla casella di riepilogo</SPAN><BR><B>2.</B>
+S<SPAN STYLE="font-weight: normal">e richiesto, cambiare il nome
+della funzione ausiliaria nel Basic di OOo<BR></SPAN><B>3.</B>
+<SPAN STYLE="font-weight: normal">Impostare la combinazione di tasti
+desiderata</SPAN><BR><B>4.</B> <SPAN STYLE="font-weight: normal">Premere
+il pulsante </SPAN><VAR CLASS="western">[&nbsp;Assegna&nbsp;]</VAR><BR><BR><BR>
+</P>
+<P CLASS="western">Perché la scorciatoia funzioni, all&rsquo;atto
+della sua creazione viene contemporaneamente creata una funzione
+ausiliaria nel modulo Basic avente nome <SAMP CLASS="western">Standard.AltSearchBatchs</SAMP>
+il cui nome, adattato alla sintassi del Basic, viene visualizzato
+nella seconda casella di riepilogo della finestra di dialogo. Quando
+viene lanciata questa procedura ausiliaria, si apre la finestra di
+dialogo AltSearch e viene immediatamente eseguita la procedura batch
+specificata. Il funzionamento corretto dipende dalla<FONT COLOR="#000000">
+conformit&agrave; </FONT>dei nomi di batch elencati all&rsquo;interno
+della procedura e dal nome dei batch esistenti. Se si modifica il
+nome del batch al quale era stata precedentemente assegnata una
+scorciatoia, &egrave; ovviamente necessario che essa venga
+riassegnata. La vecchia procedura ausiliaria pu&ograve; essere
+cancellata selezionandola nella seconda casella di riepilogo
+cliccando sul pulsante <VAR CLASS="western"><U><B>[&nbsp;x&nbsp;]</B></U></VAR>
+che vi sta a fianco. Qualsiasi scorciatoia da tastiera definita in
+OOo Writer pu&ograve; essere resa disponibile e riassegnata
+utilizzando il pulsante <VAR CLASS="western">[&nbsp;x&nbsp;]</VAR>
+posizionato pi&ugrave; sotto. Pertanto si faccia molta attenzione a
+non rimuovere inavvertitamente scorciatoie importanti!</P>
+<P CLASS="western"><BR><BR>
+</P>
+<H6 CLASS="western"><A NAME="omezeni"></A>Limitazioni</H6>
+<P CLASS="western">Qualora siano note delle limitazioni di AltSearch,
+esse sono menzionate assieme alla descrizione dei parametri
+individuali interessati.<BR>Limitazioni di carattere pi&ugrave;
+generale sono le seguenti:</P>
+<UL>
+	<LI><P CLASS="western">Se &egrave; attiva l&rsquo;opzione &quot;Solo
+	nella selezione corrente&quot; non &egrave; possibile fare ricerche
+	di testo all&rsquo;interno di cornici o di tabelle anche se poste
+	all&rsquo;interno di blocchi di testo selezionati. La ricerca
+	all&rsquo;interno dei blocchi &egrave; limitata solamente all&rsquo;area
+	del blocco selezionato e non &egrave; supportata la selezione
+	multipla dei blocchi</P>
+	<LI><P CLASS="western">La funzione &quot;Trova tutto&quot; non &egrave;
+	in grado di selezionare il marcatore di paragrafo <TT CLASS="western">\p</TT>,
+	perché per la selezione viene usata <FONT COLOR="#000000">la
+	propriet&agrave; &quot;Sfondo carattere (Evidenziato)&quot;</FONT>
+	che non &egrave; possibile usare per evidenziare un marcatore di
+	paragrafo. Ne consegue anche che la funzione &ldquo;Trova tutto&rdquo;
+	si limita ai testi che non utilizzano l&rsquo;evidenziazione. Quando
+	si usa l&rsquo;opzione &quot;Trova tutto&quot;, se il documento
+	contiene delle evidenziazioni, appare una finestra di avvertimento</P>
+	<LI><P CLASS="western">Nella sostituzione delle espressioni pi&ugrave;
+	complesse, la funzione &ldquo;Annulla&rdquo; (<I>Undo</I>) viene
+	frammentata in pi&ugrave; operazioni di sostituzione parziale, cos&igrave;
+	che pu&ograve; facilmente accadere che il numero di operazioni
+	Annulla necessarie per ripristinare il documento allo stato
+	originale non corrisponda al numero atteso di operazioni</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="historie"></A>Storia delle modifiche</H6>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Version 1.3.1&nbsp;&nbsp;&nbsp;4/10</B>
+<SPAN STYLE="font-weight: normal">[v1.3.1]</SPAN></P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western">Ricerca per stile di paragrafo e di elenco
+	(tramite la casella a discesa <SPAN STYLE="font-weight: normal">'Propriet&agrave;&rsquo;,
+	in modo del tutto analogo alla ricerca per stile di carattere</SPAN>)</P>
+	<LI><P CLASS="western">Aggiunta una procedura batch di default per
+	convertire un testo in BBcode. Essa compare nel batch file
+	&quot;AltSearchScript.txt&quot; solo dopo la prima installazione di
+	AltSearch. Infatti, quando si reinstalla AltSearch, viene
+	inizialmente cercato e rinominato il file &quot;AltSearchScript.txt&quot;;
+	quando poi si fa partire per la prima volta AltSearch vengono
+	caricate le procedure batch di default.</P>
+</UL>
+<P CLASS="western">Bug corretti:</P>
+<UL>
+	<LI><P CLASS="western">Piccole variazioni nella localizzazione
+	italiana</P>
+	<LI><P CLASS="western">Aggiornamento della guida olandese</P>
+	<LI><P CLASS="western">Propriet&agrave; del testo: l&rsquo;elenco a
+	discesa a destra del pulsante <SPAN LANG="en-US">&quot;Scegli
+	Propriet&agrave;</SPAN>&quot; <SPAN LANG="en-US">ora &egrave;
+	ordinato alfabeticamente</SPAN></P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.3&nbsp;&nbsp;&nbsp;11/09 </B><SPAN STYLE="font-weight: normal">[v1.3]</SPAN></P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western">Opzioni: mantenimento maiuscole</P>
+</UL>
+<UL>
+	<LI><P CLASS="western">Ricerca per stile dei carattere (Casella di
+	riepilogo <SPAN STYLE="font-weight: normal">'Propriet&agrave;&rsquo;
+	- Stile carattere)</SPAN></P>
+	<LI><P CLASS="western">Possibilit&agrave; di scegliere da menu uno
+	stile per ricerca/sostituzione (vedi Casella di riepilogo
+	<SPAN STYLE="font-weight: normal">'Propriet&agrave;' - Stile
+	carattere e </SPAN>Casella di riepilogo <SPAN STYLE="font-weight: normal">'Sostituisci'
+	- Stile Paragrafo/Stile Carattere/Stile Elenco)</SPAN></P>
+	<LI><P CLASS="western" STYLE="font-style: normal">La finestra di
+	dialogo principale di AltSearch si sposta per cercare di non
+	sovrapporsi al testo trovato</P>
+</UL>
+<UL>
+	<LI><P CLASS="western">Guida in italiano</P>
+</UL>
+<UL>
+	<LI><P CLASS="western">Se si seleziona la lingua slovacca, viene
+	applicata la localizzazione ceca</P>
+</UL>
+<P CLASS="western">Bug corretti:</P>
+<UL>
+	<LI><P CLASS="western">Tabelle all&rsquo;interno di un blocco -
+	viene trovata solo la prima tabella e non le successive</P>
+	<LI><P CLASS="western">Piccole variazioni nella localizzazione
+	olandese</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.2.2&nbsp;&nbsp;&nbsp;5/09</B> [v1.2]</P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western">Localizzazione italiana (senza guida)</P>
+	<LI><P CLASS="western">Traduzione della guida in francese (in
+	parallelo all&rsquo;inglese)</P>
+	<LI><P CLASS="western">Aggiunta la voce &quot;Alt. Trova e
+	Sostituisci...&quot; (&quot;<I>Alt. Find and replace...</I>&quot;)
+	nel menu Modifica (<I>Edit</I>) di OOo</P>
+	<LI><P CLASS="western">AltSearch &egrave; ora disponibile anche per
+	i tipi di documento <I>HTML</I> e <I>Master</I>. Attenzione, se
+	qualcosa viene sostituito nel documento master, le modifiche
+	verranno salvate solo su questo e non sui documenti collegati!</P>
+</UL>
+<P CLASS="western">Bug corretti:</P>
+<UL>
+	<LI><P CLASS="western" STYLE="font-weight: normal"><FONT SIZE=2 STYLE="font-size: 11pt">File
+	di guida della versione 1.2 inglese modificato da Anna Sharman</FONT></P>
+	<LI><P CLASS="western">Cambio del testo Inglese nella finestra di
+	dialogo relativa a &quot;Assegnazione combinazione di tasti per le
+	scorciatoie&quot;</P>
+	<LI><P CLASS="western">Comando &quot;Growe&quot; modificato in Grow
+	(&quot;Growe&quot; comunque continua a funzionare per compatibilit&agrave;)</P>
+	<LI><P CLASS="western">Le scorciatoie ora funzionano anche nei
+	documenti <I>HTML</I> e <I>Master</I></P>
+</UL>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.2.1&nbsp;&nbsp;&nbsp;7/08</B> <SPAN STYLE="font-weight: normal">[v1.2]</SPAN></P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western">Localizzazione olandese</P>
+	<LI><P CLASS="western">Indipendente dai TOOLS delle librerie BASIC</P>
+</UL>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.2&nbsp;&nbsp;&nbsp;7/08</B> <SPAN STYLE="font-weight: normal">[v1.2]</SPAN></P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western">Integrata la nuova finestra di dialogo per
+	l&rsquo;assegnazione rapida di scorciatoie con combinazione di tasti
+	per le procedure batch</P>
+	<LI><P CLASS="western">Localizzazione parziale in francese (senza
+	guida)</P>
+	<LI><P CLASS="western">Nuovo parametro per la modalit&agrave; Batch:
+	noSummary (BezSouhrnu) - impedisce la creazione di un relazione
+	(<I>report</I>) riassuntiva alla fine delle operazioni di batch</P>
+</UL>
+<P CLASS="western">Bug corretti:</P>
+<UL>
+	<LI><P CLASS="western">Eliminato un bug di OOo 2.4 su piattaforma
+	Linux (errata interpretazione della funzione CASE), che provocava
+	l&rsquo;errore &quot;<I>Bt_run: Unknown command: [Find]...</I>&quot;
+	quando veniva eseguita una procedura batch</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.1.2&nbsp;&nbsp;&nbsp;4/08</B></P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western">Localizzazione spagnola</P>
+	<LI><P CLASS="western">Localizzazione tedesca</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.1.1&nbsp;&nbsp;&nbsp;3/08</B></P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western">Localizzazione russa</P>
+</UL>
+<P CLASS="western">Bug corretti:</P>
+<UL>
+	<LI><P CLASS="western">Eliminato il crash dell&rsquo;estensione
+	qualora si apra o ci si sposti su un altro file di testo OOo mentre
+	&egrave; in corso una operazione di ricerca o di sostituzione</P>
+	<LI><P CLASS="western">Il file in cui sono salvati i parametri per
+	la modalit&agrave; batch <SAMP CLASS="western"><SPAN STYLE="font-style: normal">.../config/AltSearchScript.txt</SPAN></SAMP>
+	&egrave; ora codificato in UTF-8</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.1&nbsp;&nbsp;&nbsp;2/08</B></P>
+<P CLASS="western">Notizie:</P>
+<UL>
+	<LI><P CLASS="western"><I>Ricerca:</I> introduzione del parametro <TT CLASS="western">\l</TT>
+	per cercare un carattere alfabetico qualsiasi</P>
+	<LI><P CLASS="western"><I>Ricerca:</I> possibilit&agrave; di
+	ricercare un testo nell&rsquo;ambito del nome degli Indicatori di
+	Riferimento Incrociato e dei Riferimenti Incrociati</P>
+	<LI><P CLASS="western"><I>Ricerca:</I> possibilit&agrave; di ricerca
+	nell&rsquo;ambito delle Note a Pi&egrave; di Pagina e delle Note di
+	Chiusura. Funziona con OOo 2.3 e versioni superiori</P>
+	<LI><P CLASS="western"><I>Sostituzione:</I> introduzione del
+	parametro <TT CLASS="western">\d</TT> per ripristinare gli attributi
+	del testo alle condizioni di default</P>
+	<LI><P CLASS="western"><I>Sostituzione:</I> introduzione dei
+	parametri <TT CLASS="western">\F{}</TT> e <TT CLASS="western">\E{}</TT>
+	per creare Note a Pi&egrave; di Pagina e Note di Chiusura
+	(modificato il parametro da <TT CLASS="western">\F</TT> a <TT CLASS="western">\f</TT>
+	per conservare il formato)</P>
+	<LI><P CLASS="western"><I>Sostituzione:</I> introduzione dei
+	parametri <TT CLASS="western">\B{label|text}</TT> per inserire
+	l&rsquo;Indicatore di Riferimento Incrociato e <TT CLASS="western">\L{1,0,label}</TT>
+	per inserire campi di testo del tipo Riferimento incrociato</P>
+</UL>
+<P CLASS="western">Bug corretti:</P>
+<UL>
+	<LI><P CLASS="western">Supporto per l&rsquo;inserimento di numeri
+	esadecimali (&amp;Hnnnnnn) all&rsquo;interno del parametro di
+	sostituzione <TT CLASS="western">\A{}</TT></P>
+	<LI><P CLASS="western">Supporto per usare <TT CLASS="western">\}</TT>
+	e <TT CLASS="western">\I</TT> all&rsquo;interno dei parametri di
+	sostituzione <TT CLASS="western">\P{}</TT>, <TT CLASS="western">\C{}</TT>,
+	<TT CLASS="western">\F{}</TT></P>
+	<LI><P CLASS="western">Usando &quot;Trova tutto&quot; nell&rsquo;ambito
+	di propriet&agrave; quali BOLD (grassetto) ecc... non viene mostrato
+	il messaggio con il numero di corrispondenze</P>
+	<LI><P CLASS="western">Aumentata l&rsquo;altezza dei pulsanti
+	&quot;Scegli propriet&agrave;&quot; e &quot;?&quot; - essendo il
+	testo parzialmente tagliato in basso in Windows XP</P>
+	<LI><P CLASS="western">Messaggio di errore e di malfunzionamento
+	della modalit&agrave; batch nelle localizzazioni diverse da EN o CS</P>
+	<LI><P CLASS="western">La ricerca nelle Note, Campi di Testo,
+	Indicatori di Riferimento Incrociato, Riferimenti Incrociati, Note a
+	Pi&egrave; di Pagina, Note di Chiusura con il pulsante &quot;Trova&quot;
+	procede secondo l&rsquo;ordinamento delle pagine; supporto della
+	ricerca all&rsquo;interno di una selezione</P>
+	<LI><P CLASS="western">La ricerca per <TT CLASS="western">\ptext</TT>
+	e la sostituzione con: <TT CLASS="western">&amp;</TT> determina
+	l&rsquo;inserimento di una interruzione di riga in pi&ugrave; dopo
+	il paragrafo</P>
+	<LI><P CLASS="western">La ricerca per <TT CLASS="western">\p</TT> e
+	la sostituzione con: <TT CLASS="western">\p\p</TT> determina
+	l&rsquo;insorgere di un circolo vizioso che non &egrave; possibile
+	interrompere</P>
+	<LI><P CLASS="western">La ricerca per <TT CLASS="western">(text)\p</TT>
+	e la sostituzione con: <TT CLASS="western">\1</TT> determina la
+	comparsa del messaggio di errore <I>repldo: lin: 2842</I></P>
+	<LI><P CLASS="western">La ricerca per <TT CLASS="western">^.*$</TT>
+	e la sostituzione con: <TT CLASS="western">x&amp;x</TT> determina
+	l&rsquo;insorgere di un circolo vizioso che non &egrave; possibile
+	interrompere</P>
+</UL>
+<P CLASS="western" STYLE="margin-left: 2.01cm"><BR><BR>
+</P>
+<P CLASS="western"><B>Versione 1.0&nbsp;&nbsp;&nbsp;12/07</B> - Prima
+versione rilasciata pubblicamente</P>
+<P CLASS="western"><BR><BR>
+</P>
+</BODY>
+</HTML>

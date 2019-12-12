@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window
+    xmlns:dlg="http://openoffice.org/2000/dialog"
+    xmlns:script="http://openoffice.org/2000/script"
+    dlg:id="fr" dlg:left="101" dlg:top="52" dlg:width="196" dlg:height="72" dlg:closeable="true" dlg:moveable="true" dlg:withtitlebar="false">
+
+    <dlg:bulletinboard>
+        <dlg:fixedline dlg:id="basic" dlg:tab-index="1" dlg:top="5" dlg:left="5" dlg:width="240" dlg:height="10" dlg:value="&amp;basic" />
+<dlg:checkbox dlg:id="typo" dlg:tab-index="2" dlg:top="15" dlg:left="10" dlg:width="80" dlg:height="10" dlg:value="&amp;typo" dlg:checked="true"  />
+<dlg:checkbox dlg:id="apos" dlg:tab-index="3" dlg:top="15" dlg:left="90" dlg:width="80" dlg:height="10" dlg:value="&amp;apos" dlg:checked="true" dlg:help-text="&amp;hlp_apos" />
+<dlg:checkbox dlg:id="eepi" dlg:tab-index="4" dlg:top="15" dlg:left="170" dlg:width="80" dlg:height="10" dlg:value="&amp;eepi" dlg:checked="true" dlg:help-text="&amp;hlp_eepi" />
+<dlg:checkbox dlg:id="esp" dlg:tab-index="5" dlg:top="25" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;esp" dlg:checked="true" dlg:help-text="&amp;hlp_esp" />
+<dlg:checkbox dlg:id="tab" dlg:tab-index="6" dlg:top="25" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;tab" dlg:checked="false" dlg:help-text="&amp;hlp_tab" />
+<dlg:checkbox dlg:id="nbsp" dlg:tab-index="7" dlg:top="35" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;nbsp" dlg:checked="true" dlg:help-text="&amp;hlp_nbsp" />
+<dlg:checkbox dlg:id="unit" dlg:tab-index="8" dlg:top="35" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;unit" dlg:checked="true"  />
+<dlg:checkbox dlg:id="tu" dlg:tab-index="9" dlg:top="45" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;tu" dlg:checked="true" dlg:help-text="&amp;hlp_tu" />
+<dlg:checkbox dlg:id="maj" dlg:tab-index="10" dlg:top="45" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;maj" dlg:checked="true" dlg:help-text="&amp;hlp_maj" />
+<dlg:checkbox dlg:id="num" dlg:tab-index="11" dlg:top="55" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;num" dlg:checked="true" dlg:help-text="&amp;hlp_num" />
+<dlg:checkbox dlg:id="virg" dlg:tab-index="12" dlg:top="55" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;virg" dlg:checked="true" dlg:help-text="&amp;hlp_virg" />
+<dlg:checkbox dlg:id="nf" dlg:tab-index="13" dlg:top="65" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;nf" dlg:checked="true"  />
+<dlg:checkbox dlg:id="poncfin" dlg:tab-index="14" dlg:top="65" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;poncfin" dlg:checked="false" dlg:help-text="&amp;hlp_poncfin" />
+<dlg:checkbox dlg:id="ocr" dlg:tab-index="15" dlg:top="75" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;ocr" dlg:checked="false" dlg:help-text="&amp;hlp_ocr" />
+<dlg:checkbox dlg:id="chim" dlg:tab-index="16" dlg:top="75" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;chim" dlg:checked="false" dlg:help-text="&amp;hlp_chim" />
+<dlg:checkbox dlg:id="liga" dlg:tab-index="17" dlg:top="85" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;liga" dlg:checked="false" dlg:help-text="&amp;hlp_liga" />
+<dlg:checkbox dlg:id="mapos" dlg:tab-index="18" dlg:top="85" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;mapos" dlg:checked="false" dlg:help-text="&amp;hlp_mapos" />
+<dlg:fixedline dlg:id="gramm" dlg:tab-index="19" dlg:top="95" dlg:left="5" dlg:width="240" dlg:height="10" dlg:value="&amp;gramm" />
+<dlg:checkbox dlg:id="conf" dlg:tab-index="20" dlg:top="105" dlg:left="10" dlg:width="80" dlg:height="10" dlg:value="&amp;conf" dlg:checked="true" dlg:help-text="&amp;hlp_conf" />
+<dlg:checkbox dlg:id="sgpl" dlg:tab-index="21" dlg:top="105" dlg:left="90" dlg:width="80" dlg:height="10" dlg:value="&amp;sgpl" dlg:checked="true" dlg:help-text="&amp;hlp_sgpl" />
+<dlg:checkbox dlg:id="gn" dlg:tab-index="22" dlg:top="105" dlg:left="170" dlg:width="80" dlg:height="10" dlg:value="&amp;gn" dlg:checked="true" dlg:help-text="&amp;hlp_gn" />
+<dlg:fixedline dlg:id="verbs" dlg:tab-index="23" dlg:top="115" dlg:left="5" dlg:width="240" dlg:height="10" dlg:value="&amp;verbs" />
+<dlg:checkbox dlg:id="infi" dlg:tab-index="24" dlg:top="125" dlg:left="10" dlg:width="80" dlg:height="10" dlg:value="&amp;infi" dlg:checked="true" dlg:help-text="&amp;hlp_infi" />
+<dlg:checkbox dlg:id="conj" dlg:tab-index="25" dlg:top="125" dlg:left="90" dlg:width="80" dlg:height="10" dlg:value="&amp;conj" dlg:checked="true" dlg:help-text="&amp;hlp_conj" />
+<dlg:checkbox dlg:id="ppas" dlg:tab-index="26" dlg:top="125" dlg:left="170" dlg:width="80" dlg:height="10" dlg:value="&amp;ppas" dlg:checked="true"  />
+<dlg:checkbox dlg:id="imp" dlg:tab-index="27" dlg:top="135" dlg:left="10" dlg:width="80" dlg:height="10" dlg:value="&amp;imp" dlg:checked="true" dlg:help-text="&amp;hlp_imp" />
+<dlg:checkbox dlg:id="inte" dlg:tab-index="28" dlg:top="135" dlg:left="90" dlg:width="80" dlg:height="10" dlg:value="&amp;inte" dlg:checked="true" dlg:help-text="&amp;hlp_inte" />
+<dlg:checkbox dlg:id="vmode" dlg:tab-index="29" dlg:top="135" dlg:left="170" dlg:width="80" dlg:height="10" dlg:value="&amp;vmode" dlg:checked="true"  />
+<dlg:fixedline dlg:id="style" dlg:tab-index="30" dlg:top="145" dlg:left="5" dlg:width="240" dlg:height="10" dlg:value="&amp;style" />
+<dlg:checkbox dlg:id="bs" dlg:tab-index="31" dlg:top="155" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;bs" dlg:checked="true" dlg:help-text="&amp;hlp_bs" />
+<dlg:checkbox dlg:id="pleo" dlg:tab-index="32" dlg:top="155" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;pleo" dlg:checked="true" dlg:help-text="&amp;hlp_pleo" />
+<dlg:checkbox dlg:id="redon1" dlg:tab-index="33" dlg:top="165" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;redon1" dlg:checked="false" dlg:help-text="&amp;hlp_redon1" />
+<dlg:checkbox dlg:id="redon2" dlg:tab-index="34" dlg:top="165" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;redon2" dlg:checked="false" dlg:help-text="&amp;hlp_redon2" />
+<dlg:checkbox dlg:id="neg" dlg:tab-index="35" dlg:top="175" dlg:left="10" dlg:width="240" dlg:height="10" dlg:value="&amp;neg" dlg:checked="false" dlg:help-text="&amp;hlp_neg" />
+<dlg:fixedline dlg:id="misc" dlg:tab-index="36" dlg:top="185" dlg:left="5" dlg:width="240" dlg:height="10" dlg:value="&amp;misc" />
+<dlg:checkbox dlg:id="date" dlg:tab-index="37" dlg:top="195" dlg:left="10" dlg:width="120" dlg:height="10" dlg:value="&amp;date" dlg:checked="true"  />
+<dlg:checkbox dlg:id="mc" dlg:tab-index="38" dlg:top="195" dlg:left="130" dlg:width="120" dlg:height="10" dlg:value="&amp;mc" dlg:checked="false" dlg:help-text="&amp;hlp_mc" />
+<dlg:fixedline dlg:id="debug" dlg:tab-index="39" dlg:top="205" dlg:left="5" dlg:width="240" dlg:height="10" dlg:value="&amp;debug" />
+<dlg:checkbox dlg:id="idrule" dlg:tab-index="40" dlg:top="215" dlg:left="10" dlg:width="240" dlg:height="10" dlg:value="&amp;idrule" dlg:checked="false" dlg:help-text="&amp;hlp_idrule" />
+
+    </dlg:bulletinboard>
+
+</dlg:window>

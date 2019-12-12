@@ -200,7 +200,6 @@ stde() {
 	cat <<<"$@" 1>&2
 	return
 }
-
 s1() {
 	local color="$1"
 	shift

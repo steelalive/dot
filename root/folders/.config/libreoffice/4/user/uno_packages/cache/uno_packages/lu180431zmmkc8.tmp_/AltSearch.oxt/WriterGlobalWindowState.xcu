@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="WriterGlobalWindowState" oor:package="org.openoffice.Office.UI">
+	<node oor:name="UIElements">
+		<node oor:name="States">
+			<node oor:name="private:resource/toolbar/addon_name.TomBil.addon.AltSearch" oor:op="replace">		
+				<prop oor:name="UIName" oor:type="xs:string">
+					<value xml:lang="en-GB">Alternative searching</value>
+					<value xml:lang="cs-CZ">Alt. najít a nahradit</value>
+					<value xml:lang="ru-RU">Альтернативный поиск</value>
+					<value xml:lang="es-ES">Búsqueda alternativa</value>
+					<value xml:lang="de-DE">Suchen &amp; Ersetzen-Alternative für Writer</value>
+					<value xml:lang="fr-FR">Recherche alternative</value>
+					<value xml:lang="nl-NL">Alternatieve Zoeken</value>
+					<value xml:lang="it-IT">Trova e Sostituisci alternativo</value>
+				</prop>
+			</node>
+		</node>
+	</node>
+</oor:component-data>

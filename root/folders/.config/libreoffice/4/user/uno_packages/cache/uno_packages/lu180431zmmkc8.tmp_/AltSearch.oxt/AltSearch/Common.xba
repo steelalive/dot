@@ -1,0 +1,4511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Common" script:language="StarBasic">REM  *****  BASIC  *****
+option explicit
+
+type tParFind  &apos; zaznamova promenna pro hledani odstavcu \p 
+ txt as string
+ attr as string  
+ bmin as integer
+ bmax as integer
+ emin as integer
+ emax as integer
+ mode as integer
+end type
+
+
+type tFind  &apos; zaznamova promenna pro obecne hledani 
+ hled as string  &apos;hledaný retezec pro findNext()
+ &apos;hledat skupinu prazdnych odstavcu: 
+ pmode as integer  &apos;0=nic; -1=před zacatkem nalezeneho; 1=za koncem nalezeneho 
+ pmin as integer   &apos; minimalní počet odstavcu: 0..pmax  
+ pmax as integer   &apos; maximalni počet odstavcu: 1..max; -1=libovolný počet
+ pgBreak as integer &apos; hledat zalomení 0=nic; 1=stranky; 2=sloupce
+ pstyl as string   &apos; pouzito pro hledání podretezce v URL; původně určeno pro: vyhledaný text musí být zadaneho odstavcoveho stylu
+ chstyl as string  &apos; vyhledaný text musí být zadaneho znakoveho stylu
+ lgrw as string     &apos; zvětseni výběru po konečném nalezení vzhledem k jeho zacatku 
+ rgrw as string     &apos; zvětseni výběru po konečném nalezení vzhledem k jeho konci 
+ cmd as string     &apos; specialni prikaz [::neco::] - pouze pro prvni polozku
+ atr as integer   &apos; 0= hledat pouze zmenene vlastnosti   1=hledat presnou hodnotu 
+                  &apos; 3= hledat určitý text zadaneho znak. stylu    4=hledat jakykoli usek zadaneho znak. stylu   - pouze v prvni polozce
+                  &apos; 5= hledat jen zadaný seznam. styl  6=hledat jakykoli seznam. styl, včetně sytemovych (např. pro nestylové seznamy, odražky...)    - pouze v prvni polozce 
+                  &apos; 7= hledat jen zadaný odstav. styl  8=hledat jakykoli odstav. styl mimo Standard  - pouze v prvni polozce 
+                  &apos; 9=hledat určitý text označený jako rejstrik, zadaneho jmena rejstriku 10=hledat jakykoli text ozn. jako rejstrík - pouze v prvni polozce   
+ skup as integer  &apos; 0=nic; 1-9 cislo nalezene skupiny uvnitr zavorek
+ umode as integer  &apos; 0=normalni; 1 tato cast pole hleda libovoně dlouhou skupinu .+ nebo .* [výhledově i .{n,}] (min. pocet znaků n je v PMIN)  
+                               &apos;-1 signalizuje že předchozi zaznam byl libovolně dlouha skupina znaků - jina obsluha pro ulozeni obsahu (predchozí) skupiny
+ nmode as byte  &apos; 0=nic; 1 = priznak natahovaci skupiny která i pokud není nalezena, povazuje se za nalezenou;  např. [xy..z]*  z* aj. 
+end type
+
+
+type tRepl &apos; zaznamova promenna pro nahrazeni 
+ nahr as string  &apos;nahrazovany retezec nebo parametr prikazu
+ cmd as string     &apos; specialni prikaz [::neco::] - pouze pro prvni polozku
+ &apos; plati pro celý retezec, ulozeno v  Repl(0).smaz .vloz  
+ smaz as byte &apos; 1 = smazat; priznak že je přeba na zacatku nahrad smazat vyhledany text - např. u hyperlinku to muže být nežádoucí, když se bude chtít jen pozměnit část URL   
+ vloz as byte &apos; 1 = uvnitr nahrady se pouziva celý nalezeny řetezec/objekt (smazat do clipboardu, bude potřeba dále)
+ form as byte &apos; 1 = vynuceni vkladani pres clip, pro zachovani formatovani pri vkladani pres &amp;
+ textobs as byte &apos; 1 = je použit parametr \o = textovy obsah objektu - aby se zbytecne nekonvertovali tabulky na text  
+ ppos as byte &apos; 0 nic; 1 = jde o vlozeni odstavce na zavěr nahrazovacího retezce, po vložení odstavce nutno posunout kurzor doprava před další text - jinak zacyklení  
+end type
+
+
+
+sub main
+&apos; _AltSearch
+dim hle(), hled, pom
+
+&apos; Load_cs
+
+ hled = &quot;1text1\m\p\p\c2text2&quot;
+ hled = &quot;\p\p\p\p+1text1\p\p*2text2&quot;
+ hled = &quot;text\PTE\0\1\9XT\H&quot;
+&apos;hled = &quot;\x00ef0text0\c\p\p\t\m\p\p\m1text1\p\m&quot;
+&apos; hled = &quot;\p{sgs k s }\p\p\\\c1text1\m\*(&amp;)&quot;
+ hled = &quot;\x067\x0041\x0013\x0009&quot;
+ AltSearchSkup(0) = &quot;[vse]&quot;
+ AltSearchSkup(1) = &quot;[1]&quot;
+ AltSearchSkup(6) = &quot;[6]&quot; 
+ AltSearchSkup(9) = &quot;[9]&quot;
+ AltSearchSkup(10) = &quot;[URL]&quot;
+&apos; hled = &quot;\1neco\0\\&amp;jineho\ukonec\6&quot;
+&apos; hled = &quot;(.+neco0.*)^ *LN=(.*$) +FN=(xxx.*)bvv.+( *$)(.*)&quot;
+
+ hled = &quot;\x067\x0041\x0013\x09&quot;
+ msgbox replace_x2u(hled)
+
+exit sub
+
+ AltSearchVolby.reg = 1
+&apos;    hled = &quot;(neco neco( neco)&quot;
+    hle() = getFindArray(hled, true)
+    dbgVypisFind(hle())
+
+end sub
+
+
+&apos; vraci odhadnutý datový typ pro atributy textu
+function getPrValue(pomo as string)
+dim ppom as string
+ on error goto konec
+ &apos; prozatim jen boolen, retezce a cisla
+ getPrValue = pomo
+ ppom = ucase(pomo)
+ select case ppom
+   case &quot;TRUE&quot;
+    getPrValue = true
+   case &quot;FALSE&quot;
+    getPrValue = false            
+   case else
+    if IsNumeric(ppom) then
+       if (instr(ppom,&quot;&amp;h&quot;)=1) then 
+          getPrValue = clng(ppom) 
+         else
+          ppom = replace_(ppom,&quot;,&quot;,&quot;.&quot;)  &apos; val umi jako desetinny oddelovac jen tecku
+          getPrValue = val(ppom)
+         end if
+          
+     else &apos; je retezec
+       getPrValue = pomo
+
+     end if
+ end select
+konec:
+end function
+
+
+&apos; vyhodnoti citaci metaznak na udane pozici v retezci FIND
+&apos; v poli vys(0) vratí delku retezce metaznaku - citace
+&apos; vys(1)/vys(2) vratí min max citace; max=-1 znamena libovolny pocet opakovani
+sub vyhodnotMetazn(find as string, pol as integer) as array 
+dim vysl(2) as integer
+dim i,n as integer
+dim pom
+   i=pol
+       select case mid(find,i,1) &apos; dalsi znak za znakem
+        case &quot;?&quot;
+          vysl(0) = 1 &apos; delka citaciho metaznaku
+          vysl(1) = 0 
+          vysl(2) = 1 &apos; max 1
+        case &quot;*&quot;
+          vysl(0) = 1 &apos; delka citaciho metaznaku
+          vysl(1) = 0 
+          vysl(2) = -1 &apos; libovolny počet
+        case &quot;+&quot;
+          vysl(0) = 1 &apos; delka citaciho metaznaku
+          vysl(1) = 1 
+          vysl(2) = -1 &apos; libovolny počet
+        case &quot;{&quot;
+          n = i  
+          if instr(n,find,&quot;}&quot;) = 0 then goto Problem
+          pom = &quot;x&quot;+FindPartStr(find,&quot;{&quot;,&quot;}&quot;,n)+&quot;x&quot;
+          vysl(0) = n-i
+          if instr(pom,&quot;,&quot;)&gt;0 then  &apos; obsahuje carku
+             vysl(1) = val(FindPartStr(pom,&quot;x&quot;,&quot;,&quot;,1)) &apos; min
+             vysl(2) = val(FindPartStr(pom,&quot;,&quot;,&quot;x&quot;,1)) &apos; max
+             if vysl(2) = 0 then vysl(2) = -1  &apos; pokud není zadana hodnota maxima, pak bez omezení
+            else &apos; neobsahuje carku
+             vysl(1) = val(FindPartStr(pom,&quot;x&quot;,&quot;x&quot;,1)) &apos; min
+             if vysl(2) &lt; 0 then vysl(2) = 0  &apos; pokud není korektne zadan pocet opakovani tak nula
+             vysl(2) = vysl(1)
+            end if 
+        case else &apos; není čítací metaznak
+         problem:
+          vysl(1)=0
+          vysl(2)=0
+          vysl(0)=0
+        end select
+   
+   vyhodnotMetazn() = vysl()
+   
+end sub
+
+
+
+
+&apos; kompletne zanalyzuje hledany retezec a vrati vstupní pole pro funkci FindNextInBlock 
+function getFindArray(byval find as string, skupiny as boolean) as  tFind
+dim pom(0) as tFind
+dim pp(), cmd, rest
+dim  i, n, nMode as long
+dim cr1, pomo as string
+dim attrnames()
+dim chstyles   &apos; prac promena pro kontrolu hledanych stylu
+
+ redim SrchAtr() &apos; prazne pole hledani atributu
+ pom(0).atr = 0
+&apos; cr1 = chr(182) &apos;182 pro ladeni, naostro 13
+ cr1 = chr(13) 
+
+&apos;1. hledani samotneho (bloku) odstavcu:  .hled = &quot;$&quot;   .pmode = 16  + .pmin a .pmax
+&apos;2. hledani bloku odstavcu za prvnim nebo mezi texty:  .hled = &quot;&quot;   .pmode = 1  + .pmin a .pmax
+&apos;3. hledani bloku odstavcu pred prvnim textem:  .hled = &quot;text&quot;   .pmode = -1  + .pmin a .pmax
+&apos;4. hledat zalomeni strany/sloupce: .hled = &quot;text na zalomeni&quot; nebo .hled = &quot;$&quot; jakykoli odstavec;  .pgBreak = 1 nebo 2
+ 
+ 
+ if AltSearchVolby.reg &lt;&gt; 1 then &apos; ne regularni vyrazy
+   pom(0).hled = find
+   getFindArray() = pom()
+   exit function
+  end if
+ 
+&apos;1. zjistit GROW 
+ pp() = getGrow(find)
+ pom(0).lgrw = pp(1)
+ pom(0).rgrw = pp(2)
+
+&apos;2. specialní prikazy na zacatku radku 
+ getCmdRest(pp(0),cmd,find) &apos; vrati do druhe a treti promenne hodnoty cmd a zbytek textu pro hledani 
+ pom(0).cmd = cmd
+
+&apos;3. hledani podle atributů 
+ if 1 = instr(cmd,&quot;[:::&quot;) then
+    i = instr(cmd,&quot;::]&quot;)
+    if i &gt; 8 then  &apos; atributy zadany
+      cmd = mid(cmd,5,i-5)  &apos; ve tvaru prikaz1=hodnota1|prikaz2..|....
+
+     &apos; specialní obsluha pro hledaní znakových stylů 
+      if left(cmd,13) = &quot;CharStyleName&quot; then  
+         pom(0).cmd = &quot;&quot;
+         chstyles = AltSearchDoc.StyleFamilies.getByName(&quot;CharacterStyles&quot;)
+         pomo = rightpast(cmd,&quot;CharStyleName=&quot;)  &apos; jméno hledaneho stylu
+         &apos; existuje vůbec tento styl ?
+         if chstyles.hasByName(pomo) then &apos; ano, 
+            pom(0).chstyl = chstyles.getByName(pomo).name  &apos; ulozit jmeno stylu který se bude hledat (ne displayname)
+            &apos; zjistit zda je styl výchozí, pokud ano tak hledat styl jako  &quot;&quot;
+            if chstyles.ElementNames(0) = pom(0).chstyl then pom(0).chstyl = &quot;&quot;
+           else &apos;nexistujicí jmeno stylu 
+            &apos; hlasení o chybe? - prozatim se necha puvodni nepodporovane
+            pom(0).chstyl = pomo
+            if pomo = &quot;&quot; then  &apos; hledat všechny styly kromě kromě &quot;Výchozí&quot;
+                pom(0).cmd = &quot;NotDefaultCharStyleName&quot;
+              end if
+           end if
+
+         if find = &quot;&quot; then &apos; 4=hledat jakykoli usek zadaneho znak. stylu
+             pom(0).atr = 4
+             pom(0).hled = &quot;.*&quot;
+           else  &apos; 3= hledat určitý zadaný text zadaneho znak. stylu 
+             pom(0).atr = 3
+           end if 
+         goto preskocAtr  &apos; zbytek preskočit - prozatím asi nelze kombinovat
+        end if 
+
+
+     &apos; speciální obsluha pro hledaní slov označenných pro rejstrík - index 
+      if left(cmd,17) = &quot;DocumentIndexMark&quot; then  
+         pom(0).cmd = &quot;&quot;
+   
+         pomo = rightpast(cmd,&quot;DocumentIndexMark=&quot;)  &apos; jméno hledaneho rejstriku
+         &apos; bylo by dobre zjistit jestkli existuje, ale zatim nevim jak takže:
+         pom(0).chstyl = pomo  
+
+         if find = &quot;&quot; then &apos; 10=hledat jakykoli usek zadaneho znak. jmena rejstriku
+             pom(0).atr = 10
+             pom(0).hled = &quot;.*&quot;
+           else  &apos; 9= hledat určitý zadaný text zadaneho jmena rejstriku 
+             pom(0).atr = 9
+           end if 
+
+         goto preskocAtr  &apos; zbytek preskočit - prozatím asi nelze kombinovat
+        end if 
+
+
+
+     &apos; speciální obsluha pro hledaní čislovani - odrážek 
+      if left(cmd,18) = &quot;NumberingStyleName&quot; then  
+         pom(0).cmd = &quot;&quot;
+         if find = &quot;&quot; then 
+           if AltSearchVolby.zpet = 1 then
+              find = &quot;^.*&quot; &apos; Pokud není zadano, tak hledat celý odstavec  
+             else
+              find = &quot;.*&quot; &apos; Pokud není zadano, tak hledat celý odstavec   
+             end if 
+          end if 
+         chstyles = AltSearchDoc.StyleFamilies.getByName(&quot;NumberingStyles&quot;)
+         pomo = rightpast(cmd,&quot;NumberingStyleName=&quot;)  &apos; jméno hledaneho stylu
+         &apos; existuje vůbec tento styl ?
+         if chstyles.hasByName(pomo) then &apos; ano, 
+            pom(0).chstyl = chstyles.getByName(pomo).name  &apos; ulozit jmeno stylu který se bude hledat (ne displayname)
+            pom(0).atr = 5
+           else &apos;nexistujicí jmeno stylu nebo bez jmena stylu = jakykoliv vcetne systemových
+            pom(0).chstyl = pomo
+            pom(0).atr = 6
+           end if
+     
+         goto preskocAtr  &apos; zbytek preskočit - prozatím asi nelze kombinovat
+        end if 
+
+
+
+     &apos; speciální obsluha pro hledaní odstavcových stylů 
+      if left(cmd,13) = &quot;ParaStyleName&quot; then  
+         pom(0).cmd = &quot;&quot;
+         if find = &quot;&quot; then 
+           if AltSearchVolby.zpet = 1 then
+              find = &quot;^.*&quot; &apos; Pokud není zadano, tak hledat celý odstavec  
+             else
+              find = &quot;.*&quot; &apos; Pokud není zadano, tak hledat celý odstavec   
+             end if 
+          end if 
+         chstyles = AltSearchDoc.StyleFamilies.getByName(&quot;ParagraphStyles&quot;)
+         pomo = rightpast(cmd,&quot;ParaStyleName=&quot;)  &apos; jméno hledaneho stylu
+         &apos; existuje vůbec tento styl ?
+         if chstyles.hasByName(pomo) then &apos; ano, 
+            pom(0).chstyl = chstyles.getByName(pomo).name  &apos; ulozit jmeno stylu který se bude hledat (ne displayname)
+            pom(0).atr = 7
+           else &apos;nexistujicí jmeno stylu nebo bez jmena stylu = jakykoliv mimo default
+            pom(0).chstyl = pomo
+            pom(0).atr = 8
+           end if
+
+         goto preskocAtr  &apos; zbytek preskočit - prozatím asi nelze kombinovat
+        end if 
+
+
+
+
+     
+      pom(0).atr = 0  &apos;1 v pripade ze se maji hledat presne hodnoty
+      &apos; zde vytvorit pole pro atributy
+      attrnames() = ArrayOutOfString_(cmd, &quot;|&quot;)
+      dim SrchAtrTmp(ubound(attrnames())) as new com.sun.star.beans.PropertyValue
+      for i = 0 to ubound(attrnames())
+         n = instr(attrnames(i),&quot;=&quot;) &apos; zjistit jestli jsou zadany i hodnoty
+         if n&gt;0 then &apos; ano, jmeno atributu i hodnota
+            pomo = right(attrnames(i),len(attrnames(i))-n) &apos; hodnota
+            pom(0).atr = 1  &apos;1 v pripade ze se maji hledat presne hodnoty = 1 &apos; hledat presnou hodnotu
+            SrchAtrTmp(i).Name = left(attrnames(i),n-1)                       
+            SrchAtrTmp(i).Value = getPrValue(pomo)  &apos; vrati prislusny datovy typ pro value 
+            &apos; vyjimka pro hledani podretezce v URL Hyperlikoveho odkazu 
+            if SrchAtrTmp(i).Name = &quot;HyperLinkURL&quot; then
+               pom(0).atr = 0  &apos; hledat jen obecne vsechny hyperliky
+               pom(0).pstyl = SrchAtrTmp(i).Value &apos; pokud je neprazdne, hleda se navic podretezec
+               SrchAtrTmp(i).Value = &quot;&quot;
+              end if
+
+           else  &apos; pouze jmeno atributu
+            SrchAtrTmp(i).Name = attrnames(i)          
+           end if
+&apos;         msgbox &quot;Atribut s hodnotou:&quot; &amp; chr(10) &amp; attrnames(i) &amp; chr(10) &amp; SrchAtrTmp(i).Name &amp; chr(10) &amp; SrchAtrTmp(i).Value           
+        next i 
+      SrchAtr() = SrchAtrTmp()  
+      pom(0).cmd = &quot;&quot;
+     end if   
+  end if
+ 
+preskocAtr:
+ 
+    
+&apos; find = replace_(find,&quot;\\&quot;,&quot;\x005C&quot;)  &apos; spec. znaky zamenit za hexa kody
+&apos; find = replace_(find,&quot;\\&quot;,&quot;\&quot;)  &apos; spec. znaky zamenit za hexa kody
+ find = replace_(find,&quot;\(&quot;,&quot;\x0028&quot;)  &apos; obycejne zavorky - ne pro skupiny ()
+ find = replace_(find,&quot;\)&quot;,&quot;\x0029&quot;)  &apos; obycejne zavorky - ne pro skupiny ()
+ find = replace_(find,&quot;\^&quot;,&quot;\x005E&quot;)  &apos; znak ^
+ find = replace_(find,&quot;\+&quot;,&quot;\x002B&quot;)  &apos; znak +
+ find = replace_(find,&quot;\*&quot;,&quot;\x002A&quot;)  &apos; znak * 
+ find = replace_(find,&quot;\|&quot;,&quot;\x007C&quot;)  &apos; oddelovac OR
+ find = replaceC(find,&quot;\S&quot;,chr(160))   &apos; pevna mezera
+ find = replaceC(find,&quot;\s&quot;,&quot;[ \xA0\x09\x0A]&quot;)   &apos;bile mezery: tabulátor,line-break, mezera, nedelitelna mezera 
+ find = replace_(find,&quot;\[&quot;,&quot;\x005B&quot;)   &apos; leva zavorka [
+ find = replaceC(find,&quot;\d&quot;,&quot;[0-9]&quot;)&apos; zkratka pro hledani cisel
+ find = replaceC(find,&quot;\l&quot;,&quot;[:alpha:]{1,1}&quot;)   &apos;zkratka pro nejake pismeno 
+
+ find = replDec2hex(find)             &apos; záměna dec zadani \d
+ &apos;\n zlom radku a \t tabulator netreba OOo to umí automaticky
+ find = replaceC(find,&quot;\x000D&quot;,chr(13))   &apos; znak odstavce
+ find = replaceC(find,&quot;\x000d&quot;,chr(13))   &apos; znak odstavce
+ find = replaceC(find,&quot;\p&quot;,chr(13))   &apos; znak odstavec
+
+ &apos; hook - nekolik let už nejde hledat \x00AD (\#173) = volitelné rozdělení
+ &apos; nahradit přímo znakem - to zatím fungovalo
+&apos; nedá se spravit - pokud jsou aktivní reg. symboly tak to prostě nenajde ani \xAD, \u00AD, chr(173)
+&apos; find = replaceC(find,&quot;\x00AD&quot;,chr(173))   
+ 
+ if ICUcompatability then  find = replace_x2u(find)   &apos; použít syntaxi ICU regexp (International Components for Unicode)  \xhhhh =&gt; \uhhhh
+
+
+
+&apos;debug:
+&apos; find = replace_(find,&quot;\x000d&quot;,&quot;¶&quot;)   &apos; znak odstavce
+&apos; find = replace_(find,&quot;\p&quot;,&quot;¶&quot;)   &apos; znak odstavec
+ 
+ &apos; jsou-li vypnute skupiny a hleda se objekt 
+ &apos; tak prekodovat zpátky z hex na znaky a skončit; neplatí pro NotDefaultCharStyleName = hledání všech znakových stylů
+ if (pom(0).cmd &lt;&gt; &quot;&quot;) and (not skupiny) and (not (pom(0).cmd = &quot;NotDefaultCharStyleName&quot;)) then 
+     pom(0).hled = prepis_hex(find)
+     getFindArray() = pom()
+     exit function
+   end if 
+
+
+
+ &apos; zbytek textu uvnitr find rozdelit na casti podle odstavcu \p a podle skupin ()
+dim skup, uroven &apos; cislo skupiny () a uroven zanoreni zavorek 
+dim ch as string
+dim meta()
+dim lenFind, l,r as long
+
+ &apos; vypusteni vnejsich zavorek - OOo nedokáže spravně najít zacatek odstavce &quot;^&quot; pokud je pred nim &quot;(&quot;
+ &apos; pokud jsou vypnuty skupiny, odstranit vnější závorkysub replace 
+ &apos; takze (text1)(taxt2) - nechat byt, ((text1)(taxt2)) nebo (text1 text2) - zrusit vnější závorky
+ lenFind = len(find)
+ if (left(find,1)=&quot;(&quot;) and (right(find,1)=&quot;)&quot;) and (lenFind&gt;2) and (not skupiny) then &apos; ano, na zacatku je &quot;(&quot; a na konci je &quot;)&quot;
+    for i = 2 to lenFind-1
+       ch = mid(Find, i, 1)
+       if ch = &quot;(&quot; then l = l+1
+       if ch = &quot;)&quot; then r = r+1
+       &apos; pokud je první pravá závorka, pak patri k první vnější levé a nic se nesmí měnit 
+       if (r = 1) and (l = 0) then goto nechat
+       &apos; pokud je první levá závorka, pak jsou další podúrovně a vnější závorky je třeba zrušit
+       if (r = 0) and (l = 1) then exit for
+
+     next i
+     
+    find = mid(find,2, lenFind-2) 
+    nechat:
+   
+  end if
+
+ &apos; problem s kotvou zacatku odstavce: (^skup) nenajde OOo; ^(skup) nenajde AltSearch
+ &apos; pokud jsou zapnuty skupiny, je treba přesunout ^ dovnitr skupiny 
+ if skupiny then
+     find = replace_(find,&quot;^(&quot;,&quot;(^&quot;) &apos; kotvu zacatku odstavce ^ premistit dovnitř skupiny 
+   end if
+ 
+ 
+
+ if not skupiny then uroven = 999   
+ rest = &quot;&quot;
+ i = 1
+ n = 0 &apos; index skupiny pro hledani
+ lenFind = len(find)
+ nmode = 0
+ do while i &lt;= lenFind
+	ch = mid(Find, i, 1)
+	select case nMode
+	case 0 &apos;normal mode
+		select case ch
+		case &quot;\&quot;  &apos; escape mode 
+			nMode = 1
+		case cr1  &apos; zacatek bloku odstavců          
+            nMode = 2
+            if rest &lt;&gt; &quot;&quot; then &apos; blok odstavcu za textem
+                pom(n).hled = rest &apos; nastavit predchozi text na hledani
+                rest = &quot;&quot;
+                n=n+1  &apos; nova skupina odstavců pro hledani
+                redim preserve pom(n) 
+                pom(n).pmode = 1
+                pom(n).pmin = 1 
+              else &apos;dosud zadny text pred
+                pom(n).pmode = 1  &apos; prozatim mode 1, definitivne se rozhodne na konci bloku
+                pom(n).pmin = 1 
+              end if 
+            if uroven = 1 then pom(n).skup = skup &apos; index stavajici skupiny, byla-li predchozi otevrena 
+            
+		case &quot;.&quot; &apos; hledany retezec preruseny .
+		    if not skupiny then goto normalZnak &apos; vypnout pri vypnutych skupinach
+		    if (i+1)&gt;=lenFind then goto normalZnak &apos; pokud je . poslední nebo predposledni znak, tak nema cenu nic delat
+             
+            select case mid(Find, i+2, 1) &apos; co je treti znak za .* nebo .+   ?
+               case &quot;(&quot;
+                 if uroven &lt;&gt; 0 then goto normalZnak &apos; vnorene skupiny ignorovat     
+                 &apos; mel by to byt konec useku mezi skupinami
+		       case &quot;)&quot;
+                 if uroven &lt;&gt; 1 then goto normalZnak &apos; vnorene skupiny ignorovat
+                 &apos; mel by to byt konec skupiny 1. urovne
+		       case else  
+    		       goto normalZnak 
+ 	
+		      end select
+		      		    
+		    
+            &apos; zjistit vyskyt * nebo + na dalsim miste
+            dim opak
+            opak = mid(Find, i+1, 1)
+            select case opak
+              case &quot;*&quot;, &quot;+&quot;  &apos; další znak * nebo + = libovolně dlouhý řetezec 
+                if rest &lt;&gt; &quot;&quot; then &apos; pokud uz je nejaky hledany text tak ukoncit a novou skupinu
+                  pom(n).hled = rest &apos; nastavit predchozi text na hledani
+                  rest = &quot;&quot;
+                  n=n+1  &apos; nova skupina odstavců pro hledani
+                  redim preserve pom(n) 
+                 end if
+               if uroven = 1 then pom(n).skup = skup &apos; index stavajici skupiny, byla-li predchozi otevrena 
+               rest = &quot;.&quot;+opak  &apos; musi byt nastaven - použije se pri ukonceni
+               pom(n).hled = rest &apos; nastavit text na hledani
+               pom(n).umode = 1 &apos; priznak libolne dlouheho bloku textu
+               if opak = &quot;*&quot; then
+                    pom(n).pmin = 0 &apos; minimální delka bloku
+                  else
+                    pom(n).pmin = 1 &apos; minimální delka bloku
+                  end if  
+
+               if (i+1)&lt;lenFind then &apos; pokud jeste neco nasleduje, tak zalozit dalsi skupinu
+                 if mid(Find, i+2, 1) &lt;&gt; &quot;)&quot; then &apos; pokud nenasleduje ukonceni skupiny, novou skupinu
+                   n=n+1  &apos; nova skupina odstavců pro hledani
+                   redim preserve pom(n) 
+                   if uroven = 1 then pom(n).skup = skup &apos; index stavajici skupiny, byla-li predchozi otevrena 
+                   pom(n).umode = -1 &apos; priznak skupiny nasledujici za libolně dlouhým blokem textu
+                   rest = &quot;&quot;
+                  end if 
+                end if
+               i = i+1
+
+              case else
+                goto normalZnak &apos; normalni obsluha bezneho znaku
+              end select
+
+
+
+		case &quot;(&quot; &apos; hledany retezec preruseny zavorkou (
+            uroven = uroven + 1 &apos; uroven zanoreni zavorek ()
+            if uroven = 1 then 
+              if skup &lt; 9 then skup = skup + 1 &apos; číslo skupiny zavorek ()
+              &apos; ukoncit stavajici skupinu a zacit novou s indexem skup 
+              if i&gt;1 then 
+                pom(n).hled = rest &apos; nastavit predchozi text do hledani
+                rest = &quot;&quot;
+                n=n+1  &apos; nova skupina pro hledani
+                redim preserve pom(n)
+                if pom(n-1).umode = 1 then pom(n).umode = -1  &apos; nastavit priznak predchozi libovone dlouheho bloku 
+
+               end if 
+              pom(n).skup = skup &apos; index stavajici skupiny
+
+             else &apos; uroven = 1
+              rest = rest + ch 
+             end if
+
+		case &quot;)&quot;
+            uroven = uroven - 1
+            if uroven = 0 then &apos; zpet na puvodni urovni, ukoncit skupinu, zacit novou
+              &apos; pokud je dalsi znak nova oteviraci zavorka nekoncit skupin, ukonci se pri otevření dalsi skupiny
+              if (i &lt; lenFind)and(mid(Find,i+1,1)&lt;&gt;&quot;(&quot;) then &apos; hledany retezec preruseny zavorkou )
+                pom(n).hled = rest &apos; nastavit predchozi text na hledani
+                rest = &quot;&quot;
+                n=n+1  &apos; nova skupina pro hledani
+                redim preserve pom(n) 
+                if pom(n-1).umode = 1 then pom(n).umode = -1  &apos; nastavit priznak predchozi libovone dlouheho bloku 
+               end if 
+             else
+              rest = rest + ch 
+             end if 
+            
+		case else &apos;asi znak do hledaneho textu 
+		 normalZnak:
+		   if (rest=&quot;&quot;) then 
+		       if pom(n).pmode &lt;&gt; 0 then
+		           &apos; ukoncit blok odstavců, osetrit maximum
+		           if (pom(n).pmin&gt;pom(n).pmax) and (pom(n).pmax&gt;=0) then pom(n).pmax=pom(n).pmin
+
+                   n=n+1  &apos; nova skupina odstavců pro hledani
+                   redim preserve pom(n) 
+                   if uroven = 1 then pom(n).skup = skup &apos; index stavajici skupiny, byla-li predchozi otevrena
+		           rest = ch  
+		         else  
+      	          &apos; hledani zacina textem  
+		          rest = ch  
+		         end if 
+		       
+		       
+		     else  &apos;asi znak do hledaneho textu - pridat 
+		       rest = rest &amp; ch 
+		     end if
+			
+		end select
+	case 1	&apos;Escape mode
+		select case ch
+		case &quot;m&quot;,&quot;M&quot;
+			nMode = 0
+            pom(n).pgBreak = 1
+
+		case &quot;c&quot;,&quot;C&quot;
+			nMode = 0
+            pom(n).pgBreak = 2
+
+		case else &apos; nehlidany parametr - prepsat
+			nMode = 0
+            if pom(n).pmode &lt;&gt; 0 then  &apos; ukoncit bloku odstavcu
+	           &apos; ukoncit blok odstavců, osetrit maximum
+	           if (pom(n).pmin&gt;pom(n).pmax) and (pom(n).pmax&gt;=0) then pom(n).pmax=pom(n).pmin
+               n=n+1  &apos; nova skupina odstavců pro hledani
+               redim preserve pom(n) 
+	         end if 
+            rest = rest &amp; &quot;\&quot; &amp; ch
+		end select
+
+	case 2	&apos;blok odstavců
+		select case ch
+		case cr1 &apos; dalsi odstavec
+            pom(n).pmin = pom(n).pmin + 1 
+
+		case &quot;?&quot;,&quot;+&quot;,&quot;*&quot;,&quot;{&quot;  &apos; čítací metaznaky
+            meta() = vyhodnotMetazn(find,i)   
+			nMode = 0		
+            pom(n).pmin = meta(1) 
+            pom(n).pmax = meta(2)
+            if meta(0)&gt;0 then i = i + meta(0) &apos; polohu za konec metaznaku 
+
+		case &quot;(&quot;
+            uroven = uroven + 1 &apos; uroven zanoreni zavorek ()
+            if uroven = 1 then 
+              if skup &lt; 9 then skup = skup + 1 &apos; číslo skupiny zavorek ()
+              &apos; ukoncit stavajici skupinu a zacit novou s indexem skup 
+              rest = &quot;&quot;
+              if (pom(n).pmin&gt;pom(n).pmax) and (pom(n).pmax&gt;=0) then pom(n).pmax=pom(n).pmin &apos; osetrit maximum
+              n=n+1  &apos; nova skupina odstavců pro hledani
+              redim preserve pom(n) 
+              pom(n).skup = skup &apos; index nove skupiny
+              nMode = 0
+
+             else
+              rest = rest + ch 
+             end if
+
+		case &quot;)&quot;
+            uroven = uroven - 1
+            if uroven = 0 then &apos; zpet na puvodni urovni, ukoncit skupinu, zacit novou
+              if (i &lt; lenFind) then &apos; hledany retezec preruseny zavorkou )
+               pom(n).hled = rest &apos; nastavit predchozi text na hledani
+               rest = &quot;&quot;
+               n=n+1  &apos; nova skupina pro hledani
+               redim preserve pom(n) 
+               nMode = 0
+              end if 
+             else
+              rest = rest + ch 
+             end if 
+
+		case else  &apos; asi text nebo prikaz - zkontrolovat v modu 0
+			nMode = 0
+            i = i - 1
+		end select
+      
+
+
+	case else
+		&apos;shouldn&apos;t happen
+	end select
+  
+  i = i + 1
+ loop
+ 
+ 
+ 
+ &apos;koncilo blokem odstavcu
+ if pom(n).pmode&lt;&gt;0 then 
+    &apos; ukoncit blok odstavců, osetrit maximum
+    if (pom(n).pmin&gt;pom(n).pmax) and (pom(n).pmax&gt;=0) then pom(n).pmax=pom(n).pmin
+   else  
+     pom(n).hled = rest
+   end if  
+
+  &apos; pokud se zacina blokem odstavcu a nasleduje neco dalsiho 
+  &apos; (tim je vsak asi zadelano na problemy se skupinami... prvni blok zacina jinak nez ostatní)
+  if (pom(0).pmode&lt;&gt;0) and (ubound(pom())&gt;0) then
+      if pom(0).skup &lt;&gt; pom(1).skup then goto HledatJenSamOstavec &apos; dalsi je také odstavec - nechat byt
+      pom(0).hled = pom(1).hled
+      pom(0).pmode = -1
+      if pom(0).pgBreak = 0 then pom(0).pgBreak = pom(1).pgBreak
+      if pom(0).skup = 0 then pom(0).skup = pom(1).skup      
+
+      for i = 1 to ubound(pom())-1 
+&apos;       pom(i) = pom(i+1) &apos; nefunguje spolehlive pripredavani do vysledku
+        pom(i).hled = pom(i+1).hled &apos;hledat skupinu prazdnych odstavcu: 
+        pom(i).pmode = pom(i+1).pmode
+        pom(i).pmin = pom(i+1).pmin
+        pom(i).pmax = pom(i+1).pmax
+        pom(i).pgBreak = pom(i+1).pgBreak
+        pom(i).pstyl = pom(i+1).pstyl
+        pom(i).chstyl = pom(i+1).chstyl
+        pom(i).lgrw = pom(i+1).lgrw
+        pom(i).rgrw = pom(i+1).rgrw
+        pom(i).cmd = pom(i+1).cmd
+        pom(i).atr = pom(i+1).atr
+        pom(i).skup = pom(i+1).skup
+        pom(i).umode = pom(i+1).umode
+        pom(i).nmode = pom(i+1).nmode
+       next i 
+       
+      i = ubound(pom())-1 
+      redim preserve pom(i)
+    end if
+    
+HledatJenSamOstavec:
+  &apos; pokud je smostatny blok odstavcu tak nastavit první hledani
+  if (pom(0).pmode &lt;&gt; 0) and (pom(0).hled=&quot;&quot;) then
+     pom(0).pmode = 16
+     pom(0).hled=&quot;$&quot;
+    end if
+  
+&apos;  msgbox pom(0).nmode
+  
+  &apos; dodatecne upravy 
+  for i = 0 to ubound(pom())
+    &apos; hledani zalomeni stranky: pokud se hleda samotne zalomeni bez jineho textu
+    if (pom(i).hled = &quot;&quot;) and (pom(i).pgBreak&gt;0) then pom(i).hled = &quot;$&quot;
+         
+    &apos; nastaveni priznaku skupiny která může mít nulovou délku a přesto se považuje za nalezenou
+    &apos; zbavit se kotev ^ a $
+    l = 0 : r = 0
+    if (left(pom(i).hled,1)=&quot;^&quot;) then l = 1
+    if (right(pom(i).hled,1)=&quot;$&quot;) then r = 1
+    rest = ucase( mid(pom(i).hled,1+l, len(pom(i).hled)-l-r) )
+    &apos; na konci je * nebo ? nebo {0,nn} 
+    if (right(rest,1)=&quot;*&quot;)or(right(rest,1)=&quot;?&quot;)or(right(rest,1)=&quot;}&quot;) then
+       if (right(rest,1)=&quot;}&quot;) then  &apos; odpreparovat zavorky
+          ch = &quot;&quot;  &apos; najit oteviraci zavorku
+          for n = len(rest)-1 to 1 step -1
+             if mid(rest,n,1)=&quot;{&quot; then exit for  
+             ch = mid(rest,n,1) + ch
+           next n 
+          &apos; pokud bylo ve tvaru {0,nn} tak odpreparovat modifikator
+          if instr(ch,&quot;0,&quot;)=1 then rest = left(rest,len(rest)-len(ch)-2) 
+          
+         else
+          rest = mid(rest,1, len(rest)-1)
+         end if 
+       
+       &apos; a. typ:   [xy...z]*   ale ne:  [xx]*[yy]*
+       if (left(rest,1)=&quot;[&quot;) and (right(rest,1)=&quot;]&quot;) then
+          rest = mid(rest,2, len(rest)-2)
+          &apos; jen pri jednom paru zavorek
+          if (instr(rest,&quot;[&quot;)=0)and((instr(rest,&quot;]&quot;)=0)) then pom(i).nmode = 1 
+
+       &apos; b. typ:   x*   = jediny znak
+       elseif (len(rest)=1) then
+           pom(i).nmode = 1 
+
+       &apos; c. typ:   \x0000*
+       elseif (len(rest)=6) and (left(rest,2)=&quot;\X&quot;) then
+           pom(i).nmode = 1 
+       end if
+    
+      end if &apos; konci na *
+        
+   next i 
+ 
+  &apos; pokud je natahovaci skupina jako poslední v seskupení, tak vypnout vyjimku nenalezení,
+  &apos; jinak se může nekonečně zacyklovat  
+  i = ubound(pom())
+&apos;  if pom(i).nmode = 1 then pom(i).nmode = 0
+  
+  &apos; hledat celý odstavec jako priprava pro hledání pouze podle znakového stylu
+  if pom(0).atr = 4 then pom(0).hled = &quot;.*&quot;
+  if pom(0).atr = 10 then pom(0).hled = &quot;.*&quot;  &apos; pro hledaní jakekoli indexové značky
+ &apos; dbgVypisFind( pom())
+
+
+
+&apos;msgbox pom(0).nmode &amp; &quot;   &quot; &amp; pom(0).umode
+
+  getFindArray() = pom()
+end function
+
+
+
+
+&apos; kompletne zanalyzuje nahrazovaci retezec a vrati pole pro funkci nahradit 
+function getReplArray(byval nahr as string) as  tRepl
+dim pom(0) as tRepl
+dim pp(), cmd, rest
+dim  i as long, n, k, nMode as long
+dim kod, pomo as string
+dim attrnames()
+const cisla = &quot;0123456789&quot;
+ AltSearchPrintOut = &quot;&quot;  &apos; jmeno souboru, rámce pro výpis - prázdný = bez výpisu 
+
+
+&apos;kazdy spec prikaz pole pro nahrazeni bude proveden zvlast v zavislosti na CMD
+ 
+ if AltSearchVolby.reg &lt;&gt; 1 then &apos; ne regularni vyrazy
+   pom(0).nahr = nahr
+   pom(0).cmd  = &quot;$&quot;     &apos; normalne vlozit text
+   pom(0).smaz = 1
+   getReplArray() = pom()
+   exit function
+  end if
+ 
+ 
+ &apos; na casti podle pouzitých prikazu
+
+redim pom() as tRepl
+dim ch as string
+dim lenRepl as long
+
+ rest = &quot;&quot;
+ i = 1
+ lenRepl = len(nahr)
+ n = -1  &apos; pocitadlo zaznamu vysl. pole 
+
+ do while i &lt;= lenRepl
+	ch = mid(nahr, i, 1)
+	select case nMode
+	case 0 &apos;normal mode
+		select case ch
+		case &quot;\&quot;  &apos; escape mode - prvni vyskyt lomitka
+            nMode = 1
+  	        if i = 1 then &apos; prvni zaznam - vytvorit
+               n=n+1  &apos; nova skupina pro hledani
+               redim preserve pom(n)
+              end if 
+
+            if lenRepl&gt;i then  &apos; za lomitkem je dalsi znak
+               select case mid(nahr, i+1, 1) &apos; nasledujici znak 
+                case &quot;x&quot;,&quot;&amp;&quot;,&quot;#&quot;,&quot;\&quot;,&quot;|&quot;   &apos; nasleduje specialni text zadany pomoci \ 
+                  if (pom(n).cmd &lt;&gt; &quot;$&quot;)and(i&lt;&gt;1) then
+                      n=n+1  &apos; novy zaznam pro text
+                      redim preserve pom(n)
+                    end if
+                   
+                case &quot;f&quot;  &apos; vynuceni vkladani přes clipboard, neni treba novy zaznam, jen se nastaví přiznak pro celé pole
+                  &apos; nic
+
+                case else   &apos; bude nejaky spec. parametr
+                  if i&lt;&gt;1 then
+                    n=n+1  
+                    redim preserve pom(n)
+                   end if
+                  
+                end  select
+
+              end if
+
+			
+		case &quot;&amp;&quot;  &apos; totez je \0           
+            n=n+1  &apos; nova skupina pro hledani
+            redim preserve pom(n)
+
+            &apos; vlozit obsah skupiny 0
+            pom(n).nahr = &quot;0&quot;
+            pom(n).cmd = &quot;@&quot;  &apos; identifikator skupiny
+            nMode = 0  &apos; pokracovat textovym modem
+            
+            
+		case else &apos;asi znak do hledaneho textu 
+		   if i = 1 then &apos; zacina se retezcem
+               n=n+1  &apos; nova skupina pro hledani
+               redim preserve pom(n)
+               pom(n).nahr = ch
+               pom(n).cmd = &quot;$&quot;   &apos; identifikator retezce
+             else
+    		   if pom(n).cmd = &quot;$&quot; then &apos; otevreny retezec textu - pridat ke stavajicimu
+	              pom(n).nahr = pom(n).nahr + ch
+		   	     else  &apos;jinak zalozit novy zaznam a pridat znak  
+                  n=n+1  &apos; nova skupina pro hledani
+                  redim preserve pom(n)
+                  pom(n).nahr = ch
+                  pom(n).cmd = &quot;$&quot;   &apos; identifikator retezce
+		         end if
+		     end if    
+			
+		end select
+
+	case 1	&apos;Escape mode
+		select case ch
+		 case &quot;&amp;&quot;, &quot;\&quot;, &quot;|&quot;  &apos; vlozit normalni &amp; nebo \ nebo |
+			nMode = 0
+            pom(n).nahr = pom(n).nahr + ch
+            pom(n).cmd = &quot;$&quot;   &apos; identifikator retezce
+
+		 case &quot;b&quot;, &quot;e&quot;, &quot;p&quot;, &quot;t&quot;, &quot;n&quot;, &quot;S&quot;, &quot;c&quot;, &quot;m&quot;, &quot;M&quot;, &quot;r&quot;, &quot;D&quot;, &quot;d&quot;, &quot;v&quot;, &quot;V&quot;, &quot;u&quot;, &quot;O&quot;, &quot;I&quot;             &apos; &quot;i&quot;,
+			nMode = 0
+			pom(n).nahr = &quot;&quot; &apos; bez parametru
+            pom(n).cmd = ch  &apos; identifikator funkce
+
+		 case &quot;o&quot;  &apos; textovy obsah objektu navi vyplnit priznak použití
+			nMode = 0
+			pom(n).nahr = &quot;&quot; &apos; bez parametru
+            pom(n).cmd = ch  &apos; identifikator funkce
+            pom(0).textobs = 1 &apos; přiznak použití tohoto parametru, aby se zbytečně nekonvertovali tabulky 
+
+		 case &quot;f&quot; &apos; vynuceni vkládání pres clipboard ; ve verzi v1.1 změněno v \F na \f  (\F je pro vložení poznámky pod čarou)
+			nMode = 0
+            pom(0).form = 1
+
+		 case &quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;
+		    &apos; vlozit skupinu cislo
+			nMode = 0
+			pom(n).nahr = ch &apos; 
+            pom(n).cmd = &quot;@&quot;  &apos; identifikator skupiny
+
+
+		 case &quot;H&quot;,&quot;h&quot;, &quot;P&quot;, &quot;C&quot;, &quot;N&quot;, &quot;A&quot;, &quot;R&quot;, &quot;F&quot;, &quot;E&quot;, &quot;B&quot;, &quot;L&quot;, &quot;i&quot;, &quot;K&quot; &apos; očekává parametr - řetězec mezi {}
+			nMode = 0
+			pom(n).nahr = &quot;&quot; &apos; bez parametru
+            pom(n).cmd = ch  &apos; identifikator skupiny
+            if lenRepl&gt;i then
+               if mid(nahr, i+1, 1) = &quot;{&quot; then  &apos; parametr
+                  nMode = 2  &apos; pokracovat ctenim parametru
+                  i = i + 1
+                 else
+                  select case ch &apos; uvedeno bez zavorek
+                     case &quot;P&quot;, &quot;C&quot; : pom(n).nahr = msg(32) &apos; výchozí
+                     case &quot;R&quot; : AltSearchPrintOut = msg(33) &apos; Výpis náhrad - Writer
+                   end select 
+                 end if
+              else
+               select case ch &apos; uvedeno bez zavorek - na konci nahrazovaciho vyrazu
+                 case &quot;P&quot;, &quot;C&quot; : pom(n).nahr = msg(32) &apos; výchozí
+                 case &quot;R&quot; : AltSearchPrintOut = msg(33) &apos; Výpis náhrad - Writer
+                end select 
+              end if
+
+		 case &quot;x&quot;  &apos; hexadecimalne zadany znak
+			nMode = 0
+			pomo = &quot;&quot;
+            for k = 1 to 4
+               if (i+k)&lt;=(lenRepl) then pomo=pomo+mid(nahr, i+k, 1)
+              next k
+            pomo = hex2str(pomo)  
+            pom(n).nahr = pom(n).nahr + pomo 
+            pom(n).cmd = &quot;$&quot;   &apos; identifikator retezce
+            i = i+4
+ &apos;           if pomo = chr(13) then  &apos; novy zaznam pro vlozeni odstace
+ &apos;                n=n+1  &apos; nova skupina pro hledani
+ &apos;                redim preserve pom(n)
+ &apos;                pom(n).nahr = &quot;&quot;
+ &apos;                pom(n).cmd = &quot;p&quot;   &apos; identifikator funkce
+ &apos;             end if
+            
+
+		 case &quot;#&quot;  &apos; dekadicky zadany znak
+			nMode = 0
+			k = 1
+			pomo = &quot;&quot;
+			kod = &quot;&quot;
+            if (i+k)&lt;=(lenRepl) then pomo = mid(nahr,i+k,1) &apos; znak nasledujicí za #
+            do while (instr(cisla,pomo) &gt; 0) and (i+k&lt;=lenRepl)   &apos;je to cislice 
+              kod = kod + pomo
+              k = k + 1 
+              if k &gt; 5 then exit do &apos; max 5 cislic
+              pomo = &quot;&quot;
+              if (i+k)&lt;=(lenRepl) then pomo = mid(nahr,i+k,1) &apos; znak nasledujicí za #
+             loop
+
+            i = i + k - 1
+   
+            pomo = chr(val(kod))
+            pom(n).nahr = pom(n).nahr + pomo 
+            pom(n).cmd = &quot;$&quot;   &apos; identifikator retezce
+&apos;            if pomo = chr(13) then  &apos; novy zaznam pro vlozeni odstace
+&apos;                 n=n+1  &apos; nova skupina pro hledani
+&apos;                 redim preserve pom(n)
+&apos;                 pom(n).nahr = &quot;&quot;
+&apos;                 pom(n).cmd = &quot;p&quot;   &apos; identifikator funkce
+&apos;              end if
+
+		 case else &apos; neznamy parametr - ignorovat
+			nMode = 0
+			pom(n).nahr = &quot;&quot; &apos; bez parametru
+            pom(n).cmd = ch  &apos; identifikator skupiny
+
+
+		end select
+
+
+	case 2	&apos; cteni prametru mezi {}
+		select case ch
+		 case &quot;\&quot;
+		   if (i&lt;lenRepl)and(mid(nahr, i+1, 1)=&quot;}&quot;)  then 
+		        &apos; \} vložit složenou závorku
+                pom(n).nahr = pom(n).nahr + &quot;}&quot; 
+                i = i + 1
+              else
+                &apos; &apos; cokoliv krome uzaviraci zavorky - pridat
+                pom(n).nahr = pom(n).nahr + ch 
+              end if
+
+		 case &quot;}&quot;
+			nMode = 0
+			&apos; kontrola smysluplnosti parametru nahrazovani
+			select case pom(n).cmd
+			  case &quot;P&quot; &apos; kontrola existence odstavcoveho stylu
+			    if trim(pom(n).nahr) = &quot;&quot; then  
+                    pom(n).nahr = msg(32) &apos; výchozí
+ 			      else &apos; test existence stylu
+			        if not AltSearchDoc.StyleFamilies.getByName(&quot;ParagraphStyles&quot;).hasByName(pom(n).nahr) then 
+                       goto NoStyl
+			          end if
+			      end if
+
+			  case &quot;C&quot; &apos; kontrola existence znakoveho stylu
+			    if trim(pom(n).nahr) = &quot;&quot; then
+                    pom(n).nahr = msg(32) &apos; výchozí
+			      else &apos; test existence stylu
+			        if not AltSearchDoc.StyleFamilies.getByName(&quot;CharacterStyles&quot;).hasByName(pom(n).nahr) then 
+                       goto NoStyl
+			          end if
+			      end if
+
+			  case &quot;N&quot; &apos; kontrola existence stylu seznamu
+			    if trim(pom(n).nahr) = &quot;&quot; then
+                    &apos; nechat prazdne = reset
+			      else &apos; test existence stylu
+			        if not AltSearchDoc.StyleFamilies.getByName(&quot;NumberingStyles&quot;).hasByName(pom(n).nahr) then 
+                       goto NoStyl
+			          end if
+			      end if
+
+			  case &quot;R&quot; &apos; najít a nastavit jmeno a objekt souboru pro výpis
+		        if trim(pom(n).nahr) = &quot;&quot; then &apos; pradne zavorky
+                    AltSearchPrintOut = msg(33)
+                  else
+                    AltSearchPrintOut = pom(n).nahr
+			      end if
+                  
+			
+			 end select
+
+   		 case else &apos; cokoliv krome uzaviraci zavorky - pridat
+      	    pom(n).nahr = pom(n).nahr + ch 
+
+
+        end select
+      
+
+
+	case else
+		&apos;shouldn&apos;t happen
+	end select
+  
+  i = i + 1
+ loop
+
+  if n = -1 then &apos; pokud je prazdny retezec zadat rucne
+     redim preserve pom(0)
+     pom(0).nahr = &quot;&quot;   
+     pom(0).cmd = &quot;$&quot;   &apos; identifikator retezce    
+    end if
+
+  &apos; 1. zjistit zda bude nutno smazat nalezeny text
+  &apos; 2. zjistit jestli se bude používat parametr &amp; = vložit cely nalezeny text, nebo vnitřni část dlouheho bloku
+  for i = 0 to ubound(pom())
+     select case pom(i).cmd
+       case &quot;@&quot;  &apos; pokud se nekde vyskytuje nahrazeni celeho bloku nebo jeho části, nastavit indikatory
+         pom(0).smaz = 1  &apos; v kazdem pripade
+         if pom(i).nahr = &quot;0&quot; then
+           pom(0).vloz = 1  &apos; bude se vkladat cely nalezeny retezec pomocí \0 nebo &amp;
+          end if 
+       
+       &apos; vycet parametru pro funkce pouze meni vlastnosti, s vlastnim objektem se nehybe (nemaže, neposunuje...)
+       case &quot;c&quot;,&quot;m&quot;,&quot;M&quot;,&quot;r&quot;,&quot;D&quot;,&quot;d&quot;,&quot;H&quot;,&quot;h&quot;,&quot;P&quot;,&quot;C&quot;,&quot;N&quot;,&quot;A&quot;,&quot;R&quot;,&quot;K&quot;  &apos; mimo funkce pouze nastavujici vlastnosti/properties 
+
+       case else
+         pom(0).smaz = 1
+       
+      end select 
+
+   next i 
+
+
+  &apos; zjistit zda nahrazování končí vložením prázdného odstavce
+  for i = ubound(pom()) to 0 step -1  &apos; odzadu
+     select case pom(i).cmd
+       case &quot;p&quot;  &apos; 
+           pom(i).ppos = 1
+           exit for
+       
+       
+       &apos; vycet parametru pro funkce co pouze meni vlastnosti, s vlastnim objektem se nehybe (nemaže, neposunuje...)
+       case &quot;c&quot;,&quot;m&quot;,&quot;M&quot;,&quot;r&quot;,&quot;D&quot;,&quot;d&quot;,&quot;H&quot;,&quot;h&quot;,&quot;P&quot;,&quot;C&quot;,&quot;N&quot;,&quot;A&quot;,&quot;R&quot;,&quot;K&quot;  &apos; mimo funkce pouze nastavujici vlastnosti/properties 
+
+       case else  &apos; neco jineho se vloží na konci - není třeba řešit
+        exit for
+       
+      end select 
+
+   next i 
+
+
+
+
+  if AltSearchPrintOut&lt;&gt;&quot;&quot; then &apos;získat odkaz na objekt souboru pro vypis náhrad               
+     if trim(pom(n).nahr) = &quot;&quot; then &apos; pradne zavorky
+          AltSearchPrintOut = msg(33) &apos; Výpis náhrad - Writer
+        end if
+     &apos; 1. hledat podle jmena frame.title
+     oPOfile = getDocumentControl(AltSearchPrintOut, AltSearchDoc)
+
+     &apos;  fokus do noveho dokumentu
+     oPOfile.CurrentController.Frame.containerWindow.setFocus()
+     &apos; počkat na aktivitu, jinak se v linuxu nic nenajde
+     i = 0  &apos; pojistka proti zacyklení 
+     do while not oPOfile.CurrentController.frame.isActive()
+       i = i + 1
+       if i&gt;100000 then 
+         msgbox &quot;Focus - přeteklo 1&quot;
+         exit do
+        end if 
+      loop 
+
+     &apos; nastavit prCurs1
+     prCurs1 = oPOfile.text.createTextCursorByRange(oPOfile.text.getEnd()) &apos; na konec dokumentu
+     oPOfile.CurrentController.select(prCurs1)    &apos; vybrat konec
+     ovCurs1 = oPOfile.CurrentController.getViewCursor() &apos; nastavit viditelny kurzor
+
+     &apos; vrátit fokus do původniho dokumentu
+     oDocControl.Frame.containerWindow.setFocus()
+
+     &apos; zjistit a čekat dokud nema současny soubor fokus - jinak se nic nenajde 
+     i = 0 &apos; pojistka proti zacyklení 
+     do while not oDocControl.frame.isActive()
+       i = i + 1
+       if i&gt;100000 then 
+         msgbox &quot;Focus - přeteklo 2&quot;
+         exit do
+        end if 
+
+      loop 
+    end if &apos; získat odkaz na objekt souboru pro vypis náhrad
+
+ 
+  getReplArray() = pom()
+  exit function
+  
+noStyl:  
+  &apos; styl neni v dokumentu obsažen!
+  hlaseni1(48, true, false, msg(20) &amp; pom(n).nahr  &amp; msg(21)) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti
+  pom(0).cmd = &quot;!&quot;  &apos; priznak chyby parametru
+  getReplArray() = pom()
+  
+end function
+
+
+&apos; po zápisu nutno obnovit identifikační jméno pokud neni soubor ulozen 
+sub ReastoreFrameName
+ if oPOfile.URL = &quot;&quot; then 
+   oPOfile.CurrentController.Frame.Title = AltSearchPrintOut  
+   oPOfile.Title = AltSearchPrintOut
+  end if 
+end sub 
+
+
+
+sub dbgVypisFind(pom())
+dim i 
+ for i = 0 to ubound(pom())
+    msgbox &quot;Find: &quot; &amp; pom(i).hled &amp; &quot;   Cmd: &quot; &amp; pom(i).cmd &amp; chr(10) &amp; _
+        &quot;Grow: &quot; &amp; pom(i).lgrw &amp; &quot;  &quot; &amp; pom(i).rgrw &amp; chr(10) &amp; _
+        &quot;pmode:  &quot; &amp; pom(i).pmode &amp; &quot;  min: &quot; &amp; pom(i).pmin &amp; &quot;  max: &quot; &amp; pom(i).pmax &amp; &quot;  uMode: &quot; &amp; pom(i).umode &amp; &quot;  nMode: &quot; &amp; pom(i).nmode &amp; chr(10) &amp; _
+        &quot;pgBreak:&quot; &amp; pom(i).pgBreak &amp; &quot;  Atr: &quot; &amp; pom(i).atr &amp; &quot;  Skupina(): &quot; &amp; pom(i).skup &amp; chr(10) &amp; _
+        &quot;pstyl:  &quot; &amp; pom(i).pstyl &amp; &quot;  chstyl: &quot; &amp; pom(i).chstyl, 0 , &quot;Index: &quot; &amp; i
+ 
+  next i
+
+end sub
+
+
+sub dbgVypisRepl(pom())
+dim i 
+ for i = 0 to ubound(pom())
+    msgbox &quot;Repl: &quot; &amp; pom(i).nahr &amp; chr(10) &amp; _
+           &quot;Cmd: &quot; &amp; pom(i).cmd &amp;  chr(10) &amp; _
+           &quot;Smaz: &quot; &amp; pom(i).smaz &amp; &quot;  Vloz: &quot; &amp; pom(i).vloz &amp; &quot;  Form: &quot; &amp; pom(i).form &amp; &quot;  TextObsah: &quot; &amp; pom(i).textobs , 0 , &quot;Index: &quot; &amp; i 
+  next i
+
+end sub
+
+
+
+
+
+&apos; !!! nyní nepouzito 
+&apos; uprava hledanych vyrazu na kody pro hledani
+sub upravFindReg(hled as string)as string &apos; \\ za \x005C; \s za \x00A0, zamenit dekadické za hexa 
+dim pom as string 
+ pom = replace_(hled,&quot;\\&quot;,&quot;\x005C&quot;) 
+ pom = replace_(pom,&quot;\s&quot;,&quot;\x00A0&quot;)   &apos; pevna mezera
+ pom = replDec2hex(pom)             &apos; záměna dec zadani \d
+ pom = replace_(pom,&quot;\x000d&quot;,chr(13))   &apos; znak odstavce
+ pom = replace_(pom,&quot;\p&quot;,chr(13))   &apos; znak odstavec
+ findPageBreak = 0  &apos; hledat zalomeni stranky, sloupce
+ if instr(pom,&quot;\c&quot;)&gt;0 then findPageBreak = 2
+ if instr(pom,&quot;\m&quot;)&gt;0 then findPageBreak = 1
+ pom = replace_(pom,&quot;\c&quot;,&quot;&quot;)   &apos; 
+ pom = replace_(pom,&quot;\m&quot;,&quot;&quot;)   &apos; 
+ if (pom = &quot;&quot;)and(findPageBreak&gt;0) then pom = &quot;$&quot;  &apos; pokud se nehleda nic jineho než zlom, tak hledat konec odstavce
+ upravFindReg = pom
+end sub
+
+
+&apos; vlozi hodnoty na místa parametrů \0..\9, &amp;, \u, \i, \I, \} do retezce SUBST  (pro URL \h a pod.)
+sub SubstValue(byval subst as string, cur, oriCur) as string
+dim ch, rest as string
+dim lenRepl, i as long
+dim nMode as byte
+
+ rest = &quot;&quot;
+ i = 1
+ subst = prepis_hex(replDec2hex(subst)) &apos; nahradit hexadecimálně a dekadicky zadané kody za znaky
+ lenRepl = len(subst)
+
+ do while i &lt;= lenRepl
+	ch = mid(subst, i, 1)
+	select case nMode
+	case 0 &apos;normal mode
+		select case ch
+		case &quot;\&quot;  &apos; escape mode - prvni vyskyt lomitka
+            nMode = 1
+			
+		case &quot;&amp;&quot;  &apos; totez je \0, vlozit cely nalezeny text
+            nMode = 0
+            rest = rest + AltSearchSkup(0)
+            
+		case else &apos;asi znak do hledaneho textu 
+			rest = rest + ch
+			
+		end select
+
+	case 1	&apos;Escape mode
+		nMode = 0
+		select case ch
+		 case &quot;\&quot;, &quot;&amp;&quot;  &apos; v jako znaky
+            rest = rest &amp; ch
+		
+		 case &quot;u&quot;  &apos; vlozit URL nalezenho textu
+            rest = rest &amp; AltSearchSkup(10)
+
+		 case &quot;b&quot;  &apos; cast pred hledanym podretezcem
+            rest = rest &amp; AltSearchSkup(1)
+
+		 case &quot;e&quot;  &apos; cast za hledanym podretezcem
+            rest = rest &amp; AltSearchSkup(2)
+
+        case &quot;o&quot; &apos; vložit textovy obsah objektu (poznamky, ramce, pole...)
+            if (AltSearchSkup(11) &lt;&gt; &quot;&quot;) then 
+              &apos; #13#10 je odstavec, pri vložení by se přidalo zalomení řádku
+              rest =  rest + replace_(AltSearchSkup(11),chr(13)+chr(10),chr(13))  &apos; textový obsah
+            end if  
+
+        case &quot;O&quot; &apos; vložit název objektu (poznamky, ramce, pole...)
+          if (AltSearchSkup(12) &lt;&gt; &quot;&quot;) then 
+             rest =  rest + AltSearchSkup(12)  &apos; nazev objektu
+           end if  
+
+
+		 case &quot;i&quot;  &apos; pocitadlo nalezení - nahrazeni 
+            rest = rest &amp; ReplCount  &apos; ošetřit pro formátované počitadlo  todo!!!
+
+		 case &quot;I&quot;  &apos; číslo stránky 
+            if AltSearchPrintOut = &quot;&quot; then &apos; přesměrování není
+              nastavVKurzor(Cur, false, &quot;&quot;)  &apos;nastavit viditelny kurzor podle prac
+               &apos; pokud je to blok textu zjistit stranku zacatku bloku 
+               select case Cur.ImplementationName
+                 case &quot;SwXTextCursor&quot; 
+                   ovCurs.collapseToStart  &apos; zajíma nás stránka kde to začína, podle původniho viditelného kurzoru
+                 case &quot;SwXTextTableCursor&quot;  &apos; vybrat text první buňky
+                   oDocControl.select(ovCurs.Cell)         
+                end select           
+
+             else
+               nastavVKurzor(oriCur, false, &quot;&quot;)  &apos;nastavit viditelny kurzor podle puvodniho prac
+               &apos; pokud je to blok textu zjistit stranku zacatku bloku 
+               select case oriCur.ImplementationName
+                 case &quot;SwXTextCursor&quot; 
+                   ovCurs.collapseToStart  &apos; zajíma nás stránka kde to začína, podle původniho viditelného kurzoru
+                 case &quot;SwXTextTableCursor&quot;  &apos; vybrat text první buňky
+                   oDocControl.select(ovCurs.Cell)         
+                end select           
+
+             end if  
+
+            rest = rest &amp; cstr(ovCurs.getPage())  &apos; vložit číslo strany začátku
+
+
+		 case &quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;
+            rest = rest &amp; AltSearchSkup(val(ch))
+
+		 case else &apos; neznamy parametr - prevzit
+            rest = rest &amp; &quot;\&quot; &amp; ch
+
+		end select
+
+	case else
+		&apos;shouldn&apos;t happen
+	end select
+  
+  i = i + 1
+ loop
+
+ if nMode = 1 then rest = rest + &quot;\&quot;  &apos; posledni bylo lomitko \ prevzit
+ SubstValue = rest
+
+end sub
+
+
+
+&apos; naplní promenne cmd = pokud začína na &quot;[::&quot; a konci na &quot;::]&quot;;
+&apos; rest = zbytek za &quot;::]&quot;
+sub getCmdRest(prikaz,cmd,rest) 
+dim p as long 
+  p = instr(prikaz,&quot;[::&quot;)
+  if p &lt;&gt; 1 then goto nic &apos; prikaz na začátku retezce
+  p = instr(prikaz,&quot;::]&quot;)
+  if p &lt;= 3 then goto nic &apos; neni zaviraci retezec
+  cmd = left(prikaz,p+2)
+  rest = right(prikaz, len(prikaz)-p-2)
+  exit sub
+nic:
+  cmd = &quot;&quot;
+  rest = prikaz
+end sub
+
+
+
+
+&apos; nastaví vyběr v textovem poli
+sub setCursorSel(elem as string, min,max as integer)
+dim sel
+  sel = createUnoStruct( &quot;com.sun.star.awt.Selection&quot; ) 
+  sel.min = min
+  sel.max = max
+  oDial.getcontrol(elem).setselection(sel)   
+end sub 
+
+
+
+sub InsertTextTuCursor(elem as string, mytext as string, mode)
+&apos; kam: 0 - podle kurzoru, bloku; 1 - prida na zacatek; 2 - prida na konec; 3 prepise
+dim tx, min, max, tmp
+  tx = oDial.getcontrol(elem) 
+  max = tx.Selection.max 
+  min = tx.Selection.min 
+  if max&lt;min then  &apos; oznaceni bloku zprava doleva
+    tmp = min
+    min = max
+    max = tmp
+   end if
+
+  select case mode
+   case 0 &apos; from curs
+     tx.text = left(tx.text,min)+mytext+right(tx.text,len(tx.text)-max)
+     &apos; nastavit polohu za vlozeny text
+     setCursorSel(elem, len(mytext)+min, len(mytext)+min)
+   case 1 &apos; from start
+     tx.text = mytext + tx.text
+     setCursorSel(elem, 0, 0)     
+   case 2 &apos; to end     
+     tx.text = tx.text + mytext
+     setCursorSel(elem, len(tx.text), len(tx.text))     
+   case 3 &apos; replace     
+     tx.text = mytext
+     setCursorSel(elem, len(tx.text), len(tx.text))     
+   end select     
+  tx.setfocus() 
+end sub 
+
+
+
+&apos; prepise volbu do pole podle tag
+Sub ZapisVolbu(oEvt)
+dim pom
+ pom = oEvt.source.getSelectedItem
+ pom = right(pom,len(pom)-instr(pom,chr(160)))
+ select case oEvt.source.model.tag
+   case &quot;freg&quot;   &apos; find-regular predvolby
+    InsertTextTuCursor(&quot;Cb_find&quot;,pom,0)  
+&apos;    oDial.model.Ch_reg.state = 1 &apos; zapnout regulární výrazy
+     
+   case &quot;fext&quot;   &apos; find-extend predvolby
+    pom = findExt(oEvt.source.getSelectedItemPos())
+    pom = right(pom,len(pom)-instr(pom,chr(160))) &apos; separovat prikaz
+    select case left(pom,4)
+      case &quot;[::G&quot; &apos; rozsireni vyberu vlozit ke kurzoru 
+        InsertTextTuCursor(&quot;Cb_find&quot;,pom,1)
+      case &quot;[::F&quot;,&quot;[::T&quot;,&quot;[::P&quot;,&quot;[::N&quot;,&quot;[::C&quot;,&quot;[::E&quot;,&quot;[::R&quot; &apos; zvlastni prikazy - smazat puvodni obsah 
+        InsertTextTuCursor(&quot;Cb_find&quot;,pom,3)
+        if (pom=&quot;[::Reference::]&quot;)and isSelTextRange(0) then 
+          if isObject(ovCurs.Start.ReferenceMark) then
+           pom = &quot;\\&quot;+ovCurs.Start.ReferenceMark.Name
+           InsertTextTuCursor(&quot;Cb_find&quot;,pom,2)
+           &apos; vybrat hledaný nazev reference, aby šel případně lehce smazat
+           setCursorSel(&quot;Cb_find&quot;, len(oDial.model.Cb_find.text)-len(pom) ,len(oDial.model.Cb_find.text))
+          end if
+         end if 
+        prvnipruchod = true  &apos; mohlo dojít ke změně typu objektu, znou načíst pole objektů
+        &apos; bezpodmínečně načíst znovu pole při nejbližším hledání
+   &apos;     redim tmppole() &apos; resetovat pole používane hledani rámců, poznamek, footnoote, a text. pole
+        
+      case &quot;||&quot;  &apos; pridat na konce hledej i nahraď 
+       InsertTextTuCursor(&quot;Cb_find&quot;,pom,2)
+       InsertTextTuCursor(&quot;Cb_repl&quot;,pom,2)    
+       &apos; fokus a kurzor na konec hledej
+       oDial.getControl(&quot;Cb_find&quot;).setfocus()  &apos; fokus do pole hledej 
+      case else &apos; ostatní podle kurzoru a bloku
+       InsertTextTuCursor(&quot;Cb_find&quot;,pom,0)  
+     end select 
+ &apos;   oDial.model.Ch_reg.state = 1 &apos; zapnout regulární výrazy
+
+   case &quot;fatr&quot;   &apos; find-atributy predvolby
+    pom = findAtr(oEvt.source.getSelectedItemPos())
+    pom = right(pom,len(pom)-instr(pom,chr(160))) &apos; separovat prikaz
+    select case pom
+      case &quot;[:::p::]&quot;  &apos; hledat podobne
+       if not AltSearchDoc.getCurrentController().getSelection().supportsService(&quot;com.sun.star.text.TextRanges&quot;) then goto problem
+       pom = &quot;[:::&quot;+getCharProperties(ovCurs, false)+&quot;::]&quot;
+
+      case &quot;[:::s::]&quot;   &apos; hledat stejne
+       if not AltSearchDoc.getCurrentController().getSelection().supportsService(&quot;com.sun.star.text.TextRanges&quot;) then goto problem
+       pom = &quot;[:::&quot;+getCharProperties(ovCurs, true)+&quot;::]&quot;
+
+      case &quot;[:::ps::]&quot;  &apos; hledat odstavcový styl
+       if not AltSearchDoc.getCurrentController().getSelection().supportsService(&quot;com.sun.star.text.TextRanges&quot;) then goto problem
+       &apos; vybrat ze seznamu použitých znakovych stylu
+       pom = &quot;[:::ParaStyleName=&quot;+ getStyleName(&quot;ParagraphStyles&quot;, true) +&quot;::]&quot;
+
+      case &quot;[:::chs::]&quot;  &apos; hledat znakovy styl
+       if not AltSearchDoc.getCurrentController().getSelection().supportsService(&quot;com.sun.star.text.TextRanges&quot;) then goto problem
+       &apos; vybrat ze seznamu použitých znakovych stylu
+       pom = &quot;[:::CharStyleName=&quot;+ getStyleName(&quot;CharacterStyles&quot;, true) +&quot;::]&quot;
+
+      case &quot;[:::ns::]&quot;  &apos; hledat seznamový styl
+       if not AltSearchDoc.getCurrentController().getSelection().supportsService(&quot;com.sun.star.text.TextRanges&quot;) then goto problem
+       &apos; vybrat ze seznamu použitých znakovych stylu
+       pom = &quot;[:::NumberingStyleName=&quot;+ getStyleName(&quot;NumberingStyles&quot;, true) +&quot;::]&quot;
+      
+     end  select 
+ 
+    InsertTextTuCursor(&quot;Cb_find&quot;,pom,3)  &apos; 1= vlozit na zacatek; 3= přepsat existující text = je asi nejrozumnější i když ne ideální...
+ &apos;   oDial.model.Ch_reg.state = 1 &apos; zapnout regulární výrazy
+
+
+   case &quot;rext&quot;   &apos; replace-extend predvolby
+      select case left(pom,3)
+        case &quot;\C{&quot;  &apos; priradit znakovy styl
+         pom = &quot;\C{&quot;+ getStyleName(&quot;CharacterStyles&quot;,false) +&quot;}&quot;
+
+        case &quot;\P{&quot;  &apos; priradit odstavcovy styl
+         pom = &quot;\P{&quot;+ getStyleName(&quot;ParagraphStyles&quot;,false) +&quot;}&quot;
+
+        case &quot;\N{&quot;  &apos; priradit znakovy styl
+         pom = &quot;\N{&quot;+ getStyleName(&quot;NumberingStyles&quot;,false) +&quot;}&quot;
+
+      
+       end  select 
+ 
+
+      InsertTextTuCursor(&quot;Cb_repl&quot;,pom,0)  
+&apos;      oDial.model.Ch_reg.state = 1 &apos; zapnout regulární výrazy
+
+   case &quot;ratr&quot;   &apos; replace-atributy-vlastnosti
+&apos;     msgbox &quot;Do nahrad:   &quot;+oEvt.source.getSelectedItem
+    if oEvt.source.SelectedItemPos &gt; 0 then &apos; mimo první položku, což je informace o možnosti načtení pomocí  tlačítka
+      pom = replace_(pom,&quot; = &quot;, &quot;=&quot;)
+      InsertTextTuCursor(&quot;Cb_repl&quot;,&quot;\A{&quot;+pom+&quot;}&quot;,0)  
+     end if 
+
+
+  end select 
+
+  oDial.model.Ch_reg.state = 1 &apos; zapnout regulární výrazy
+  exit sub
+
+problem:
+ &apos; Chyba výběru - nepodporováno. 
+ hlaseni1(48, true, false, &quot;ZapisVolbu:  &quot; &amp; msg(12)) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti
+End Sub
+
+
+
+
+&apos; inicializace ukazatele 
+Sub StatusBarStart(vyzva as string, maximum as long)
+ AltSearchDoc.CurrentController.statusIndicator.reset
+ AltSearchDoc.CurrentController.statusIndicator.start(vyzva, maximum)
+End Sub
+
+&apos; prubeh ukazatele hodnota ukazuje podil vyplnene casti vzhledem k maximalni
+Sub StatusBarPr(hodnota as long)
+ AltSearchDoc.CurrentController.statusIndicator.setValue(hodnota)
+End Sub
+
+
+
+&apos; vypise text do stavoveho radku, prazny retezec = reset do puvodni podoby OOo
+Sub StatusText(sInformation as string, delka, init as boolean, initbar as long)
+   Dim iLen,iRest As Integer
+   if sInformation= &quot;&quot; then
+      AltSearchDoc.CurrentController.statusIndicator.end
+      AltSearchDoc.CurrentController.statusIndicator.reset
+     exit sub
+     end if
+   iLen=Len(sInformation)
+   iRest=delka-iLen
+   if init then 
+       AltSearchDoc.CurrentController.statusIndicator.start(sInformation+SPACE(iRest),initbar)
+      else
+       AltSearchDoc.CurrentController.statusIndicator.settext(sInformation+SPACE(iRest)) 
+       AltSearchDoc.CurrentController.statusIndicator.setValue(findcounter)
+      end if 
+End Sub
+
+
+
+sub vypisStatusInfo()
+dim pom
+ pom = msg(7)+cstr(findcounter)
+ if ncount&gt;0 then pom = pom &amp; msg(16) &amp; ncount   &apos; Nalezeno
+ if ReplCount&gt;0 then pom = pom &amp; msg(31) &amp; ReplCount  &apos; Počet náhrad:
+ if batReplCount&gt;0 then pom = pom &amp; msg(31) &amp; batReplCount  
+  
+ StatusText(pom, 100,false,0)
+ &apos;beep
+ 
+&apos; ReplCount
+end sub
+
+
+&apos; Vypise po urcitem intervalu podle n statusinfo
+sub StatusInfo(n as long)
+const interval = 17
+ if (n mod interval) = 0 then vypisStatusInfo()
+end sub
+
+
+
+  
+
+&apos; vypise info pod pole hledat
+sub vypisFoundInfo(itext)
+ if not AltSearchDialog_end then oDial.model.Lb_info.label = itext
+end sub
+
+
+
+&apos; funkce hleda a nahrazuje v retezci
+&apos; změněno jméno na replace_ kvůli kolizím se standardní knihovnou v některých OS 
+Function Replace_(Source As String, Search As String, NewPart As String) as string
+Dim Result As String
+Dim StartPos As Long
+Dim CurrentPos As Long
+Result = &quot;&quot;
+StartPos = 1
+CurrentPos = 1
+If Search = &quot;&quot; Then
+  Result = Source
+ Else
+Do While CurrentPos &lt;&gt; 0
+ CurrentPos = InStr(StartPos, Source, Search) 
+ If CurrentPos &lt;&gt; 0 Then
+  Result = Result + Mid(Source, StartPos, CurrentPos - StartPos)
+  Result = Result + NewPart
+  StartPos = CurrentPos + Len(Search)
+ Else
+  Result = Result + Mid(Source, StartPos, Len(Source))
+ End If &apos; Position &lt;&gt; 0
+Loop
+End If
+Replace_ = Result
+End Function
+
+
+&apos; funkce hleda a nahrazuje v retezci 
+&apos; Záleží na velikosti hledanych pismen !!!
+Function ReplaceC(Source As String, Search As String, NewPart As String) as string
+Dim Result As String
+Dim StartPos As Long
+Dim CurrentPos As Long
+Result = &quot;&quot;
+StartPos = 1
+CurrentPos = 1
+If Search = &quot;&quot; Then
+  Result = Source
+ Else
+Do While CurrentPos &lt;&gt; 0
+ CurrentPos = InStr(StartPos, Source, Search,0)  &apos; case sensitiv!!!
+ If CurrentPos &lt;&gt; 0 Then
+  Result = Result + Mid(Source, StartPos, CurrentPos - StartPos)
+  Result = Result + NewPart
+  StartPos = CurrentPos + Len(Search)
+ Else
+  Result = Result + Mid(Source, StartPos, Len(Source))
+ End If &apos; Position &lt;&gt; 0
+Loop
+End If
+ReplaceC = Result
+End Function
+
+
+&apos; vraci retezec se zamenenym všemi  \x za \u, 
+&apos; pouze v případě pokud se vyskytuje ve formě \xhhhh
+&apos;   formát \xhh nechat být
+Function replace_x2u(source as string) as string   
+Dim Result, Search, zn3, zn4 As String
+Dim StartPos As Long
+Dim CurrentPos As Long
+dim le as Long
+ 
+ Result = &quot;&quot;
+ StartPos = 1
+ CurrentPos = 1
+ le = len(source) &apos; delka retezce
+ search = &quot;\x&quot;
+
+Do While CurrentPos &lt;&gt; 0
+ CurrentPos = InStr(StartPos, Source, Search,0)  &apos; case sensitiv!!!
+ If CurrentPos &lt;&gt; 0 Then  &apos; nalezeno
+    if CurrentPos + 4 &lt; len(source) then    &apos; poslední záměna před koncem se musí vejit do formátu \uhhhh, jinak nechat být
+       &apos; testovat zda nejde jde o formát \xhh 
+       &apos; zkontruluji jestli předpokládaný 3 a 4 znak jsou hex cislo
+       zn3 = mid(source,CurrentPos+4,1)
+       zn4 = mid(source,CurrentPos+5,1)
+       if (Instr(&quot;1234567890abcdefABCDEF&quot;, zn3)&gt;0) and (Instr(&quot;1234567890abcdefABCDEF&quot;, zn4)&gt;0) then   
+          &apos;zaměnit
+          Result = Result + Mid(Source, StartPos, CurrentPos - StartPos)
+          Result = Result + &quot;\u&quot;
+          StartPos = CurrentPos + Len(Search) 
+
+         else
+          Result = Result + Mid(Source, StartPos, CurrentPos - StartPos)
+          Result = Result + &quot;\x&quot;
+          StartPos = CurrentPos + Len(Search) 
+          
+         end if
+
+      else 
+        Result = Result + Mid(Source, StartPos, CurrentPos - StartPos)
+        Result = Result + &quot;\x&quot;
+        StartPos = CurrentPos + Len(Search) 
+       
+    end if
+    
+   
+
+ Else &apos; další výskyt nenalezen
+  Result = Result + Mid(Source, StartPos, Len(Source))  &apos; pridat zbytek retezce
+ End If &apos; Position &lt;&gt; 0
+Loop
+
+ replace_x2u = Result
+
+
+End Function
+
+&apos; vraci podretezec zleva, až do hledaneho retezce HLE
+sub leftTo(ret$, hle$)as string
+dim i&amp; 
+dim nic as variant
+  i = instr(1,ret,hle,1)  &apos; posledni par. = 1 - nezalezi na velikosti znaků
+  if i&gt;0 then
+      leftTo = left(ret,i-1)
+    else &apos; nenalezeno
+      leftTo = &quot;&quot;
+    end if
+end sub
+
+
+&apos; vraci podretezec zprava, za hledanym retezcem HLE
+sub rightPast(ret$, hle$)as string
+dim i&amp;
+  i = instr(1,ret,hle,1)  &apos; posledni par. = 1 - nezalezi na velikosti znaků
+  if i&gt;0 then
+      rightPast = right(ret,len(ret)-i-len(hle)+1)
+    else &apos; nenalezeno
+      rightPast = &quot;&quot;   
+    end if
+end sub
+
+
+&apos; zkrati retezec zprava na zadaný počet znaků, pripadne doplní ...
+sub zkratitNa(byval ret$, poc)as string
+dim le&amp; 
+  le = len(ret) 
+  if le&gt;poc then
+      ret = left(ret,poc-3)+&quot;...&quot;
+    end if
+  zkratitNa = ret  
+end sub
+
+
+
+
+&apos; vraci index 1. nalezeneho zaznamu, -1 = nenalezeno 
+sub pozvSeznamuA(seznam, hled)as long 
+dim hl as string
+dim i as long
+ for i = 0 to seznam.itemCount-1
+    if seznam.getItem(i)=hled then
+       pozvSeznamuA = i
+       exit sub
+      end if 
+   next i  
+ pozvSeznamuA = -1
+end sub
+
+
+&apos; prida &quot;neco&quot; do seznamu, pokud tam uz neni
+&apos; doplnuje pouze na pocatecni pozice seznamu urcene promenou &quot;promene&quot; 
+&apos; &quot;pevne&quot; udava pocet polozek na konci seznamu ktere zustavaji beze zmen
+sub pridejDoSeznamuA(seznam, neco, promene, pevne)
+
+ if pozvSeznamuA(seznam, neco) &gt;= 0 then exit sub &apos; uz je to tam, konec
+ &apos; doplnit novou polozku   
+ if seznam.itemCount &gt;= (promene+pevne) then &apos; smazat posledni promennou polozku
+    seznam.removeItems(promene-1,1)
+   end if 
+  seznam.addItem(neco,0)
+end sub 
+
+
+
+&apos; zameni kody zadane hexadecimalne \xhhhh za znaky
+sub prepis_hex(byval vstup as string) as string
+dim po, od as long
+dim zac, kon, kod, vst as string
+
+ &apos; hexa
+  od = 1
+  po = 1
+  do while po &gt; 0 
+    vst = ucase(vstup)  &apos; mpro male i velké &quot;h&quot;
+    po = instr(od, vst,&quot;\x&quot;) 
+
+    if po &gt; 0 then &apos; zaměnit kod
+       zac = left(vstup,po-1)
+       kon = right(vstup,len(vstup)-len(zac))
+       kod = left(kon,6)
+       kod = &quot;&amp;H&quot; + right(kod,len(kod)-2)
+       kon = mid(kon,7,65535)
+       vstup = zac+chr(val(kod))+kon
+       od = po+1
+      end if
+  loop
+
+prepis_hex = vstup
+end sub
+
+
+
+
+&apos; zameni kody zadane dekadicky hexadecimalne za znaky
+sub replDec2hex(byval vstup as string) as string
+dim po, od as long
+dim zac, kon, kod, vst, hexa as string
+const cisla = &quot;0123456789&quot;
+
+ &apos; nejdrive decimal protoze pripadny nasledujici hex kod nemůze změnit vyznam dec kodu 
+  od = 1
+  po = 1
+  do while po &gt; 0 
+    po = instr(od, vstup,&quot;\#&quot;) 
+    if po &gt; 0 then &apos; zaměnit kod
+       zac = left(vstup,po-1)
+       kod = &quot;&quot;
+       dim i
+       i = 0
+       kon = mid(vstup,po+2+i,1) &apos; znak nasledujicí za #
+       do while (instr(cisla,kon) &gt; 0) and (po+i+1&lt;=len(vstup))   &apos;je to cislice 
+         kod = kod + kon
+         kon = mid(vstup,po+2+i,1)
+         i = i + 1 
+         if i &gt; 5 then exit do &apos; max 5 cislic 
+        loop
+       kon = mid(vstup,po+1+i)
+       hexa = &quot;000&quot;+hex(val(mid(kod,2,9)))  &apos; prevest na hexa
+       vstup = zac + &quot;\x&quot;+right(hexa,4) + kon
+
+       od = po+1
+      end if 
+  loop
+
+replDec2hex = vstup
+end sub
+
+
+
+&apos; z kodu zadaneho hexadecimalním řetězcem vrátí odpovídající znak
+sub hex2str(byval vstup as string) as string
+dim pom
+ on error goto problem
+ pom = CLng(&quot;&amp;H&quot;+vstup) 
+ if pom=0 then goto problem
+ hex2str = chr(val(pom))
+ exit sub
+
+problem:
+ hex2str = &quot;&quot;
+end sub
+
+
+
+
+
+sub nastavKurzor(pCurs as object)as object  &apos;nastavit Cur kurzor podle pCurs
+dim curs
+  Curs = pCurs.text.createTextCursor()   
+  Curs.gotorange(pCurs.getStart(),false) 
+  Curs.gotorange(pCurs.getEnd(),true)
+  nastavKurzor = curs
+end sub
+
+
+sub nastavVKurzor(pCurs as object, init as boolean, info as string )  &apos;nastavit viditelny kurzor podle pCurs
+&apos;  ovCurs = AltSearchDoc.getCurrentController().getViewCursor()
+&apos;  ovCurs.gotorange(pCurs.getStart(),false) 
+&apos;  ovCurs.gotorange(pCurs.getEnd(),true)
+&apos; if errControl then on error resume next 
+ oDocControl.select(pCurs) &apos; vybrat objekt        
+ if init then CursorInit(true)
+ vypisFoundInfo(info) 
+end sub
+
+
+sub nastavRozsah(Curs, byval r1, r2 as object)as integer
+  if errControl then on error goto errorreg 
+  Curs.gotorange(r1,false) 
+  Curs.gotorange(r2,true)
+  nastavRozsah = 0
+  exit sub
+errorreg: 
+  nastavRozsah = -4
+end sub
+
+
+&apos; hledá podretezec ohraniceny PreString, PostString pokud nenajde PostString
+&apos; tak vrátí retezec od pre do konce
+Function FindPartStr(BigString, PreString, PostString as String, SearchPos as Integer) as String
+Dim StartPos%, EndPos%
+Dim BigLen%, PreLen%, PostLen%
+	StartPos = Instr(SearchPos,BigString,PreString)
+	If StartPos &lt;&gt; 0 Then
+		PreLen = Len(PreString)
+		EndPos = Instr(StartPos + PreLen,BigString,PostString)
+    	BigLen = Len(BigString)
+		If EndPos &lt;&gt; 0 Then
+			PostLen = Len(PostString)
+			SearchPos = EndPos + PostLen
+			FindPartStr = Mid(BigString,StartPos + PreLen, EndPos - (StartPos + PreLen))
+		Else &apos; uzaviraci nenalezen
+			SearchPos = BigLen
+			FindPartStr = Right(BigString, BigLen - StartPos - PreLen + 1)  &apos; Mid(BigString,StartPos + PreLen, EndPos - (StartPos + PreLen))
+		End If
+	Else
+		FindPartStr = &quot;&quot;
+	End If
+End Function
+
+
+
+&apos; testuje kurzor zda ma rozah textu nad 64k, nebo neni textovy objekt
+sub isBigText_Or_NonTextObject(cur as object) as boolean
+&apos;dim pom, le
+ isBigText_Or_NonTextObject = true
+ on error goto konec
+ if cur.isCollapsed then
+     isBigText_Or_NonTextObject = false
+   else   &apos; pokud je delka retezce nenulova tak je mensi nez 64k
+&apos;     le =  len(cur.string)
+     if (len(cur.string)&lt;&gt;0) then isBigText_Or_NonTextObject = false
+     if isObject(cur.TextField) then isBigText_Or_NonTextObject = true  &apos; pole a poznamka/anotation jako netextovy objekt pro vkládaní přes clipboard
+     if isObject(cur.Footnote) then isBigText_Or_NonTextObject = true  &apos; poznamka pod čarou jako netextovy objekt pro vkládaní přes clipboard
+     if isObject(cur.Endnote) then isBigText_Or_NonTextObject = true  &apos; poznamka na konci jako netextovy objekt pro vkládaní přes clipboard
+     if isObject(cur.ReferenceMark) then isBigText_Or_NonTextObject = true  &apos; poznamka na konci jako netextovy objekt pro vkládaní přes clipboard
+&apos;     isBigText_Or_NonTextObject = pom
+   end if
+    
+konec:    
+end sub
+
+
+
+
+sub isSelTextRange(mode as integer) as boolean
+ if oSels.supportsService(&quot;com.sun.star.text.TextRanges&quot;) then
+      isSelTextRange = true
+    else
+      if mode = 1 then hlaseni(3)
+      isSelTextRange = false
+    end if 
+end sub
+
+
+
+&apos; [::Grow 1,1::]text
+sub getGrow(find as string) as array
+dim pom(2), tmp
+dim n as integer
+ tmp = find
+ if Ucase(left(tmp,7))&lt;&gt;&quot;[::GROW&quot; then goto konec &apos; pokud nezačíná spravne tak konec
+ n = 1 
+ pom(1)=trim(FindPartStr(tmp, &quot;[::grow&quot;,&quot;,&quot;,n))
+ &apos; zpětná kompatibilita s GROWE
+ if ucase(left(pom(1),1)) = &quot;E&quot; then pom(1)=trim(rightPast(pom(1),&quot;e&quot;)) 
+ n = n - 1
+ pom(2)=trim(FindPartStr(tmp, &quot;,&quot;,&quot;::]&quot;,n))
+ pom(0)=mid(tmp,n)
+&apos; msgbox pom(0)+chr(13)+pom(1)+chr(13)+pom(2)
+ getGrow() = pom() 
+ exit sub
+  
+konec:
+ pom(0) = find 
+ pom(1) = &quot;&quot;
+ pom(2) = &quot;&quot;
+ getGrow() = pom() 
+end sub
+
+
+
+
+&apos; vraci objekt s parametry pro hledani odstavcu \p  
+&apos; x.txt - hledany retezec; je-li x.mode=0 tak bez odstavcu 
+&apos; x.bmin/x.bmax - min/max počet prazdnych odstavců před hledaným retezcem (pokud x.bmax=-1 pak libovolny pocet)
+&apos; x.emin/x.emax - min/max počet pocet prazdnych odstavců za hledaným retezcem (pokud x.emax=-1 pak libovolny pocet)    
+&apos; přípustna syntaxe: \p\p...\p  \p+ \p* \p{počet} \p{min,}  \p{min,max} \p{1}neco\p
+&apos; zatim nepodporovano: neco\p{1}neco   (mohlo by byt treba  x.mode = 4, x.txt1 druha cast retezce) 
+sub GetParFind0(find as string) as  tParFind
+dim za, ko, i as integer
+dim vysl as tParfind
+dim pom
+const cisla = &quot;0123456789&quot;
+  za = 0 &apos; zacatek hledaneho textu
+  vysl.mode = 0 &apos; neobsahuje odstavce
+  vysl.attr = &quot;&quot; &apos;bez atributu pro hledani
+  vysl.txt = find &apos; neobsahuje odstavce
+  i = instr(find,chr(13)) &apos;pozice prvniho nalezeného odstavce
+  if i &gt; 0 then &apos; specialní hledaní pro odstavce \p
+     if i = 1 then  &apos; odstavce na zacatku
+       do while mid(find,i,1)=chr(13) &apos; souvisly blok odstavcu
+         i = i+1
+        loop  &apos; dokud je 13
+       pom() = vyhodnotMetazn(find,i)
+       if pom(0)=0 then &apos;neni metacitac = +*{}
+           vysl.bmin = i-1
+           vysl.bmax = i-1
+           za = i
+          else &apos; je metacitac
+           vysl.bmin = pom(1)
+           vysl.bmax = pom(2)
+           za = i+pom(0)
+          end if
+       vysl.mode = 1 &apos; 1. bit = odstavce na zacatku
+       i = instr(za,find,chr(13),) &apos;pozice dalsiho odstavce - mel by byt na konci
+       if i &gt; 0 then goto hledejkonec  &apos; dalsi na konci
+       ko = len(find)
+       vysl.txt = mid(find,za,ko-za+1)
+       if vysl.txt = &quot;&quot; then vysl.mode = 16  &apos; samotny odstavec nebo skupina - bez textu     
+      else &apos; odstavce nejsou na zacatku hled. ret
+       za = 1  &apos; definovat zacatek, jsou-li odstavce pouze na konci
+      hledejkonec:
+        ko = i-1 &apos; pred zaverechnym blokem odstavcu
+        do while mid(find,i,1)=chr(13) &apos; souvisly blok odstavcu
+          i = i+1
+         loop  &apos; dokud je 13
+        pom() = vyhodnotMetazn(find,i)
+        if pom(0)=0 then &apos;neni metacitac = +*{}
+            vysl.emin = i-ko-1
+            vysl.emax = i-ko-1
+           else &apos; je metacitac
+            vysl.emin = pom(1)
+            vysl.emax = pom(2)
+           end if
+
+        if pom(0)+i-1 &lt; len(find) then
+           vysl.mode = 0 &apos; za druhym blokem odstavcu je jeste dalsi text = nepodporovano 
+           &apos;vysl.txt1 = 
+           &apos;vysl.mode = 4
+          else   
+           vysl.mode = vysl.mode + 2 &apos; 2. bit = odstavce na konci
+           vysl.txt = mid(find,za,ko-za+1) 
+          end if 
+      
+      end if 
+    end if &apos; obsahuje odstavce
+
+ &apos; zjistit a odfiltrovat atributy hledani 
+ i = instr(vysl.txt,&quot;::]&quot;)
+ if (instr(vysl.txt,&quot;[:::&quot;)=1)and(i&gt;7) then
+    vysl.attr = mid(vysl.txt,5,i-5)
+    vysl.txt = right(vysl.txt,len(vysl.txt)-i-2)
+   end if
+
+ GetParFind = vysl
+
+end sub
+
+
+&apos; posune prCurs v zavislosi na zadanych parametrech
+sub NoFoundBreak(found as object, BreakTyp as integer) as boolean
+dim pCur as object
+  NoFoundBreak = true &apos; predpoklad nenalezeno
+  pCur = found.getEnd
+&apos;  pCur = found.text.createtextcursor
+&apos;  pcur.gotoRange(found.getEnd,false) 
+  select case BreakTyp
+    case 1  &apos; rucni zalomeni stranky před
+     if (pCur.BreakType = 4)or(pCur.BreakType = 5) then NoFoundBreak = false
+     if NOT IsEmpty(pCur.PageDescName) then NoFoundBreak = false
+     
+    case 2  &apos; zlom sloupce
+     if found.getStart.BreakType = 1 then NoFoundBreak = false  
+   
+   end select
+end sub
+
+
+
+
+
+&apos; posune prCurs v zavislosi na zadanych parametrech
+sub NoFoundBlokOdst(zacatek as object, min, max, dirBackw) as boolean
+dim i as long
+
+ on error goto Errobsluha 
+ NoFoundBlokOdst = false  &apos; predpoklad nalezeno
+ prCurs.gotoRange(zacatek,false)  &apos;  
+ i = 0 &apos; pocitadlo prazdnych odstavcu
+ if dirBackw then &apos;zpetne hledani
+     do while prCurs.goLeft(1,false) and prCurs.isEndOfParagraph &apos;and prCurs.isStartOfParagraph
+        i = i+1
+        if (i &gt;= max) and (max &gt; 0) then exit sub &apos; dosazeno maximum, konec
+      loop &apos;blok odstavců
+     if (i = 0)and(min&lt;=0) then &apos; nenalezeno nic a min=0
+         prCurs.goLeft(1,false)
+         exit sub &apos; co nejrychleji skoncit     
+       end if 
+     if (i = 0)or(i &lt;= (min-1)) then &apos; nedosazeno minimum
+         if (i = 0) then prCurs.goLeft(1,false)     
+         NoFoundBlokOdst = true
+         exit sub &apos; co nejrychleji skoncit
+       end if
+     &apos; přestřeleno - vratit zpet 
+     if not prCurs.isEndOfParagraph then prCurs.goRight(1,false)
+
+    
+   else &apos; hledani dopredu
+     do while prCurs.goRight(1,false) and prCurs.isStartOfParagraph &apos; dokud jsou prazdne odstavce
+         i = i+1
+         if (i &gt;= max) and (max &gt; 0) then exit sub &apos; dosazeno maximum, konec
+      loop &apos;blok odstavců
+     if (i = 0)and(min&lt;=0) then &apos; nenalezeno nic a min=0
+         if not prCurs.goRight(1,false) then  &apos; poslední odstavec dokumentu
+            NoFoundBlokOdst = true
+            exit sub
+           end if
+         prCurs.goLeft(2,false)
+         exit sub &apos; co nejrychleji skoncit     
+       end if 
+     if (i = 0)or(i &lt;= (min-1)) then &apos; nenalezen prazdny odstavedc nebo zadane minimum
+         if (i = 0) then prCurs.goLeft(1,false)
+         NoFoundBlokOdst = true
+         exit sub &apos; co nejrychleji skoncit
+       end if
+     &apos; přestřeleno - vratit zpet 
+     if not prCurs.isStartOfParagraph then prCurs.goLeft(1,false)
+     
+   end if &apos; hledani dopredu
+  
+  exit sub
+  
+Errobsluha: &apos; error 1: chyba regionu = nalezeno mimo hranice omezujicího bloku
+ if Err=1 then  &apos; 1 
+     hlaseni1(48, true, false, &quot;NoFoundBlokOdst:  Region Error&quot;) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti
+   else
+     hlaseni1(48, true, false, &quot;NoFoundBlokOdst:  Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line: &quot; &amp; Erl &amp; &quot;)&quot;) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti
+     resume next
+   end if 
+
+end sub
+
+
+
+
+
+&apos; funkce se snazi najit po částech všechny položky pole FIND() v zavislosti jeho parameterech a param. hledani z oDialog
+&apos; začíná hledat od FROMcur, v případném bloku definovanym kurzorem BLOCKcur. 
+&apos;&apos; lgrow, rgrow zvětší/zmenší nalezenou oblast: napr. -1/+1 posun zacatku nebo konce vyberu o znak vlevo/vpravo 
+&apos;&apos; par - rozsiri oblast k začátku/konci současneho odstavce
+&apos; navratova hodnota: 0 = nalezeno nalezená část uložena v prCurs 
+&apos; -1/1 = překročen začátek/konec omezujicího bloku, v prCurs je omezujicí blok  
+&apos; -2/2 = nebylo nalezeno do začátku/konce dokumentu, v prCurs znacka konce/zacatku dokumentu    
+sub FindNextInBlock(find(), fromCur, blockCur as object, fcount as boolean, mark as boolean) as integer
+ Dim HleDesc, found, hledjod, zac, kon, finzac, finkon, tmprange, lgrow, rgrow 
+ Dim oTmp, oAnch, tabIsIn  &apos; tabulka uvnitř bloku
+ Dim i, mistoChyby, maxfind
+ Dim uskupB, uskupE &apos; zacatek a konec neukonceného bloku textu - se zvlastni obsluhou
+ Dim n as long &apos; pocitadlo nasledneho hledani: aby bylo nalezeno, musí vyt spravne nalezeny vsechny casti pole find()  
+ dim foundStr as string &apos; retezec nalezeneho textu
+ dim nulSkupina as boolean &apos; priznak ze jde o skupinu s nulovou delkou pro vyjimku 
+ dim Enum1,Enum2, TextElement, TextPortion, stylNalezen, rejstrikNalezen, tCurs    &apos; pro hledani znakoveho stylu
+ dim pomo
+ 
+&apos;xray fromcur
+ if errControl then on error goto Errobsluha 
+  HleDesc = AltSearchDoc.createReplaceDescriptor()
+
+  if AltSearchVolby.kcase = 1 then HleDesc.SearchCaseSensitive = true
+  if AltSearchVolby.word = 1 then HleDesc.SearchWords = true 
+&apos;  if AltSearchVolby.zpet = 1 then HleDesc.SearchBackwards = true  &apos; presunuto nize
+  if AltSearchVolby.styl = 1 then HleDesc.SearchStyles = true
+  if AltSearchVolby.reg = 1 then HleDesc.SearchRegularExpression = true
+  if find(0).atr = 1 then  
+     HleDesc.ValueSearch = true &apos; = hledá presne zadanou hodnotu prop; false hledá pouhý výskyt properties
+    else
+     HleDesc.ValueSearch = false
+    end if
+
+ 
+  if ubound(SrchAtr())&gt;=0 then 
+    HleDesc.SearchAll = true
+    HleDesc.SearchStyles = true
+    mistochyby = 3
+    HleDesc.SetSearchAttributes(SrchAtr())  &apos; pokud je neprazdne pole pro hledani podle atributů tak nacist    
+   end if 
+
+
+  &apos; počítat vyskyty zrychlene, nesmi byt blok 
+  foundAll = 0  &apos; nastavit na nulu, pokud se dále pouzije hledaní, pak to bude objekt  
+  if fcount and (AltSearchVolby.csele = 0) then &apos; neni aktivni prepinač hledat v  bloku
+     &apos; a nesmí být použity spec. funkce \p \m \c, skupiny, případne hledani podle stylů (.atr=3)
+     if (ubound(find())=0)and(find(0).pmode=0)and(find(0).pgBreak=0)and(find(0).pstyl=&quot;&quot;)and(find(0).atr&lt;3) then 
+       if AltSearchVolby.zpet = 1 then HleDesc.SearchBackwards = true  &apos; presunuto nize
+       HleDesc.SearchString = find(0).hled &apos; hledany retezec
+       foundAll = AltSearchDoc.findAll(HleDesc) &apos; hledat vse
+       ncount = ncount+foundAll.count
+       FindNextInBlock = 9  &apos; konec, prCurs neni definovan 
+       exit sub
+      end if 
+    end if 
+
+  &apos; zobrazit varovani o poruseni zvyrazneni pred prvnim použitím
+  if fcount and mark and varovani then  
+     if isUsedCharBackColor then
+       if 6 &lt;&gt; hlaseni(7) then 
+           FindNextInBlock = -999  &apos; prerusit ukoncit
+           exit sub
+         end if
+      end if 
+     ClearBackColor &apos; zrusit pripadne predchozi pomocne barvy
+     varovani = false
+    end if
+     
+ &apos; udaje pro rozšíření nalezeneho vyberu musi byt v první položce
+ lgrow = find(0).lgrw
+ rgrow = find(0).rgrw
+
+
+  if AltSearchVolby.zpet = 1 then &apos; pri zpetnem hledani obraceny kurzor
+     fromCur.collapseToStart
+     &apos;pro \p neprazdny odstavec, za zacatek odstavce, aby slo dal vyhledavat    
+&apos;     if (find(0).pmode = 16) and (find(0).pmin=1) and (fpar.bmax=1) then fromCur.gotoStartOfParagraph(false)
+    else   
+     fromCur.collapseToEnd  
+    end if
+    
+ finkon = fromCur.getStart() 
+ finzac = finkon 
+
+hledejBlokZnovu:
+
+ redim AltSearchSkup(14) &apos; smazat pole se skupinami 
+ if AltSearchVolby.zpet = 1 then &apos; nastavit pro zpetny smer
+   HleDesc.SearchBackwards = true  
+   finkon = finzac  &apos; pro pripad nenalezení dalsich casti pri hledani pozpatku 
+  end if 
+
+ n = 0
+ maxfind = ubound(find())  &apos; posledni skupina hledani
+ do while n &lt;= maxfind 
+&apos;  if (AltSearchVolby.zpet = 1) and (n=0) then HleDesc.SearchBackwards = true
+  
+ HleDesc.SearchString = find(n).hled &apos; hledany retezec
+ nulSkupina = false
+
+ if (find(n).hled = &quot;&quot;)and(n&gt;0)and(find(n).pmode=1) then
+    &apos; prazdny kurzor pro natahovaci skupinu
+    Found = finkon.text.createTextCursorByRange(finkon)
+   else
+    Found =  AltSearchDoc.findNext(finkon, HleDesc) &apos; hledat od kurzoru
+   end if 
+
+
+  &apos; možnost přerušení
+  findcounter =   findcounter + 1  &apos; pocitadlo opakovani hledani  
+  if findcounter &lt; 0 then 
+      FindNextInBlock = -999  &apos; prerusit ukoncit
+      exit sub
+    end if       
+  if (findcounter mod 25) = 0 then 
+    vypisStatusInfo()
+   end if
+
+
+&apos;vyhodnotit nalezene:
+&apos; msgbox found.string
+ 
+  &apos; hledaní znakoveho stylu uvnitř nalezeneho odstavce - .atr = 4 - hledá se jakákoliv část textu daneho stylu, i kotvy a pole 
+  if (not IsNull(Found)) and (find(0).atr = 4) then  &apos; dalsi nenalezen - konec
+     &apos; zpetný směr není podporován
+     if AltSearchVolby.zpet = 1 then
+         FindNextInBlock = -2 
+         exit sub
+       end if
+
+     &apos; problém: funkce find &quot;.*&quot; nevyhledá kotvy na zacátku ani konci  
+     tCurs = found.text.createTextCursor()   &apos; pro jistotu novy kurzor - v tabulkach jinak nefungovalo správne přímo enumeration
+     tCurs.gotorange(found.getStart(),false) &apos; kurzor na zacatek nalezeneho bloku = odstavce
+     tmprange = tCurs.getStart()  &apos; zacatek uvnitř odstavce - kurzor může být za zacatkem odstavce 
+
+     &apos; pokud findcounter = 2 - pak jde oprvni hledaání - zjistit zda není kotva hned na začátku 
+     if findcounter = 2 then
+        
+        mistoChyby = 4
+        tCurs.gotorange(finkon,false) &apos; kurzor na pozici kurzoru odkud se hledá
+        chybaCharStyle: &apos; zde pokračovat při chybe regionu, pokud byl kurzor před tabulkou 
+
+        &apos; hledání začína přímo na kotvě textoveho pole, end/footnote
+        if isObject(tcurs.textfield) then tmprange = tcurs.textfield.anchor  &apos; zacatek bude nastaven na kotvu
+        if isObject(tcurs.endnote) then tmprange = tcurs.endnote.anchor
+        if isObject(tcurs.footnote) then tmprange = tcurs.footnote.anchor
+      &apos;  xray tmprange
+   
+       else  &apos; některá z kotev může být hned na začátku odstavce opakovaneho hledání - find ignoruje kotvy na zacatku
+         &apos; posunout začátek tCurs doleva na skutečný začátek odstavce
+         if not tCurs.isStartOfParagraph then tCurs.gotoStartOfParagraph(false)
+         tmprange = tCurs.getStart()  &apos; zapamatovat nový začátek - včetne kotev polí
+
+       end if
+     
+     tCurs.gotorange(found.getEnd(),false)
+     &apos; posunout začátek tCurs na skutečný konec ostavce - 
+     if not tCurs.isEndOfParagraph then tCurs.gotoEndOfParagraph(false)
+
+     &apos; nastavit nový rozsah - odstavec včetně kotev na záčtku a konci 
+     tCurs.gotorange(tmprange,true)
+
+    
+     Enum1 = tCurs.createEnumeration
+     if Enum1.hasMoreElements then
+       TextElement = Enum1.nextElement
+ &apos;      If TextElement.supportsService(&quot;com.sun.star.text.Paragraph&quot;) Then
+         Enum2 = TextElement.createEnumeration
+         While Enum2.hasMoreElements       &apos; loop over all paragraph portions
+            TextPortion = Enum2.nextElement
+     &apos;       msgbox TextPortion.string
+&apos;            xray TextPortion   &apos; NotDefaultCharStyleName
+     
+         
+            if find(0).cmd = &quot;NotDefaultCharStyleName&quot; then  &apos; hledat jakýkoliv znakový styl mimo &quot;Výchozí&quot;
+                If (TextPortion.CharStyleName &lt;&gt; &quot;&quot;)  Then 
+                  if  (TextPortion.string=&quot;&quot;) and not isNull(TextPortion.DocumentIndexMark) then goto dalsi &apos; problemu dela kotva (znacka) rejstriku o nulove delce retezce - ignorovat
+
+                  stylNalezen = true      
+                  &apos; pokud je pocitaci rezim tak nastvit pro dalsi hledani a hledat dalsi vyskyt
+                  &apos; tak dlouho dokud se neco najde
+                  if fcount then
+
+                    &apos; zjistit zda už nejsme za koncem bloku
+                    if AltSearchVolby.csele=1 then  &apos; hledání unitř bloku - za koncem bloku = skončit
+                       if (-1 = blockCur.text.compareRegionEnds(TextPortion, blockCur.getEnd)) then goto konbloku 
+                     end if 
+
+                    ncount = ncount + 1
+                    if mark then TextPortion.CharBackColor = bcolor  &apos; je-li zapnuto značení tak označit barvou
+                   else
+                    found = TextPortion
+                    AltSearchSkup(12) = getDisplayChName(found.CharStyleName)  &apos; \O = jmeno stylu
+                    goto chstylNalezen
+                   end if 
+                  End If
+
+               else   &apos; hledat zadaný styl
+                If (TextPortion.CharStyleName = find(0).chstyl)  Then 
+                  if  (TextPortion.string=&quot;&quot;) and not isNull(TextPortion.DocumentIndexMark) then goto dalsi &apos; problemu dela kotva (znacka) rejstriku o nulove delce retezce - ignorovat
+                  stylNalezen = true      
+                  &apos; pokud je pocitaci rezim tak nastvit pro dalsi hledani a hledat dalsi vyskyt
+                  &apos; tak dlouho dokud se neco najde
+                  if fcount then
+
+                    &apos; zjistit zda už nejsme za koncem bloku
+                    if AltSearchVolby.csele=1 then  &apos; hledání unitř bloku - za koncem bloku = skončit
+                       if (-1 = blockCur.text.compareRegionEnds(TextPortion, blockCur.getEnd)) then goto konbloku 
+                     end if 
+
+                    ncount = ncount + 1
+                    if mark then TextPortion.CharBackColor = bcolor  &apos; je-li zapnuto značení tak označit barvou
+                   else
+                    found = TextPortion  
+                    AltSearchSkup(12) = getDisplayChName(found.CharStyleName)  &apos; \O = jmeno stylu
+                    goto chstylNalezen
+                   end if 
+                 End If
+               
+               end if
+          
+          dalsi:       
+          
+          Wend
+
+         &apos; konec odstavce - nejsou na jeho konci nějaké kotvy polí end/footnoote co mohou mít znakový styl? 
+         
+
+       end if
+     &apos; nebylo nalezeno, zkusit hledat další odstavec  
+     finkon = found.End 
+     finzac = finkon 
+     stylNalezen = false
+&apos;     goto hledejBlokZnovu   &apos; presunuto az za vyhodnoceni hranic bloku
+    end if
+    
+chstylNalezen:
+
+
+  &apos; hledaní slov označených pro rejstrik uvnitř nalezeneho odstavce - .atr = 10 - hledá se jakákoliv část textu daneho stylu, i kotvy a pole 
+  if (not IsNull(Found)) and (find(0).atr = 10) then  &apos; dalsi nenalezen - konec
+     &apos; zpetný směr není podporován
+     if AltSearchVolby.zpet = 1 then
+         FindNextInBlock = -2 
+         exit sub
+       end if
+
+&apos;   goto preskocto
+     &apos; toto prevzato ze chstylu, možna ze pro rejstriky neni nutné
+     &apos; problém: funkce find &quot;.*&quot; nevyhledá kotvy na zacátku ani konci  
+     tCurs = found.text.createTextCursor()   &apos; pro jistotu novy kurzor - v tabulkach jinak nefungovalo správne přímo enumeration
+     tCurs.gotorange(found.getStart(),false) &apos; kurzor na zacatek nalezeneho bloku = odstavce
+     tmprange = tCurs.getStart()  &apos; zacatek uvnitř odstavce - kurzor může být za zacatkem odstavce 
+
+     &apos; pokud findcounter = 2 - pak jde o prvni hledaání - zjistit zda není kotva hned na začátku 
+     if findcounter = 2 then
+        
+        mistoChyby = 5
+        tCurs.gotorange(finkon,false) &apos; kurzor na pozici kurzoru odkud se hledá
+        chybaRejstrikStyle: &apos; zde pokračovat při chybe regionu, pokud byl kurzor před tabulkou 
+
+        &apos; hledání začína přímo na kotvě textoveho pole, end/footnote
+ &apos;       if isObject(tcurs.textfield) then tmprange = tcurs.textfield.anchor  &apos; zacatek bude nastaven na kotvu
+ &apos;       if isObject(tcurs.endnote) then tmprange = tcurs.endnote.anchor
+  &apos;      if isObject(tcurs.footnote) then tmprange = tcurs.footnote.anchor
+  &apos;      if isObject(tcurs.DocumentIndexMark) then tmprange = tcurs.DocumentIndexMark.anchor
+      &apos;  xray tmprange
+   
+       else  &apos; některá z kotev může být hned na začátku odstavce opakovaneho hledání - find ignoruje kotvy na zacatku
+         &apos; posunout začátek tCurs doleva na skutečný začátek odstavce
+         if not tCurs.isStartOfParagraph then tCurs.gotoStartOfParagraph(false)
+         tmprange = tCurs.getStart()  &apos; zapamatovat nový začátek - včetne kotev polí
+
+       end if
+     
+     tCurs.gotorange(found.getEnd(),false)
+     &apos; posunout začátek tCurs na skutečný konec ostavce - 
+     if not tCurs.isEndOfParagraph then tCurs.gotoEndOfParagraph(false)
+
+     &apos; nastavit nový rozsah - odstavec včetně kotev na záčtku a konci 
+&apos;     tCurs.gotorange(tmprange,true)
+     tCurs.gotorange(finkon,false) &apos; kurzor na pozici kurzoru odkud se hledá
+     tCurs.gotorange(found.getend,true) &apos; konec oblasti n akonce ostavce
+
+     Enum1 = tCurs.createEnumeration
+    
+&apos; preskocto:
+ 
+     if Enum1.hasMoreElements then
+       TextElement = Enum1.nextElement
+ &apos;      If TextElement.supportsService(&quot;com.sun.star.text.Paragraph&quot;) Then
+         Enum2 = TextElement.createEnumeration
+         While Enum2.hasMoreElements       &apos; loop over all paragraph portions
+            TextPortion = Enum2.nextElement
+     &apos;       msgbox TextPortion.string
+&apos;            xray TextPortion   &apos; NotDefaultCharStyleName
+              
+            if find(0).cmd = &quot;&quot; then  &apos; hledat jakýkoliv index 
+                If isObject(TextPortion.getstart.DocumentIndexMark) Then 
+ &apos;                 if  (TextPortion.string=&quot;&quot;) and not isNull(TextPortion.DocumentIndexMark) then goto rdalsi &apos; problemu dela kotva (znacka) rejstriku o nulove delce retezce - ignorovat
+
+                  rejstrikNalezen = true      
+                  &apos; pokud je pocitaci rezim tak nastvit pro dalsi hledani a hledat dalsi vyskyt
+                  &apos; tak dlouho dokud se neco najde
+                  if fcount then
+
+                    &apos; zjistit zda už nejsme za koncem bloku
+                    if AltSearchVolby.csele=1 then  &apos; hledání unitř bloku - za koncem bloku = skončit
+                       if (-1 = blockCur.text.compareRegionEnds(TextPortion, blockCur.getEnd)) then goto konbloku 
+                     end if 
+
+                    ncount = ncount + 1
+                    if mark then TextPortion.CharBackColor = bcolor  &apos; je-li zapnuto značení tak označit barvou
+                   else
+                    
+                    found.gotoRange(TextPortion.DocumentIndexMark.anchor.getstart(), false)
+                    found.gotoRange(TextPortion.DocumentIndexMark.anchor.getend(), true)
+                    mistoChyby = 6
+                    goto nRejstrikNalezen
+                   end if 
+                  End If
+
+               else   &apos; hledat zadaný styl
+                If (TextPortion.CharStyleName = find(0).chstyl)  Then 
+                  if  (TextPortion.string=&quot;&quot;) and not isNull(TextPortion.DocumentIndexMark) then goto dalsi &apos; problemu dela kotva (znacka) rejstriku o nulove delce retezce - ignorovat
+                  rejstrikNalezen = true      
+                  &apos; pokud je pocitaci rezim tak nastvit pro dalsi hledani a hledat dalsi vyskyt
+                  &apos; tak dlouho dokud se neco najde
+                  if fcount then
+
+                    &apos; zjistit zda už nejsme za koncem bloku
+                    if AltSearchVolby.csele=1 then  &apos; hledání unitř bloku - za koncem bloku = skončit
+                       if (-1 = blockCur.text.compareRegionEnds(TextPortion, blockCur.getEnd)) then goto konbloku 
+                     end if 
+
+                    ncount = ncount + 1
+                    if mark then TextPortion.CharBackColor = bcolor  &apos; je-li zapnuto značení tak označit barvou
+                   else
+                    found = TextPortion  
+                    goto nRejstrikNalezen
+                   end if 
+                 End If
+               
+               end if
+          
+          rdalsi:       
+          
+          Wend
+
+         &apos; konec odstavce - nejsou na jeho konci nějaké kotvy polí end/footnoote co mohou mít znakový styl? 
+         
+
+       end if
+     &apos; nebylo nalezeno, zkusit hledat další odstavec  
+     finkon = found.End 
+     finzac = finkon 
+     rejstrikNalezen = false
+&apos;     goto hledejBlokZnovu   &apos; presunuto az za vyhodnoceni hranic bloku
+    end if
+
+nRejstrikNalezen:
+
+
+
+
+
+  &apos; dalsi vyskyt nenalezen - zjistit jesli neni výjimka pro natahovaci blok x* nebo []* x? nebo \{0,nn}
+  &apos; vyjimka neplatí pro jedinou natahovaci skupinu:      ... and (maxfind&gt;0), jinak hrozí zacyklení
+  if IsNull(Found) and (find(n).nmode = 1) and (maxfind&gt;0) then  
+    VyjimkaNalezeno:
+     prCurs = finkon.text.createTextCursor()  &apos; pro jistotu novy kurzor
+     zac = finkon &apos; zapamatovat původni vyber
+     kon = finkon
+     nulSkupina = true &apos; priznak ze jde o skupinu s nulovou delkou pro vyjimku 
+     foundStr = &quot;&quot;        
+     goto jakobyNalezeno
+    end if
+
+
+  &apos; byl-li vybran blok a je povoleno hledani v bloku, tak upozornit na jeho konec
+  if AltSearchVolby.csele=1 then
+
+    mistoChyby=1 &apos;rozliseni mista chyby porovnani regionu 1=hledani v bloku; 2=hledani casti
+    if AltSearchVolby.zpet = 1 then &apos; ruzne porovnani regionu pro zpetne hledani
+       if IsNull(Found) then goto zacbloku: &apos; nenalezeno zacatek
+       if (1 = blockCur.text.compareRegionStarts(Found, blockCur.getStart)) then  
+        zacbloku:
+         &apos; zjistit jesli neni výjimka pro natahovaci blok x* nebo []* x? nebo \{0,nn}
+         &apos; nmode - příznak je skupiny co má výjimku při nenalezení; umode - natahovací skupina
+         if (find(n).nmode = 1)and(find(n).umode &lt;&gt; 0) then goto VyjimkaNalezeno &apos; pokracovat v hledani dalsi skupiny  
+
+         prCurs = blockCur.text.createTextCursorByRange(blockCur)
+         FindNextInBlock = -1  &apos; nenalezeno do začátku bloku
+         exit sub
+        end if 
+      else
+       if IsNull(Found) then goto konbloku:  &apos; nenalezeno konec
+       if (-1 = blockCur.text.compareRegionEnds(Found, blockCur.getEnd)) then  
+        konbloku:
+         &apos; zjistit jesli neni výjimka pro natahovaci blok x* nebo []* x? nebo \{0,nn}
+         if (find(n).nmode = 1)and(find(n).umode &lt;&gt; 0) then goto VyjimkaNalezeno &apos; pokracovat v hledani dalsi skupiny
+        
+         prCurs = blockCur.text.createTextCursorByRange(blockCur)
+         FindNextInBlock = 1  &apos; nenalezeno do konce bloku
+         exit sub         
+        end if 
+      end if  
+   end if
+
+pokracujZaBlok:
+
+  if (not IsNull(Found)) and (find(0).atr = 4) and (not stylNalezen) then goto hledejBlokZnovu    &apos; znak. styl v odstavci nenalezen hledat v dalším odstavci
+
+  if (not IsNull(Found)) and (find(0).atr = 10) and (not RejstrikNalezen) then goto hledejBlokZnovu    &apos; polozka zadaneho jmena rejstriku v odstavci nenalezena, hledat v dalším odstavci
+
+  if IsNull(Found) then  &apos; dalsi nenalezen - konec
+    nofound:
+      prCurs = AltSearchDoc.text.createTextCursor() 
+      if AltSearchVolby.zpet = 1 then &apos; pri zpetnem hledani obraceny kurzor
+         prCurs.gotorange(AltSearchDoc.text.getEnd(),false) &apos; kurzor na konec dokumentu
+         FindNextInBlock = -2 
+         exit sub
+       else   
+         prCurs.gotorange(AltSearchDoc.text.getStart(),false) &apos; kurzor na zacatek dokumentu
+         FindNextInBlock = 2 
+         exit sub
+       end if
+   end if
+
+  prCurs = found.text.createTextCursor()  &apos; pro jistotu novy kurzor
+  zac = found.getStart() &apos; zapamatovat původni vyber
+  kon = found.getEnd()
+  foundStr = found.string
+
+&apos; dbgVcursor(zac,kon,n)  &apos; nastavi viditelny kurzor podle rozsahu a zastavi
+
+
+  if find(n).pgBreak &gt; 0 then  &apos; hledat zalomení strany/sloupce
+     if NoFoundBreak(found,find(n).pgBreak) then goto hledejDalsi &apos;hledejBlokZnovu &apos;
+     if (HleDesc.SearchString=&quot;$&quot;)and(find(n).pgBreak=1) then &apos; pokud se hleda jen znacka odstavce 
+         zac = found.getEnd   &apos; nulový výběr, aby se kurzor objevil na zacatku odstavce se zlomem 
+         &apos; pri zpetnem hledani u prazdných odstavcu ale nepokracuje hledani
+       end if  
+
+   end if 
+
+  if find(n).pmode &lt;&gt; 0 then  &apos; zpracovani odstavcu \p = rozsirit vyber podle odstavců
+     if (find(n).pmode = -1) then  &apos;odstavce na zacatku: hledat zacatek odstavce
+        if NoFoundBlokOdst(zac, find(n).pmin, find(n).pmax, true) then goto hledejDalsi
+        zac = prCurs.getStart()
+       end if
+     if (find(n).pmode = 1) then  &apos;odstavce na konci: hledat konce odstavce
+        if NoFoundBlokOdst(kon, find(n).pmin, find(n).pmax, false) then goto hledejBlokZnovu &apos;hledejDalsi
+        kon = prCurs.getStart()
+       end if
+
+     if (find(n).pmode = 16) then  &apos;samotny odstavec nebo skupina - bez textu
+        if (find(n).pmin=1) and (find(n).pmax=1) then &apos; 1. neprazdny odstavec
+           prCurs.gotoRange(kon,false)
+&apos;           prCurs.goRight(1,false) &apos; vybrat odstavec za
+&apos;           zac = prCurs.getEnd()
+         else &apos; 2 nebo vice prazdnych odstavcu
+          if HleDesc.SearchBackwards then &apos; dozadu - pri zpetnem hledani hledat 1. znak odstavce
+              prCurs.gotoRange(zac,false) &apos; zapocitavat i prvni nalezeny prazdny odstavec
+              prCurs.goRight(1,false)     &apos; tj. vratit se o jeden zpet
+              zac = prCurs.getStart() 
+              if NoFoundBlokOdst(zac, find(n).pmin, find(n).pmax, true) then
+                 zac = prCurs.getStart()
+                 goto hledejDalsi
+                end if 
+              kon = prCurs.getStart()
+              
+            else   &apos; smer dopredu
+              if NoFoundBlokOdst(zac, find(n).pmin, find(n).pmax, false) then goto hledejDalsi
+              kon = prCurs.getStart()
+            end if        
+          end if  
+       end if
+
+
+    end if &apos; konec zpracovani odstavu \p
+
+&apos;   dbgVcursor(zac,kon,n)  &apos; nastavi viditelny kurzor podle rozsahu
+
+jakobyNalezeno:
+   &apos; nalezeno prvni pruchod
+   if n = 0 then
+      &apos; kazdy další prvek hledani hledat vždy dopredu
+      HleDesc.SearchBackwards = false
+      &apos; ulozit zacatek a konec 1. nalezeneho bloku
+      finzac = zac &apos; zac = zacatek prave nalezeneho retezce
+      finkon = kon &apos; kon = konec prave nalezeneho retezce 
+      if find(n).umode = 1 then  &apos; cast textu typu neukoncena skupina .+ nebo .*
+         &apos; tedy je nalezen text až do konce odstavce
+          uskupB = zac &apos; zapamatovat zacatek neukoncené skupiny 
+          uskupE = kon &apos; zapamatovat konec neukoncené skupiny 
+          &apos; pokud je nalezeno mene znaku než je minimum pro skupinu tak = nanalezeno, hledat dal
+          if len(foundStr) &lt; find(n).pmin  then goto hledejBlokZnovu &apos; hledat dal za koncem posledniho uspešného nalezeni 
+          &apos; dalsi skupinu hledat za minimálním počtem znaku
+          prCurs.gotoRange(zac,false)
+          prCurs.goRight(find(n).pmin,false) &apos; posun za minimum 
+          finkon = prCurs.getStart()   &apos; nachystat pro dalsi hledani
+        end if
+
+     else  &apos; kazda dalsi nalezena cast musi nasledovat hned za predchozi 
+           &apos; konec predchoziho musí byt zacatkem nasledujiciho
+      mistoChyby=2  &apos; rozliseni mista chyby porovnani regionu 1=hledani v bloku; 2=hledani casti
+      select case find(n).umode
+        case 0  &apos; normalní ukoncena skupina
+          if 0 = finkon.text.compareRegionStarts(finkon.getStart(),zac.getStart()) then  
+              finkon = kon  &apos;found.getEnd()  &apos; nachystat pro dalsi hledani
+            else  &apos; nesouhlasi, konec
+              if find(n).nmode=1 then  &apos; jakoby nalezeno pokud je povolena nulova delka useku textu pomocí  * ? nebo \{0,nn}
+                  &apos; finkon = finkon
+                  foundStr = &quot;&quot;
+                else
+                  goto hledejBlokZnovu &apos; hledat dal za koncem posledniho uspešného nalezeni
+                end if  
+            end if
+
+        case 1  &apos; cast textu typu neukoncena skupina .+ nebo .*
+                &apos; tedy je nalezen text až do konce odstavce
+          uskupB = zac &apos; zapamatovat zacatek neukoncené skupiny 
+          uskupE = kon &apos; zapamatovat konec neukoncené skupiny 
+          &apos; pokud je nalezeno mene znaku než je minimum pro skupinu tak = nanalezeno, hledat dal
+          if len(foundStr) &lt; find(n).pmin  then goto hledejBlokZnovu &apos; hledat dal za koncem posledniho uspešného nalezeni 
+          &apos; dalsi skupinu hledat za minimálním počtem znaku
+          prCurs.gotoRange(zac,false)
+          prCurs.goRight(find(n).pmin,false) &apos; posun za minimum 
+          finkon = prCurs.getStart()   &apos; nachystat pro dalsi hledani
+
+        case -1 &apos; skupina nasledujicí za neukoncenou .+ nebo .*
+          &apos; blok textu nalezeny ZA predchozi neukoncenou casti textu musi zacinat pred koncem teto skupiny nebo právě na jejím konci
+          if finkon.text.compareRegionEnds(zac.getStart(),uskupE.getStart()) &gt;= 0 then  
+              &apos; sestavit retezec neukoncene (predchozi) casti textu skupiny 
+              prCurs.gotoRange(uskupB,false)
+              if nulSkupina then &apos; skupina nulove delky, vracena pri hledani uvnitr bloku 
+                  prCurs.gotoRange(uskupE,true)
+                  kon = uskupE
+                else
+                  prCurs.gotoRange(zac.getStart(),true)
+                end if
+              AltSearchSkup(find(n-1).skup) = AltSearchSkup(find(n-1).skup) &amp; prCurs.string
+          &apos;    msgbox prCurs.string
+              finkon = kon  &apos;found.getEnd()  &apos; nachystat pro dalsi hledani
+              
+            else  &apos; nesouhlasi, dalsi blok textu zacina az za koncem predchozího =&gt; konec
+              if find(n).nmode=1 then  &apos; jakoby nalezeno pokud je povolena nulova delka useku textu pomocí  * ? nebo \{0,nn}
+                  &apos; sestavit retezec neukoncene (predchozi) casti textu skupiny 
+                  prCurs.gotoRange(uskupB,false)
+                  prCurs.gotoRange(uskupE,true)
+                  AltSearchSkup(find(n-1).skup) = AltSearchSkup(find(n-1).skup) &amp; prCurs.string
+                  finkon = uskupE
+                  foundStr = &quot;&quot;
+                else
+                  goto hledejBlokZnovu &apos; hledat dal za koncem posledniho uspešného nalezeni
+                end if  
+ 
+            end if
+           
+
+       end select 
+
+    end if
+   
+    
+   &apos; sestavit nalezene skupiny 
+   if find(n).umode &lt;= 0 then
+      AltSearchSkup(find(n).skup) = AltSearchSkup(find(n).skup) &amp; foundStr
+    end if
+     
+   n = n+1
+  loop 
+
+
+&apos; skutečně nalezeno
+
+  &apos; sestavit posledni neukoncenou skupinu, pokud ji konci hledany retezec 
+  if find(n-1).umode = 1 then &apos; posledni byl neukoncený blok textu
+    AltSearchSkup(find(n-1).skup) = AltSearchSkup(find(n-1).skup) &amp; foundStr
+   end if
+
+
+
+  &apos; pokud je nalezen hyperlink, tak zjistit zda URL obsahuje zadany podretezec 
+  if find(0).pstyl&lt;&gt;&quot;&quot; then  &apos; hledany podretezec ulozen v .pstyl
+     if AltSearchVolby.kcase=0 then &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+        n = instr(found.HyperLinkURL,find(0).pstyl)     &apos;od verze  2.4 přestalo fungovat s finkon  n = instr(finkon.HyperLinkURL,find(0).pstyl)   
+       else  &apos; brat ohled na velikost pismen
+        n = instr(1,found.HyperLinkURL,find(0).pstyl,0)  &apos;od verze  2.4 přestalo fungovat s finkon  n = instr(1,finkon.HyperLinkURL,find(0).pstyl,0)
+       end if    
+     if n&lt;1 then goto hledejBlokZnovu &apos; hledat dal za koncem posledniho uspešného nalezeni 
+   end if
+
+
+  if lgrow &lt;&gt; &quot;&quot; then  &apos; rozsireni vyberu zleva
+     prCurs.gotoRange(finzac,false) 
+     if lgrow=&quot;par&quot; then &apos; od zacatku odstavce
+        prCurs.gotoStartOfParagraph(false)
+       else
+        if val(lgrow)&gt;0 then 
+           prCurs.goLeft(val(lgrow),false)
+          else
+           prCurs.goRight(-1*val(lgrow),false)
+        end if     
+       end if
+     finzac = prCurs.getStart()  
+    end if
+
+  if rgrow &lt;&gt; &quot;&quot; then  &apos; rozsireni vyberu zprava
+     prCurs.gotoRange(finkon,false) 
+     if rgrow=&quot;par&quot; then &apos; od zacatku odstavce
+        prCurs.gotoEndOfParagraph(false)
+       else
+        if val(rgrow)&gt;0 then 
+           prCurs.goRight(val(rgrow),false)
+          else
+           prCurs.goLeft(-1*val(rgrow),false)
+        end if     
+       end if
+     finkon = prCurs.getStart()  
+    end if
+
+
+  &apos; nastavit kurzor  
+  prCurs.gotorange(finzac,false)   &apos; kurzor na zacatek nalezeneho bloku
+  prCurs.gotorange(finkon,true)    &apos; kurzor na konec nalezeneho bloku a zvyraznit
+
+chybaRejstrik:  &apos; pokusna obsluha
+
+  &apos; hledal se text určitého znakového stylu?
+  if find(0).atr = 3 then  &apos;souhlasí hledaný styl?
+    if prCurs.CharStyleName &lt;&gt; find(0).chstyl then  &apos;souhlasí hledaný styl?
+       goto hledejBlokZnovu 
+      end if
+    AltSearchSkup(12) = getDisplayChName(prCurs.CharStyleName)  
+   end if
+
+
+  &apos; hledal se určitý seznamový stylu
+  if find(0).atr = 5 then  &apos;souhlasí hledaný styl?
+    if prCurs.NumberingStyleName &lt;&gt; find(0).chstyl then goto hledejBlokZnovu &apos;souhlasí hledaný styl?
+    AltSearchSkup(12) = getDisplayNumName(prCurs.NumberingStyleName)
+   end if
+
+  &apos; hledal se jakýkoli seznamový styl
+  if find(0).atr = 6 then  &apos;souhlasí hledaný styl?
+    if prCurs.NumberingStyleName = &quot;&quot; then goto hledejBlokZnovu &apos;souhlasí hledaný styl?
+    AltSearchSkup(12) = getDisplayNumName(prCurs.NumberingStyleName)
+   end if
+
+  &apos; hledal se určitý odstavcový styl
+  if find(0).atr = 7 then  &apos;souhlasí hledaný styl?
+    if prCurs.ParaStyleName &lt;&gt; find(0).chstyl then goto hledejBlokZnovu &apos;souhlasí hledaný styl?
+    AltSearchSkup(12) = getDisplayPName(prCurs.ParaStyleName) 
+   end if
+
+  &apos; hledal se jakýkoliykoliv odstavcovy styl mimo defaultni
+  if find(0).atr = 8 then  &apos;
+     if prCurs.ParaStyleName = &quot;Standard&quot; then goto hledejBlokZnovu &apos;vychozí ignorovat
+     AltSearchSkup(12) = getDisplayPName(prCurs.ParaStyleName)
+   end if
+
+  &apos; hledalo se něco k určitému jmenu rejstříku 
+  if find(0).atr = 9 then  &apos;
+    if isObject(prcurs.getStart.DocumentIndexMark) then
+      pomo = getNameOfIndex(prcurs.getStart.DocumentIndexMark) &apos; nazev labelu rejstriku () 
+      &apos; je to hledane jmeno rejstriku? 
+      if find(0).chstyl = &quot;&quot; then  &apos; bez nazvu = hledat všechny
+        AltSearchSkup(12) = pomo &apos; nazev
+        AltSearchSkup(11) = prcurs.getStart.DocumentIndexMark.anchor.string  &apos;celý retezec oznacený pro index
+       else
+        if find(0).chstyl = pomo then  &apos; vyhovuje zadany nazev?
+          AltSearchSkup(12) = pomo 
+          AltSearchSkup(11) = prcurs.getStart.DocumentIndexMark.anchor.string  &apos;celý retezec oznacený pro index
+         else
+          goto hledejBlokZnovu   &apos; vyhodnotit jako nenalezeno
+         end if 
+       end if
+
+      
+      else
+        goto hledejBlokZnovu  
+     end if 
+
+   end if
+
+
+
+
+  &apos; pokud je pocitaci rezim tak nastvit pro dalsi hledani a hledat dalsi vyskyt
+  &apos; tak dlouho dokud se neco najde
+  if fcount then
+     ncount = ncount + 1
+     if mark then prCurs.CharBackColor = bcolor  &apos; je-li zapnuto značení tak označit barvou
+     goto hledejBlokZnovu    
+    end if
+
+  FindNextInBlock = 0
+  &apos; nulta skupina = vsechno nalezene
+  AltSearchSkup(0) = prCurs.string
+  &apos; 10 zaznam původni URL adresa pro \u
+   AltSearchSkup(10) = prCurs.HyperLinkURL
+
+
+&apos; dbgVypisSkupiny &apos; vypise pole se skupinami pro nahrazeni
+
+ exit sub
+
+
+
+
+hledejDalsi: &apos; hledá další výskyt při nesplnění některe podminky (napr. minima) - při hledani odstavců, zalomeni?
+     finzac = zac
+     finkon = kon
+     goto hledejBlokZnovu
+ 
+Errobsluha: &apos; error 1: chyba regionu = nalezeno mimo hranice omezujicího bloku
+ if (Err=1) or (Err=0) then
+   select case  mistoChyby  &apos; rozliseni mista chyby porovnani regionu 1=hledani v bloku; 2=hledani casti 
+
+    case 1 &apos;chyba pri hledani v bloku - chyba regionu;
+       &apos; je-li nalezeno v tabulce, je tabulka uvnitř vyberu? Pokud ano tak hledat dál jinak konec bloku
+       tabIsIn = false   
+       if not isNull(found) then 
+         if not isEmpty(found.TextTable) then
+            oTmp = found.TextTable  &apos; objekt tabulky
+            oAnch = getTextRangeOfTable(oTmp)  &apos; kotva zpet do textu
+            &apos; obnovit původní rozsah 
+            ovCurs.gotoRange(AltSiniSel.getstart(),false) &apos; 
+            ovCurs.gotoRange(AltSiniSel.getEnd(),true) &apos; 
+            if isInsideOfSelection(oAnch) then tabIsIn = true
+           end if
+         end if   
+   
+       if HleDesc.SearchBackwards then &apos; pozpátku
+          if tabIsIn then 
+            resume pokracujZaBlok
+           else 
+            resume zacbloku
+           end if
+         
+        else  &apos; hledat vpred
+          if tabIsIn then 
+            resume pokracujZaBlok
+           else 
+            resume konbloku
+           end if
+
+        end if
+    case 2 &apos;chyba pri hledani po castech 
+      resume hledejBlokZnovu
+      
+    case 3 &apos; chyba pri nacteni pole SrchAtr() atributu  
+      &apos; Nepodporované vlastnosti atributů hledání.
+      hlaseni1(48, true, false, &quot;FindNextInBlock:  &quot; &amp; msg(10)) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti
+
+    case 4 &apos;chyba pri hledani znak. stylu - hledání začíná na konci odstavce před tabulkou
+      resume chybaCharStyle  &apos; normálně pokračovat
+
+    case 5 &apos;chyba pri hledani slov rejstriku - hledání začíná na konci odstavce před tabulkou
+      resume chybaRejstrikStyle  &apos; normálně pokračovat
+
+&apos;    case 6 &apos;chyba pri hledani slov rejstriku - skok do tabulky?
+   &apos;   prCurs = found.text.createTextCursor()  &apos; pro jistotu novy kurzor
+&apos;      zac = found.getStart() &apos; zapamatovat původni vyber
+&apos;      kon = found.getEnd()
+&apos;      prCurs = found.getEnd()&apos;getStart() &apos; zapamatovat původni vyber
+&apos;       prCurs = found
+
+&apos;      prCurs.gotorange(finzac,false)   &apos; kurzor na zacatek nalezeneho bloku
+&apos;      prCurs.gotorange(found,true)
+
+&apos;      resume chybaRejstrik  &apos; normálně pokračovat
+
+
+    end select
+
+&apos;     msgbox &quot;Další výskyt nenalezen v této textové části.&quot;, 64
+
+   else
+    hlaseni1(48, true, false, &quot;FindNextInBlock:  Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line: &quot; &amp; Erl &amp; &quot;)&quot;) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti
+    resume next
+   end if 
+end sub
+
+
+&apos; vraci lokalizovaný nazev odstavcového stylu 
+sub getDisplayPName(styleName) as string
+dim oStyles
+  getDisplayPName = &quot;&quot;
+  on error goto konec
+  &apos; rodina stylu
+  oStyles = AltSearchDoc.StyleFamilies.getByName(&quot;ParagraphStyles&quot;)  
+  getDisplayPName = oStyles.getByName(styleName).DisplayName
+
+ konec:
+end sub
+
+&apos; vraci lokalizovaný nazev znakoveho stylu 
+sub getDisplayChName(styleName) as string
+dim oStyles
+  getDisplayChName = &quot;&quot;
+  on error goto konec
+  &apos; rodina stylu
+  oStyles = AltSearchDoc.StyleFamilies.getByName(&quot;CharacterStyles&quot;,)  
+  getDisplayChName = oStyles.getByName(styleName).DisplayName
+
+ konec:  
+end sub
+
+
+&apos; vraci lokalizovaný nazev znakoveho stylu 
+sub getDisplayNumName(styleName) as string
+dim oStyles
+  getDisplayNumName = &quot;&quot;
+  on error goto konec
+  &apos; rodina stylu
+  oStyles = AltSearchDoc.StyleFamilies.getByName(&quot;NumberingStyles&quot;,)  
+  getDisplayNumName = oStyles.getByName(styleName).DisplayName
+  
+ konec:
+end sub
+
+
+&apos; porovnava hodnoty properties kurzoru a stylu
+sub isSameProperties(parStState,nam,curs,oPSt) as boolean
+ isSameProperties = true &apos; predpoklada se shoda - pak se nic nebude menit
+ &apos; struct zatim vyloucit - nedokazu jednoduse porovnat
+ if (parStState &lt;&gt; 2)and (not IsUnoStruct(curs.getPropertyValue(nam))) then &apos; proverit podle hodnot stylu
+    if errControl then on error goto konec 
+ &apos;   msgbox nam &amp; oPST.getPropertyValue(nam)
+    if (curs.getPropertyValue(nam))&lt;&gt; (oPSt.getPropertyValue(nam))  then
+      isSameProperties = false
+     end if
+   end if 
+   
+konec:   
+end sub
+
+
+
+
+&apos; vraci retezec propertis pro hledaní ktere jsou shodne se zadanym kurzorem  
+sub getCharProperties(curs as object, value as boolean) as string
+dim prop  &apos; pole se seznamem kontrolovanych char vlastností 
+prop = array(&quot;CharAutoEscapement&quot;,&quot;CharAutoKerning&quot;,&quot;CharBackColor&quot;,&quot;CharBackTransparent&quot;,&quot;CharCaseMap&quot;,&quot;CharColor&quot;,&quot;CharCombineIsOn&quot;,_
+               &quot;CharCombinePrefix&quot;,&quot;CharCombineSuffix&quot;,&quot;CharContoured&quot;,&quot;CharCrossedOut&quot;,_
+               &quot;CharEmphasis&quot;,&quot;CharEscapement&quot;,&quot;CharEscapementHeight&quot;,&quot;CharFlash&quot;,_
+               &quot;CharFontName&quot;,&quot;CharHeight&quot;,&quot;CharHidden&quot;,&quot;CharKerning&quot;,_
+               &quot;CharLocale&quot;,&quot;CharNoHyphenation&quot;,&quot;CharPosture&quot;,&quot;CharRelief&quot;,&quot;CharRotation&quot;,_
+               &quot;CharRotationIsFitToLine&quot;,&quot;CharScaleWidth&quot;,&quot;CharShadowed&quot;,&quot;CharStrikeout&quot;,&quot;CharUnderline&quot;,_
+               &quot;CharUnderlineColor&quot;,&quot;CharUnderlineHasColor&quot;,&quot;CharWeight&quot;,&quot;CharWordMode&quot;)                             
+
+dim cursor, oPStyl as object
+dim parStState, sezn, para, st, vl
+dim i,nam 
+
+ Cursor = ovCurs.getEnd &apos;ukazatel na konec viditelny kurzor
+
+&apos;msgbox cursor.getPropertyValue(&quot;CharPosture&quot;) &amp; &quot;   default: &quot; &amp; cursor.getPropertyDefault(&quot;CharPosture&quot;)
+&apos;cursor.SetPropertyToDefault(&quot;CharPosture&quot;)
+&apos; If not ThisComponent.getCurrentController().getSelection().supportsService(&quot;com.sun.star.text.TextRanges&quot;) Then goto problem
+
+
+ &apos; zjistit odstavcovy styl
+ parStState = cursor.getPropertyState(&quot;ParaStyleName&quot;)
+ 
+ para=cursor.getPropertyValue(&quot;ParaStyleName&quot;)
+ &apos; objekt soucsneho odstavcoveho stylu 
+ oPStyl = AltSearchDoc.StyleFamilies.getByName(&quot;ParagraphStyles&quot;).getByName(para)
+
+ sezn=&quot;&quot; &apos; vysledny retezec
+ for i = LBound(Prop) to UBound(Prop)
+  nam=prop(i) &apos; jmeno testovane vlastnosti
+  st=cursor.getPropertyState(nam) &apos; stav teto vlasnosti v miste kurzoru
+  vl=cursor.getPropertyValue(nam) &apos; hodnota vlastnosti
+    if (st&lt;&gt;1) then   
+      if value then nam=nam &amp; &quot;=&quot; &amp; cstr(vl) &apos; pridat hodnotu vlastnosti
+      if sezn=&quot;&quot; then 
+         sezn = nam
+        else
+         sezn = sezn+&quot;|&quot;+nam  &apos;
+        end if 
+
+     else &apos; jeste proverit pokud je jednolity odstavcovy styl
+       if  not isSameProperties(parStState,nam,cursor,oPStyl) then
+         if value then nam=nam &amp; &quot;=&quot; &amp; cstr(vl) &apos; pridat hodnotu vlastnosti
+         if sezn=&quot;&quot; then 
+            sezn = nam
+           else
+            sezn = sezn+&quot;|&quot;+nam  &apos;
+           end if 
+
+        end if
+     
+     end if
+      
+ next i 
+ 
+&apos; oDial.model.Cb_find.text = &quot;[:::&quot;+sezn+&quot;::]&quot;
+ if sezn = &quot;&quot; then 
+   sezn = &quot;CharWeight&quot;
+   if value then sezn=sezn &amp; &quot;=&quot; &amp; cstr(cursor.getPropertyValue(sezn)) &apos; pridat hodnotu vlastnosti
+  end if 
+ getCharProperties = sezn
+
+end sub
+
+
+&apos; dioalog nechá vybrat z pole hodnot
+sub getFromList(caption$, pole1(), x&amp;, y&amp;, xx&amp;, yy&amp;) as string
+dim pom(),poloha
+   oDsel = LoadDialog_(&quot;AltSearch&quot;, &quot;D_styl&quot;) &apos; dilog vyběru stylu
+   oDsel.Title =  caption
+   oDsel.model.tag = &quot;&quot;
+   
+   &apos; poloha dialogu relativní k hlavnimu dialogu
+   poloha = oDial.getPosSize
+   poloha.x = poloha.x + x
+   poloha.y = poloha.y + y
+   oDsel.setPosSize poloha.x, poloha.y, xx, yy, 3+12
+   &apos; nastavir rozměry vnitřku boxu
+   oDsel.getcontrol(&quot;Lb_styles&quot;).setPosSize 0, 0, xx-10, yy-10, 12
+ 
+   oDsel.getcontrol(&quot;Lb_styles&quot;).removeItems(0,oDsel.getcontrol(&quot;Lb_styles&quot;).itemCount)  &apos; smazat predchozi     
+   oDsel.getcontrol(&quot;Lb_styles&quot;).addItems(pole1(),0)  &apos; pridat 
+   oDsel.execute() &apos;zobrazit dialog 
+   
+   getFromList = oDsel.model.Tag
+end sub
+
+
+&apos; dioalog nechá vybrat některý ze znakových stylů použitých (inUse) v dokumentu
+sub getStyleName(typ as string, inUse as boolean) as string
+dim pom(), poloha
+
+  pom() = GetStyles(typ,inUse) &apos; true = jen použité, jinak vsechny odst. styly nebo 
+  getStyleName = getFromList(msg(47),pom,120,90,220,350)
+
+end sub
+
+
+&apos; při aktivaci, dvojkliku na seznam stylu přenest vysledek pres tag dialogu
+sub selStyle(oEvt)
+  oDsel.endExecute()
+  oDsel.model.Tag = oEvt.ActionCommand
+end sub
+
+
+
+
+&apos; vraci jmeno uživatelského rejstríku nebo &quot;obsah&quot; nebo
+&apos; objekt musí být typu .getStart.DocumentIndexMark  
+sub getNameOfIndex(oIndex) as string
+ dim pom, i
+&apos; on error goto konec
+ 
+ getNameOfIndex = &quot;???&quot;
+ pom = oIndex.getPropertySetInfo.properties
+  
+ for i = 0 to ubound(pom) step 1 
+   
+     if pom(i).name = &quot;UserIndexName&quot; then
+        getNameOfIndex = oIndex.UserIndexName
+        exit sub
+       end if
+       
+     if pom(i).name = &quot;PrimaryKey&quot; then
+        getNameOfIndex = &quot;Alphabetical index&quot;
+        exit sub
+       end if 
+
+   next i
+ 
+ if ubound(pom) = 4 then  &apos; podle počtu properties odhaduji ze je to obsah
+    getNameOfIndex = &quot;Document content&quot;
+    exit sub
+   end if 
+
+ exit sub
+
+konec:
+  getNameOfIndex = &quot;Chyba&quot;
+end sub
+
+
+
+
+
+
+&apos; vraci cislo urcujici typ nalezeneho řetězce z hlediska velikosti pisma
+&apos; první písmeno velke, zbytek malé = 1
+&apos; vsechna velka = 2
+&apos; ostatní = 0
+sub getCapitalType(pCurs as object) as byte
+dim pom, i, ch
+dim v, prvniVelke
+ v = 0 : prvniVelke = false
+ getCapitalType = 0
+ on error goto konec
+ pom = pCurs.string
+ if pom = &quot;&quot; then exitsub
+ if AltSearchVolby.preservecap &lt;&gt; 1 then exit sub  &apos; není aktivni volba = pryč
+
+ for i = 1 to len(pom)
+    ch = mid(pom,i,1)
+    if ch = ucase(ch) then 
+       v = v + 1 &apos; počet velkých písmen
+       if i = 1 then 
+         prvniVelke = true
+        else
+         prvniVelke = false
+        end if    
+      
+      end if
+       
+  next i
+
+ if len(pom) = v then getCapitalType = 2
+ if prvniVelke then getCapitalType = 1
+
+konec:
+end sub
+
+
+
+sub hlaseni(volba as integer)as integer
+dim pom, pr, i, quit
+ pr = chr(13)
+ quit = 0 &apos; potlaceni hlaseni  6 = Ano, pokracovat
+ &apos;Další výskyt hledaného výrazu ... nebyl nalezen.
+
+&apos; pom = msg(0)+&quot;  &quot;&quot;&quot;+oDial.model.Cb_find.text+&quot;&quot;&quot;  &quot;+msg(1)+pr+&quot; &quot;+pr+&quot; &quot;
+ pom = msg(0)+&quot;  &quot;&quot;&quot;+AltSearchVolby.find+&quot;&quot;&quot;  &quot;+msg(1)+pr+&quot; &quot;+pr+&quot; &quot;  
+ 
+ select case volba 
+  case 0 &apos; Hledání v bloku ukončeno
+    i = 32
+    pom = pom + msg(2)  
+    if quitMode then quit = 1  &apos; 1=Ne 6=Ano; možnost potlačení hlaseni
+  case 1 &apos; pokračovat od začátku?
+    i = 4 + 32 + 128 &apos;128= prvni tlacitko aktivni 256-druhe
+    pom = pom + msg(4)+pr+&quot; &quot;
+    if quitMode then quit = 1  &apos; 1=Ne 6=Ano; možnost potlačení hlaseni
+  case 2  &apos; pokračovat od konce?
+    pom = pom + msg(3)+pr+&quot; &quot;  
+    i = 4 + 32 + 128 &apos;128= prvni tlacitko aktivni
+    if quitMode then quit = 1  &apos; 1=Ne 6=Ano; možnost potlačení hlaseni
+  case 3  &apos; hledani textu na netextovem objektu
+    pom = msg(5)  
+    i = 32
+  case 4  &apos; tento objekt neni v dokumentu
+    pom = pom + msg(6)+pr+&quot; &quot;  
+    i = 32
+  case 5  &apos; hledany vyraz ...    byl nalezen ...  krat.
+    pom = msg(13) &amp; &quot;  &quot;&quot;&quot;+AltSearchVolby.find+&quot;&quot;&quot;  &quot; &amp; pr &amp; pr &amp; msg(14) &amp; cstr(ncount) &amp; msg(15)  
+    i = 64
+    if quitMode then quit = 1  &apos; 1=Ne 6=Ano; možnost potlačení hlaseni
+  case 6  &apos; Nelze zaráz vybrat vice techto objetů
+    pom = msg(18) &amp; &quot;  &quot;&quot;&quot;+AltSearchVolby.find+&quot;&quot;&quot;  &quot; 
+    i = 64
+  case 7  &apos; Tento výběr všech hledaných výrazů může trvat déle a způsobit porušení &apos;Zvýraznění&apos;, pokud je v dokumentu použito, bez možnosti vzít &apos;Zpět&apos;.
+    pom = msg(19)
+    i = 4 + 32 + 128 &apos;128= prvni tlacitko aktivni
+    if quitMode then quit = 6  &apos; 1=Ne 6=Ano; možnost potlačení hlaseni
+  case 8  &apos; hledany vyraz ...    byl NAHRAZEN ...  krat.
+    pom = msg(13) &amp; &quot;  &quot;&quot;&quot;+AltSearchVolby.find+&quot;&quot;&quot;  &quot; &amp; pr &amp; pr &amp; msg(30) &amp; cstr(ReplCount) &amp; msg(15)  
+    i = 64
+    if quitMode then quit = 1  &apos; 1=Ne 6=Ano; možnost potlačení hlaseni
+
+    
+ end select
+
+&apos; oDial.model.Bt_find.enabled = false
+ if quit&gt;0 then  &apos; u rozhodovacich funkci je nastaveno ne
+    hlaseni = quit  
+   else
+    hlaseni = msgbox(pom, i, msg(11)+verze)
+    if not AltSearchDialog_end then oDial.setfocus()  &apos; fokus vrátit do dialogu 
+   end  if 
+
+end sub
+
+
+&apos; vypise hlaseni s textem vypis: 
+&apos; styl: 16=zastavit 32=? 48=! 64=info
+&apos;
+sub hlaseni1(styl as long, potlacitHlaseniMozno as boolean, prerusit as boolean,vypis$) &apos; styl: 16=zastavit 32=? 48=! 64=info
+ if not (potlacitHlaseniMozno and quitMode) then  &apos; nepotlacene hlaseni
+    msgbox(vypis, styl, msg(11)+verze)
+    if not AltSearchDialog_end then oDial.setfocus()  &apos; fokus do dialogu
+   end  if 
+end sub
+
+
+
+&apos; aktualizuje hodnoty textových polí v dokumentu aby po vložení ukazovali správné hodnoty
+sub update_fields
+dim document   as object
+dim dispatcher as object
+ document   = AltSearchDoc.CurrentController.Frame
+ dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+ dispatcher.executeDispatch(document, &quot;.uno:UpdateFields&quot;, &quot;&quot;, 0, Array())
+end sub
+
+
+sub runOOoIntCommand(cmd as string, nam, valu) as variant
+dim document   as object
+dim dispatcher as object
+dim args1(0) as new com.sun.star.beans.PropertyValue
+
+ document   = AltSearchDoc.CurrentController.Frame
+ dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+ args1(0).Name = nam     &apos; JumpToNextFootnote  JumpToFootnoteOrAnchor
+ args1(0).Value = valu
+
+ dispatcher.executeDispatch(document, &quot;.uno:&quot;+cmd, &quot;&quot;, 0, args1())
+&apos; dispatcher.executeDispatch(document, &quot;.uno:&quot;+cmd, &quot;&quot;, 0, array())
+end sub
+
+
+&apos; nastaví promenne AltSearchSkup(0-2) podle parametru hledání podretezce: 1=před nalezeným 0=nalezeny 2=za nalezenym 
+sub nastavSkupiny012(retezec, hled)   
+dim bin, i, j
+
+  bin = 0
+  if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+  j = len(hled)
+  i = instr(1,retezec, hled, bin)  &apos; pořadí prvniho nalezeneho znaku podretezce
+  if i = 0 then     &apos;podretezec nenalezen 
+    AltSearchSkup(0) = retezec&apos; nalezeny podretezec
+    exit sub
+   end if
+  AltSearchSkup(0) = mid(retezec, i, j) &apos; nalezeny podretezec
+  AltSearchSkup(1) = left(retezec, i-1)   &apos; retezec pred nalezenym podretezcem
+  AltSearchSkup(2) = mid(retezec, i+j)  &apos; retezec za nalezenym podretezcem
+                        
+end sub
+
+
+
+
+&apos; zvetsi/zmensi i smeru hledani a podle max, vcetne hlaseni  
+sub vyhodnotHledani(i,max as long) as boolean
+         vyhodnotHledani = false
+         if max &lt; 0 then
+            hlaseni(4)
+            exit sub
+           end if  
+         if AltSearchVolby.zpet = 1 then  &apos; opacne meze pro zpetne hledani        
+            if i&lt;=0 then
+              if 6 &lt;&gt; hlaseni(1) then exit sub &apos;Bylo dosaženo začátku dokumentu. Pokračovat v hledání od konce? 
+              i = max
+             else 
+              i = i-1
+              if i&lt;0 then i=0 &apos; aby slo zacit hledat od prvniho
+             end if
+            else
+             if i&gt;=max then        
+               if 6 &lt;&gt; hlaseni(2) then exit sub &apos;Bylo dosaženo konce dokumentu. Pokračovat v hledání od začátku? 
+               i = 0 
+              else
+               i = i + 1 
+               if i&gt;max then i=max &apos; aby slo zacit hledat i od posledniho
+              end if
+            end if
+         vyhodnotHledani = true   
+end sub
+
+
+&apos; mode=0: vrati index ramce kde je kurzor; 
+&apos; mode=1: vratí počet ramcu celkem  
+&apos; mode=2: se snaži najít podretezec REST počinaje zadanym indexem  
+&apos; -1 je vraceno když objekty nejsou v dokumentu, nebo se ma hledat od zacatku
+sub getIndexTextFrame(mode as integer, idx, rest as string) as long
+dim i as long, bin 
+dim oTFr, tf, nam, names, count
+ oTFr = AltSearchDoc.getTextFrames 
+ names = oTFr.ElementNames &apos; pole s nazvy ramců
+ count = oTFr.count
+ if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+ 
+
+ if mode = 2 then  &apos; najit podretezec rest v nazvu
+    if rest = &quot;&quot; then  &apos;hledat dalsi
+        getIndexTextFrame = idx
+        exit sub
+      end if
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani        
+       for i = idx-1 to 0 step -1
+           if instr(1,names(i), rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexTextFrame = i
+           exit sub
+          end if 
+         next i
+       getIndexTextFrame = -1
+       exit sub
+    
+      else &apos; dopredu
+       for i = idx+1 to ubound(names())
+           if instr(1,names(i), rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexTextFrame = i
+           exit sub
+          end if 
+         next i
+       getIndexTextFrame = ubound(names())+1
+       exit sub
+      end if 
+  end if 
+
+ if mode = 1 then &apos; pocet vsech txt ramců
+    getIndexTextFrame = count - 1
+   else        
+    if count = 0 then &apos; nejsou ramce
+      getIndexTextFrame = -1
+      exit sub
+     end if  
+    if initImplName = &quot;SwXTextRanges&quot; then &apos; kurzor někde v textu
+       if ovCurs.text.ImplementationName = &quot;SwXTextFrame&quot; then &apos; kurzor je přímo uvnitř text. ramce
+          &apos; vratit index soucasneho
+          nam = ovCurs.text.name
+          for i = 0 to ubound(names())
+             if nam = names(i) then
+               getIndexTextFrame = i
+               exit sub
+              end if 
+           next i
+          getIndexTextFrame = -1 &apos; neanalezeno zacit prvniho         
+
+         else &apos; hledat nejbližší další, predchozí
+           &apos; prozatím hledat od začátku/konce  
+          hledejBlizke: 
+           if AltSearchVolby.zpet = 1 then &apos; pozpatku
+             getIndexTextFrame = ubound(names())+1 &apos; posledni
+            else 
+             getIndexTextFrame = -1 &apos; prvni
+            end if 
+         end if
+      else &apos; je vybran primo ramec 
+         if initImplName &lt;&gt; &quot;SwXTextFrame&quot; then goto hledejBlizke
+         nam = oSels.name
+         for i = 0 to ubound(names())
+            if nam = names(i) then
+              getIndexTextFrame = i
+              exit sub
+             end if 
+          next i
+         getIndexTextFrame = -1 &apos; od prvniho          
+     end if         
+   
+    end if &apos; mode = 0     
+
+end sub
+
+
+&apos; vrati index tabulkly kde je kurzor, nebo pocet vsech tabulek
+&apos; mode=0: vrati index objektu kde je kurzor; 
+&apos; mode=1: vratí počet objektu celkem  
+&apos; mode=2: se snaži najít podretezec REST počinaje zadanym indexem  
+&apos; -1 je vraceno když objekty nejsou v dokumentu, nebo se ma hledat od zacatku
+sub getIndexTextTable(mode as integer, idx, rest as string) as long
+dim i as long, bin
+dim oTFr, tf, nam, names, count
+ oTFr = AltSearchDoc.getTextTables
+ names = oTFr.ElementNames &apos; pole s nazvy tabulek
+ count = oTFr.count
+ if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+
+ if mode = 2 then  &apos; najit podretezec rest v nazvu
+    if rest = &quot;&quot; then  &apos;hledat dalsi
+        getIndexTextTable = idx
+        exit sub
+      end if
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani        
+       for i = idx-1 to 0 step -1
+           if instr(1,names(i), rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexTextTable = i
+           exit sub
+          end if 
+         next i
+       getIndexTextTable = -1
+       exit sub
+    
+      else &apos; dopredu
+       for i = idx+1 to ubound(names())
+           if instr(1,names(i), rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexTextTable = i
+           exit sub
+          end if 
+         next i
+       getIndexTextTable = ubound(names())+1
+       exit sub
+      end if 
+  end if 
+
+
+ if mode = 1 then &apos; pocet vsech txt ramců
+    getIndexTextTable = count - 1
+   else        
+    if count = 0 then
+      getIndexTextTable = -1
+      exit sub
+     end if  
+    if initImplName = &quot;SwXTextRanges&quot; then &apos; kurzor někde v textu
+       if ovCurs.text.ImplementationName = &quot;SwXCell&quot; then &apos; kurzor je přímo uvnitř tabulky
+          &apos; hledat další
+          nam = ovCurs.textTable.name
+          for i = 0 to ubound(names())
+             if nam = names(i) then
+               getIndexTextTable = i
+               exit sub
+              end if 
+           next i
+          getIndexTextTable = -1 &apos; neanalezeno          
+
+         else &apos; hledat nejbližší další, predchozí
+          hledejBlizke:
+           &apos; prozatím hledat od začátku/konce  
+           if AltSearchVolby.zpet = 1 then &apos; pozpatku
+             getIndexTextTable = ubound(names())+1 &apos; posledni
+            else 
+             getIndexTextTable = -1 &apos; prvni
+            end if 
+         end if
+      else &apos; je vybran rozsah buněk 
+         if initImplName &lt;&gt; &quot;SwXTextTableCursor&quot; then goto hledejBlizke
+         nam = ovCurs.textTable.name
+         for i = 0 to ubound(names())
+            if nam = names(i) then
+              getIndexTextTable = i
+              exit sub
+             end if 
+          next i
+         getIndexTextTable = -1 &apos; neanalezeno          
+     end if         
+   
+    end if &apos; mode = 0     
+
+end sub
+
+
+
+&apos; mode=0: vrati index objektu kde je kurzor; 
+&apos; mode=1: vratí počet objektu celkem  
+&apos; mode=2: se snaži najít podretezec REST počinaje zadanym indexem  
+&apos; -1 je vraceno když objekty nejsou v dokumentu, nebo se ma hledat od zacatku
+sub getIndexPicture(mode as integer, idx, rest1 as string) as long
+dim i as long, bin
+dim oTFr, tf, nam, names, Alttext, count,rest
+ rest = rest1 
+ oTFr = AltSearchDoc.GraphicObjects
+ names = oTFr.ElementNames &apos; pole s nazvy ramců
+ count = oTFr.count
+ if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+
+ if mode = 2 then  &apos; najit podretezec rest v nazvu
+    &apos; hledat v nazvu nebo Alt textu?
+    Alttext = false  
+    if left(rest,2) = &quot;\\&quot; then  &apos; hledat v Alternativním textu
+        for i = 0 to ubound(names)
+           &apos; nahradit názvy Alt. texty 
+           names(i) = oTFr.getByName(names(i)).Title
+         next i        
+        rest = rightpast(rest,&quot;\\&quot;)      
+&apos;        xray rest               
+        Alttext = true    
+      end if
+    
+
+       
+    if (rest = &quot;&quot;) and (not Alttext) then &apos;hledat dalsi 
+        getIndexPicture = idx
+        exit sub
+      end if
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani        
+       for i = idx-1 to 0 step -1
+           if ((instr(1,names(i), rest,bin)&gt;0) and (rest&lt;&gt;&quot;&quot;))   or (Alttext and (names(i)= &quot;&quot;) and (rest= &quot;&quot;))  then &apos; nalezen podretezec - druhá podmínka za OR pro nalezení prazdného retezce v alt. textu
+             getIndexPicture = i
+             exit sub
+            end if 
+         next i
+       getIndexPicture = -1
+       exit sub
+    
+      else &apos; dopredu
+       for i = idx+1 to ubound(names())
+           if ((instr(1,names(i), rest,bin)&gt;0) and (rest&lt;&gt;&quot;&quot;))   or (Alttext and (names(i)= &quot;&quot;) and (rest= &quot;&quot;))  then &apos; nalezen podretezec - druhá podmínka za OR pro nalezení prazdného retezce v alt. textu
+             getIndexPicture = i
+             exit sub
+            end if 
+         next i
+       getIndexPicture = ubound(names())+1
+       exit sub
+      end if 
+  end if 
+
+
+ if mode = 1 then &apos; pocet vsech txt ramců
+    getIndexPicture = count - 1
+   else        
+    if count = 0 then
+      getIndexPicture = -1
+      exit sub
+     end if  
+    if initImplName = &quot;SwXTextRanges&quot; then &apos; kurzor někde v textu
+          &apos; hledat nejbližší další, predchozí
+          &apos; prozatím hledat od začátku/konce  
+          hledejBlizke: 
+           if AltSearchVolby.zpet = 1 then &apos; pozpatku
+             getIndexPicture = ubound(names())+1 &apos; posledni
+            else 
+             getIndexPicture = -1 &apos; prvni
+            end if 
+
+      else &apos; je vybran primo obrazek 
+         if initImplName &lt;&gt; &quot;SwXTextGraphicObject&quot; then goto hledejBlizke
+         nam = oSels.name
+         for i = 0 to ubound(names())
+            if nam = names(i) then
+              getIndexPicture = i
+              exit sub
+             end if 
+          next i
+         getIndexPicture = -1 &apos; od prvniho      
+     end if         
+   
+    end if &apos; mode = 0     
+
+end sub
+
+
+
+
+
+sub getIndexNote(mode as integer, idx, rest as string) as long
+dim i as long, bin
+dim oTFs, oTF, nam, names, count 
+
+ if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+
+&apos; on error goto Errobsluha
+ if ubound(tmppole())=-1 then  &apos;1. pruchod: nacist tmp pole s poznamkami
+  redim tmppole()
+  count = 0
+  oTFs = AltSearchDoc.getTextFields().createEnumeration()
+  Do While oTFs.hasMoreElements()
+    oTF = oTFs.nextElement()
+	if oTF.supportsService(&quot;com.sun.star.text.TextField.Annotation&quot;) then
+       redim preserve tmppole(count)
+       tmppole(count)=oTF 
+	   count= count+1	
+       if i&gt;65000 then 
+         hlaseni1(64, true, false, &quot;getIndexNote:  Je použito více jak 65000 polí, poznámek nebo poznámek pod čarou. Zbytek ignoruji. &quot;) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti 
+	     exit do
+	    end if
+	  end if   
+   Loop
+  end if
+ count = ubound(tmppole())+1
+
+ if mode = 2 then  &apos; najit podretezec rest v nazvu
+    if rest = &quot;&quot; then  &apos;hledat dalsi
+        getIndexNote = idx
+        exit sub
+      end if
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani        
+       for i = idx-1 to 0 step -1
+           if instr(1,tmppole(i).content, rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexNote = i
+           exit sub
+          end if 
+         next i
+       getIndexNote = -1
+       exit sub
+    
+      else &apos; dopredu
+       for i = idx+1 to ubound(tmppole())
+           if instr(1,tmppole(i).content, rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexNote = i
+           exit sub
+          end if 
+         next i
+       getIndexNote = ubound(tmppole())+1
+       exit sub
+      end if 
+  end if 
+
+
+ if mode = 1 then &apos; pocet vsech poznamek
+    getIndexNote = ubound(tmppole())
+   else  &apos;mode=0        
+    if count = 0 then
+      getIndexNote = -1
+      exit sub
+     end if  
+    if initImplName = &quot;SwXTextRanges&quot; then &apos; kurzor někde v textu
+      if isObject(prCurs.TextField) then &apos; kurzor je přímo před polem 
+         &apos; najit index podle kotvy
+         for i = 0 to ubound(tmppole())
+            if isRegionStart0(prCurs,tmppole(i).anchor)  then 
+               getIndexNote = i
+               exit sub            
+              end if 
+          next i
+         getIndexNote = -1 &apos; nenalezeno, od prvniho                
+
+        else &apos; hledat nejbližší další, predchozí
+          &apos; hledat nejbližší další, predchozí  &apos; prozatím hledat od začátku/konce  
+          hledejBlizke: 
+           if AltSearchVolby.zpet = 1 then &apos; pozpatku
+             getIndexNote = ubound(tmppole())+1 &apos; posledni
+            else 
+             getIndexNote = -1 &apos; prvni
+            end if 
+        end if 
+        
+      else  &apos; &quot;SwXTextRanges&quot;
+       goto hledejBlizke &apos; jdi na prvni nebo posledni  
+     end if  &apos; &quot;SwXTextRanges&quot;
+   
+    end if &apos; mode = 0     
+
+   exit sub
+
+
+&apos;Errobsluha: &apos; error 1: chyba regionu = nalezeno mimo hranice omezujicího bloku
+&apos; if Err=1 then
+&apos;     msgbox &quot;Další výskyt nenalezen v této textové části.&quot;, 64
+&apos;    goto ignoruj
+&apos;   else
+&apos;    msgbox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line: &quot; &amp; Erl &amp; &quot;)&quot;, 64
+&apos;    resume next
+&apos;   end if 
+
+end sub
+
+
+
+
+sub getIndexTField(mode as integer, idx, rest as string) as long
+dim i as long, bin
+dim oTFs, oTF, nam, names, count 
+
+ if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+
+&apos; on error goto Errobsluha
+ if ubound(tmppole())=-1 then  &apos;1. pruchod: nacist tmp pole s poznamkami
+  redim tmppole()
+  count = 0
+  oTFs = AltSearchDoc.getTextFields().createEnumeration()
+  Do While oTFs.hasMoreElements()
+    oTF = oTFs.nextElement()
+	if not (oTF.supportsService(&quot;com.sun.star.text.TextField.Annotation&quot;) or oTF.supportsService(&quot;com.sun.star.text.TextField.GetReference&quot;)) then
+&apos; nepoužitelné, při testu blika obrazovka a velmi pomale
+&apos;       if isFieldDispUsed(oTF) then
+          redim preserve tmppole(count)
+          tmppole(count)=oTF 
+	      count= count+1	
+&apos;	     end if 
+       if i&gt;65000 then 
+         hlaseni1(64, true, false, &quot;getIndexTField:  Je použito více jak 65000 polí, poznámek nebo poznámek pod čarou. Zbytek ignoruji. &quot;) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti 
+	     exit do
+	    end if
+	  end if   
+   Loop
+  end if
+ count = ubound(tmppole())+1
+
+ if mode = 2 then  &apos; najit podretezec rest v nazvu
+    if rest = &quot;&quot; then  &apos;hledat dalsi
+        getIndexTField = idx
+        exit sub
+      end if
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani        
+       for i = idx-1 to 0 step -1
+           if instr(1,tmppole(i).anchor.string, rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexTField = i
+           exit sub
+          end if 
+         next i
+       getIndexTField = -1
+       exit sub
+    
+      else &apos; dopredu
+       for i = idx+1 to ubound(tmppole())
+           if instr(1,tmppole(i).anchor.string, rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexTField = i
+           exit sub
+          end if 
+         next i
+       getIndexTField = ubound(tmppole())+1
+       exit sub
+      end if 
+  end if 
+
+ if mode = 1 then &apos; pocet vsech poznamek
+    getIndexTField = ubound(tmppole())
+   else  &apos;mode=0        
+    if count = 0 then
+      getIndexTField = -1
+      exit sub
+     end if  
+    if initImplName = &quot;SwXTextRanges&quot; then &apos; kurzor někde v textu
+      if isObject(prCurs.TextField) then &apos; kurzor je přímo před polem 
+         &apos; najit index podle kotvy
+         for i = 0 to ubound(tmppole())
+            if isRegionStart0(prCurs,tmppole(i).anchor)  then 
+               getIndexTField = i
+               exit sub            
+              end if 
+          next i
+         getIndexTField = -1 &apos; nenalezeno, od prvniho                
+
+        else &apos; hledat nejbližší další, predchozí
+          &apos; hledat nejbližší další, predchozí  &apos; prozatím hledat od začátku/konce  
+          hledejBlizke: 
+           if AltSearchVolby.zpet = 1 then &apos; pozpatku
+             getIndexTField = ubound(tmppole())+1 &apos; posledni
+            else 
+             getIndexTField = -1 &apos; prvni
+            end if 
+        end if 
+        
+      else  &apos; &quot;SwXTextRanges&quot;
+       goto hledejBlizke &apos; jdi na prvni nebo posledni  
+     end if  &apos; &quot;SwXTextRanges&quot;
+   
+    end if &apos; mode = 0     
+
+   exit sub
+
+end sub
+
+
+
+&apos; mode=0: vrati index objektu kde je kurzor; 
+&apos; mode=1: vratí počet objektu celkem  
+&apos; mode=2: se snaži najít podretezec REST počinaje zadanym indexem  
+&apos; -1 je vraceno když objekty nejsou v dokumentu, nebo se ma hledat od zacatku
+sub getIndexBookmark(mode as integer, idx, rest1 as string) as long
+dim i as long, bin 
+dim oTFr, tf, nam, names, count
+ oTFr = AltSearchDoc.getBookmarks 
+ names = oTFr.ElementNames &apos; pole s nazvy ramců
+ count = oTFr.count
+ if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+ 
+
+ if mode = 2 then  &apos; najit podretezec rest v nazvu
+    if rest = &quot;&quot; then  &apos;hledat dalsi
+        getIndexBookmark = idx
+        exit sub
+      end if
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani        
+       for i = idx-1 to 0 step -1
+           if instr(1,names(i), rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexBookmark = i
+           exit sub
+          end if 
+         next i
+       getIndexBookmark = -1
+       exit sub
+    
+      else &apos; dopredu
+       for i = idx+1 to ubound(names())
+           if instr(1,names(i), rest,bin)&gt;0 then  &apos; nalezen podretezec
+           getIndexBookmark = i
+           exit sub
+          end if 
+         next i
+       getIndexBookmark = ubound(names())+1
+       exit sub
+      end if 
+  end if 
+
+ if mode = 1 then &apos; pocet vsech txt ramců
+    getIndexBookmark = count - 1
+   else     &apos; mode = 0   
+    if count = 0 then &apos; nejsou zadne zalozky
+      getIndexBookmark = -1
+      exit sub
+     end if  
+    if initImplName = &quot;SwXTextRanges&quot; then &apos; kurzor někde v textu
+       if ovCurs.text.ImplementationName = &quot;SwXTextFrame&quot; then &apos; kurzor je přímo uvnitř text. ramce
+          &apos; vratit index soucasneho
+          nam = ovCurs.text.name
+          for i = 0 to ubound(names())
+             if nam = names(i) then
+               getIndexBookmark = i
+               exit sub
+              end if 
+           next i
+          getIndexBookmark = -1 &apos; neanalezeno zacit prvniho         
+
+         else &apos; hledat nejbližší další, predchozí
+           &apos; prozatím hledat od začátku/konce  
+          hledejBlizke: 
+           if AltSearchVolby.zpet = 1 then &apos; pozpatku
+             getIndexBookmark = ubound(names())+1 &apos; posledni
+            else 
+             getIndexBookmark = -1 &apos; prvni
+            end if 
+         end if
+      else &apos; je vybran primo ramec 
+         if initImplName &lt;&gt; &quot;SwXTextFrame&quot; then goto hledejBlizke
+         nam = oSels.name
+         for i = 0 to ubound(names())
+            if nam = names(i) then
+              getIndexBookmark = i
+              exit sub
+             end if 
+          next i
+         getIndexBookmark = -1 &apos; od prvniho          
+     end if         
+   
+    end if &apos; mode = 0     
+
+end sub
+
+
+
+&apos; vrací kod hledani založky - 0 nalezeno,  -1/1 začátek/konec bloku, -2/2 zač./konec dokumentu a nastaví pařičně prCurs 
+&apos; nastaví proměnnou FoundBookmarkNo  = index právě nalezené (-1 nenalezeno)
+sub getNextBookmark(byval find as string, fromCur, blockCur as object, inFoot) as integer
+dim j&amp;,i&amp;, k&amp;, k1&amp;, k2&amp;, max&amp;, bin&amp;, zac&amp;, kon&amp;, krok&amp;, pgno&amp;  
+dim oBookm, oAnch, oCol, pCur  &apos; kolekce zalozek
+&apos;dim inFoot
+dim hled, pom
+
+ hled = find
+
+ &apos; \ = hledání ve jemenech založek 
+ inFoot = -1  &apos; -1 = hledání v textu zalozky; 1 = hledat ve jmenech založek; 0 = hledat jakoukoli založku
+ if left(hled,2)= &quot;\\&quot; then  
+   inFoot = 1
+   &apos;hled = rightPast(hled, &quot;\u005C&quot;)
+   hled = rightpast(hled, &quot;\\&quot;)
+  end if
+ if hled = &quot;&quot; then inFoot = 0 &apos; hledat všechny   
+
+ oBookm = AltSearchDoc.Bookmarks
+ max = oBookm.Count-1 &apos;ubound(oBookm())  &apos; max index poslední poznamky
+
+ if max &lt; 0  then &apos; objekt v dokumentu není
+   getNextBookmark = 4
+   exit sub 
+  end if
+ 
+ if (initImplName &lt;&gt; &quot;SwXTextRanges&quot;) then &apos; kurzor není v textu
+     getNextBookmark = 10 &apos; přerušeno
+     hlaseni(3) &apos; hledání v netextovém objektu
+    exit sub 
+   end if
+
+ &apos; hledat nejbližší
+ pCur = ovCurs.text.createTextCursorByRange(ovCurs.getStart()) &apos; zapamatovat zacatek momentalniho kurzoru 
+ pgno = ovCurs.getPage()
+ 
+&apos;zjistit index pokud je kurzor přímo na kotvě - najit podle umistění kotvy     
+ k = getIndexByAnchor(oBookm(),pCur.start(),max) &apos; -1 = kurzor neni na založce 
+ 
+ if k&gt;=0 then 
+    &apos; kurzor je na zacatku založky - může ji být více na stejnem místě
+&apos;    if k &lt; 0 then msgbox &quot;getNextBookmark:  znacka nenalezena ackoli je na ni kurzor&quot;
+    if FoundBookmarkNo&gt;=0 then  &apos; poslední nalezený index
+       if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+          if k &gt; FoundBookmarkNo then k = FoundBookmarkNo
+        else
+          if k &lt; FoundBookmarkNo then k = FoundBookmarkNo
+        end if
+
+        
+      end if 
+
+    &apos; nastavit první index pro další hledání
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+       if k = 0 then : goto nenalezeno : else  k = k-1 : end if  &apos; prvni index pro zpetne hledání 
+     else
+       if k = max then : goto nenalezeno : else  k = k+1 : end if &apos; prvni index pro hledání dopredu
+     end if
+  
+   else
+    &apos; kurzor mimo zalozku, najít nejbližší další / předchozí
+    k1 = findPrevBookm(ovCurs.start,oBookm())  &apos;nejdrive najít nejbližší predchozi v ramci stejneho regionu
+    k2 = findNextBookm(ovCurs.start,oBookm())  &apos;nejdrive najít nejbližší dalsi
+
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+      if k=-1 then k = max 
+      if (k2-k1)&gt;=1 then k=k2-1  
+      if (k1&lt;0)and(k2&lt;=max) then k=k2-1
+      if (k1&lt;=max)and(k2&lt;0) then k=k1
+       &apos; nic, k už je nalezeno
+     else &apos; prvni index pro hledání
+      &apos;  if ( isBodyTextRegion(ovCurs.start))and(max&gt;=0) then k = -1  &apos; body text region - první kotva mimo body text oblast
+      &apos;  if -1 = isRegionBefore(oBookm(k).anchor,ovCurs.start) then k = -1
+      &apos;  if k = max then : goto nenalezeno : else  k = k+1 : end if &apos; prvni index pro hledání dopredu
+      if (k2-k1)&gt;=1 then k=k1+1  
+      if (k1&lt;0)and(k2&lt;=max) then k=k2
+      if (k1&lt;=max)and(k2&lt;0) then k=k1+1
+     end if
+ 
+&apos;    msgbox k1 &amp; &quot;   &quot; &amp; k2  &amp;  &quot;  &gt;&gt;&gt;  &quot; &amp; k  
+
+    if k = -1 then goto nenalezeno 
+           
+   end if
+
+
+ &apos; OK, hledat zda vyhovuje podmínkám, od indexu k počínaje
+ zac = k &apos; první index pro hledaní 
+ if AltSearchVolby.zpet = 1 then 
+     kon = 0 : krok = -1  &apos; prohledavat od k do 0
+   else
+     kon = max : krok = 1 &apos; prohledavat od k do max
+   end if
+
+ for i = zac to kon step krok
+    &apos; hledat v obsahu zalozek ? 
+    if inFoot=1 then  &apos; hledat ve jmenech
+        pom = oBookm(i).Name   
+      else &apos; hledat v textu kotvy
+        pom = oBookm(i).anchor.string  &apos; hledat v obsahu textu zalozky
+      end if
+
+    &apos; je hledaný podřetězec HLED obsažen ve VST a je případně uvnitř bloku?
+    &apos; pokud je inFoot = 0  tak se hledá bez ohledu výskyt hled. podřetězce
+    if isSubstrInBlock(oBookm(i),pom,hled,inFoot) then
+&apos;        if oBookm(i).anchor.string = &quot;&quot; then &apos; vybrat prazný text, aby případně šlo smazat pomocí DEL
+&apos;          prCurs = oBookm(i).anchor.text.createTextCursorByRange(oBookm(i).anchor.getStart())
+&apos;          PrCurs.goRight(1,true)
+&apos;         else
+          prCurs = oBookm(i) &apos;.anchor
+&apos;         end if 
+        getNextBookmark = 0
+        FoundBookmarkNo = i     
+        exit sub
+
+      end if &apos; je nalezen podřetězec?
+
+   next i
+
+&apos; debug info             
+&apos;msgbox &quot;Index: &quot; &amp; i &amp; &quot;   ReferenceID: &quot; &amp; oBookm(i).ReferenceId &amp; &quot;   Anchor: &quot; &amp; oBookm(i).anchor.string &amp; &quot;   Label: &apos;&quot; &amp; oBookm(i).label &amp; chr(10) &amp; chr(10) &amp; oBookm(i).string
+
+&apos; nenalezeno
+nenalezeno:
+
+  &apos; vrátí index neuspěšného hledání -1/1 začátek/konec bloku, -2/2 zač./konec dokumentu a nastaví pařičně prCurs
+  getNextBookmark = getNoFoundIndex(blockCur)
+  FoundBookmarkNo = -1
+
+end sub
+
+
+
+
+
+
+
+
+&apos; vraci kod nalezeni dalsiho objektu; 0 = nalezeno 
+&apos; nalezeny textový objekt je v prcurs
+sub getNextFootnote(byval find as string, fromCur, blockCur as object, typ as string,inFoot) as integer
+dim i&amp;, k&amp;, max&amp;, bin&amp;, zac&amp;, kon&amp;, krok&amp;  
+dim oFoot, oAnch, oCol, pCur  &apos; kolekce poznamek
+&apos;dim inFoot
+dim hled, pom
+
+ hled = find
+
+ &apos; \ = hledání v textu poznámky 
+ inFoot = -1  &apos; -1 = hledání v kotvě co je vidět (kotvě objektu); 1 = hledat v textu poznamky (bublině); 0 = hledat všechno
+ if left(hled,2)= &quot;\\&quot; then  
+   inFoot = 1
+   hled = rightPast(hled, &quot;\\&quot;)
+  end if
+ if hled = &quot;&quot; then inFoot = 0 &apos; hledat všechny
+
+ if typ=&quot;Foot&quot; then
+   oFoot = AltSearchDoc.Footnotes
+  else
+   oFoot = AltSearchDoc.Endnotes
+  end if 
+
+
+ max = oFoot.count - 1  &apos; max index poslední poznamky
+ if AltSearchVolby.kcase=0 then bin = 1  &apos; pokud je bin=1 instr(,,bin) nezohlednuje velikost znaků zatim co BIN=0 porovnava presne binarně 
+
+ if oFoot.count = 0 then 
+   getNextFootnote = 4
+   exit sub 
+  end if
+ 
+ if (initImplName &lt;&gt; &quot;SwXTextRanges&quot;) then &apos; kurzor není v textu
+     getNextFootnote = 10 &apos; přerušeno
+     hlaseni(3) &apos; hledání v netextovém objektu
+    exit sub 
+   end if
+
+ &apos; hledat nejbližší
+znovu:
+ ovCurs.collapseToStart
+ pCur = ovCurs.text.createTextCursorByRange(ovCurs.getStart()) &apos; zapamatovat momentalni kurzor 
+ if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+    runOOoIntCommand(&quot;JumpToPrevFootnote&quot;, &quot;&quot;, &quot;&quot;) &apos; JumpToNextFootnote  JumpToFootnoteOrAncho JumpToPrevFootnote
+  else
+    runOOoIntCommand(&quot;JumpToNextFootnote&quot;, &quot;&quot;, &quot;&quot;) &apos; JumpToNextFootnote  JumpToFootnoteOrAncho JumpToPrevFootnote
+  end if
+ &apos; zapamatovat kurzor po hledani dalsi poznamky
+ prCurs = ovCurs.text.createTextCursorByRange(ovCurs.getStart())
+ &apos; jsou-li kurzory stejne, nenalezeno 
+ if isRegionStart0(pCur,prCurs)  then goto nenalezeno &apos; další nenalezen   
+
+ if findcounter &lt; 0 then  &apos; prerusit ukoncit
+     getNextFootnote = 10 &apos; přerušeno
+     exit sub
+   end if
+
+
+ &apos; nalezeno ale...
+ if typ=&quot;Foot&quot; then
+    if isEmpty(prCurs.footnote) then goto znovu &apos; asi je to Endnote, hledat další
+  else
+    if isEmpty(prCurs.endnote) then goto znovu &apos; asi je to Endnote, hledat další   
+  end if  
+ 
+
+ pCur = prCurs.text.createTextCursorByRange(prCurs.getStart()) 
+
+ &apos; zjistit soucasny index - najit podle umistění kotvy     
+ k = getIndexByAnchor(oFoot(),pCur.start(),max)
+ 
+ if k &lt; 0 then  &apos; Bug OOo: do verze cca 2.3 nefungují kotvy poznamek a tudíž to zde skončí s chybou... od 2.3 by mělo fungovat
+&apos;    msgbox &quot;getNextFootnote:  poznamka nenalezena ackoli je na ni kurzor&quot;
+    beep
+    getNextFootnote = 10
+    exit sub
+   end if 
+
+
+ &apos; OK, hledat zda vyhovuje podmínkám, od indexu k počínaje
+ zac = k &apos; první index pro hledaní 
+ if AltSearchVolby.zpet = 1 then 
+     kon = 0 : krok = -1  &apos; prohledavat od k do 0
+   else
+     kon = max : krok = 1 &apos; prohledavat od k do max
+   end if
+
+
+
+ for i = zac to kon step krok
+   &apos; hledat v obsahu poznamky ? 
+   if inFoot=1 then  
+       pom = oFoot(i).string
+     else &apos; hledat v textu kotvy
+       pom = oFoot(i).anchor.string
+     end if
+
+    &apos; je hledaný podřetězec HLED obsažen ve VST a je případně uvnitř bloku?
+    &apos; pokud je inFoot = 0  tak se hledá bez ohledu výskyt hled. podřetězce
+    if isSubstrInBlock(oFoot(i),pom,hled,inFoot) then
+        prCurs = oFoot(i).anchor
+        getNextFootnote = 0
+        exit sub
+      end if &apos;nalezeno
+
+  next i 
+
+
+&apos; debug info             
+&apos;msgbox &quot;Index: &quot; &amp; i &amp; &quot;   ReferenceID: &quot; &amp; oFoot(i).ReferenceId &amp; &quot;   Anchor: &quot; &amp; oFoot(i).anchor.string &amp; &quot;   Label: &apos;&quot; &amp; oFoot(i).label &amp; chr(10) &amp; chr(10) &amp; oFoot(i).string
+
+ &apos; nenalezeno
+nenalezeno:
+
+  &apos; vrátí index neuspěšného hledání -1/1 začátek/konec bloku, -2/2 zač./konec dokumentu a nastaví pařičně prCurs
+  getNextFootnote = getNoFoundIndex(blockCur)
+
+end sub
+
+
+
+
+
+
+&apos; vraci kod nalezeni dalsiho objektu; 0 = nalezeno 
+&apos; nalezeny textový objekt je v prcurs
+sub getNextReferenceMark(byval find as string, fromCur, blockCur as object, inFoot) as integer
+dim j&amp;,i&amp;, k&amp;, max&amp;, bin&amp;, zac&amp;, kon&amp;, krok&amp;, pgno&amp;  
+dim oFoot, oAnch, oCol, pCur  &apos; kolekce poznamek
+&apos;dim inFoot
+dim hled, pom
+
+ hled = find
+
+ inFoot = -1  &apos; -1 = hledání v textu co je vidět (kotvě objektu); 1 = hledat ve Názvu (v bublině); 0 = hledat všechno
+ if hled = &quot;\\\\&quot; then &apos; hledat prázdný text
+      hled = &quot;&quot;
+   else
+     if left(hled,2)= &quot;\\&quot; then  &apos; hledat v názvu
+       inFoot = 1
+       hled = rightPast(hled, &quot;\\&quot;)
+      else 
+       if hled = &quot;&quot; then  &apos; hledat všechno
+          inFoot = 0
+         end if
+      end if
+   end if
+
+&apos;msgbox ubound(tmppole()) &amp; &quot;  &quot; &amp; prvnipruchod
+ if ubound(tmppole())=-1 then  &apos;1. pruchod: nacist tmp pole s poznamkami
+   getSortRefMarks(tmppole(), tmppole1(), true)  &apos; nacte setridene podle stranek
+  end if
+   
+ oFoot = tmppole() &apos;AltSearchDoc.ReferenceMarks
+ max = ubound(oFoot())  &apos; max index poslední poznamky
+
+ if max &lt; 0  then &apos; objekt v dokumentu není
+   getNextReferenceMark = 4
+   exit sub 
+  end if
+ 
+ if (initImplName &lt;&gt; &quot;SwXTextRanges&quot;) then &apos; kurzor není v textu
+     getNextReferenceMark = 10 &apos; přerušeno
+     hlaseni(3) &apos; hledání v netextovém objektu
+    exit sub 
+   end if
+
+ &apos; hledat nejbližší
+
+ pCur = ovCurs.text.createTextCursorByRange(ovCurs.getStart()) &apos; zapamatovat zacatek momentalniho kurzoru 
+ pgno = ovCurs.getPage()
+ 
+ if isObject(pCur.ReferenceMark) then 
+    &apos; kurzor je na značce
+    &apos; zjistit soucasny index - najit podle umistění kotvy     
+    k = getIndexByAnchor(oFoot(),pCur.start(),max)
+
+    if k &lt; 0 then msgbox &quot;getNextReferenceMark:  znacka nenalezena ackoli je na ni kurzor&quot;
+
+    &apos; nastavit první index pro další hledání
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+       if k = 0 then : goto nenalezeno : else  k = k-1 : end if  &apos; prvni index pro zpetne hledání 
+     else
+       if k = max then : goto nenalezeno : else  k = k+1 : end if &apos; prvni index pro hledání dopredu
+     end if
+  
+   else
+    &apos; kurzor mimo značku, najít nejbližší další / předchozí
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+       &apos; vrátí index předchoziho objektu pro hledání
+       k = findPrevObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     else &apos; prvni index pro hledání
+       &apos; vrátí index dalšího objektu pro hledání
+       k = findNextObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     end if
+ 
+    if k = -1 then goto nenalezeno 
+           
+   end if
+
+
+ &apos; OK, hledat zda vyhovuje podmínkám, od indexu k počínaje
+ zac = k &apos; první index pro hledaní 
+ if AltSearchVolby.zpet = 1 then 
+     kon = 0 : krok = -1  &apos; prohledavat od k do 0
+   else
+     kon = max : krok = 1 &apos; prohledavat od k do max
+   end if
+
+ for i = zac to kon step krok
+    &apos; hledat ve nazvu značky 
+    if inFoot = 1 then  
+        pom = oFoot(i).Name
+      else &apos; hledat v textu 
+        pom = oFoot(i).anchor.string
+      end if
+
+    &apos; je hledaný podřetězec HLED obsažen ve VST a je případně uvnitř bloku?
+    &apos; pokud je inFoot = 0  tak se hledá bez ohledu výskyt hled. podřetězce
+    if isSubstrInBlock(oFoot(i),pom,hled,inFoot) then
+        if oFoot(i).anchor.string = &quot;&quot; then &apos; vybrat prazný text, aby případně šlo smazat pomocí DEL
+          prCurs = oFoot(i).anchor.text.createTextCursorByRange(oFoot(i).anchor.getStart())
+          PrCurs.goRight(1,true)
+         else
+          prCurs = oFoot(i).anchor
+         end if 
+        getNextReferenceMark = 0
+        exit sub
+
+      end if &apos; je nalezen podřetězec?
+
+   next i
+
+&apos; debug info             
+&apos;msgbox &quot;Index: &quot; &amp; i &amp; &quot;   ReferenceID: &quot; &amp; oFoot(i).ReferenceId &amp; &quot;   Anchor: &quot; &amp; oFoot(i).anchor.string &amp; &quot;   Label: &apos;&quot; &amp; oFoot(i).label &amp; chr(10) &amp; chr(10) &amp; oFoot(i).string
+
+&apos; nenalezeno
+nenalezeno:
+
+  &apos; vrátí index neuspěšného hledání -1/1 začátek/konec bloku, -2/2 zač./konec dokumentu a nastaví pařičně prCurs
+  getNextReferenceMark = getNoFoundIndex(blockCur)
+
+end sub
+
+
+
+&apos; vraci kod nalezeni dalsiho objektu; 0 = nalezeno 
+&apos; nalezeny textový objekt je v prcurs
+sub getNextNote(byval find as string, fromCur, blockCur as object) as integer
+dim j&amp;,i&amp;, k&amp;, max&amp;, bin&amp;, zac&amp;, kon&amp;, krok&amp;, pgno&amp;  
+dim oFoot, oAnch, oCol, pCur  &apos; kolekce poznamek
+dim inFoot
+dim hled, pom
+
+on error goto konec
+
+ hled = find
+ &apos; nastavit mod hledani pro vsechny poznamky
+ if hled = &quot;&quot; then : inFoot = 0 : else : inFoot = 1 : end if  
+
+
+
+ if ubound(tmppole())=-1 then  &apos;1. pruchod: nacist tmp pole s poznamkami
+    getSortFields(tmppole(), tmppole1(), &quot;Annotation&quot;, true)  &apos; načíst setříděné poznmaky
+  end if
+   
+ oFoot = tmppole() 
+ max = ubound(oFoot())  &apos; max index poslední poznamky
+
+ if max &lt; 0  then &apos; objekt v dokumentu není
+   getNextNote = 4
+   exit sub 
+  end if
+ 
+ if (initImplName &lt;&gt; &quot;SwXTextRanges&quot;) then &apos; kurzor není v textu
+     getNextNote = 10 &apos; přerušeno
+     hlaseni(3) &apos; hledání v netextovém objektu
+    exit sub 
+   end if
+
+ &apos; hledat nejbližší
+ pCur = ovCurs.text.createTextCursorByRange(ovCurs.getStart()) &apos; zapamatovat zacatek momentalniho kurzoru 
+ pgno = ovCurs.getPage()
+ 
+ if isObject(pCur.TextField) then 
+    if pCur.TextField.supportsService(&quot;com.sun.star.text.TextField.Annotation&quot;) then
+       &apos; kurzor je na značce
+       &apos; zjistit soucasny index - najit podle umistění kotvy     
+       k = getIndexByAnchor(oFoot(),pCur.start(),max)
+
+       if k &lt; 0 then msgbox &quot;getNextNote:  poznamka nenalezena ackoli je na ni kurzor&quot;
+
+       &apos; nastavit první index pro další hledání
+       if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+          if k = 0 then : goto nenalezeno : else  k = k-1 : end if  &apos; prvni index pro zpetne hledání 
+         else
+          if k = max then : goto nenalezeno : else  k = k+1 : end if &apos; prvni index pro hledání dopredu
+         end if
+      else
+       goto kurzorMimo
+      end if
+
+   else
+   kurzorMimo:
+    &apos; kurzor mimo značku, najít nejbližší další / předchozí
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+       &apos; vrátí index předchoziho objektu pro hledání
+       k = findPrevObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     else &apos; prvni index pro hledání
+       &apos; vrátí index dalšího objektu pro hledání
+       k = findNextObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     end if
+ 
+    if k = -1 then goto nenalezeno 
+           
+   end if
+
+
+ &apos; OK, hledat zda vyhovuje podmínkám, od indexu k počínaje
+ zac = k &apos; první index pro hledaní 
+ if AltSearchVolby.zpet = 1 then 
+     kon = 0 : krok = -1  &apos; prohledavat od k do 0
+   else
+     kon = max : krok = 1 &apos; prohledavat od k do max
+   end if
+
+ for i = zac to kon step krok
+    &apos; je hledaný podřetězec HLED obsažen ve VST a je případně uvnitř bloku?
+    &apos; pokud je inFoot = 0  tak se hledá bez ohledu výskyt hled. podřetězce
+    if isSubstrInBlock(oFoot(i),oFoot(i).content,hled,inFoot) then
+        if oFoot(i).anchor.string = &quot;&quot; then &apos; vybrat aby šlo smazat
+           prCurs = oFoot(i).anchor.text.createTextCursorByRange(oFoot(i).anchor.getStart())
+           PrCurs.goRight(1,true)
+          else  &apos; asi zde ani neni potreba - kotva poznamky je vždy prázdná
+           prCurs = oFoot(i).anchor
+           beep
+          end if 
+
+        getNextNote = 0
+        exit sub
+     end if &apos; nalezeno
+
+   next i
+
+&apos; debug info             
+&apos;msgbox &quot;Index: &quot; &amp; i &amp; &quot;   ReferenceID: &quot; &amp; oFoot(i).ReferenceId &amp; &quot;   Anchor: &quot; &amp; oFoot(i).anchor.string &amp; &quot;   Label: &apos;&quot; &amp; oFoot(i).label &amp; chr(10) &amp; chr(10) &amp; oFoot(i).string
+
+&apos; nenalezeno
+nenalezeno:
+
+  &apos; vrátí index neuspěšného hledání -1/1 začátek/konec bloku, -2/2 zač./konec dokumentu a nastaví pařičně prCurs
+  getNextNote = getNoFoundIndex(blockCur)
+
+  exit sub
+  
+konec:  
+
+  hlaseni1(48, true, false, &quot;getNextNote:  Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line: &quot; &amp; Erl &amp; &quot;)&quot;) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti    
+
+end sub
+
+
+
+
+
+sub getNextField(byval find as string, fromCur, blockCur as object) as integer
+dim j&amp;,i&amp;, k&amp;, max&amp;, bin&amp;, zac&amp;, kon&amp;, krok&amp;, pgno&amp;  
+dim oFoot, oCol, pCur  &apos; kolekce poznamek
+dim inFoot
+dim hled, pom
+
+ hled = find
+ &apos; nastavit mod hledani pro vsechna pole
+ if hled = &quot;&quot; then : inFoot = 0 : else : inFoot = 1 : end if  
+
+ if ubound(tmppole())=-1 then  &apos;1. pruchod: nacist tmp pole s poznamkami
+    getSortFields(tmppole(), tmppole1(), &quot;All&quot;, true)  &apos; načíst setříděné poznmaky
+  end if
+   
+ oFoot = tmppole() 
+ max = ubound(oFoot())  &apos; max index poslední poznamky
+
+ if max &lt; 0  then &apos; objekt v dokumentu není
+   getNextField = 4
+   exit sub 
+  end if
+ 
+ if (initImplName &lt;&gt; &quot;SwXTextRanges&quot;) then &apos; kurzor není v textu
+     getNextField = 10 &apos; přerušeno
+     hlaseni(3) &apos; hledání v netextovém objektu
+    exit sub 
+   end if
+
+ &apos; hledat nejbližší
+ pCur = ovCurs.text.createTextCursorByRange(ovCurs.getStart()) &apos; zapamatovat zacatek momentalniho kurzoru 
+ pgno = ovCurs.getPage()
+ 
+ if isObject(pCur.TextField) then 
+    if not (pCur.supportsService(&quot;com.sun.star.text.TextField.Annotation&quot;) or pCur.supportsService(&quot;com.sun.star.text.TextField.GetReference&quot;)) then
+       &apos; kurzor je na poli (mimo poznamku)
+       &apos; zjistit soucasny index - najit podle umistění kotvy     
+       k = getIndexByAnchor(oFoot(),pCur.start(),max)
+
+       if k &lt; 0 then msgbox &quot;getNextField:  pole nenalezeno ackoli je na nem kurzor&quot;
+
+       &apos; nastavit první index pro další hledání
+       if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+          if k = 0 then : goto nenalezeno : else  k = k-1 : end if  &apos; prvni index pro zpetne hledání 
+         else
+          if k = max then : goto nenalezeno : else  k = k+1 : end if &apos; prvni index pro hledání dopredu
+         end if
+      else
+       goto kurzorMimo
+      end if
+
+   else
+   kurzorMimo:
+    &apos; kurzor mimo značku, najít nejbližší další / předchozí
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+       &apos; vrátí index předchoziho objektu pro hledání
+       k = findPrevObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     else &apos; prvni index pro hledání
+       &apos; vrátí index dalšího objektu pro hledání
+       k = findNextObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     end if
+ 
+    if k = -1 then goto nenalezeno 
+           
+   end if
+
+
+ &apos; OK, hledat zda vyhovuje podmínkám, od indexu k počínaje
+ zac = k &apos; první index pro hledaní 
+ if AltSearchVolby.zpet = 1 then 
+     kon = 0 : krok = -1  &apos; prohledavat od k do 0
+   else
+     kon = max : krok = 1 &apos; prohledavat od k do max
+   end if
+
+ for i = zac to kon step krok
+    &apos; je hledaný podřetězec HLED obsažen ve VST a je případně uvnitř bloku?
+    &apos; pokud je inFoot = 0  tak se hledá bez ohledu výskyt hled. podřetězce
+    if isSubstrInBlock(oFoot(i),oFoot(i).anchor.string,hled,inFoot) then
+        if oFoot(i).anchor.string = &quot;&quot; then &apos; vybrat aby šlo smazat
+           prCurs = oFoot(i).anchor.text.createTextCursorByRange(oFoot(i).anchor.getStart())
+           PrCurs.goRight(1,true)
+          else  &apos; asi zde ani neni potreba - kotva poznamky je vždy prázdná
+           prCurs = oFoot(i).anchor
+          end if 
+
+        getNextField = 0
+        exit sub
+     end if &apos; nalezeno
+
+   next i
+
+&apos; debug info             
+&apos;msgbox &quot;Index: &quot; &amp; i &amp; &quot;   ReferenceID: &quot; &amp; oFoot(i).ReferenceId &amp; &quot;   Anchor: &quot; &amp; oFoot(i).anchor.string &amp; &quot;   Label: &apos;&quot; &amp; oFoot(i).label &amp; chr(10) &amp; chr(10) &amp; oFoot(i).string
+
+&apos; nenalezeno
+nenalezeno:
+
+  &apos; vrátí index neuspěšného hledání -1/1 začátek/konec bloku, -2/2 zač./konec dokumentu a nastaví pařičně prCurs
+  getNextField = getNoFoundIndex(blockCur)
+
+end sub
+
+
+
+
+sub getNextReference(byval find as string, fromCur, blockCur as object, mode) as integer
+dim j&amp;,i&amp;, k&amp;, max&amp;, bin&amp;, zac&amp;, kon&amp;, krok&amp;, pgno&amp;  
+dim oFoot, oCol, pCur  &apos; kolekce poznamek
+&apos;dim mode
+dim hled, pom
+
+ hled = find
+ mode = -1  &apos; -1 = hledání v textu co je vidět (kotvě objektu); 1 = hledat v Názvu (v bublině); 0 = hledat všechno
+ if hled = &quot;\\\\&quot; then &apos; hledat prázdný text
+   hled = &quot;&quot;
+  else
+   if left(hled,2)= &quot;\\&quot; then  &apos; hledat v názvu
+      mode = 1
+      hled = rightPast(hled, &quot;\\&quot;)
+     else 
+      if hled = &quot;&quot; then  &apos; hledat všechno
+         mode = 0
+        end if
+     end if
+   end if
+
+ if ubound(tmppole())=-1 then  &apos;1. pruchod: nacist tmp pole s poznamkami
+    getSortFields(tmppole(), tmppole1(), &quot;GetReference&quot;, true)  &apos; načíst setříděné poznmaky
+  end if
+   
+ oFoot = tmppole() 
+ max = ubound(oFoot())  &apos; max index poslední poznamky
+
+ if max &lt; 0  then &apos; objekt v dokumentu není
+   getNextReference = 4
+   exit sub 
+  end if
+ 
+ if (initImplName &lt;&gt; &quot;SwXTextRanges&quot;) then &apos; kurzor není v textu
+     getNextReference = 10 &apos; přerušeno
+     hlaseni(3) &apos; hledání v netextovém objektu
+    exit sub 
+   end if
+
+ &apos; hledat nejbližší
+ pCur = ovCurs.text.createTextCursorByRange(ovCurs.getStart()) &apos; zapamatovat zacatek momentalniho kurzoru 
+ pgno = ovCurs.getPage()
+ 
+ if isObject(pCur.TextField) then 
+    if pCur.supportsService(&quot;com.sun.star.text.TextField.GetReference&quot;) then
+       &apos; kurzor je na poli (mimo poznamku)
+       &apos; zjistit soucasny index - najit podle umistění kotvy     
+       k = getIndexByAnchor(oFoot(),pCur.start(),max)
+
+       if k &lt; 0 then msgbox &quot;getNextReference:  pole nenalezeno ackoli je na nem kurzor&quot;
+
+       &apos; nastavit první index pro další hledání
+       if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+          if k = 0 then : goto nenalezeno : else  k = k-1 : end if  &apos; prvni index pro zpetne hledání 
+         else
+          if k = max then : goto nenalezeno : else  k = k+1 : end if &apos; prvni index pro hledání dopredu
+         end if
+      else
+       goto kurzorMimo
+      end if
+
+   else
+   kurzorMimo:
+    &apos; kurzor mimo značku, najít nejbližší další / předchozí
+    if AltSearchVolby.zpet = 1 then  &apos; zpetne hledani            
+       &apos; vrátí index předchoziho objektu pro hledání
+       k = findPrevObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     else &apos; prvni index pro hledání
+       &apos; vrátí index dalšího objektu pro hledání
+       k = findNextObj(pgno,ovCurs.start,oFoot(),tmppole1())
+     end if
+ 
+    if k = -1 then goto nenalezeno 
+           
+   end if
+
+ &apos; OK, hledat zda vyhovuje podmínkám, od indexu k počínaje
+ zac = k &apos; první index pro hledaní 
+ if AltSearchVolby.zpet = 1 then 
+     kon = 0 : krok = -1  &apos; prohledavat od k do 0
+   else
+     kon = max : krok = 1 &apos; prohledavat od k do max
+   end if
+
+ for i = zac to kon step krok
+    if mode = 1 then  &apos; hledat v názvu znacky ?
+       pom = tmppole(i).SourceName
+      else &apos; hledat v textu kotvy
+       pom = tmppole(i).anchor.string
+      end if
+
+    &apos; je hledaný podřetězec HLED obsažen ve VST a je případně uvnitř bloku?
+    &apos; pokud je inFoot = 0  tak se hledá bez ohledu výskyt hled. podřetězce
+    if isSubstrInBlock(oFoot(i),pom,hled,mode) then
+        if oFoot(i).anchor.string = &quot;&quot; then &apos; vybrat aby šlo smazat
+           prCurs = oFoot(i).anchor.text.createTextCursorByRange(oFoot(i).anchor.getStart())
+           PrCurs.goRight(1,true)
+          else  &apos; asi zde ani neni potreba - kotva poznamky je vždy prázdná
+           prCurs = oFoot(i).anchor
+          end if 
+
+        getNextReference = 0
+        exit sub
+     end if &apos; nalezeno
+
+   next i
+
+&apos; nenalezeno
+nenalezeno:
+
+  &apos; vrátí index neuspěšného hledání -1/1 začátek/konec bloku, -2/2 zač./konec dokumentu a nastaví pařičně prCurs
+  getNextReference = getNoFoundIndex(blockCur)
+end sub
+
+
+
+
+
+
+
+
+
+</script:module>

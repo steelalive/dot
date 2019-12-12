@@ -730,27 +730,29 @@ who
 whoami
 yes'
 
-	[[ $1 ]] || set -- $PWD
-	ANG "Setup busybox and corutils in $1...\n"
+	[[ $1 ]] || set -- "$PWD"
+	ANLR "Setup busybox and coreutils in ${C}${1}${W}...${R}\n\n\n\n\n\n"
 	#	yorn || return
 	mkdir -pv "$1"
 	cd "$1" || echo "error $LINE_NO"
 	cp -av "$slash/sbin/coreutils" "$1"
 	cp -av "$slash/sbin/busybox" "$1"
 	cp -av "$ex/misc-android/toybox" "$1/toybox"
+	[[ -x ./busybox ]] && busylist="$(./busybox --list)"
+	[[ -x ./toybox ]] && toylist="$(./toybox)"
 
 	(
-		ANY "Setup Busybox in $1...${R}\n"
+		ANY "Setup Busybox in $1...${R}\n\n\n\n\n\n\n"
 		for exe in $busylist; do
 			[[ -L $exe ]] && continue
 			ln -sv$force busybox "$exe" 2>/dev/null && ANORANGE "$PWD/busybox linked with ${W}$exe $R\n"
 		done
-		ANY "Setup coreutils in $1...${R}\n"
+		ANY "Setup coreutils in $1...${R}\n\n\n\n\n\n\n\n"
 		for exe in $corelist; do
 			[[ -L $exe ]] && [[ ! $force ]] && continue
 			ln -sv$force coreutils "$exe" 2>/dev/null && ANORANGE "$PWD/coreutils linked with ${W}$exe $R\n"
 		done
-		ANY "Setup toybox in $1...${R}\n"
+		ANY "Setup toybox in $1...${R}\n\n\n\n\n\n\n\n\n"
 		for exe in $toylist; do
 			[[ -L $exe ]] && continue
 			ln -sv toybox "$exe" 2>/dev/null && ANORANGE "$PWD/toybox linked with ${W}$exe $R\n"
@@ -762,7 +764,13 @@ yes'
 		cp -av $slash/etc/mk ./
 		cp -av $slash/etc/rc ./
 		chmod 4755 ./bash busybox toybox coreutils nano*
+		chown 0:0 ./*
 	)
 }
-
+[[ $1 ]] || {
+	for doit in /data/sbin /data/dot/slash/sbin /system/system/xbin; do
+		setupbox "$doit"
+	done
+	exit
+}
 setupbox "$@"

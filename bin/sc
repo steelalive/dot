@@ -11,32 +11,31 @@ export -f shellc
 
 #SHELLCHECK_OPTS+=" --color=always"
 for file_list; do
-	is_bash $file_list || continue
-	shellc $file_list
+	is_bash "$file_list" || continue
+	shellc "$file_list"
 	if ! [[ -e $file_list ]]; then
 		if [[ -e "$(on silent "$file_list" echo)" ]]; then
 			file_list="$(on silent "$file_list" echo)"
 		else
 			sh_error "$file_list does not exist."
-
 		fi
 	fi
 
-	if [[ $sc_debug ]] && is_bash "$file_list"; then
+	if [[ "$sc_debug" ]] && is_bash "$file_list"; then
 		while [[ $(shellc "$file_list") =~ [0-9] ]]; do
 			shellcheck --color=always "$file_list" | grep --after-context=8 "$(shellc "$file_list")"
-			ANRED "ERROR ${G}do you want to edit ${C}${file_list}${W}?"
+			ANRED "ERROR ${G}do you want to edit ${C}${file_list}${W}?${R}\n"
 			echo
 			#			echo "$(shellc $file_list)"
 			#			tmp_num="$(shellc $file_list)"
 			#			echo $tmp_num
-			yornq yes && eval nvim "$file_list" '+'"$(shellc $1)"
-			ANG eval $EDITOR "$file_list" '+'"$(shellc $file_list)"
+			yornq yes && eval nvim "$file_list" '+'"$(shellc "$1")"
+			ANG eval "$EDITOR" "$file_list" '+'"$(shellc "$file_list")"
 
 		done
 	else
 		if is_bash "$file_list"; then
-			ANLY "Set sc_debug var for troubleshooting"
+			ANLY "Set sc_debug var for troubleshooting${R}\n"
 			echo
 			shellcheck "$file_list" && ANBG "CONGRATULATION! Script $file_list is error free!"
 			echo

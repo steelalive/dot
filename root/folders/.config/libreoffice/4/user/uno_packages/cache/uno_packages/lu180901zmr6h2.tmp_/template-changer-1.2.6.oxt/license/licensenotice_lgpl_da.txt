@@ -1,0 +1,7 @@
+Forfatteren af denne udvidelse er:
+    André Schnabel   (andreschnabel@openoffice.org)
+Copyright 2007-2011. Visse regigheder forbeholdes.
+
+Denne udvidelse er et frit program; du kan viderefordele det og/eller tilpasse det jævnfør betingelserne i "GNU Lesser General Public License version 3.0", således som de er offentliggjorte af Free Software Foundation.
+
+Denne udvidelse distribueres i håbet om at den vil være nyttig men UDEN NOGEN GARANTI; også uden nogen underforstået garanti for at den er egnet til markedsførelse eller passer til et bestemt formål. Se "GNU Lesser General Public License" for yderligere detaljer: http://www.gnu.org/licenses/

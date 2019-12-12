@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="xMoreFiles" script:language="StarBasic">REM  *****  BASIC  *****
+
+
+&apos; obsluha tlačítka více pro vykonání dávky na více souborech Writeru
+Sub Bt_MoreFiles
+ dim i&amp;
+ GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;) &apos; nacist knihovnu
+
+ &apos; stejne jmeno davky jako u Spuštění dávky Bt_run
+ BatchToExecute = ucase(trim(replace_(LastName, chr(9), subTab))) &apos; zrusit pripadne mezery a tabulatory
+ oDmof.model.Tf_selBatch.text = BatchToExecute
+ if ucase(msg(24))=BatchToExecute then  &apos; není vybrána dávka
+    hlaseni1(48, false, false, msg(48)) &apos; styl: 16=zastavit 32=? 48=! 64=info
+    exit sub 
+   else
+    &apos;vytvořit proceduru podle vybrane dávky
+     SetBatch_to_BasicSub(BatchToExecute, &quot;Altsearch_LastMultiBatch&quot;)
+  end if   
+ 
+ &apos; načíst seznam otevřených txt dokumentů 
+ ListOfWFiles = dejArrayOfTexts &apos; vrací pole s objekty dokumentů
+ &apos;xray ListOfTextFiles(0)
+ &apos; smazat starý seznam
+ oDmof.getcontrol(&quot;Lb_wfiles&quot;).removeItems(0,oDmof.getcontrol(&quot;Lb_wfiles&quot;).itemCount)  
+ for i = 0 to Ubound(ListOfWFiles)   &apos; načíst seznam txt dokumentů
+   oDmof.getControl(&quot;Lb_wfiles&quot;).addItem(getNameIdentifString(ListOfWFiles(i)),0)
+  next i
+ 
+ oDmof.execute() &apos; provest dialog
+
+End Sub
+
+
+
+
+&apos;vybrat všechny prvky listboxu 
+sub Bt_selectAll
+ dim i, oList
+ oList = oDmof.getcontrol(&quot;Lb_wfiles&quot;)
+ for i = 0 to ubound(oList.Items())
+   oList.selectItemPos(i, true) 
+  next i
+
+end sub
+
+
+
+&apos;spustit davku na včšechny soubory 
+sub Bt_startBatch
+ 
+ &apos; seznam vybraných souboru pro spuštení dávky
+ ListFilesForBatch() = oDmof.getcontrol(&quot;Lb_wfiles&quot;).GetSelectedItems()   
+ if ubound(ListFilesForBatch()) &lt; 0 then 
+     hlaseni1(48, false, false, msg(49)) &apos; styl: 16=zastavit 32=? 48=! 64=info
+     oDmof.toFront
+     exit sub
+   end if
+ 
+ oDmof.endExecute() &apos; skoncit dialog
+ &apos; skončit dialog AS
+&apos; AltSearchDialog_end = true
+ KonecTm
+ wait 300 &apos; počkat na ukončení AS
+ 
+ &apos; spustit dávku na vsech souborech  
+ if oDmof.getcontrol(&quot;Cb_DisabRepBatch&quot;).state = 1 then MultiFileBatchDisableMsg = true  &apos; ovladani potlačení hlášení
+ 
+ MultiFileBatchRun = true  &apos; příznak že probíhá davka na vice souborech
+ MultiFileBatchReport = &quot;&quot;
+ for CountBatchSel = 0 to ubound(ListFilesForBatch())  &apos; cyklus pro všechny vybrané dokumenty
+    
+    for CountBatch = 0 to ubound(ListOfWFiles())  &apos; cyklus pro všechny otevřené textové doc 
+        &apos; je dokument vybrán pro spustění dávky?
+        if getNameIdentifString(ListOfWFiles(CountBatch)) = ListFilesForBatch(CountBatchSel) then
+           &apos; ano, provést davku
+&apos;           msgbox ListOfWFiles(CountBatch).Title
+            ListOfWFiles(CountBatch).CurrentController.Frame.containerWindow.setFocus()
+            ListOfWFiles(CountBatch).CurrentController.Frame.containerWindow.toFront
+         &apos;   xray ListOfWFiles(CountBatch).CurrentController.Frame.containerWindow
+
+            oBatchDispatch = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+            oBatchDispatch.executeDispatch( StarDesktop, &quot;macro:///Standard.AltSearchBatchs.Altsearch_LastMultiBatch&quot;,&quot;&quot;, 0, Array() )
+            
+            &apos;msgbox ListOfWFiles(CountBatch).Title
+         end if    
+      
+      next CountBatch 
+
+   next CountBatchSel
+ 
+ hlaseni1(64, false, false, MultiFileBatchReport + cr(1) + &quot; &quot;) &apos; souhrnne hlaseni 
+ MultiFileBatchRun = false  
+ MultiFileBatchDisableMsg = false
+
+&apos;global ListOfWFiles() &apos; seznam otevřených souborů writeru 
+&apos;global ListFilesForBatch &apos; seznam vybraných souboru pro spuštení dávky
+&apos;global BatchToExecute &apos; jmeno dávky pro vyhkonání na více souborech 
+&apos;global CountBatch, CountBatchSel &apos; Počitadla
+&apos;global oBatchDispatch  &apos; dispatch pro spustení davky pres pomocnou proceduru
+
+
+&apos;oDispatch = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+&apos;oDispatch.executeDispatch( StarDesktop, &quot;macro:///&quot;+right(cmd,len(cmd)-6),&quot;&quot;, 0, Array() )    
+
+
+
+end sub
+
+
+&apos; vrací řetezec názvu a cesty do výpisu
+sub getNameIdentifString(wdoc as object) as string
+  getNameIdentifString = wdoc.Title &amp; chr(9) &amp; &quot;     &quot; &amp; replace(wdoc.URL,&quot;%20&quot;,&quot; &quot;)
+end sub
+
+
+
+
+&apos; vraci pole všech otevřených textových dokumentů
+function dejArrayOfTexts as array
+  dim pol()
+  Dim oDocs, oDoc1 As Object
+  dim i
+  i = 0
+  oDocs = StarDesktop.getComponents().createEnumeration()
+  Do While oDocs.hasMoreElements()
+    oDoc1 = oDocs.nextElement()
+ 
+&apos;    if (GetDocumentType(oDoc1)=&quot;swriter&quot;) then
+     on error goto chyba   &apos; soubory s chybou nepočítat
+     if oDoc1.ImplementationName = &quot;SwXTextDocument&quot; then
+       if left(oDoc1.Title,28) = &quot;vnd.sun.star.help://swriter/&quot; then goto chyba  &apos; přeskočit help 
+        redim preserve pol(i)
+        pol(i) = oDoc1
+ &apos;        MsgBox &quot;Nalezeno &quot;+oDoc1.url
+        i = i+1
+     end if 
+   chyba: 
+  Loop
+
+ dejArrayOfTexts = pol()
+end function
+
+</script:module>

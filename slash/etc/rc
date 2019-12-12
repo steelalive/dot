@@ -114,10 +114,10 @@ if $LS_BIN --help 2>&1 | grep 'Z'; then LS_OPTIONS=' -Z '; fi
 if $LS_BIN --help 2>&1 | grep 'group-directories-first'; then
 	export LS_OPTIONS="$LS_OPTIONS --group-directories-first "
 fi
-export LS_OPTIONS="$LS_OPTIONS -AHhpFl --color "
+export LS_OPTIONS="--group-directories-first -AHhpFl --color "
 
-command -v coreutils && ls() { coreutils --coreutils-prog=ls $LS_OPTIONS; }
-is_recovery && ls() { /sbin/ls $LS_OPTIONS; }
+command -v coreutils && ls() { coreutils --coreutils-prog=ls $LS_OPTIONS "$@"; }
+is_recovery && ls() { /sbin/ls $LS_OPTIONS "$@"; }
 fixpart() {
 	command -v fstrim && {
 		for i in vendor system data cache; do
@@ -129,9 +129,11 @@ fixpart() {
 	for i in $(/sbin/busybox blkid | cut -d: -f1); do
 		echo "##############################---${i}---#######################################"
 		umount "$i" 2>/dev/null
+		umount -f "$i" 2>/dev/null
 		/sbin/e2fsck -fp "$i" 2>/dev/null
 		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
-		resize2fs $i
+		/sbin/e2fsck -f "$i"
+		resize2fs "$i"
 		[[ $1 == t ]] && /sbin/tune2fs -c 30 -m 1 -o journal_data_writeback,nobarrier "$i"
 		echo "##############################---${i}---#######################################"
 	done
@@ -149,9 +151,62 @@ fixpart() {
 		echo "$datapath"
 	done
 }
+2sys() {
+	[[ $1 ]] || {
+		echo '$1=app name in /system $2=part of the folder name in /data/app'
+		return
+	}
+	sysname=$1
+	for i in $(2sysEchoApp $2); do
+		path=$(find /system/system -type d -name $sysname)
+		[[ -e $path ]] || continue
+		[[ -e $i ]] || continue
+		rm -rf $i/oat
+		mv -v $i/base.apk $path/${sysname}.apk
+		mv -v $i/* $path/
+		rm -rfv "$i"
+		ls /data/app
+	done
+}
+aline() {
+	for apk in $(find /system/system -name "*.apk"); do
+		zipalign -c 4 $apk
+		ZIPCHECK=$?
+		if [ $ZIPCHECK -eq 1 ]; then
+			echo ZipAligning $(basename $apk) | tee -a $LOG_FILE
+			zipalign -f 4 $apk /cache/$(basename $apk)
+			if [ -e /cache/$(basename $apk) ]; then
+				cp -f -p /cache/$(basename $apk) $apk | tee -a $LOG_FILE
+				rm /cache/$(basename $apk)
+			else
+				echo ZipAligning $(basename $apk) Failed | tee -a $LOG_FILE
+			fi
+		else
+			echo ZipAlign already completed on $apk | tee -a $LOG_FILE
+		fi
+	done
+}
+aline2() {
+	for apk in $(find /system/system/framework -name "*.apk"); do
+		zipalign -c 4 $apk
+		ZIPCHECK=$?
+		if [ $ZIPCHECK -eq 1 ]; then
+			echo ZipAligning $(basename $apk) | tee -a $LOG_FILE
+			zipalign -f 4 $apk /cache/$(basename $apk)
+			if [ -e /cache/$(basename $apk) ]; then
+				cp -f -p /cache/$(basename $apk) $apk | tee -a $LOG_FILE
+				rm /cache/$(basename $apk)
+			else
+				echo ZipAligning $(basename $apk) Failed | tee -a $LOG_FILE
+			fi
+		else
+			echo ZipAlign already completed on $apk | tee -a $LOG_FILE
+		fi
+	done
+}
 
 nano=$termuxbin/nano || unset nano
-if [[ -x $nano ]]; then
+if [[ -x $nano ]] || [[ ! /external_sd ]]; then
 	alias nano="$nano "
 	export EDITOR="$nano " VISUAL="$nano "
 fi
@@ -197,16 +252,26 @@ chmod 777 -R /data/dot
 '
 eval $init_incantation
 
-if [[ ! -e /sdcard/recovery_mod ]] && [[ -e /sdcard ]]; then
+#if [[ -x /sbin/twrp ]]; then
+#	twrp restore lk_no_message_stock
+#fi
+
+if [[ ! -e /sdcard/Open-GApps ]] && [[ -e /sdcard ]]; then
 	(
 		cd /external_sd && {
 			mkdir -p /sdcard/TWRP /data/adb/modules
+			coreutils --coreutils-prog=cp -avu /sdcard sdcard || cp -av sdcard /
 			coreutils --coreutils-prog=cp -avu sdcard / || cp -av sdcard /
-			coreutils --coreutils-prog=cp -avu /external_sd/magisk/dot /data/adb/modules/
+			mount /system
+			coreutils --coreutils-prog=cp -avu /external_sd/magisk/dot1/system /system/
 			coreutils --coreutils-prog=cp -avu /sdcard/Download/* /external_sd/Download/
+			[[ -e /data/dot ]] || unzip /external_sd/dot.zip -d /data/
 			cp -av misc-android/config/Open-GApps /sdcard/ 2>/dev/null
 			cd -av $slash/sbin/bash /data/
 			ln -sv $slash/etc/rc /data/
+			ln -sv $slash/etc/mk /data/
+			ln -sv $slash/pushthem /data/pu
+			clear
 		}
 	)
 fi

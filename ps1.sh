@@ -69,7 +69,7 @@ prompt_command() {
 		check_source_files
 		meteo
 	fi
-	printf "%b" "$(</tmp/prompt)${R}"
+	printf "%b" "$(</tmp/prompt)${R} "
 	#	show_user
 	printf "%b" "${ORANGE}${SSH_CLIENT:0:13}${R}"
 	#	ANLC " '${PWD}'"
@@ -510,7 +510,7 @@ PS1="\[$sexy_bash_prompt_reset\]\
 set_title() {
 	ORIG=$PS1
 	TITLE="\e]2;$*\a"
-	#PS1=${ORIG}${TITLE}
+	#	PS1=${ORIG}${TITLE}
 	PS1=${TITLE}"\[$sexy_bash_prompt_reset\]\
 \[$sexy_bash_prompt_user_color\]\u\[$sexy_bash_prompt_reset\] \
 \[$sexy_bash_prompt_preposition_color\]at\[$sexy_bash_prompt_reset\] \

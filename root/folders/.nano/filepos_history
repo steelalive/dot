@@ -1,8 +1,3 @@
-/root/.config/nvim/config/plugins/denite.vim 87 1
-/root/.config/nvim/config/plugins/all.vim 302 1
-/root/.config/nvim/config/plugins/deoplete.vim 44 1
-/root/.config/nvim/config/vimrc 152 1
-/tmp/aml/output/initrd/fstab.amlogic 11 127
 /tmp/aml/output/initrd/default.prop 19 21
 /root/.config/yay/config.json 16 16
 /out/out/debug/target/product/harpia/root/default.prop 9 1
@@ -50,7 +45,6 @@
 /etc/dhcpcd.conf 3 1
 /prog/build/host.conf 36 19
 /src/buildspec.mk 29 1
-/dot/bin/setup-nvim 18 29
 /root/.SpaceVim/config/init.vim 59 1
 /root/.SpaceVim/init.toml 40 1
 /dot/bin/env.sh 168 1
@@ -127,7 +121,6 @@
 /ext/AIK-Linux/ramdisk/etc/mkshrc 23 1
 /ext/AIK-Linux/ramdisk/init.r 1 2
 /ext/AIK-Linux/ramdisk/etc/recovery.fstab 16 20
-/ext/AIK-Linux/ramdisk/recovery.fstab 3 91
 /dot/ps1bg.sh 55 9
 /etc/mkinitcpio.d/linux.preset 4 30
 /etc/fstab 11 2
@@ -149,7 +142,6 @@
 /dot/bin/lkk 53 9
 /etc/pacman.d/mirrorlist 20 1
 /dot/root/folders/.nano/vi.nanorc 8 7
-/dot/bin/adp 357 18
 /dot/bin/on 110 1
 /usr/bin/wifite 2972 1
 /dot/bin/ad 21 11
@@ -174,7 +166,6 @@
 /etc/pacman.conf 18 2
 /dot/bin/fix-sdcard-perm.sh 81 1
 /dot/bin/setupbox 662 1
-/dot/bin/rmspaceinfile 1 24
 /boot/refind_linux.conf 1 364
 /boot/EFI/refind/refind.conf 53 1
 /ext/AIK-Linux/unpackimg.sh 349 1
@@ -191,10 +182,19 @@
 /last/wifi.txt 2 19
 /dot/bin/my_info 22 23
 /dot/bin/src_post.bash 11 128
-/dot/ex.sh 53 11
 /dot/slash/etc/mk 64 82
 /dot/slash/etc/rc 175 3
 /dot/bin/wpa_supplicant.conf 18 19
 /dot/.SpaceVim/init.vim 10 2
 /dot/bin/updateall 70 20
 /dot/bin/e 12 2
+/dot/slash/termux.sh 10 1
+/tmp/neovim-init/install.sh 36 1
+/dot/bin/setup-nvim 18 24
+/dot/ex.sh 230 17
+/dot/root/folders/.config/nvim/local.vim 52 2
+/dot/bin/adp 24 1
+/dot/bin/bootcopy 49 34
+/dot/bin/rmspaceinfile 1 28
+/ext/AIK-Linux/prop.default 85 35
+/ext/AIK-Linux/ramdisk/recovery.fstab 3 101

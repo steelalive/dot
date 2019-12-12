@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Local" script:language="StarBasic">REM  *****  BASIC  *****
+option explicit
+  
+
+sub main
+&apos;msgbox GetDocumentType1(thiscomponent)
+&apos; _AltSearch
+&apos;OOoHelp
+&apos;xray stardesktop
+end sub
+
+
+&apos; vrací cestu do adresáře .../user/config/, kde by měl user mít zapisovací práva
+function getUserPath as string
+ dim cesty as object
+ cesty=CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+ getUserPath=cesty.UserConfig+&quot;/&quot;
+end function
+
+
+
+&apos; vrací cestu k helpu, je treba nastavit spravne i soubory: HelpPath.xcs a HelpPath.xcu 
+Function GetHelpDir(idPath as string) as string
+Const sPrefix = &quot;vnd.sun.star.expand:&quot;
+Dim oConfigProvider as object, oRegKey as object
+Dim sHelpDir$
+&apos; * get access to the configuration provider
+  oConfigProvider = _
+    CreateUnoService(&quot;com.sun.star.configuration.ConfigurationProvider&quot;)
+
+&apos; * define the node path, where the Image name is stored in the configuration file ImageLocations.xcu
+  Dim aNodePath(0) As New com.sun.star.beans.PropertyValue
+  	  aNodePath(0).Name = &quot;nodepath&quot;
+&apos;      aNodePath(0).Value = &quot;name.TomBil.addon.TextClipboard.HelpPath&quot;
+	  aNodePath(0).Value = idPath
+
+&apos; * obtain read-only access to that node
+  oRegKey = oConfigProvider.createInstanceWithArguments( _
+			&quot;com.sun.star.configuration.ConfigurationAccess&quot;, aNodePath() )
+
+&apos;xray oRegKey
+
+&apos; * retrieving the values
+&apos; * the content was &quot;%origin%/images/Image1.png&quot;
+&apos; * during the installation of the extension, %origin% was replaced
+&apos; *   with &quot;vnd.sun.star.expand:$UNO_USER_PACKAGES_CACHE/uno_packages/&quot;
+  sHelpDir$ = oRegKey.getByName(&quot;HelpDir&quot;)
+			
+&apos; * cut the &quot;vnd.sun.star.expand:&quot; protocol from the macrofied Url retrieved from the registry
+  sHelpDir = mid(sHelpDir, len(sPrefix)+1)
+
+&apos; * now the &quot;$UNO_USER_PACKAGES_CACHE&quot; has to be replaced with the real location of the files on your system
+&apos; * this will be done by the MacroExpander
+&apos; * get the default context
+  Dim oCtx as object 
+  oCtx = getProcessServiceManager().DefaultContext
+  
+&apos; * get the macro expander from the default context
+  Dim oMacroExpander as object
+  oMacroExpander = oCtx.getValueByName(&quot;/singletons/com.sun.star.util.theMacroExpander&quot;)  
+	
+&apos; * expand the macrofield expression, which gives us the real location of the files
+  sHelpDir = oMacroExpander.ExpandMacros(sHelpDir)
+  GetHelpDir = sHelpDir
+End Function
+
+
+&apos; otevře OOHelp na regulárních symbolech 
+&apos; nepoužito
+Sub OOoHelp
+dim oHelp,sURL 
+&apos;msgbox &quot;neco&quot;
+&apos; otevri napovedu
+language = &quot;cs&quot;
+&apos;  sURL=&quot;vnd.sun.star.help://scalc/text%2Fscalc%2F01%2F04060105.xhp?Language=cs&amp;System=UNIX&quot;
+&apos;  sURL=&quot;vnd.sun.star.help://scalc/text/scalc/01/04060105.xhp?Language=cs&amp;System=UNIX&quot;
+&apos;  sURL=&quot;vnd.sun.star.help://shared/text/shared/01/02100001.xhp?Language=&quot;+language+&quot;&amp;System=UNIX&quot;
+&apos;  sURL=&quot;vnd.sun.star.help:%2F%2Fshared%2Ftext%2Fshared%2F01%2F02100001.xhp?Language=cs&amp;System=UNIX&quot;
+  sURL=&quot;vnd.sun.star.help://shared/text%2Fshared%2F01%2F02100001.xhp?Language=&quot;+language+&quot;&amp;System=UNIX&quot;
+&apos;oHelp = OpenDocument_(sURL,array())
+  oHelp=StarDesktop.loadComponentFromURL(sURL, &quot;x&quot;, 0, array())
+&apos;  xray oHelp
+end sub
+
+
+
+Function GetDocumentType1(oDocument) as string
+	On Local Error GoTo NODOCUMENTTYPE
+&apos;	ShowSupportedServiceNames(oDocument)
+	If oDocument.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;) Then
+		GetDocumentType1 = &quot;scalc&quot;
+	ElseIf oDocument.SupportsService(&quot;com.sun.star.text.TextDocument&quot;) Then
+		GetDocumentType1 = &quot;swriter&quot;
+	ElseIf oDocument.SupportsService(&quot;com.sun.star.text.WebDocument&quot;) Then
+		GetDocumentType1 = &quot;swriterweb&quot;
+	ElseIf oDocument.SupportsService(&quot;com.sun.star.drawing.DrawingDocument&quot;) Then
+		GetDocumentType1 = &quot;sdraw&quot;
+	ElseIf oDocument.SupportsService(&quot;com.sun.star.presentation.PresentationDocument&quot;) Then
+		GetDocumentType1 = &quot;simpress&quot;
+	ElseIf oDocument.SupportsService(&quot;com.sun.star.formula.FormulaProperties&quot;) Then
+		GetDocumentType1 = &quot;smath&quot;
+	End If
+	
+	exit function
+	
+	NODOCUMENTTYPE:
+	If Err &lt;&gt; 0 Then
+		GetDocumentType1 = &quot;&quot;
+		Resume GOON
+		GOON:
+	End If
+End Function
+
+
+&apos; hleda podle jmena ve frame.title , poud nenajde tak otevře nový prázdný soubor writeru
+&apos; a nastaví mu jméno frame.title na JMENO
+&apos; vrátí ukazatel na objektobjekt zadaneho URL dokumentu, nebo jej otevře,nebo vytvoří? 
+function getDocumentControl(jmeno,oOrig)as object
+  Dim oDesktop As Object, oDocs, oDoc1 As Object
+  dim typ
+
+  oDocs = StarDesktop.getComponents().createEnumeration()
+  Do While oDocs.hasMoreElements()
+    oDoc1 = oDocs.nextElement()
+   
+    typ =  GetDocumentType1(oDoc1)    
+    if (typ=&quot;swriter&quot;) then
+     if Ucase(oDoc1.CurrentController.Frame.Title)=ucase(jmeno) then
+         getDocumentControl=oDoc1
+        exit function
+       end if 
+      end if 
+
+  Loop
+&apos; msgbox &quot;nenalezeno, nutno otvrit&quot;
+  on local error goto konec:
+  oDoc1=StarDesktop.loadComponentFromURL(&quot;private:factory/swriter&quot;,jmeno,0,array()) 
+  oDoc1.CurrentController.Frame.Title = jmeno
+  &apos; vrátit fokus do původniho dokumentu
+&apos;  oOrig.CurrentController.Frame.containerWindow.setFocus()
+  getDocumentControl = oDoc1
+&apos;  dejDocumentControl=OpenDocument_(jmeno,propert())
+  exit function
+konec:
+  resume next
+end function
+
+
+&apos; zatím nepoužito
+sub Bt_Help_pressed(oEvt)
+HelpKeyModif = 1
+
+end sub
+
+
+&apos; myš uvolněna
+sub Bt_Help_mouse_release(oEvt)
+if oEvt.Buttons = 2 then  &apos; prava mys = zmena jazyka
+  &apos;xray oEvt
+  &apos;menu load langue
+   dim pom()
+   pom() =  array (&quot;Auto&quot;,&quot;cs&quot;,&quot;de&quot;,&quot;en&quot;,&quot;es&quot;,&quot;fr&quot;,&quot;it&quot;,&quot;nl&quot;,&quot;ru&quot;)&apos; true = jen použité, jinak vsechny odst. styly nebo 
+   Language = getFromList(&quot;Language:&quot;,pom,350,50,100,150)
+   LoadLanguage
+   
+&apos;   if sel &lt;&gt; &quot;&quot; then
+&apos;     msgbox(sel)
+&apos;   end if
+
+  
+ end if
+  
+end sub
+
+
+
+
+&apos; otevře nové okno dokumentu s helpem
+Sub Bt_Help  &apos;(oEvt)
+  Dim sNewUrl$, oDocc, oNic
+  Dim mArgs(0) as New com.sun.star.beans.PropertyValue
+  dim hled,i, HleDesc, found, pom, velikost
+  velikost = false
+
+&apos;xray oEvt
+
+  mArgs(0).Name = &quot;ReadOnly&quot;
+  mArgs(0).Value = true
+  sNewUrl =  helpPath &amp; &quot;HelpAltSearch_&quot; &amp; language &amp; &quot;.html&quot; 
+  if not FileExists(sNewUrl) then
+      &apos; Soubor helpu v aktuálním jazyce nelze otevřít&quot; 
+      &apos; pokus o onglický help
+      sNewUrl =  helpPath &amp; &quot;HelpAltSearch_en.html&quot; 
+      if FileExists(sNewUrl) then goto vypis
+      &apos; &quot;Soubor helpu nelze otevřít&quot; 
+      hlaseni1(64, true, false, &quot;Help: &quot; &amp; msg(17) &amp; chr(10) &amp;  chr(10) &amp;  sNewUrl) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti
+      exit sub
+    end if 
+
+vypis:
+  &apos; 1. hledat podle hledej:
+  if oDial.model.step = 1 then  &apos; dialog hledání
+
+      i = instr(oDial.model.Cb_find.text,&quot;[:::&quot;)
+      if i &lt;&gt; 0 then 
+         hled  = &quot;[:::&quot;
+         goto najdi
+       end if 
+
+      i = instr(oDial.model.Cb_find.text,&quot;[::Grow&quot;)
+      if i &lt;&gt; 0 then 
+         hled  = &quot;[::Grow&quot;
+         goto najdi
+       end if 
+
+
+      &apos; hledat specialní prikazy find
+      pom = oDial.model.Cb_find.text
+      pom = rightPast(pom,&quot;[::&quot;)
+      pom = leftTo(pom,&quot;::]&quot;)
+      if pom &lt;&gt; &quot;&quot; then 
+         hled  = &quot;[::&quot;+pom+&quot;::]&quot;
+         goto najdi
+       end if 
+
+      i = instr(oDial.model.Cb_find.text,&quot;||&quot;)
+      if i &lt;&gt; 0 then 
+         hled  = &quot;||&quot;
+         goto najdi
+       end if 
+      
+      &apos; hledat reg symbol z hledej
+      pom = oDial.model.Cb_find.text + &quot; &quot;
+      i = instr(pom,&quot;\&quot;)
+      if i &lt;&gt; 0 then 
+         hled  = &quot;\&quot;+mid(pom, i+1,1)
+         velikost = true
+         goto najdi
+       end if 
+
+      i = instr(oDial.model.Cb_repl.text,&quot;||&quot;)
+      if i &lt;&gt; 0 then 
+         hled  = &quot;||&quot;
+         goto najdi
+       end if 
+
+
+      i = instr(oDial.model.Cb_repl.text,&quot;&amp;&quot;)
+      if i &lt;&gt; 0 then 
+         hled  = &quot;&amp; &quot;
+         goto najdi
+       end if 
+
+      &apos; hledat reg symbol z nahrad
+      pom = oDial.model.Cb_repl.text + &quot; &quot;
+      i = instr(pom,&quot;\&quot;)
+      if i &lt;&gt; 0 then 
+         hled  = &quot;\&quot;+mid(pom, i+1,1)
+         velikost = true
+         goto najdi
+       end if 
+
+ 
+    else &apos;dialog davek
+     hled = oDial.model.Bt_batch.Label  &apos; &quot;davky &gt;&gt;    - nutno uvest do helpu?
+    
+    end if
+
+
+
+najdi:
+
+&apos;  msgbox hled
+  oDocc = OpenDocument_(sNewUrl,mArgs())
+ &apos; vrátí objekt zadaneho URL dokumentu, nebo jej otevře,nebo vytvoří? 
+ &apos; oDocc = dejDocumentControl(sNewUrl,&quot;&quot;, mArgs())
+  oDocc.getCurrentController.getFrame.ContainerWindow.setFocus() &apos;fokus do dokumentu  
+
+ &apos; čekat dokud nema současny soubor helpu fokus - jinak se nezobrazí nalezený výraz 
+ i = 0 &apos; pojistka proti zacyklení
+ do while not oDocc.getCurrentController.frame.isActive()
+   i = i + 1
+   if i&gt;100000 then exit do
+  loop 
+    
+  HleDesc = oDocc.createSearchDescriptor()
+  HleDesc.SearchString = hled
+  HleDesc.SearchCaseSensitive = velikost
+  found = oDocc.findFirst(HleDesc)
+  oDocc.getCurrentController.select(found)
+
+end sub
+
+
+
+
+&apos; načte pole cmd pro interpretaci příkazů
+sub initCmd
+ cmd( 0,0)=&quot;[Nazev]&quot;     : cmd( 0,1)=&quot;[Name]&quot;
+ cmd( 1,0)=&quot;[Hledej]&quot;    : cmd( 1,1)=&quot;[Find]&quot;
+ cmd( 2,0)=&quot;[Nahrad]&quot;    : cmd( 2,1)=&quot;[Replace]&quot;
+ cmd( 3,0)=&quot;[Parametry]&quot; : cmd( 3,1)=&quot;[Parameters]&quot;
+ cmd( 4,0)=&quot;[Prikaz]&quot;    : cmd( 4,1)=&quot;[Command]&quot;
+ cmd( 5,0)=&quot;[Konec]&quot;     : cmd( 5,1)=&quot;[End]&quot;
+
+ cmd( 6,0)=&quot;Velikost&quot;      :  cmd( 6,1)=&quot;MatchCase&quot;
+ cmd( 7,0)=&quot;CelaSlova&quot;     :  cmd( 7,1)=&quot;WholeWord&quot;
+ cmd( 8,0)=&quot;StylyOdst&quot;     :  cmd( 8,1)=&quot;ParaStyles&quot;
+ cmd( 9,0)=&quot;Regularni&quot;     :  cmd( 9,1)=&quot;Regular&quot;
+ cmd(10,0)=&quot;SoucasnyVyber&quot; :  cmd(10,1)=&quot;CurrSelection&quot;
+ cmd(11,0)=&quot;Pozpatku&quot;      :  cmd(11,1)=&quot;Backwards&quot;
+ cmd(12,0)=&quot;BezHlaseni&quot;    :  cmd(12,1)=&quot;MsgOff&quot;
+
+ cmd(13,0)=&quot;Hledat&quot;        :  cmd(13,1)=&quot;Find&quot;
+ cmd(14,0)=&quot;HledatVse&quot;     :  cmd(14,1)=&quot;FindAll&quot;
+ cmd(15,0)=&quot;Nahradit&quot;      :  cmd(15,1)=&quot;Replace&quot;
+ cmd(16,0)=&quot;NahraditVse&quot;   :  cmd(16,1)=&quot;ReplaceAll&quot;
+ cmd(17,0)=&quot;Spocitat&quot;      :  cmd(17,1)=&quot;Count&quot;
+ &apos;v1.2
+ cmd(18,0)=&quot;BezSouhrnu&quot;  :  cmd(18,1)=&quot;NoSummary&quot;
+ &apos;v1.3
+ cmd(19,0)=&quot;ZachovatVelkaPismena&quot;  :  cmd(19,1)=&quot;PreserveCapital&quot;
+
+ cmd(20,0)=&quot;&quot;  :  cmd(20,1)=&quot;&quot;
+end sub
+
+
+
+Sub Load_cs
+dim i as long
+dim pom as string
+  findReg = array(&quot; První znak odstavce          &quot;+chr(160)+&quot;^.&quot;, _
+                  &quot; Konec odstavce               &quot;+chr(160)+&quot;$&quot;, _
+                  &quot; Prázdný odstavec (jeden)     &quot;+chr(160)+&quot;^$&quot;, _
+                  &quot; Jakýkoli text v 1 odstavci   &quot;+chr(160)+&quot;.*&quot;, _
+                  &quot; Písmeno     [:alpha:]{1,1}   &quot;+chr(160)+&quot;\l&quot;, _
+                  &quot; Číslo       [0-9]            &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Začátek slova                &quot;+chr(160)+&quot;\&lt;&quot;, _
+                  &quot; Konec slova                  &quot;+chr(160)+&quot;\&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Odstavec (značka konce)      &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Blok prázdných odstavců      &quot;+chr(160)+&quot;^$\p*&quot;, _
+                  &quot; Tabulátor                    &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Ruční zalomení řádku         &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Ruční zalomení sloupce       &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Ruční zalomení stránky       &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Nějaká mezera  [ \xA0\x9\xA] &quot;+chr(160)+&quot;\s&quot;, _
+                  &quot; Pevná mezera   (\xA0)        &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Volitelné rozdělení          &quot;+chr(160)+&quot;\x00AD&quot;, _
+                  &quot; Nezlomitelné rozdělení       &quot;+chr(160)+&quot;\x2011&quot;, _
+                  &quot; Dekadicky zadaný znak A      &quot;+chr(160)+&quot;\#65&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Tečka                        &quot;+chr(160)+&quot;\.&quot;, _
+                  &quot; Závorky kulaté   ()          &quot;+chr(160)+&quot;\(\)&quot;, _
+                  &quot; Závorky hranaté  []          &quot;+chr(160)+&quot;\[\]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;            &quot;)
+                  
+&apos;                   &quot; Další symboly:  \^$*+?| &quot;+chr(160)+&quot;\\\^\$\*\+\?\|&quot;, _                  
+
+  oDial.getcontrol(&quot;Cb_findReg&quot;).addItems(findReg,0)
+
+  findExt = array(&quot; Blok odstavců (uzavřený mezi značkami začátku a konce)&quot;+chr(160)+&quot;[::BigBlock::]&quot;, _
+                  &quot; Rozšíření nalezeného bloku textu o 1 znak na obě strany &quot;+chr(160)+&quot;[::Grow 1,1::]&quot;, _
+                  &quot; Přidat značky || pro vícenásobné nahrazování v jednom kroku &quot;+chr(160)+&quot;||&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Text mezi () (uvnitř jednoho odstavce)&quot;+chr(160)+&quot;(\(([^\)])+\))&quot;, _
+                  &quot; Text mezi [] (uvnitř jednoho odstavce)&quot;+chr(160)+&quot;(\[([^\]])+\])&quot;, _
+                  &quot; Text mezi {} (uvnitř jednoho odstavce)&quot;+chr(160)+&quot;({([^}])+})&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; e-mailovou adresu&quot;+chr(160)+&quot;[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_].?@[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_]\.[a-zA-Z0-9_]{2,4}&quot;, _
+                  &quot; Internetovou, URL adresu&quot;+chr(160)+&quot;(((news|http|ftp|https|file):\/\/|www\.)[a-zA-Z0-9_]+((\.[a-zA-Z0-9_]+)+)(([a-zA-Z0-9_\-\.,@?^=%&amp;:/~\+#]*[a-zA-Z0-9_\-\@?^=%&amp;/~\+#])?))&quot;, _
+                  &quot; HTML tag&quot;+chr(160)+&quot;(&lt;(&quot;&quot;[^&quot;&quot;]*&quot;&quot;|&apos;[^&apos;]*&apos;|[^&apos;&quot;&quot;&gt;])*&gt;)&quot;, _
+                  &quot; Otevírací HTML tag&quot;+chr(160)+&quot;&lt;[^/][^&gt;]+&gt;&quot;, _
+                  &quot; Uzavírací HTML tag&quot;+chr(160)+&quot;&lt;/[^&gt;]+&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Poznámku (žluté bubliny) - hledá se podřetězec v jejím obsahu&quot;+chr(160)+&quot;[::Note::]&quot;, _
+                  &quot; Textové pole - hledá se podřetězec v obsahu pole&quot;+chr(160)+&quot;[::Field::]&quot;, _
+                  &quot; Textový rámec - hledá se podřetězec v názvu rámce&quot;+chr(160)+&quot;[::TextFrame::]&quot;, _
+                  &quot; Tabulku - hledá se podřetězec v názvu tabulky&quot;+chr(160)+&quot;[::TextTable::]&quot;, _
+                  &quot; Obrázek - hledá se podřetězec v názvu obrázku; přidejte \\ pro hled. Alt. textu&quot;+chr(160)+&quot;[::Picture::]&quot;, _
+                  &quot; Poznámku pod čarou - hledá text kotvy; přidejte \\ pro hled. v obsahu pozn.  &quot;+chr(160)+&quot;[::Footnote::]&quot;, _
+                  &quot; Vysvětlivku - hledá text kotvy; přidejte \\ pro hled. v obsahu vysvětlivky   &quot;+chr(160)+&quot;[::Endnote::]&quot;, _
+                  &quot; Značku pro referenci (text); \\ pro hledání v Názvu; \\\\ najít prázdný text &quot;+chr(160)+&quot;[::ReferenceMark::]&quot;, _
+                  &quot; Křížovou referenci (text); \\ pro hl. v Názvu značky; \\\\ najít prázd. text &quot;+chr(160)+&quot;[::Reference::]&quot;, _
+                  &quot; Záložku - hledá v textu záložek; přidejte \\ pro hledání v Názvech záložek   &quot;+chr(160)+&quot;[::Bookmark::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)           
+
+&apos;                  &quot; Značku pro referenci - osiřelou, na kterou neexistuje v dokumentu odkaz &quot;+chr(160)+&quot;[::RefMarkOrph::]&quot;, _
+&apos;                  &quot; Křížovou referenci - osiřelou, ke které neexistuje v dokumentu značka &quot;+chr(160)+&quot;[::ReferenceOrph::]&quot;, _
+
+                         
+  for i = lbound(findExt) to ubound(findExt) 
+    pom = findExt(ubound(findExt)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findExt&quot;).addItem(pom,0)                     
+   next i 
+
+  findAtr = array(&quot; Odstavcový styl&quot;+chr(160)+&quot;[:::ps::]&quot;, _
+                  &quot; Znakový styl&quot;+chr(160)+&quot;[:::chs::]&quot;, _
+                  &quot; Seznamový styl&quot;+chr(160)+&quot;[:::ns::]&quot;, _
+                  &quot; Položku rejstříku&quot;+chr(160)+&quot;[:::DocumentIndexMark=::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Hypertextový odkaz&quot;+chr(160)+&quot;[:::HyperLinkURL::]&quot;, _
+                  &quot; Hypertextový odkaz - podřetězec v URL &quot;+chr(160)+&quot;[:::HyperLinkURL=file:///::]&quot;,_
+                  &quot; Kurzívu&quot;+chr(160)+&quot;[:::CharPosture::]&quot;, _
+                  &quot; Tučné&quot;+chr(160)+&quot;[:::CharWeight::]&quot;, _
+                  &quot; Tučnou kurzívu&quot;+chr(160)+&quot;[:::CharPosture|CharWeight::]&quot;, _
+                  &quot; Písmo (změna názvu fontu)&quot;+chr(160)+&quot;[:::CharFontName::]&quot;, _
+                  &quot; Velikost písma&quot;+chr(160)+&quot;[:::CharHeight::]&quot;, _
+                  &quot; Barvu písma&quot;+chr(160)+&quot;[:::CharColor::]&quot;, _
+                  &quot; Barvu pozadí písma (zvýraznění)&quot;+chr(160)+&quot;[:::CharBackColor::]&quot;, _
+                  &quot; Podtržené&quot;+chr(160)+&quot;[:::CharUnderline::]&quot;, _
+                  &quot; Indexy (jakýkoli)&quot;+chr(160)+&quot;[:::CharEscapement::]&quot;, _
+                  &quot; Index spodní (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=-101::]&quot;, _
+                  &quot; Index horní (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=101::]&quot;, _
+                  &quot; Index zadný velikostí písma a posunem &quot;+chr(160)+&quot;[:::CharEscapementHeight=70|CharEscapement=30::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Podobné znakové atributy (dle kurzoru)&quot;+chr(160)+&quot;[:::p::]&quot;, _
+                  &quot; Stejné znakové atributy (dle kurzoru)&quot;+chr(160)+&quot;[:::s::]&quot;)
+                  
+  &apos; není podporováno  &quot; Znakové styly&quot;+chr(160)+&quot;[:::CharStyleName::]&quot;, _                  
+  
+  for i = lbound(findAtr) to ubound(findAtr) 
+    pom = findAtr(ubound(findAtr)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findAtr&quot;).addItem(pom,0)                     
+   next i 
+
+
+  replExt = array(&quot; Nalezený text                           &quot;+chr(160)+&quot;&amp;&quot;, _
+                  &quot; Obsah značek začátku (\b), konce (\e)  bloku odstavců &quot;+chr(160)+&quot;\b\e&quot;, _
+                  &quot; Obsah 1. skupiny, nalezené mezi () v hledaném výrazu (max. \9) &quot;+chr(160)+&quot;\1&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Značka konce odstavce                   &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Tabulátor                               &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Pevná mezera                            &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Ruční zalomení řádku                    &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Ruční zalomení sloupce před             &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Ruční zalomení stránky před (za \M)     &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Zrušit zalomení stránky, sloupce        &quot;+chr(160)+&quot;\r&quot;, _
+                  &quot; Hexadecim. zadání &apos;A&apos;, (dekadicky \#65) &quot;+chr(160)+&quot;\x0041&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Nastavit URL hypertextového odkazu      &quot;+chr(160)+&quot;\h{file///C:...}&quot;, _
+                  &quot; Nahradit nalezený podřetězec v URL      &quot;+chr(160)+&quot;\H{subst}&quot;, _
+                  &quot; URL nalezeného hypertextového odkazu    &quot;+chr(160)+&quot;\u&quot;, _
+                  &quot; Nastavit styl odstavce                  &quot;+chr(160)+&quot;\P{Text}&quot;, _
+                  &quot; Nastavit styl znaků                     &quot;+chr(160)+&quot;\C{Výchozí}&quot;, _
+                  &quot; Nastavit styl seznamu                   &quot;+chr(160)+&quot;\N{Seznam 3}&quot;, _
+                  &quot; Nastavit vlastnost objektu na hodnotu   &quot;+chr(160)+&quot;\A{CharBackColor=&amp;Hffcc00}&quot;, _
+                  &quot; Nastavit výchozí formátování bloku znaků&quot;+chr(160)+&quot;\D&quot;, _
+                  &quot; Reset znak. vlastností od místa užití   &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Vložit poznámku pod čarou               &quot;+chr(160)+&quot;\F{}&quot;, _
+                  &quot; Vložit vysvětlivku                      &quot;+chr(160)+&quot;\E{}&quot;, _
+                  &quot; Vložit značku a text pro křížový odkaz  &quot;+chr(160)+&quot;\B{ref1|text}&quot;, _
+                  &quot; Vložit referenci na značku (číslo strny)&quot;+chr(160)+&quot;\L{0,0,ref1}&quot;, _
+                  &quot; Vložit záložku (w,b,e - blok, na začátek, na konec)        &quot;+chr(160)+&quot;\K{w,BookmName}&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Textový obsah objektu (rámce,tabulky...)                   &quot;+chr(160)+&quot;\o&quot;, _
+                  &quot; Název objektu (rámce, tabulky...)                          &quot;+chr(160)+&quot;\O&quot;, _
+                  &quot; Vložit obsah schránky (\V vloží bez formátu, jen text)     &quot;+chr(160)+&quot;\v&quot;, _
+                  &quot; Zachovat formát při nahrazování (nahrazovat přes schránku) &quot;+chr(160)+&quot;\f&quot;, _
+                  &quot; Vložit počitadlo nahrazení (jen pro Nahradit vše)          &quot;+chr(160)+&quot;\i{1,3}&quot;, _
+                  &quot; Vložit číslo stránky                                       &quot;+chr(160)+&quot;\I&quot;, _
+                  &quot; Přesměrovat nahrazovací výraz do jiného souboru            &quot;+chr(160)+&quot;\R&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)                  
+
+  oDial.getcontrol(&quot;Cb_replExt&quot;).addItems(replExt,0)
+  
+&apos; hlášení 
+ msg(0)  = &quot;Další výskyt hledaného výrazu&quot;
+ msg(1)  = &quot;nebyl nalezen. &quot;
+ msg(2)  = &quot;Hledání v bloku ukončeno. &quot;
+ msg(3)  = &quot;Bylo dosaženo konce dokumentu. Pokračovat v hledání od začátku? &quot;
+ msg(4)  = &quot;Bylo dosaženo začátku dokumentu. Pokračovat v hledání od konce? &quot;
+ msg(5)  = &quot;V tomto objektu nelze vyhledávat text. &quot;
+ msg(6)  = &quot;Objekt tohoto typu v tomto dokumentu není. &quot;
+ msg(7)  = &quot; (ESC v dokumentu pro přerušení) - Prohledáno odstavců/opakování: &quot;
+ msg(8)  = &quot;Přerušit&quot;
+ msg(9)  = &quot;Zavřít&quot;
+ msg(10) = &quot;Nepodporované vlastnosti atributů hledání. &quot;
+ msg(11) = &quot;Alternativní hledání pro Writer  &quot;
+ msg(12) = &quot;Chyba výběru - nepodporováno. &quot;
+ msg(13) = &quot;Hledaný výraz  &quot;
+ msg(14) = &quot;byl nalezen  &quot;
+ msg(15) = &quot;  krát. &quot;
+ msg(16) = &quot;   Nalezeno: &quot;
+ msg(17) = &quot;Soubor helpu nelze otevřít. &quot;
+ msg(18) = &quot;Nelze zaráz vybrat více objetů typu &quot;
+ msg(19) = &quot;Výběr všech hledaných výrazů může trvat déle a způsobit porušení &apos;ZVÝRAZNĚNÍ&apos;, pokud je v dokumentu použito, bez možnosti vzít &apos;ZPĚT&apos;. &quot; + chr(10) + chr(10) + &quot;Opravdu chcete vybrat vše? &quot;
+ msg(20) = &quot;Styl   &apos;&quot;
+ msg(21) = &quot;&apos;   není v dokumentu obsažen. &quot;
+ msg(22) = &quot;&lt;&lt; seznam můžete aktualizovat pomocí tlačítka vlevo &lt;&lt;&quot;
+ msg(23) = &quot;Počet neúspěšně nastavených vlastností:  &quot;
+ msg(24) = &quot;Nové hledání&quot;
+ msg(25) = &quot;Dávka &quot; +chr(10)+ &quot;&apos;^^&apos;&quot; +chr(10)+ &quot;už existuje. &quot;
+ msg(26) = &quot;Problémy s načtením souboru: &quot;
+ msg(27) = &quot;Uložit současné nastavení hledání a nahrazení pod jménem: &quot;
+ msg(28) = &quot;Chyba při spuštění editoru textů. Nastavte cestu k vašemu editoru textů: &quot; + chr(10) + &quot;(např. pro Windows:  notepad    nebo pro Linux:  kwrite &quot;
+ msg(29) = &quot;Dávka   &apos;^^1&apos;   skončila. &quot;+chr(10)+chr(10)+&quot;Celkem bylo provedeno  ^^2  záměn. &quot;
+ msg(30) = &quot;byl nahrazen   &quot;
+ msg(31) = &quot;   Počet náhrad: &quot;
+ msg(32) = &quot;Výchozí&quot;
+ msg(33) = &quot;Výpis nahrazení - OpenOffice.org Writer&quot;
+ msg(34) = &quot;Tato funkce není implementována. &quot;
+ msg(35) = &quot;Dávka obsahuje více navazujících skupin hledání a nahrazení. &quot; + chr(10) + &quot;Přeneseny byly jen parametry poslední skupiny. &quot;
+ msg(36) = &quot;Aktualizuji výběr... &quot;
+ msg(37) = &quot;Obnovuji pozadí výběru... &quot;
+ msg(38) = &quot;Vytvořit vysvětlivku/poznámku pod čarou v tomto místě není možné. &quot;
+ msg(39) = &quot;Chyba při vkládání značky pro křížový odkaz - značka musí být jedinečná. &quot;
+ msg(40) = &quot;Načítám, třídím seznam polí: &quot; 
+ &apos;v1.2
+ msg(41) = &quot;Přiřazení klávesové zkratky&quot;   &apos;v1.2 - doplnit do všech lokalizací
+ msg(42) = &quot;Neobsazeno&quot;  &apos;v1.2 -
+ msg(43) = &quot;Vybraná klávesová zkratka je už obsazena funkcí: &quot;  &apos;v1.2 -
+ msg(44) = &quot;Opravdu ji chcete nově přiřadit pro funkci: &quot;  &apos;v1.2 -
+ msg(45) = &quot;Opravdu zrušit klávesovou zkratku pro tuto funkci?&quot;  &apos;v1.2 - 
+ msg(46) = &quot;Opravdu smazat pomocnou proceduru: ^^^1 z modulu:   Standard.AltSearchBatchs ?&quot;  &apos;v1.2 - 
+ &apos;v1.3
+ msg(47) = &quot; Vyberte styl:&quot;
+ &apos;v1.4
+ msg(48) = &quot;Nebyla vybrána žadná dávka - vyberte v seznamuu!&quot;
+ msg(49) = &quot;Nebyly vybrány žadné dokumenty - vyberte v seznamu!&quot; 
+ msg(50) = &quot;Spuštění dávky na vybraných otevřených textových dokumentech&quot; 
+
+  
+&apos; main dialog
+with oDial.model
+
+ .title = msg(11)+verze
+ oDial.getcontrol(&quot;Cb_replAtr&quot;).addItem(msg(22),0)  &apos; Pick properties by button 
+
+&apos; Page 1
+ &apos; buttons              
+   .Bt_find.Label       =&quot;Najít&quot;
+   .Bt_findall.Label    =&quot;Najít vše&quot;
+   .Bt_count.Label      =&quot;Spočítat&quot;
+   .Bt_repl.Label       =&quot;Nahradit&quot;
+   .Bt_replall.Label    =&quot;Nahradit vše&quot;
+   .CB_help.HelpText    =&quot;Otevře soubor s helpem&quot;
+   .CB_help.Label       =&quot;?&quot;
+   .Bt_save1.Label      =&quot;Uložit dávku&quot;
+   .Bt_batch.HelpText   =&quot;Přepne na dialog Správce dávek&quot;
+   .Bt_batch.Label      =&quot;Dávky &gt;&gt;&quot;
+   .Bt_close.Label      =&quot;Zavřít&quot;
+ &apos; list boxes            
+   .Lb1.Label           =&quot;Hledat:&quot;
+   .T_find.Label        =&quot;Regulární&quot;
+   .T_findExt.Label     =&quot;Rozšířené&quot;    
+   .T_findAtr.Label     =&quot;Atributy&quot;
+   .Lb_info.Label       =&quot;&quot;  &apos; info label
+   .T_repl.Label        =&quot;Nahradit:&quot;
+   .Cb_loadAtr.HelpText =&quot;Načte seznam vlastností vybraného objektu&quot;
+   .Cb_loadAtr.Label    =&quot;Načíst vlastnosti&quot;
+ &apos; parametrs
+   .Fr2.Label           =&quot;Rozsah a směr hledání:&quot;
+   .Ch_case.Label       =&quot;Rozlišovat velikost&quot;
+   .Ch_word.Label       =&quot;Pouze celá slova&quot;
+   .Ch_styl.Label       =&quot;Odstavcové styly&quot;
+   .Ch_reg.Label        =&quot;Regulárni výrazy&quot;
+   .Fr1.Label           =&quot;Možnosti: &quot;
+   .Ch_csele.Label      =&quot;Pouze současný výběr&quot;
+   .Ch_zpet.Label       =&quot;Pozpátku&quot;
+   &apos;v1.3
+.Ch_preservecap.HelpText=&quot;Pokud nalezený text začíná velkým písmenem, bude velkým písmenem začínat i text nahrazený&quot;
+.Ch_preservecap.Label   =&quot;Zachovat velá písmena&quot;
+
+  
+ &apos; Page 2
+  &apos; Title              
+    .Lb2_1.Label        =&quot;Správa dávek&quot;
+  &apos; buttons            
+   .Bt_run.HelpText     =&quot;Provede vybranou dávku&quot;
+   .Bt_run.Label        =&quot;Spustit&quot;
+   .Bt_tranfer.HelpText =&quot;Pouze přenese parametry vybrané dávky do polí hledat a nahradit, nic neprovádí&quot;
+   .Bt_tranfer.Label    =&quot;Přenést&quot;
+   .Bt_save2.Label      =&quot;Uložit dávku&quot;
+   .Bt_edit.HelpText    =&quot;Otevře soubor s definicemi dávek v textovém editoru&quot;
+   .Bt_edit.Label       =&quot;Upravit&quot;
+   .Bt_refr.HelpText    =&quot;Aktualizuje seznam uložených dávek (např. po uložení úprav)&quot;
+   .Bt_refr.Label       =&quot;Občerstvit&quot;
+   .Cb_swfind.Label     =&quot;&lt;&lt; Hledání&quot;
+   &apos;v1.2
+   .Bt_short.HelpText   =&quot;Přiřazení klávesových zkratek dávkám&quot;
+   .Bt_short.Label      =&quot;Klávesové zkratky&quot;
+   &apos;v1.4
+   .Bt_moreFiles.HelpText=msg(50) + &quot;.&quot;
+   .Bt_moreFiles.Label   =&quot;Vícenásobné spuštění &gt;&gt;&quot;
+   
+   
+ end with  
+   
+&apos; dialog D_choice  
+ with oDia.model   
+   .Lb3.Label       =&quot;Jméno skriptu&quot;
+   .Bt_app.HelpText =&quot;Připojí současné parametry hledáné na konec existující dávky&quot;
+   .Bt_app.Label    =&quot;Připojit na konec&quot;
+   .Bt_back.Label   =&quot;Přejmenovat&quot;
+   .Bt_rep.Label    =&quot;Přepsat&quot;
+
+end with
+
+&apos; dialog D_keys  &apos;v1.2
+ with oDialSh.model   
+   .Lb1.Label            =&quot;1. vybrat funkci nebo název dávky AltSearch: &quot;
+   .Lb2.Label            =&quot;2. je-li třeba, upravit název pomocné procedury v OOo BASICu: &quot;
+   .Lb3.Label            =&quot; 3. vybrat a přiřadit kávesovou zkratku &quot;
+   .Lb4.Label            =&quot;Nyní použito pro funkci:&quot;
+   .Lb5.Label            =&quot;&quot;
+   .Cb_bas.HelpText      =&quot;V názvu je možno použít pouze znaky  _ A..Z a..z 0..9 a nesmí začínat číslem&quot;
+   .Bt_assign.HelpText   =&quot;Přiřadí nastavenou klávesovou zkratku zvolené pomocné proceduře a dávce (nebo funkci)&quot;
+   .Bt_assign.Label      =&quot;Přiřadit&quot;
+   .Bt_clear.HelpText    =&quot;Uvolní vybranou klávesovou zkratku&quot;
+   .Bt_basremove.HelpText=&quot;Smaže pomocnou proceduru v modulu  Standard.AltSearchBatch  v OOo BASICu&quot;
+
+   .title           = msg(41)
+   .Bt_close.Label  = oDial.model.Bt_close.Label
+
+end with
+
+
+&apos; dialog D_morefiles  &apos;v1.4
+ with oDmof.model   
+   .Title                 = msg(50) + &quot;:&quot;
+   .Lb1.Label             =&quot;tato dávka bude provedena na označených dokumentech:&quot;
+   .Bt_selectAll.Label    =&quot;Vybrat všechny&quot;
+   .Bt_start.Label        =&quot;Start&quot;
+   .Cb_DisabRepBatch.Helptext=&quot;Vypne hlášení po zpracování jednotlivých dokumentů, ponechá ale závěrečný přehled.&quot;
+   .Cb_DisabRepBatch.Label=&quot;Potlačit hlášení&quot;
+
+end with
+
+
+
+End Sub
+
+
+
+
+
+Sub Load_en 
+REM Charset: UTF-8   test: ěščřžýáíé юертыъшчщжі
+dim i as long
+dim pom as string
+  on error resume next &apos; za provozu vypnout chyby lokalizace
+  findReg = array(&quot; First char of a paragraph  &quot;+chr(160)+&quot;^.&quot;, _
+                  &quot; End of a paragraph         &quot;+chr(160)+&quot;$&quot;, _
+                  &quot; Empty paragraph            &quot;+chr(160)+&quot;^$&quot;, _
+                  &quot; Any text in one paragraph  &quot;+chr(160)+&quot;.*&quot;, _
+                  &quot; Any letter  [:alpha:]{1,1} &quot;+chr(160)+&quot;\l&quot;, _
+                  &quot; Any decimal digit  [0-9]   &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Beginning of a word        &quot;+chr(160)+&quot;\&lt;&quot;, _
+                  &quot; End of a word              &quot;+chr(160)+&quot;\&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Paragraph (ending mark)    &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Series of empty paragraphs &quot;+chr(160)+&quot;^$\p*&quot;, _
+                  &quot; Tabulator                  &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Manual line break          &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Manual column break        &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Manual page break          &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Any space   [ \xA0\x9\xA]  &quot;+chr(160)+&quot;\s&quot;, _
+                  &quot; Non-breaking space (\xA0)  &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Custom hyphens             &quot;+chr(160)+&quot;\x00AD&quot;, _
+                  &quot; Non-breaking dash          &quot;+chr(160)+&quot;\x2011&quot;, _
+                  &quot; A inserted by decimal code &quot;+chr(160)+&quot;\#65&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Dot                        &quot;+chr(160)+&quot;\.&quot;, _
+                  &quot; Parentheses     ()         &quot;+chr(160)+&quot;\(\)&quot;, _
+                  &quot; Square brackets []         &quot;+chr(160)+&quot;\[\]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;            &quot;)
+                  
+&apos;                   &quot; Další symboly:  \^$*+?| &quot;+chr(160)+&quot;\\\^\$\*\+\?\|&quot;, _                  
+&apos;                  &quot; Curly brackets  {}         &quot;+chr(160)+&quot;\{\}&quot;, _
+  oDial.getcontrol(&quot;Cb_findReg&quot;).addItems(findReg,0)
+
+  findExt = array(&quot; Series of paragraphs (limited between start and end marks) &quot;+chr(160)+&quot;[::BigBlock::]&quot;, _
+                  &quot; Expands found selection about one char to both sides &quot;+chr(160)+&quot;[::Grow 1,1::]&quot;, _
+                  &quot; Append mark || for multiple replace (in one step)  &quot;+chr(160)+&quot;||&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Text between () (inside of one paragraph)&quot;+chr(160)+&quot;(\(([^\)])+\))&quot;, _
+                  &quot; Text between [] (inside of one paragraph)&quot;+chr(160)+&quot;(\[([^\]])+\])&quot;, _
+                  &quot; Text between {} (inside of one paragraph)&quot;+chr(160)+&quot;({([^}])+})&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; e-mail address&quot;+chr(160)+&quot;[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_].?@[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_]\.[a-zA-Z0-9_]{2,4}&quot;, _
+                  &quot; Internet, URL, www address&quot;+chr(160)+&quot;(((news|http|ftp|https|file):\/\/|www\.)[a-zA-Z0-9_]+((\.[a-zA-Z0-9_]+)+)(([a-zA-Z0-9_\-\.,@?^=%&amp;:/~\+#]*[a-zA-Z0-9_\-\@?^=%&amp;/~\+#])?))&quot;, _
+                  &quot; HTML tag&quot;+chr(160)+&quot;(&lt;(&quot;&quot;[^&quot;&quot;]*&quot;&quot;|&apos;[^&apos;]*&apos;|[^&apos;&quot;&quot;&gt;])*&gt;)&quot;, _
+                  &quot; Opening HTML tag&quot;+chr(160)+&quot;&lt;[^/][^&gt;]+&gt;&quot;, _
+                  &quot; Closing HTML tag&quot;+chr(160)+&quot;&lt;/[^&gt;]+&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Notes (yellow bubbles) - searches substring in contents of notes&quot;+chr(160)+&quot;[::Note::]&quot;, _
+                  &quot; Text fields - searches substring in contents of fields&quot;+chr(160)+&quot;[::Field::]&quot;, _
+                  &quot; Text frame - searches substring in Names of frames&quot;+chr(160)+&quot;[::TextFrame::]&quot;, _
+                  &quot; Table - searches substring in Names of tables&quot;+chr(160)+&quot;[::TextTable::]&quot;, _
+                  &quot; Picture - searches substring in Names of pistures&quot;+chr(160)+&quot;[::Picture::]&quot;, _
+                  &quot; Footnote - text of anchor; add \\ for searches in content of footnootes&quot;+chr(160)+&quot;[::Footnote::]&quot;, _
+                  &quot; Endnote - text of anchor; add \\ for searches in content of Endnootes&quot;+chr(160)+&quot;[::Endnote::]&quot;, _
+                  &quot; Cross-ref. marker (text); \\ for search in Name; \\\\ for search of empty text&quot;+chr(160)+&quot;[::ReferenceMark::]&quot;, _
+                  &quot; Cross-reference (text); \\ for search in N. of marker; \\\\ for s. of empty text&quot;+chr(160)+&quot;[::Reference::]&quot;, _
+                  &quot; Bookmark - searches substring in text of Bookmarks; add \\ for searches in Names&quot;+chr(160)+&quot;[::Bookmark::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)           
+&apos;                   &quot; Číslo poznámky pod čarou (podřetězec)&quot;+chr(160)+&quot;[::Footnote::]&quot;, _                  
+                         
+  for i = lbound(findExt) to ubound(findExt) 
+    pom = findExt(ubound(findExt)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findExt&quot;).addItem(pom,0)                     
+   next i 
+
+  findAtr = array(&quot; Paragraph style&quot;+chr(160)+&quot;[:::ps::]&quot;, _
+                  &quot; Charcter style&quot;+chr(160)+&quot;[:::chs::]&quot;, _
+                  &quot; List style&quot;+chr(160)+&quot;[:::ns::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Hyperlink&quot;+chr(160)+&quot;[:::HyperLinkURL::]&quot;, _
+                  &quot; Hyperlink - substring in URL &quot;+chr(160)+&quot;[:::HyperLinkURL=file:///::]&quot;,_
+                  &quot; Italic&quot;+chr(160)+&quot;[:::CharPosture::]&quot;, _
+                  &quot; Bold&quot;+chr(160)+&quot;[:::CharWeight::]&quot;, _
+                  &quot; Bold Italic&quot;+chr(160)+&quot;[:::CharPosture|CharWeight::]&quot;, _
+                  &quot; Font Name (manual changed name)&quot;+chr(160)+&quot;[:::CharFontName::]&quot;, _
+                  &quot; Font Size&quot;+chr(160)+&quot;[:::CharHeight::]&quot;, _
+                  &quot; Font Color&quot;+chr(160)+&quot;[:::CharColor::]&quot;, _
+                  &quot; Font background (Highlighting)&quot;+chr(160)+&quot;[:::CharBackColor::]&quot;, _
+                  &quot; Underline&quot;+chr(160)+&quot;[:::CharUnderline::]&quot;, _
+                  &quot; Index (any)&quot;+chr(160)+&quot;[:::CharEscapement::]&quot;, _
+                  &quot; Subscript (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=-101::]&quot;, _
+                  &quot; Superscript (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=101::]&quot;, _
+                  &quot; Index defined by font size and escapement &quot;+chr(160)+&quot;[:::CharEscapementHeight=70|CharEscapement=30::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Similar format of characters (based on cursor)&quot;+chr(160)+&quot;[:::p::]&quot;, _
+                  &quot; Same format of characters (based on cursor)&quot;+chr(160)+&quot;[:::s::]&quot;)
+                  
+  &apos; není podporováno  &quot; Znakové styly&quot;+chr(160)+&quot;[:::CharStyleName::]&quot;, _                  
+  
+  for i = lbound(findAtr) to ubound(findAtr) 
+    pom = findAtr(ubound(findAtr)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findAtr&quot;).addItem(pom,0)                     
+   next i 
+
+
+  replExt = array(&quot; Whole found text                        &quot;+chr(160)+&quot;&amp;&quot;, _
+                  &quot; Content of start mark (\b) or end mark (\e), delimiting series of paragraphs &quot;+chr(160)+&quot;\b\e&quot;, _
+                  &quot; Content of 1st group, found inside () in search expression (max. \9) &quot;+chr(160)+&quot;\1&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; End of paragraph (new paragraph)        &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Tabulator                               &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Non-breaking space                      &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Manual line break                       &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Manual column break before              &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Manual page break before (after \M)     &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Dissolve manual page or cloumn break    &quot;+chr(160)+&quot;\r&quot;, _
+                  &quot; A inserted by hexa code, (decimal \#65) &quot;+chr(160)+&quot;\x0041&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Set up of hyperlink&apos;s URL               &quot;+chr(160)+&quot;\h{file///C:...}&quot;, _
+                  &quot; Replace founded substr.by &apos;subst&apos; in URL&quot;+chr(160)+&quot;\H{subst}&quot;, _
+                  &quot; Returns hyperlink&apos;s URL of founded link &quot;+chr(160)+&quot;\u&quot;, _
+                  &quot; Paragraph style                         &quot;+chr(160)+&quot;\P{Text}&quot;, _
+                  &quot; Character style                         &quot;+chr(160)+&quot;\C{Quotation}&quot;, _
+                  &quot; List style                              &quot;+chr(160)+&quot;\N{List 3}&quot;, _
+                  &quot; Set up property of object to value      &quot;+chr(160)+&quot;\A{CharBackColor=&amp;Hffcc00}&quot;, _
+                  &quot; Set up default formatting by char style &quot;+chr(160)+&quot;\D&quot;, _
+                  &quot; ResetAttributes in place of use         &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Insert Footnote                         &quot;+chr(160)+&quot;\F{}&quot;, _
+                  &quot; Insert Endnote                          &quot;+chr(160)+&quot;\E{}&quot;, _
+                  &quot; Insert marker+text for cross-reference  &quot;+chr(160)+&quot;\B{ref1|text}&quot;, _
+                  &quot; Insert cross-reference to marker        &quot;+chr(160)+&quot;\L{0,0,ref1}&quot;, _
+                  &quot; Insert Bookmark (w, b,e - Block, to Start, to End)         &quot;+chr(160)+&quot;\K{w,BookmName}&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Text content of object (frame, table, )                    &quot;+chr(160)+&quot;\o&quot;, _
+                  &quot; Name of object (frame, table, picture, )                   &quot;+chr(160)+&quot;\O&quot;, _
+                  &quot; Paste content of clipboard (\V paste unformated text only) &quot;+chr(160)+&quot;\v&quot;, _
+                  &quot; Preserve formatting with replace (replace &amp; by clipboard)  &quot;+chr(160)+&quot;\f&quot;, _
+                  &quot; Insert counter of replace (with Replace all only)          &quot;+chr(160)+&quot;\i{1,3}&quot;, _
+                  &quot; Insert page number                                         &quot;+chr(160)+&quot;\I&quot;, _
+                  &quot; Redirect of replacing expression to another file           &quot;+chr(160)+&quot;\R&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)                  
+&apos;Pravděpodobný
+  oDial.getcontrol(&quot;Cb_replExt&quot;).addItems(replExt,0)
+  
+&apos; messages
+ msg(0)  = &quot;Next occurrence of searched expression&quot;
+ msg(1)  = &quot;not found. &quot;
+ msg(2)  = &quot;Searching inside of selection has been finished. &quot;
+ msg(3)  = &quot;End of document achieved. Continue searching from start? &quot;
+ msg(4)  = &quot;Start of document achieved. Continue searching from end? &quot;
+ msg(5)  = &quot;It is impossible to find text in this object. &quot;
+ msg(6)  = &quot;In current document isn&apos;t object like this. &quot;
+ msg(7)  = &quot; (ESC in document for interrupt) - Founded paragraphs/loop: &quot;
+ msg(8)  = &quot;Interrupt&quot;
+ msg(9)  = &quot;Close&quot;
+ msg(10) = &quot;Unsupported properties. &quot;
+ msg(11) = &quot;Alternative Find &amp; Replace for Writer  &quot;
+ msg(12) = &quot;Selection error - unsupported. &quot;
+ msg(13) = &quot;Searched expression  &quot;
+ msg(14) = &quot;was found  &quot;
+ msg(15) = &quot;  times. &quot;
+ msg(16) = &quot;   Found: &quot;
+ msg(17) = &quot;File of Help is impossible to open. &quot;
+ msg(18) = &quot;It is impossible to select more than one object this type &quot;
+ msg(19) = &quot;Selection of all founded expressions can take a long time and destroy &apos;Highlighting&apos;, if it is used in this document, without possibilities &apos;Undo&apos;. &quot; + chr(10) + chr(10) + &quot; really want to use Find All? &quot;
+ msg(20) = &quot;Style   &apos;&quot;
+ msg(21) = &quot;&apos;   isn&apos;t included in current document. &quot;
+ msg(22) = &quot;&lt;&lt; use button to the left for refresh this list &lt;&lt;&quot;
+ msg(23) = &quot;Count of unsuccessful setting of properties:  &quot;
+ msg(24) = &quot;New search&quot;
+ msg(25) = &quot;Batch &quot;+chr(10)+ &quot;&apos;^^&apos;&quot; +chr(10)+ &quot;already exists.&quot;
+ msg(26) = &quot;Error with opening file:&quot;
+ msg(27) = &quot;Save current setting search and replace such as name: &quot;
+ msg(28) = &quot;Error at start of text editor. Set up path for you text editor: &quot; + chr(10) + &quot;(e.g. in Windows:  notepad      for Linux:  kwrite&quot;
+ msg(29) = &quot;Batch   &apos;^^1&apos;   is ended. &quot;+chr(10)+chr(10)+&quot;^^2  replacements have been done.&quot;
+ msg(30) = &quot;was replaced   &quot;
+ msg(31) = &quot;   Number of replace: &quot;
+ msg(32) = &quot;Default&quot;
+ msg(33) = &quot;Print-out of replaces - OpenOffice.org Writer&quot;
+ msg(34) = &quot;This function isn&apos;t implemented.&quot;
+ msg(35) = &quot;Batch contain more searching and replacing parameters. &quot; + chr(10) + &quot;Tranfered were only last parameters. &quot; 
+ msg(36) = &quot;Updating of selection... &quot;
+ msg(37) = &quot;Restoration background of selection... &quot;  
+ msg(38) = &quot;Create the Foot/Endnote is impossible. &quot;
+ msg(39) = &quot;Error on inserting marker of cross-reference - marker must by unique. &quot;
+ msg(40) = &quot;Loading, sorting list of fields: &quot; 
+ &apos;v1.2
+ msg(41) = &quot;Key shortcuts assign&quot;
+ msg(42) = &quot;Void&quot;
+ msg(43) = &quot;Selected key shortcut is already used for function: &quot;
+ msg(44) = &quot;Do you really want to reassign shortcut to function: &quot;
+ msg(45) = &quot;Do you really want to remove key shortcut for that function?&quot;
+ msg(46) = &quot;Do you really want to remove auxiliary subroutine: ^^^1 from module:   Standard.AltSearchBatchs ?&quot;
+ &apos;v1.3
+ msg(47) = &quot; Select style&quot;
+ &apos;v1.4
+ msg(48) = &quot;Batch is not selected - select from the list!&quot;
+ msg(49) = &quot;No selected documents - select from the list!&quot; 
+ msg(50) = &quot;Execute the selected batch with more opened text documents&quot;
+  
+
+
+&apos; main dialog
+with oDial.model
+
+ .title = msg(11)+verze
+ oDial.getcontrol(&quot;Cb_replAtr&quot;).addItem(msg(22),0)  &apos; Pick properties by button 
+
+&apos; Page 1
+ &apos; buttons
+   .Bt_find.Label       =&quot;Find&quot;
+   .Bt_findall.Label    =&quot;Find All&quot;
+   .Bt_count.Label      =&quot;Count&quot;
+   .Bt_repl.Label       =&quot;Replace&quot;
+   .Bt_replall.Label    =&quot;Replace all&quot;
+   .CB_help.HelpText    =&quot;Open Help file&quot;
+   .CB_help.Label       =&quot;?&quot;
+   .Bt_save1.Label      =&quot;Save batch&quot;
+   .Bt_batch.HelpText   =&quot;Switch to batch manager&quot;
+   .Bt_batch.Label      =&quot;Batch &gt;&gt;&quot;
+   .Bt_close.Label      =&quot;Close&quot;
+ &apos; list boxes
+   .Lb1.Label           =&quot;Search for:&quot;
+   .T_find.Label        =&quot;Regular&quot;
+   .T_findExt.Label     =&quot;Extended&quot;    
+   .T_findAtr.Label     =&quot;Properties&quot;
+   .Lb_info.Label       =&quot;&quot;  &apos; info label - leave empty
+   .T_repl.Label        =&quot;Replace:&quot;
+   .Cb_loadAtr.HelpText =&quot;Load list of properties from selected object&quot;
+   .Cb_loadAtr.Label    =&quot;Pick properties&quot;
+ &apos; parametrs
+   .Fr1.Label           =&quot;Options: &quot;
+   .Ch_case.Label       =&quot;Match case&quot;
+   .Ch_word.Label       =&quot;Whole words only&quot;
+   .Ch_styl.Label       =&quot;Paragraph styles&quot;
+   .Ch_reg.Label        =&quot;Regular expressions&quot;
+   .Fr2.Label           =&quot;Searching range and direction:&quot;
+   .Ch_csele.Label      =&quot;Current selection only&quot;
+   .Ch_zpet.Label       =&quot;Backwards&quot;
+  &apos;v1.3 
+.Ch_preservecap.HelpText=&quot;If found text begins with a capital letter, also the text replacement will begin with a capital letter&quot;  &apos; &quot;Pokud nalezený text začíná velkým písmenem, bude velkým písmenem začínat i text nahrazený
+.Ch_preservecap.Label   =&quot;Preserve capitalization&quot;
+
+
+ &apos; Page 2
+ &apos; Title 
+    .Lb2_1.Label        =&quot;Batch manager&quot;
+ &apos; buttons 
+   .Bt_run.HelpText     =&quot;Execute selected batch&quot;
+   .Bt_run.Label        =&quot;Execute&quot;
+   .Bt_tranfer.HelpText =&quot;Tranfer parameters of selected batch only, without Execute&quot;
+   .Bt_tranfer.Label    =&quot;Transfer&quot;
+   .Bt_save2.Label      =&quot;Save batch&quot;
+   .Bt_edit.HelpText    =&quot;Open file with batch definitions in text editor&quot;
+   .Bt_edit.Label       =&quot;Edit&quot;
+   .Bt_refr.HelpText    =&quot;Refresch list of batchs&quot;
+   .Bt_refr.Label       =&quot;Refresh&quot;
+   .Cb_swfind.Label     =&quot;&lt;&lt; Searching&quot;
+   &apos;v1.2
+   .Bt_short.HelpText   =&quot;Assign key shortcut to batch&quot;
+   .Bt_short.Label      =&quot;Key shortcuts&quot;
+   &apos;v1.4
+   .Bt_moreFiles.HelpText=msg(50) + &quot;.&quot;
+   .Bt_moreFiles.Label   =&quot;Multiple Execute &gt;&gt;&quot;
+ end with  
+   
+&apos; dialog choice
+ with oDia.model   
+   .Lb3.Label       =&quot;Name of batch&quot;
+   .Bt_app.HelpText =&quot;Append current parameters to end of existing batch&quot;
+   .Bt_app.Label    =&quot;Append&quot;
+   .Bt_back.Label   =&quot;Rename&quot;
+   .Bt_rep.Label    =&quot;Replace&quot;
+
+end with
+
+
+&apos; dialog D_keys  &apos;v1.2
+ with oDialSh.model   
+   .Lb1.Label            =&quot;First select the name of batch from the drop-down menu box&quot;   &apos;1st. select function or AltSearch&apos;s batch name:
+   .Lb2.Label            =&quot;Second, if required, change the name of the auxiliary subroutine for Basic&quot;  &apos; 2nd. if required, change name of auxiliary subroutine for OOo Basic:&quot;
+   .Lb3.Label            =&quot; Third set the desired keyboard shortcut &quot; &apos;3rd. select and assign key shortcut
+   .Lb4.Label            =&quot;Used for function:&quot;
+   .Lb5.Label            =&quot;&quot;
+   .Cb_bas.HelpText      =&quot;Only _ A..Z a..z 0..9 characters are permitted, number must not be at the beginning&quot;
+   .Bt_assign.HelpText   =&quot;Assign key shortcut to selected auxiliary subroutine and to batch&apos;s name&quot;
+   .Bt_assign.Label      =&quot;Assign&quot;
+   .Bt_clear.HelpText    =&quot;Release selected key shortcut&quot;
+   .Bt_basremove.HelpText=&quot;Remove auxiliary BASIC subroutine for batch shortcut&quot;
+
+   .title           = msg(41)
+   .Bt_close.Label  = oDial.model.Bt_close.Label
+
+end with
+
+
+&apos; dialog D_morefiles  &apos;v1.4
+ with oDmof.model   
+   .Title                 = msg(50) + &quot;:&quot;
+   .Lb1.Label             =&quot;the batch will be execute on the selected documents:&quot;
+   .Bt_selectAll.Label    =&quot;Select all&quot;
+   .Bt_start.Label        =&quot;Start&quot;
+   .Cb_DisabRepBatch.Helptext=&quot;Disable messages after processing of each document, but leaves the final report.&quot;
+   .Cb_DisabRepBatch.Label=&quot;Disable messages&quot;
+
+
+end with
+
+
+
+End Sub
+
+
+
+
+
+                  
+
+
+
+
+
+
+
+
+
+
+
+
+</script:module>

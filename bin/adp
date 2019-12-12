@@ -20,7 +20,7 @@ export ADB_KEYS_LOCATION tmp_serial su_bin ex adb files_to_copy
 if ! $adb devices | grep 'device$' &>/dev/null; then
 	[[ $1 ]] || exit
 fi
-$adb root &>/dev/null
+$adb root
 $adb remount
 sutest() {
 	$adb shell "su -c ls $1 &>/dev/null && echo $1" | grep $1 &>/dev/null
@@ -186,6 +186,18 @@ ex)
 	echo $ex
 	exit
 	;;
+partback*)
+	shift
+	ad_backup() {
+		for part in boot boot_para cache dtbo expdb flashinfo frp gz1 gz2 lk lk2 logo md1img metadata nvcfg nvdata nvram otp para proinfo protect1 protect2 recovery scp1 scp2 sec1 seccfg spmfw sspm_1 sspm_2 tee1 tee2 vbmeta vendor "$@"; do
+			ANORANGE "Backing up $part in /last/power/full/${part}_$(date +"%Y-%m-%d").img ...\n"
+			adb shell "/sbin/coreutils --coreutils-prog=dd if=/dev/block/by-name/$part bs=512 status=progress" >"/last/power/full/${part}_$(date +"%Y-%m-%d").img"
+			ANG "Done writing /last/power/full/${part}_$(date +"%Y-%m-%d").img!\n"
+		done
+	}
+
+	ad_backup "$@"
+	;;
 ls)
 	shift
 	adbsu 'command \busybox \ls --color -Al' "$@"
@@ -248,14 +260,13 @@ e | vim | edit | nvim)
 push)
 	shift
 	download=$ex
-	$adb shell ls "/storage/????-????" || {
-		ANRED "$ex \$ex is not defined.\n"
-		exit
-	}
 	(($# == 1)) && set -- $1 $ex/Download/
 	echo $adb push "$@"
 	$adb push "$@"
 	exit
+	;;
+devices)
+	$adb devices -l || fastboot devices
 	;;
 pull)
 	shift
@@ -270,6 +281,10 @@ cmd)
 	yorn adbsync
 	adbde shell "$@"
 	adbsync
+	exit
+	;;
+recovery)
+	$adb reboot recovery || fastboot reboot-recovery
 	exit
 	;;
 pushdot)
@@ -293,7 +308,8 @@ pushall | sync-delete)
 	ANLO "Full sync in progress...\n"
 	adbsyncdot
 	#	$adb push --sync /last/misc-android $ex/
-	$adb shell twrp install /external_sd/misc-android/'Decrypt Power.zip'
+	#	$adb shell twrp install /external_sd/misc-android/'Decrypt Power.zip'
+	#	$adb shell twrp restore lk_no_message_stock
 	$adb push /last/wifi.txt $ex
 	$adb shell bash /data/dot/slash/pushthem
 	$adb shell bash /data/dot/slash/etc/rc

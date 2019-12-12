@@ -1,5 +1,4 @@
-
-#vi: setft=sh:
+#vi: ft=sh:
 
 PMU="com.sec.android.emergencylauncher
 cm.aptoide.pt
@@ -13,7 +12,6 @@ com.android.email
 com.android.frameworks.telresources
 com.android.gallery3d
 com.android.inputmethod.latin
-com.android.keychain
 com.android.music
 com.android.musicfx
 com.android.noisefield
@@ -23,7 +21,6 @@ com.android.providers.downloads.ui
 com.android.provision
 com.android.soundrecorder
 com.android.statementservice
-com.android.vpndialogs
 com.android.wallpaper.holospiral
 com.android.wallpapercropper
 com.cyanogenmod.trebuchet
@@ -42,7 +39,6 @@ com.ghisler.android.TotalCommander
 com.google.android.feedback
 com.google.android.partnersetup
 com.google.android.youtube.tv
-com.google.vr.vrcore
 com.lonelycatgames.Xplore
 com.netflix.mediaclient
 com.samsung.android.app.colorblind
@@ -85,8 +81,6 @@ jp.co.omronsoft.openwnn
 org.cyanogenmod.weatherservice
 org.lineageos.audiofx
 org.lineageos.trebuchet
-com.android.stk
-com.android.simappdialog
 org.xbmc.ftmc
 org.xbmc.kodi
 service.odtcfactory.sec.com.odtcfactoryservice"
@@ -119,7 +113,6 @@ Music
 MusicFX
 NfcNci
 OmaCP
-ManagedProvisioning
 PPPoE
 PhotoTable
 PrintRecommendationService
@@ -131,10 +124,8 @@ ResurrectionStats
 SBrowserEdge
 SafetyInformation
 SecSetupWizard2015
-SetupWizard
 ShareLink
 SplitSoundService
-StorageManager
 SubTitle
 Tag
 TaskEdgePanel
@@ -143,15 +134,10 @@ Traceur
 TrebuchetQuickStep
 USBSettings
 Updater
-SimAppDialog
 VideoPlayer
-VpnDialogs
 WAPPushManager
-WallpaperBackup
 WallpaperCropper
-WebViewGoogle
 smartfaceservice
-webview
 WeatherProvider
 SettingsIntelligence
 LockClock
@@ -161,7 +147,6 @@ AntHalService
 YouTube
 Videos
 Protips
-Photos
 HoloSpiral
 Duo
 Drive
@@ -169,33 +154,13 @@ AutoDialer
 AdupsFota
 DrmProvider
 DataProtection
-DefaultContainerService
 DuraSpeed
 FMRadio
 FaceUnlock
 FilesGoogle
-MtkContacts
 PartnerBookmarksProvider
 MTKLogger
-MDMLSample
-"
-
-if [[ $1 ]]; then
-	PHONE="com.android.smspush
-    com.android.mms.service
-    com.android.server.telecom
-    com.android.CarrierConfigerconfig"
-	PHONEFOLDERS="telresources
-    DialerReceiver
-    CarrierConfig
-    Dialer
-    BlockedNumberProvider
-    MmsService
-    TeleService
-    Telecom
-    TelephonyProvider
-    VpnDialogs"
-fi
+MDMLSample"
 
 for dir in '/' /data/app /system/app /system/priv-app $PWD/ $PWD/data/app $PWD/system/app $PWD/system/priv-app $PWD/app $PWD/priv-app /system/system/app /system/system/priv-app; do
 	cd "$dir"

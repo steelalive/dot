@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry"
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                    oor:name="Addons"
+                    oor:package="org.openoffice.Office">
+    <node oor:name="AddonUI">
+        <node oor:name="OfficeMenuBarMerging">
+            <node oor:name="net.gmx.schnabel.andre.TemplateChanger" oor:op="replace">
+                <node oor:name="S1" oor:op="replace">
+                    <prop oor:name="MergePoint">
+                        <value>.uno:PickList\.uno:TemplateMenu\.uno:OpenTemplate</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <prop oor:name="MergeContext" oor:type="xs:string">
+                        <value>com.sun.star.text.TextDocument,com.sun.star.text.GlobalDocument</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+                        <node oor:name="MnuAssignNewTemplate" oor:op="replace">
+                            <prop oor:name="Title" oor:type="xs:string">
+                                <value>Assign template (current document)...</value>
+                                <value xml:lang="en">Assign template (current document)...</value>
+                                <value xml:lang="cz">Přiřadit šablonu (současný dokument)...</value>
+                                <value xml:lang="da">Anvend skabelon (dette dokument)...</value>
+                                <value xml:lang="de">Vorlage zuweisen (aktuelles Dokument)...</value>
+                                <value xml:lang="es">Asignar plantilla (documento actual)...</value>
+                                <value xml:lang="fr">Appliquer les styles du modèle (document)...</value>
+                                <value xml:lang="it">Assegna modello (a questo documento)...</value>
+                                <value xml:lang="ko">서식 적용 (현재 문서)...</value>
+                                <value xml:lang="nl">Sjabloon toewijzen (huidige document)...</value>
+                                <value xml:lang="ru">Назначить шаблон (текущий документ)...</value>
+                                <!--value xml:lang="sh">Primeni novi...</value>
+                                <value xml:lang="sr">Примени нови...</value -->
+                                <value xml:lang="ru">Använd dokumentmall (detta dokument)...</value>
+                                <value xml:lang="zh_CN">指定模板 (当前文档)...</value>
+                            </prop>
+                            <prop oor:name="URL" oor:type="xs:string">
+                                <value>macro:///TemplateChanger.TemplateChanger.Main</value>
+                            </prop>
+                            <prop oor:name="Target" oor:type="xs:string">
+                                <value>_self</value>
+                            </prop>
+                        </node>
+                    </node>
+                </node>
+                <node oor:name="S2" oor:op="replace">
+                    <prop oor:name="MergePoint">
+                        <value>.uno:PickList\.uno:TemplateMenu\net.gmx.schnabel.andre.TemplateChanger:S1</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+                        <node oor:name="MnuAssignNewTemplateB" oor:op="replace">
+                            <prop oor:name="Title" oor:type="xs:string">
+                                <value>Assign template (folder)...</value>
+                                <value xml:lang="en">Assign template (folder)...</value>
+                                <value xml:lang="cz">Přiřadit šablonu (adresář)...</value>
+                                <value xml:lang="da">Anvend skabelon (mappe)...</value>
+                                <value xml:lang="de">Vorlage zuweisen (Verzeichnis)...</value>
+                                <value xml:lang="es">Asignar plantilla (carpeta)...</value>
+                                <value xml:lang="fr">Appliquer les styles du modèle (dossier)...</value>
+                                <value xml:lang="it">Assegna modello (alla cartella)...</value>
+                                <value xml:lang="ko">서식 적용 (폴더)...</value>
+                                <value xml:lang="nl">Sjabloon toewijzen (map)...</value>
+                                <value xml:lang="ru">Назначить шаблон (файлы в папке)...</value>
+                                <value xml:lang="sv">Använd dokumentmall (mapp)...</value>
+                                <value xml:lang="zh_CN">指定模板 (文件夹)...</value>
+                            </prop>
+                            <prop oor:name="URL" oor:type="xs:string">
+                                <value>macro:///TemplateChanger.BatchChange.Main</value>
+                            </prop>
+                            <prop oor:name="Target" oor:type="xs:string">
+                                <value>_self</value>
+                            </prop>
+                        </node>
+                    </node>
+                </node>
+            </node>
+        </node>
+    </node>
+</oor:component-data>

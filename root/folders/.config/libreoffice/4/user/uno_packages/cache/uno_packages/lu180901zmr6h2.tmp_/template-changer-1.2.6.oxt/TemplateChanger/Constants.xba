@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Constants" script:language="StarBasic">&apos;*******************************************************************************
+&apos;* TemplateChanger (OOo-Basic)
+&apos;* Constants collection
+&apos;*
+&apos;* Created on 2008.14.07
+&apos;* 
+&apos;* OOo Basic makro to change the associated template (document) 
+&apos;* for the current writer document and replace all styles 
+&apos;* with those from the template
+&apos;* 
+&apos;* Copyright (C) 2007-2008  André Schnabel (andreschnabel@openoffice.org)
+&apos;*
+&apos;* Parts taken from OOo Pagination by Charles Brunet
+&apos;* http://extensions.services.openoffice.org/node/374
+&apos;* (LGPL 2.1 or later)
+&apos;* 
+&apos;* This library is free software: you can redistribute it and/or modify
+&apos;* it under the terms of the GNU Lesser General Public License as published by
+&apos;* the Free Software Foundation, version 3 of the License.
+&apos;* 
+&apos;* This library is distributed in the hope that it will be useful,
+&apos;* but WITHOUT ANY WARRANTY; without even the implied warranty of
+&apos;* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+&apos;* Lesser General Public License for more details.
+&apos;* 
+&apos;* You should have received a copy of the GNU Lesser General Public
+&apos;* License along with this library. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&apos;*
+&apos;******************************************************************************/
+option explicit
+
+&apos;--- Define constants for Error Handling
+&apos; General error codes
+Public const ERR_OK = 0			&apos;not an Error, but OK
+Public const ERR_ERR = 1		&apos;general / unknown Error (action failed)
+Public const ERR_WARNING = -1	&apos;general / unknown Warning (action finished with some problems)
+
+
+&apos; File format errors
+Public const ERR_DOC_NOT_WRITER = 101
+Public const ERR_TEMPL_NOT_WRITER = 102
+
+
+</script:module>

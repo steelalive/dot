@@ -14,6 +14,7 @@ dalvik.vm.bg-dex2oat-threads=4
 dalvik.vm.boot-dex2oat-threads=4
 dalvik.vm.check-dex-sum=false
 dalvik.vm.checkjni=false
+dalvik.vm.dexopt-flags=v=n,o=v
 dalvik.vm.deadlock-predict=off
 dalvik.vm.debug.alloc=0
 dalvik.vm.dex2oat-filter=speed

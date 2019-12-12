@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="TemplateChanger" script:language="StarBasic">&apos;*******************************************************************************
+&apos;* TemplateChanger (OOo-Basic)
+&apos;* Main Module
+&apos;*
+&apos;* Created on 2007.11.03
+&apos;* 
+&apos;* OOo Basic makro to change the associated template (document) 
+&apos;* for the current writer document and replace all styles 
+&apos;* with those from the template
+&apos;* 
+&apos;* Copyright (C) 2007-2008  André Schnabel (andreschnabel@openoffice.org)
+&apos;*
+&apos;* Parts taken from OOo Pagination by Charles Brunet
+&apos;* http://extensions.services.openoffice.org/node/374
+&apos;* (LGPL 2.1 or later)
+&apos;* 
+&apos;* 
+&apos;* This library is free software: you can redistribute it and/or modify
+&apos;* it under the terms of the GNU Lesser General Public License as published by
+&apos;* the Free Software Foundation, version 3 of the License.
+&apos;* 
+&apos;* This library is distributed in the hope that it will be useful,
+&apos;* but WITHOUT ANY WARRANTY; without even the implied warranty of
+&apos;* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+&apos;* Lesser General Public License for more details.
+&apos;* 
+&apos;* You should have received a copy of the GNU Lesser General Public
+&apos;* License along with this library. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&apos;******************************************************************************/
+option explicit
+
+&apos;*******************************************************************************
+&apos;* Main Procedure - this does actually change the template for the current 
+&apos;*	writer document
+&apos;*******************************************************************************
+Sub Main
+Dim oDoc, oTemplate, oDesktop
+Dim sFile as String
+
+	&apos;init Localization first
+	initL10n
+	
+	&apos;get Current Document
+	oDoc = StarDesktop.CurrentComponent
+	&apos;--- get current Office module and exit, if it is not Writer
+	If oDoc.ImplementationName &lt;&gt; &quot;SwXTextDocument&quot; Then
+		MsgBox gL10n(L10N_ERR_NOT_WRITER)
+		Exit Sub
+	EndIf
+		
+	&apos; Select the template file
+	sFile = selectTemplateFile(&quot;&quot;)
+	If sFile &lt;&gt;&quot;&quot; Then
+		&apos; template has been selected
+		&apos;load the template to retrieve title
+		oDesktop =   createUnoService(&quot;com.sun.star.frame.Desktop&quot;)
+
+		Dim aArgs(3)  As New com.sun.star.beans.PropertyValue
+        aArgs(0).Name = &quot;AsTemplate&quot;
+        aArgs(0).Value = False
+        aArgs(1).Name=&quot;Hidden&quot;
+        aArgs(1).Value=True
+        aArgs(2).Name=&quot;MacroExecutionMode&quot;
+        aArgs(2).Value=0    &apos;=NEVER_EXECUTE 
+        aArgs(3).Name=&quot;UpdateDocMode&quot;
+        aArgs(3).Value=1    &apos;QUIET_UPDATE 
+		oTemplate = oDesktop.loadComponentFromURL( sFile, &quot;_blank&quot;, 0,aArgs() )
+		
+		assignTemplateToDoc (oTemplate, oDoc)
+		
+        oTemplate.Close (false)
+        
+	EndIf
+
+End Sub
+
+&apos;*******************************************************************************
+&apos;* assigns a Template to a Writer Document 
+&apos;* Parameters: 
+&apos;*		oTemplate 	- Template document object
+&apos;*		oDoc		- Writer Document
+&apos;* Returns (Integer):
+&apos;*		ERR_OK:		Template has been assigned
+&apos;*		&gt;ERR_OK:	Error occured, Template has not been assigned
+&apos;*		&lt;ERR_OK:	Warning - Problem occured, but Template has been assigned
+&apos;*******************************************************************************
+Private Function assignTemplateToDoc(oTemplate, oDoc)
+Dim sFileName as String,  aFile() As String
+Dim oDocSettings
+	
+	&apos; local Error Handler
+	On Local Error Goto assignTemplateToDocErr
+	&apos; set Return code to OK
+	assignTemplateToDoc = ERR_OK
+
+	If oDoc.ImplementationName &lt;&gt; &quot;SwXTextDocument&quot; Then
+		assignTemplateToDoc = ERR_DOC_NOT_WRITER
+		Exit Function
+	EndIf
+	
+	If oTemplate.ImplementationName &lt;&gt; &quot;SwXTextDocument&quot; Then
+		assignTemplateToDoc = ERR_TEMPL_NOT_WRITER
+		Exit Function
+	EndIf
+
+	&apos;save outline numbering definitions
+    Dim oOutlineNumbering()
+    oOutlineNumbering = GetOutlineNumbering (oDoc)
+
+
+	&apos; Load (and overwrite) styles from template
+	Dim aArgs(1)  As New com.sun.star.beans.PropertyValue
+    aArgs(0).Name = &quot;OverwriteStyles&quot;
+    aArgs(0).Value = True
+    aArgs(1).Name = &quot;&quot;
+    aArgs(1).Value = &quot;&quot;
+    oDoc.stylefamilies.loadStylesFromURL( oTemplate.URL, aArgs() )
+    
+    &apos;restore outline numbering definitions
+	SetOutlineNumbering (oDoc, oOutlineNumbering)
+
+	&apos; associate current document with the template
+	If oTemplate.DocumentInfo.Title = &quot;&quot; Then
+		aFile = Split (oTemplate.URL, &quot;/&quot;)
+		sFileName = aFile(Ubound(aFile))
+		If Len(sFileName) &gt; 4 Then
+			If Mid (sFileName, Len(sFileName)-3, 1) = &quot;.&quot; Then
+				sFileName = left(sFilename, len(sFileName ) -4 )
+			EndIf
+		EndIf
+		oDoc.DocumentInfo.Template = ConvertFromURL(sFileName)
+	Else
+		oDoc.DocumentInfo.Template = oTemplate.DocumentInfo.Title
+	EndIf 
+	
+	oDoc.DocumentInfo.TemplateFileName = oTemplate.URL
+	      
+	&apos;set UpdateFromTemplate
+	oDocSettings = oDoc.createInstance( &quot;com.sun.star.document.Settings&quot; )
+	oDocSettings.UpdateFromTemplate = True        
+
+	Exit Function
+	
+assignTemplateToDocErr:
+	assignTemplateToDoc = ERR_ERR
+	Print Error
+	
+End Function
+
+
+&apos;*******************************************************************************
+&apos;* Display a file selector dialog to select a template file
+&apos;* Returns (String):
+&apos;*	empty String	-	no File has been selected
+&apos;*	non empty String -	URL of the selected template file
+&apos;*******************************************************************************
+Private Function selectTemplateFile( sPreselectFile as String) as String
+Dim oFp
+Dim initArgs(0)
+Dim bUseSystemFilePicker
+
+	&apos;--- select template with FilePicker
+	&apos;Error handling for broken KDE-filepicker implementation
+	On Local Error Goto OpenOOoFilePicker
+	
+	&apos; try to create the default FilePicker
+	oFp = createunoservice(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+	Goto CreatedFilePicker
+
+	&apos; if we get an error - tryto open the OOo filepicker
+	
+OpenOOoFilePicker:
+	On Local Error Goto 0
+	bUseSystemFilePicker = ChangeSystemFileDialog (false)
+	oFp = createunoservice(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+	ChangeSystemFileDialog (bUseSystemFilePicker)
+
+CreatedFilePicker:
+	initArgs(0) = 0
+	oFp.Initialize(initArgs)
+
+	oFp.Title = gL10n(L10N_DLG_SEL_TEMPLATE)
+	oFp.MultiSelectionMode = false
+	
+	If sPreselectFile &lt;&gt; &quot;&quot; and FileExists (sPreselectFile) Then
+		oFp.DisplayDirectory = sPreselectFile
+	Else
+		oFp.DisplayDirectory =getTemplatePath()
+	EndIf
+	oFp.AppendFilter(gL10n(L10N_FLT_ALL_TEMPLATES),&quot;*.ott;*.stw&quot;)
+	oFp.AppendFilter(gL10n(L10N_FLT_ODT_TEMPLATES),&quot;*.ott&quot;)
+	oFp.AppendFilter(gL10n(L10N_FLT_OOO1_TEMPLATES),&quot;*.stw&quot;)
+	oFp.CurrentFilter=gL10n(L10N_FLT_ALL_TEMPLATES)
+	
+	If oFp.execute Then
+		&apos; template has been selected
+		selectTemplateFile= oFp.Files(0)
+	else
+		selectTemplateFile = &quot;&quot;
+	EndIf
+
+End Function
+
+
+&apos;*******************************************************************************
+&apos;* get the default template (write) path 
+&apos;*******************************************************************************
+Private Function getTemplatePath() as String
+Dim sPath as string	
+Dim aSettings, aConfigProvider
+Dim aParams(0) As new com.sun.star.beans.PropertyValue
+Dim oPath, oConvService
+
+	aConfigProvider = createUnoService( &quot;com.sun.star.configuration.ConfigurationProvider&quot; )
+	aParams(0).Name = &quot;nodepath&quot;
+	aParams(0).Value = &quot;/org.openoffice.Office.Paths/Paths&quot;
+	aSettings = aConfigProvider.createInstanceWithArguments(&quot;com.sun.star.configuration.ConfigurationAccess&quot;, aParams() )
+
+	oPath = aSettings.Template
+	sPath = oPath.WritePath
+	oConvService = CreateUnoService(&quot;com.sun.star.util.PathSubstitution&quot;)
+	sPath = oConvService.substituteVariables(sPath, true)
+
+	sPath = ConvertToUrl(sPath)
+	getTemplatePath = sPath
+
+End Function
+
+
+
+&apos;*******************************************************************************
+&apos;* Change the Setting, if SystemFileDialog should be used 
+&apos;* Parameters:
+&apos;*	use Boolean 	- True: use system dialoges
+&apos;* Returns (Boolean):
+&apos;*		previous setting
+&apos;*******************************************************************************
+Private Function ChangeSystemFileDialog ( use as Boolean) as Boolean
+Dim aSettings, aConfigProvider, oProp
+Dim aParams(0) As new com.sun.star.beans.PropertyValue
+
+	aConfigProvider = createUnoService( &quot;com.sun.star.configuration.ConfigurationProvider&quot; )
+	aParams(0).Name = &quot;nodepath&quot;
+	aParams(0).Value = &quot;org.openoffice.Office.Common/Misc&quot;
+	aSettings = aConfigProvider.createInstanceWithArguments(&quot;com.sun.star.configuration.ConfigurationUpdateAccess&quot;, aParams() )
+
+	ChangeSystemFileDialog = aSettings.UseSystemFileDialog
+	
+	aSettings.UseSystemFileDialog = use
+	aSettings.commitChanges
+End Function 
+
+
+&apos;*******************************************************************************
+&apos;* reads the defintion for Outline Numbering from a writer document
+&apos;*	and returns as array (one entry per outline level) 
+&apos;* Parameters: 
+&apos;*		oDoc		- Writer Document
+&apos;* Returns (Array of Objects):
+&apos;*		a copy of oDoc.getChapterNumberingRules as array
+&apos;*******************************************************************************
+Private Function GetOutlineNumbering ( oDoc )
+Dim oOutlineNumbering()
+Dim oRules
+Dim nRules as Integer, i as Integer
+
+	oRules = oDoc.getChapterNumberingRules()
+	nRules = oRules.getCount() -1
+	ReDim oOutlineNumbering(nRules)
+	&apos; copy the rules to the array
+	For i = 0 To nRules
+		oOutlineNumbering(i)=oRules.getByIndex(i)
+	Next i
+	GetOutlineNumbering = oOutlineNumbering
+End Function
+
+
+&apos;*******************************************************************************
+&apos;* copies an array of numbering definitions to the documents
+&apos;*	chapter numbering rules 
+&apos;* Parameters: 
+&apos;*		oDoc				- Writer Document
+&apos;*		oOutlineNumbering	- Array of numbering rules
+&apos;* Returns nothing
+&apos;*******************************************************************************
+Private Function SetOutlineNumbering ( oDoc, oOutlineNumbering )
+Dim oAllRules
+Dim nRules as Integer, i as integer
+
+	oAllRules = oDoc.getChapterNumberingRules()
+	
+	For i = LBound(oOutlineNumbering) To UBound (oOutlineNumbering)
+		oAllRules.ReplaceByIndex (i, oOutlineNumbering(i))
+	Next i
+
+End Function
+</script:module>

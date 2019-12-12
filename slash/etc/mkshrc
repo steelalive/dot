@@ -4,38 +4,26 @@
 # This file is provided under the same terms as mksh.
 #-
 # Minimal /system/etc/mkshrc for Android
-# nvim: set ft=sh
-# nvim: set noro: ft=sh:
 # [[ -e /sbin/terminfo ]] && TERMINFO=/sbin/terminfo
 [[ -e /etc/terminfo ]] && TERMINFO=/etc/terminfo
-: ${TERM:=xterm-256color} ${HOME:=/data/dot/root} ${MKSH:=/data/dot/slash/sbin/bash} ${HOSTNAME:=POWER}
-: ${SHELL:=$MKSH} ${USER:=$(getprop ro.product.device)}
+[[ -e /data/dot/slash/etc/terminfo ]] && TERMINFO=/data/dot/slash/etc/terminfo
+: "${TERM:=xterm-256color}" "${HOME:=/data/dot/root}" "${MKSH:=/data/dot/slash/sbin/bash}" "${HOSTNAME:=POWER}"
+: "${SHELL:=$MKSH}" "${USER:=$(getprop ro.product.device)}" "${TMP:=/data/local/tmp}" "${TMPDIR:=$TMP}"
 PS1='$ '
 unset LD_PRELOAD
 if test -x /data/dot/slash/sbin/bash; then
 	BASH=/data/dot/slash/sbin/bash
-	SHELL=$BASH
+	SHELL="$BASH"
 fi
-
-#PS1='$USER@$HOSTNAME:${PWD:-?} '"$PS1 "
-PS1="\?"
-#if [ -d "/sbin/.magisk/busybox" ]; then
-#  BBDIR="/sbin/.magisk/busybox"
-#elif [ -d "/sbin/.core/busybox" ]; then
-#  BBDIR="/sbin/.core/busybox"
-#fi
-#PATH=$PATH:/sbin:$BBDIR:.
+PS1='\?'
 export TERM HOME MKSH HOSTNAME SHELL USER PATH TERMINFO
-# Place your own aliases in /sdcard/.aliases for ease.
 bashrc="/storage/????-????/.bashrc"
 if test -f "$bashrc"; then
 	. "$bashrc" || . "/sdcard/.bashrc" || touch "$bashrc"
 fi
 ########## -INIT-  ##########y
-
-#mount -o remount,hidepid=0 /proc
-#busybox mount -o rw,remount,rw / 2>/dev/null
-#busybox mount -o rw,remount,rw /system 2>/dev/null
+busybox mount -o rw,remount,rw / 2>/dev/null
+busybox mount -o rw,remount,rw /system 2>/dev/null
 /data/dot/slash/sbin/remnt 2>/dev/null
 ln -s /data/dot/slash/etc/mk / 2>/dev/null
 ln -s /data/dot/slash/etc/rc / 2>/dev/null

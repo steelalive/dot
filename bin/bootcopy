@@ -17,36 +17,38 @@ ANRED "imgtoedit=${W}$imgtoedit"
 cd $aik || exit
 export imgtoedit
 boot_path=/dev/block/by-name
-recovery=$(adb shell su -c 'find /dev/block -iname recovery | head -n1')
-boot=$(adb shell su -c 'find /dev/block -iname boot | head -n1')
-[[ $recovery ]] || recovery=$(adb shell $find /dev/block -iname recovery | head -n1)
-[[ $boot ]] || boot=$(adb shell $find /dev/block -iname boot | head -n1)
+#recovery=$(adb shell su -c 'find /dev/block -iname recovery | head -n1')
+#boot=$(adb shell su -c 'find /dev/block -iname boot | head -n1')
+#[[ $recovery ]] || recovery=$(adb shell $find /dev/block -iname recovery | head -n1)
+#[[ $boot ]] || boot=$(adb shell $find /dev/block -iname boot | head -n1)
+recovery="${boot_path}/recovery"
+boot="${boot_path}/boot"
 ANRED "Boot is ${W}$boot\n${R}"
 ANRED "Recovery is ${W}$recovery${R}\n"
-if ex=$($dot/bin/ad ex) && $adb shell ls $ex &>/dev/null; then
-	work_path=$ex
-else
-	adb shell touch /sdcard/test && work_path=/sdcard
-	[[ $work_path ]] || work_path=/
-fi
-export img_orig="${work_path}/${imgtoedit}"
+ANY "Now editing imgtoedit ${W}$imgtoedit${R}\n"
+# ad will give us external_sh or storage location in $ex var
+. /dot/bin/ad
+work_path=$ex
+export img_orig="${work_path}/${imgtoedit}.img"
+ANW "Now editing img_orig ${W}$img_orig${R}\n"
+[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="/dev/block/by-name/recovery"
+[[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="/dev/block/by-name/boot"
+
 #ANORANGE "dd recovery image?\n"
 #if yorn; then
 #	adb shell "cat $recovery" >./recovery.img
 #fi
 case $1 in
 repack*)
-	[[ -e recovery.img ]] && export imgtoedit=recovery && export block_to_write="$recovery"
-	[[ -e boot.img ]] && export imgtoedit=boot && export block_to_write="$boot"
+	#I don't care how it work, it just does for many cellphones, tablets and tv box without major edits...
 	bash repackimg.sh
-	cp image-new.img ${imgtoedit}_mod.img
-	[[ -e unsigned_new.img ]] && cp unsigned-new.img ${imgtoedit}_mod.img
-	$adb push ${imgtoedit}_mod.img $work_path
-	$adb shell "su -c "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"" ||
-		$adb shell "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"
-	export img_orig=/sdcard/recovery block_to_write=/dev/block/by-name/recovery
-	adb shell "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"
-	adb shell su -c "dd if=${img_orig}_mod.img of="${block_to_write}" bs=4096"
+	imgtoedit=image-new.img
+	[[ -e unsigned_new.img ]] && cp unsigned-new.img ${imgtoedit}
+	$adb push ${imgtoedit} ${work_path}
+	img_orig="${work_path}/${imgtoedit}"
+	$adb shell "su -c "dd if=${img_orig} of="${block_to_write}" bs=4096"" ||
+		$adb shell "dd if=${img_orig} of="${block_to_write}" bs=4096"
+	adb shell "dd if=${img_orig} of="${block_to_write}" bs=4096" || adb shell su -c "dd if=${img_orig} of="${block_to_write}" bs=4096"
 	$adb shell "su -c 'sync && sync'" ||
 		$adb shell "sync && sync"
 	$adb reboot recovery
@@ -61,7 +63,8 @@ fstab | mnt | path)
 	;;
 setuprecovery)
 	if [[ $imgtoedit == recovery ]] && [[ $1 != repack ]]; then
-		ANORANGE "Perform recovery miracle?"
+		ANORANGE "Perform recovery miracle?\n"
+		ANBR "I dont care for an answer I'M A MAGICIAN!!!${R}\n"
 		recovery_miracle
 		exit
 	fi
@@ -72,21 +75,21 @@ setuprecovery)
 	echo $boot_path $imgtoedit
 	liner
 	if [[ $1 != skip ]]; then
-		$adb shell su -c "dd if="${block_to_write}" of=${img_orig}.img bs=4096"
-		$adb shell "dd if="${block_to_write}" of=${img_orig}.img bs=4096"
-		$adb pull ${img_orig}.img
+		$adb shell su -c "dd if="${block_to_write}" of=${img_orig} bs=4096" || $adb shell "dd if="${block_to_write}" of=${img_orig} bs=4096"
+		$adb pull ${img_orig}
 	fi
 	bash unpackimg.sh ${imgtoedit}.img || {
 		abootimg -x ${imgtoedit}.img
 		abootimg-unpack-initrd
 	}
-	echo "Copy config?"
-	if yorn; then
+	echo "Copy proper?? config?(Don't)"
+	if yorn n; then
 		proper
 	fi
 	(
-		cd $aik/ramdisk/sbin/ ln -sf ../init watchdogd
-		ln -sf ../init ueventd
+		cd $aik/ramdisk
+		ln -sf ./init sbin/watchdogd
+		ln -sf ./init sbin/ueventd
 	)
 	if [[ $imgtoedit == recovery ]] && [[ $1 != repack ]]; then
 		ANORANGE "Perform recovery miracle?\n"

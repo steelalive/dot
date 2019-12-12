@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Select" script:language="StarBasic">REM  *****  BASIC  *****
+option explicit
+
+
+&apos;public const bcolor = &amp;Habcdef  &apos; barva pro podklad znaku pro pomocny vyber 
+public const bcolor = &amp;Hfefefe  &apos; barva pro podklad znaku pro pomocny vyber 
+
+&apos; vrati kolekci vsech nalezenych pozadi bcolor 
+sub FindAllBcolor as object
+dim SDesc
+dim Srch(0) as new com.sun.star.beans.PropertyValue
+  SDesc = AltSearchDoc.createReplaceDescriptor()
+  SDesc.SearchAll = true
+  SDesc.ValueSearch = true &apos; true = hledá zadanou hodnotu prop; false hledá pouhý výskyt properties
+  SDesc.SearchStyles = true &apos; hleda styly - musí být nastaveno při hledani properties
+  srch(0).Name = &quot;CharBackColor&quot;
+  srch(0).Value = bcolor
+  SDesc.SetSearchAttributes(Srch())
+  FindAllBcolor = AltSearchDoc.findAll(SDesc)
+end sub
+
+
+&apos; testuje zda je v dokumentu použito zvyraznení
+sub isUsedCharBackColor as boolean
+dim SDesc, found
+dim Srch(0) as new com.sun.star.beans.PropertyValue
+  SDesc = AltSearchDoc.createReplaceDescriptor()
+  SDesc.SearchAll = true
+  SDesc.ValueSearch = false &apos; true = hledá zadanou hodnotu prop; false hledá pouhý výskyt properties
+  SDesc.SearchStyles = true &apos; hleda styly - musí být nastaveno při hledani properties
+  srch(0).Name = &quot;CharBackColor&quot;
+&apos;  srch(0).Value = bcolor
+  SDesc.SetSearchAttributes(Srch())
+  Found = AltSearchDoc.findFirst(SDesc)
+  isUsedCharBackColor = true
+  if isNull(found) then isUsedCharBackColor = false
+end sub
+
+
+&apos; vybere jako nesouvisly blok vsechno co má pozadí &quot;bColor&quot;
+sub SelectAllBColor
+dim founds
+  StatusText(msg(36), 100, false,0)  &apos; &quot;Aktualizuji výběr...&quot;
+  founds = FindAllBcolor()
+  AltSearchDoc.getCurrentController.select(founds)   
+end sub
+
+
+&apos; nalezne a zruší všechny výskyty pozadí znaku barvou &quot;bcolor&quot;
+sub ClearBackColor
+dim founds
+dim i as long
+  StatusText(msg(37), 100, false,0) &apos; &quot;Obnovuji pozadí výběru...&quot;
+  founds = FindAllBcolor()
+  StatusBarStart(leftTo(msg(7), &quot;-&quot;) + &quot;- &quot; + msg(37), founds.count-1) &apos; Esc...   Obnovuji pozadí výběru...&quot;
+  for i = 0 to founds.count-1
+    founds(i).CharBackColor = -1   &apos; nastavit vsechna vybrana pozadi na pruhledno 
+    &apos; status info
+    if i mod 27 = 0 then
+        StatusBarPr(i)
+        if findcounter &lt; 0 then exit for &apos; prerusit ukoncit
+      end if 
+
+   next i
+&apos; vypisInfo &apos; vypis info   
+end sub 
+
+
+
+sub PosunZakrytyText  &apos; pokud je kurzor schován pod oknem dialogu posune zobrazení (má-li kam)
+
+&apos;on error goto konec   
+
+dim data, newdata(), olddata(), i, dx, dy, x, y, d, d1, d2, posCo, posDi, lhx, lhy, pdx, pdy 
+ data = Split(AltSearchDoc.CurrentController.getViewData(), &quot;;&quot;) &apos;.getbyIndex(0)&apos;ZoomFactor &apos;&quot;3375;19828;200;0;17280;9075;22883;0;0&quot;) 
+ olddata() = Split(AltSearchDoc.CurrentController.getViewData(), &quot;;&quot;)
+
+ dx = val(data(5)) - val(data(3))  &apos; sirka okna
+ dy = val(data(6)) - val(data(4))  &apos; vyska okna
+
+ x = (val(data(0))- val(data(3))) / dx   &apos; relativni pozice  x kurzoru - konec vyberu 
+ y = (val(data(1))- val(data(4))) / dy   &apos; relativni pozice  y kurzoru - približně vrsek 
+
+ posCo = AltSearchDoc.CurrentController.frame.ComponentWindow.PosSize  &apos; x, y, sirka, vyska okna vzhledem k Ooo hlavnimu oknu
+ posDi = oDial.PosSize &apos; pozice je relativní vzhledem rodičovskému oknu
+
+ lhy = (posDi.y -55 - posCo.y) / posCo.height   &apos; souřadnice y leveho horniho rohu dialogu jako pomer k výšce viditelne oblasti: 0 = horni okraj, 1 = spodní okraj  
+ pdy = (posDi.y - posCo.y + posDi.height) / posCo.height   &apos; souřadnice y praveho dolniho rohu dialogu jako pomer k výšce viditelne oblasti: 0 = horni okraj, 1 = spodní okraj  
+
+ lhx = (posDi.x - posCo.x) / posCo.width   &apos; souřadnice x leveho horniho rohu dialogu jako pomer k šířce viditelne oblasti: 0 = levý okraj, 1 = pravý okraj  
+ pdx = (posDi.x - posCo.x + posDi.width) / posCo.width   &apos;souřadnice x praveho dolniho rohu dialogu jako pomer k šířce viditelne oblasti: 0 = levý okraj, 1 = pravý okraj  
+
+&apos; to do: funkce  THISCOMPONENT.getVisualAreaSize(0) &apos; vraci skutečnou sirku a vysku okna s odectenými dokovanymi oknem stylisty, navigatoru
+ if (pdx &lt;= 0) or (pdy &lt;= 0) or (lhx &gt;= 1) or (lhy &gt;= 1)  then goto konec  &apos; dialog mimo okno editoru netreba nic delat
+ if x &lt; (lhx - 0.02) then goto konec  &apos; vlevo od dialogu - nechat byt
+ if x &gt; (pdx + 0.1) then goto konec  &apos; vpravo od dialogu - nechat byt
+ if y &lt; (lhy - 0.1) then goto konec  &apos; nad dialogem - nechat byt
+ if y &gt; (pdy + 0.02) then goto konec  &apos; pod dialogem - nechat byt
+
+
+ d1 = clng((y - (0.2*lhy)) * dy) &apos; posunout nahoru do volneho mista nad dialog  
+ d2 = -1 * clng( ( (pdy-y)+ ((1-pdy)*0.3) )*dy) &apos; posunout dolu do volneho mista pod dialog  
+
+
+ if (lhy &gt; 0.1) then &apos; je misto nahoře, zkusit posunout nahoru nad dialog
+    d = d1
+  else  &apos; jinak posunout dolu pod dialog
+    d = d2
+  end if 
+
+ if (clng(data(4))+d) &lt; 0 then &apos; posun na zapornou souřadnici t.j. pred zacatek dokumentu 
+    &apos; nahoře asi není místo ale přesto zkusit využít alespoň něco  
+    d = d1
+  end if
+ 
+ d = (clng(d/8)*8) + 8 &apos; zdá se že funkce restoreViewData akceptuje jen nasobky 8 - ne asi blbost
+ data(4) = trim(str(clng(data(4))+d))
+ data(6) = trim(str(clng(data(6))+d))
+ AltSearchDoc.CurrentController.restoreViewData(join(data,&quot;;&quot;))  &apos; často prostě nefunguje, i dyž má správná data
+
+ &apos; kontrola, zda se podarilo posunout - pokud ne, asi konec dokumentu
+ newdata() = Split(AltSearchDoc.CurrentController.getViewData(), &quot;;&quot;)  
+&apos; msgbox  olddata(4) &amp; &quot;    new: &quot; &amp; data(4) &amp; chr(13) &amp; &quot;d: &quot; &amp; d &amp; &quot;   dx: &quot; &amp; dx &amp; chr(13) &amp; join(olddata(),&quot;;&quot;) &amp; chr(13) &amp; join(data(),&quot;;&quot;) &amp; chr(13) &amp; join(newdata(),&quot;;&quot;)
+ if (val(olddata(4)) = val(newdata(4))) then 
+   d = d2
+   d = (clng(d/8)*8) + 8 &apos; zdá se že funkce restoreViewData akceptuje jen nasobky 8 - ne asi blbost
+   data(4) = trim(str(clng(olddata(4))+d))
+   data(6) = trim(str(clng(olddata(6))+d))
+   AltSearchDoc.CurrentController.restoreViewData(join(data,&quot;;&quot;))  &apos; často prostě nefunguje, i dyž má správná data
+&apos;msgbox  olddata(4) &amp; &quot;    new: &quot; &amp; data(4) &amp; chr(13) &amp; &quot;d: &quot; &amp; d &amp; &quot;   dx: &quot; &amp; dx &amp; chr(13) &amp; join(olddata(),&quot;;&quot;) &amp; chr(13) &amp; join(data(),&quot;;&quot;) &amp; chr(13) &amp; join(newdata(),&quot;;&quot;)
+  end if
+
+ &apos; kontrola, zda se podarilo posunout - restoreViewData odmítá fungovat =&gt; přesunout dialog
+ newdata() = Split(AltSearchDoc.CurrentController.getViewData(), &quot;;&quot;)  
+ if (val(olddata(4)) = val(newdata(4))) then 
+    if y &lt; 0.5 then &apos; presunout dialog doprava dolu
+         oDial.setPosSize clng(posCo.width - posDi.width + posCo.x - 20), clng(posCo.height - posDi.height + posCo.y) , 0, 0, 3  
+
+      else  &apos; presunout dialog doprava nahoru
+         oDial.setPosSize clng(posCo.width - posDi.width + posCo.x - 20), clng(30) , 0, 0, 3        
+
+      end if
+
+  end if
+
+
+
+&apos;msgbox &quot;kx: &quot; &amp; format(x,&quot;Percent&quot;)  &amp; &quot;   ky: &quot; &amp; format(y,&quot;Percent&quot;)  &amp; chr(13) &amp; &quot;x: &quot; &amp; format(lhx,&quot;Percent&quot;)  &amp; &quot;   y: &quot; &amp; format(lhy,&quot;Percent&quot;)  &amp; chr(13) &amp; &quot;x: &quot; &amp; format(pdx,&quot;Percent&quot;)  &amp; &quot;   y: &quot; &amp; format(pdy,&quot;Percent&quot;) 
+&apos;newdata = Split(AltSearchDoc.CurrentController.getViewData(), &quot;;&quot;)  
+
+&apos; thiscomponent.CurrentController.ViewSettings.ZoomValue = thiscomponent.CurrentController.ViewSettings.ZoomValue + 10  &apos; zomm + 10%
+&apos; xray thiscomponent.CurrentController.frame&apos;.ComponentWindow&apos; .ViewSettings.ZoomValue  &apos; nastavení/hodnota zoomu
+&apos;xray thiscomponent.CurrentController.frame.ComponentWindow.AccessibleContext&apos; .bounds: sirka a vyska okna; x, y vzhledem k Ooo hlavnimu oknu;
+&apos;xray AltSearchDoc.CurrentController.frame.ContainerWindow.PosSize  &apos; sirka a vyska okna, x, y, vzhledem k levemu hornimu rohu monitoru
+&apos;xray AltSearchDoc.CurrentController.frame.ComponentWindow.PosSize  &apos; sirka a vyska okna; x, y vzhledem k Ooo hlavnimu oknu
+
+
+konec:
+end sub
+
+
+
+
+</script:module>

@@ -1,0 +1,228 @@
+; Bestand met batchs voor alternatief Zoek&vervangen
+; voor de extensie AltSearch.oxt voor OOo Writer
+; Tekenset: UTF-8
+;
+; v1.3  11/09
+;
+; Syntaxis:
+; Regels die niet beginnen met enige hoofdopdracht zullen worden genegeerd.
+; Hoofdopdrachten moeten zijn opgenomen tussen [] en moeten aan het begin van de regel staan..
+;  Er mogen spaties voor de hoofdopdracht staan, alles dat daarachter staat zal worden
+;  geïnterpreteerd als parameters.
+; 
+;  Beschrijving van hoofdopdrachten:
+;  [Name] - batchnaam (verwijzing als parameter) - één enkele batch begint
+;      altijd met deze hoofdopdracht.  Het einde van de batch wordt bepaald door de volgende 
+;      entiteit van de opdracht [Naam] of [End] voor de laatst geldige batch.
+;
+;  [Find] - de te zoeken uitdrukking - bij uitvoeren van de batch zal de parameter worden
+;      overgebracht naar het veld "Zoeken naar"
+;  [Replace] - uitdrukking voor vervanging - uitvoeren van de batch zal de parameter worden 
+;      overgebracht naar het veld "Vervangen"
+;  [Parameters] - parameters voor zoeken en vervangen - lege tekenreeksen komen overeen
+;      met de instelling van alle parameters op false, citeren van de naam van de parameter
+;      stelt die in op true.  
+   
+;      Geldige parameters:  
+;           MatchCase  PreserveCapital  WholeWord  ParaStyles  Regular
+;           CurrSelection  Backwards  MsgOff  NoSummary 
+;
+;      MsgOff - onderdrukt meeste fioutberichten en informatie (voor één stap in zoeken)
+;      NoSummary - onderdrukt het uiteindelijke rapport van de gehele batch (handig bij gebruiken van toetsenbord sneltoets)  
+; 
+;  [Command] - bepalen van modus van uitvoeren zoeken en vervangen -
+;      Geldige parameters:  Find  FindAll  Replace  ReplaceAll  Count
+;
+;      In de toekomst zouden er ook instructies kunnen komen voor verplaatsing van de cursor, 
+;      instellen van bladwijzers op de plaats van de cursor en terugplaatsen van de cursor
+;      overeenkomstig de bladwijzer etc.
+;       
+;  [End] - bepaalt het einde van de laatst geldige batch - alles wat hierna staat
+;      zal worden genegeerd.   
+;
+; 
+
+************************************************************
+
+[Name] Html [Sel.]	Primitieve conversie naar Html-tags voor het geselecteerde blok
+    	 
+  ; dezelfde parameters voor alles 
+  [Parameters] MsgOff Regular CurrSelection
+
+  ; vet
+  [Find][:::CharWeight::]
+  [Replace]<b>&</b>
+  [Command] ReplaceAll 
+
+  ; cursief
+  [Find][:::CharPosture::]
+  [Replace]<i>&</i>
+  [Command] ReplaceAll         	
+
+  ; Hyperlinks 
+  [Find][:::HyperLinkURL::]
+  [Replace]<a href="\u">&</a>
+  [Command] ReplaceAll
+
+  ; Footnotes
+  [Find][::Footnote::]
+  [Replace]<b><span Title="\o"> <span style="vertical-align: super; font-size: smaller;">\i</span></span></b>
+  [Command] ReplaceAll
+
+  ; Toevoegen van tags aan alinea's  
+  [Find]^.*$
+  [Replace]<p>&</p>
+  [Command] ReplaceAll
+
+  ; Verwijder overbodige einden-begin van identieke tags in reeks
+  [Find]</i><i>|</b><b>|</p><p>
+  [Replace]
+  [Command] ReplaceAll
+
+
+[Name] Text [Sel.]	Converteren geselecteerd blok op de BBcode
+   ; dezelfde parameters voor alles 
+  [Parameters] MsgOff Regular CurrSelection
+
+  [Find][:::CharWeight::]
+  [Replace][b]&[/b]
+  [Command] ReplaceAll
+
+  [Find][:::CharPosture::]
+  [Replace][i]&[/i]
+  [Command] ReplaceAll
+
+  [Find][:::CharUnderline::]
+  [Replace][u]&[/u]
+  [Command] ReplaceAll
+
+  [Find][:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=-101::]
+  [Replace][sub]&[/sub]\d
+  [Command] ReplaceAll
+
+  [Find][:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=101::]
+  [Replace][sup]&[/sup]\d
+  [Command] ReplaceAll
+
+  [Find][:::HyperLinkURL::]
+  [Replace][url=\u]&[/url]
+  [Command] ReplaceAll
+
+  [Find][::Picture::]
+  [Replace][img]\O[/img]
+  [Command] ReplaceAll
+
+  [Find][:::CharFontName=Courier New::]
+  [Replace][code]&[/code]
+  [Command] ReplaceAll
+
+  ; Verwijder overbodige einden-begin van identieke tags in reeks
+  [Find]\[/b]\[b]|\[/i]\[i]|\[/u]\[u]|\[/sub]\[sub]|\[/sup]\[sup]|\[/code]\[code]
+  [Replace]
+  [Command] ReplaceAll
+  
+  ; code door alinea  
+  [Find]\[/code]\p\[code]
+  [Replace]\p
+  [Command] ReplaceAll
+
+  ; code door regeleinde  
+  [Find]\[/code]\n\[code]
+  [Replace]\n
+  [Command] ReplaceAll
+
+  ; lijstitems
+  [Find][:::NumberingStyleName=::]
+  [Replace][list][*]&[/list]
+  [Command] ReplaceAll
+
+  ; Verwijder overbodige tags voor lijsten 
+  [Find]\[/list]\p\[list]
+  [Replace]\p
+  [Command] ReplaceAll
+
+ 
+  
+[Name] Text [Sel.]	Aaneengesloten alinea's, niet gescheiden door lege alinea's
+ ; blok lege alinea's vervangen door één lege alinea 
+  [Find]\p{2,}
+  [Replace]\p\p
+  [Parameters] MsgOff Regular CurrSelection 
+  [Command] ReplaceAll
+
+ ; verwijder spaties en tabs aan het begin en einde van alinea's
+  [Find](^( *\t*)*|( *\t*)*$)
+  [Replace]
+  [Command] ReplaceAll
+
+ ; verwijder alle alinea-einden    
+  [Find]\p
+  [Replace]  
+  [Command] ReplaceAll
+
+ ; verwijder spatie aan begin van de alinea na een blok lege alinea's 
+  [Find]^ 
+  [Replace]
+  [Command] ReplaceAll
+
+
+[Name] Text [Sel.]    Scheidt niet-lege alinea's door een lege alinea
+  [Find]^.+$
+  [Replace]&\p
+  [Parameters]  MsgOff Regular CurrSelection
+  [Command] ReplaceAll
+
+
+; scheidingsteken
+[Name] 
+
+[Name] Text [All]	Converteer datum van  jjjj-mm-dd  naar  dd-mm-jj
+  [Find](\d{2,2})(\d{2,2})-(\d{1,2})-(\d{1,2})
+  [Replace]\4.\3.\2
+  [Parameters]   MsgOff  Regular  
+  [Command] ReplaceAll
+
+
+[Name] Text [All]	Converteer datum van  dd-mm-jjjj  naar  jj-mm-dd
+  [Find](\d{1,2})\.  *(\d{1,2})\. *(\d{2,2})(\d{2,2})
+  [Replace]\4-\2-\1
+  [Parameters]   MsgOff  Regular  
+  [Command] ReplaceAll
+
+
+[Name] Text [All]	Schrijf alle hyperlinks weg naar een nieuw bestand
+  [Find][:::HyperLinkURL::]
+  [Replace]Link \i, op pagina \I: \D\C{Voorbeeld}\h&\h{\u}\C (URL: \C{Voorbeeld}\u\C)\C{Voorbeeld}\p\h\R
+  [Parameters]   MsgOff  Regular  
+  [Command] ReplaceAll
+
+
+[Name] Text [All]	Schrijf alle notities weg naar een nieuw bestand
+  [Find][::Note::]
+  [Replace]Note &\i, on pagina \I,  Inhoud:\D\C{Voorbeeld}\C\n\o\p\p\R
+  [Parameters]   MsgOff  Regular  
+  [Command] ReplaceAll
+
+[Name] Text [All]    Schrijf alle afbeeldingen weg naar een nieuw bestand
+  [Find][::Picture::]
+  [Replace]Picture \i, op pagina \I, Naam van afbeelding: \C\O\C{Voorbeeld}&\p\p\C\R
+  [Parameters]   MsgOff  Regular  
+  [Command] ReplaceAll
+
+[Name] Text [All]    Schrijf alle tabellen weg naar een nieuw bestand
+  [Find][::TextTable::]
+  [Replace]Table \i, op pagina \I, Naam van de tabel: \C\O\C{Example}\p&\p\p\C\R
+  [Parameters]   MsgOff  Regular  
+  [Command] ReplaceAll
+
+[Name] Text [All]    Schrijf alle tekstframes weg naar een nieuw bestand
+  [Find][::TextFrame::]
+  [Replace]Frame \i, op pagina \I, Naam van tekstframe: \C\O\C{Voorbeeld}\p&\p\p\C\R
+  [Parameters]   MsgOff  Regular  
+  [Command] ReplaceAll
+
+
+
+
+[End]  
+  

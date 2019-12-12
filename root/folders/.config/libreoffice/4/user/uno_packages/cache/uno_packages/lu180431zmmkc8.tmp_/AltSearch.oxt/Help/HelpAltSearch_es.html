@@ -1,0 +1,1129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1250">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
+	<META NAME="CREATED" CONTENT="20070419;21585700">
+	<META NAME="CHANGED" CONTENT="20090508;11195800">
+	<META NAME="Info 1" CONTENT="">
+	<META NAME="Info 2" CONTENT="">
+	<META NAME="Info 3" CONTENT="">
+	<META NAME="Info 4" CONTENT="">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin-left: 2.2cm; margin-right: 2.2cm }
+		H1 { margin-top: 0cm; margin-bottom: 0.3cm; color: #800000; text-align: center }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt; font-style: normal }
+		P { margin-bottom: 0.2cm; line-height: 100% }
+		P.western { font-family: "Arial", sans-serif; font-size: 11pt }
+		H6 { margin-top: 0cm; margin-bottom: 0.2cm; color: #2300dc; text-align: left; page-break-before: auto; page-break-after: auto }
+		H6.western { font-family: "Arial", sans-serif; font-size: 12pt; font-style: italic }
+		H6.cjk { font-family: "HG Mincho Light J"; font-size: 10pt }
+		H6.ctl { font-family: "Arial Unicode MS"; font-size: 10pt }
+		TT { color: #00ae00; background: transparent }
+		TT.western { font-size: 11pt; font-weight: bold }
+		DFN { color: #800000 }
+		DFN.western { font-family: "Arial", sans-serif; font-weight: bold }
+		VAR { background: #cccccc; text-decoration: underline }
+		VAR.western { font-size: 10pt; font-style: normal }
+		SAMP.western { font-size: 10pt; font-style: normal; font-weight: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="cs-CZ" BGCOLOR="#fffacd" DIR="LTR">
+<H1 LANG="es-ES" CLASS="western"><IMG SRC="img/altsearchz_26.png" NAME="graphics2" ALIGN=RIGHT WIDTH=49 HEIGHT=48 BORDER=0>Macro
+AltSerach</H1>
+<P LANG="es-ES" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm; font-weight: normal">
+<FONT FACE="Arial, sans-serif">(Diálogo buscar y reemplazar
+alternativo para Writer)</FONT></P>
+<P LANG="es-ES" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm; font-weight: normal">
+<FONT FACE="Arial, sans-serif">versión 1.1</FONT></P>
+<P CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" ALIGN=CENTER><SPAN LANG="es-ES">| <A HREF="#ofrece">Qué
+ofrece esta extensión</A> | <A HREF="#buscar">Buscar</A> | <A HREF="#reemplazar">Reemplazar
+</A>| <A HREF="#lotes">Modo por lotes</A> | <A HREF="#limitaciones">Limitaciones</A>
+| <A HREF="#historial">Historial de cambios</A> | </SPAN>
+</P>
+<P CLASS="western" ALIGN=CENTER><BR><BR>
+</P>
+<P CLASS="western"><SPAN LANG="es-ES"><B>Autor:</B></SPAN> <SPAN LANG="es-ES"><A HREF="http://www.volny.cz/macrojtb/">Tomas
+Bilek &ndash; &copy; 2007-2008</A><BR></SPAN><SPAN LANG="es-ES"><B>Licencia:</B></SPAN>
+<SPAN LANG="es-ES">LGPL, ver
+<A HREF="http://www.volny.cz/macrojtb/0gnu-lgpl_en.html">http://www.volny.cz/macrojtb/0gnu-lgpl_en.html</A></SPAN></P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 1cm; background: transparent">
+<FONT SIZE=3><B>Esta macro se distribuye con la esperanza de que sea
+útil, pero SIN NINGUNA GARANTIA.</B></FONT></P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 1cm; background: transparent">
+Nota del traductor: Esta traducción se ofrece sin ninguna garantía,
+úsela bajo su propio riesgo. En caso de duda consulte la ayuda
+original en la p<FONT FACE="Arial, sans-serif"><SPAN STYLE="font-weight: normal">á</SPAN></FONT>gina
+del autor.</P>
+<P CLASS="western" STYLE="margin-left: 1cm; background: transparent"><BR><BR>
+</P>
+<H6 LANG="es-ES" CLASS="western"><A NAME="ofrece"></A>Qué ofrece esta
+extensión en comparación con el diálogo estándar de OOo:</H6>
+<UL>
+	<LI><P LANG="es-ES" CLASS="western">La posibilidad de seleccionar
+	rápidamente expresiones regulares y ampliadas preestablecidas</P>
+	<LI><P CLASS="western"><SPAN LANG="es-ES">Cuenta ocurrencias con el
+	botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[ Contar ]</SPAN></VAR></P>
+	<LI><P LANG="es-ES" CLASS="western">El texto buscado o reemplazado
+	puede contener uno o más párrafos</P>
+	<LI><P LANG="es-ES" CLASS="western">La posibilidad de representar el
+	carácter de búsqueda o reemplazo en formato hexadecimal o decimal</P>
+	<LI><P LANG="es-ES" CLASS="western">Búsqueda de saltos de página y
+	columna manuales y su configuración o desactivación</P>
+	<LI><P LANG="es-ES" CLASS="western">Búsqueda de bloques de párrafos
+	delimitados por dos marcas de texto</P>
+	<LI><P LANG="es-ES" CLASS="western">La posibilidad de ampliar o
+	reducir la selección del texto encontrado en un número previsto de
+	caracteres</P>
+	<LI><P LANG="es-ES" CLASS="western">Búsqueda y reemplazo múltiple de
+	un paso</P>
+</UL>
+<UL>
+	<LI><P LANG="es-ES" CLASS="western">Búsqueda de: Notas, Campos de
+	texto, Referencias cruzadas y Marcas de referencia por su contenido,
+	nombre de marca y su inserción</P>
+	<LI><P LANG="es-ES" CLASS="western">Búsqueda de objetos como Tablas,
+	Imágenes y Nombres de marco por su nombre; es posible sustituirlos
+	por cualquier texto, contenido de texto, nombre de objeto, contenido
+	del portapapeles</P>
+	<LI><P LANG="es-ES" CLASS="western">Búsqueda e inserción de Nota al
+	pie y Nota final (sólo desde la versión OOo 2.3). Es posible
+	seleccionar de una vez textos de todas las notas al pie o notas
+	finales y asignarlas cualquier estilo</P>
+</UL>
+<UL>
+	<LI><P LANG="es-ES" CLASS="western">La posibilidad de búsqueda de
+	formato similar o del mismo formato de texto, en función de la
+	posición del cursor.</P>
+	<LI><P LANG="es-ES" CLASS="western">Manejo de subexpresiones dentro
+	de paréntesis () como una referencia \# en el texto reemplazado</P>
+	<LI><P LANG="es-ES" CLASS="western">La posibilidad de cambiar en el
+	texto buscado o reemplazado: estilo de párrafo, estilo de carácter,
+	estilo de lista y URL de Hiperenlace y establecer propiedades de
+	texto</P>
+	<LI><P LANG="es-ES" CLASS="western">La posibilidad de insertar al
+	reemplazar: contenido del portapapeles, insertar contador de
+	reemplazo y número de página 
+	</P>
+	<LI><P LANG="es-ES" CLASS="western">La posibilidad de redirigir el
+	resultado de expresión de reemplazo a otro archivo de texto</P>
+	<LI><P LANG="es-ES" CLASS="western">Modo por lotes: Guardar y cargar
+	parámetros de búsqueda y reemplazo; se pueden guardar varias
+	búsquedas y reemplazos en una única secuencia para poder ejecutar
+	ese bloque después rápidamente.</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P LANG="es-ES" CLASS="western">Consejo para atajos de teclado para
+uso más frecuente:</P>
+<P LANG="es-ES" CLASS="western">1. Abrir diálogo <B>Herramientas -
+Personalizar - Teclado</B> 
+</P>
+<P LANG="es-ES" CLASS="western">2. En el campo <B>Área</B> abrir
+consecutivamente <B>Macros de OOo - User - AltSearch - AltSearch</B></P>
+<P LANG="es-ES" CLASS="western">3. En el campo <B>Función</B>
+seleccionar y asignar con el botón <B>Modificar</B>:<BR>_AltSearch y
+asigna enlace directo Ctrl+H (abrir diálogo Buscar);<BR>_FindNext y
+asigna enlace Ctrl+G (encontrar siguiente ocurrencia hacia delante,
+sin el diálogo abierto);<BR>_FindBack y asigna enlace directo
+Ctrl+Mayúsculas+G (encontrar siguiente ocurrencia hacia atrás, sin el
+diálogo abierto);</P>
+<P CLASS="western"><BR><BR>
+</P>
+<H6 LANG="es-ES" CLASS="western"><IMG SRC="img/altsearch_main_es.png" NAME="obrázky1" ALIGN=RIGHT HSPACE=6 WIDTH=419 HEIGHT=286 BORDER=0>Menú
+de lista desplegable (sobre campo de entrada para establecer
+expresiones de búsqueda y de reemplazo)</H6>
+<P LANG="es-ES" CLASS="western">contiene expresiones usadas
+frecuentemente o expresiones regulares complicadas o parámetros que
+se suministran. Tras elegir la entrada los parámetros
+correspondientes se pasan al campo de entrada (o a ambos campos).
+Éstos pueden ser insertados de varios modos: al principio, al final,
+en la posición del cursor o al texto original que se reemplaza
+completamente. Al mismo tiempo se activa la opción &quot;expresiones
+regulares&ldquo;.</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 LANG="es-ES" CLASS="western"><A NAME="buscar"></A>Buscar:</H6>
+<P LANG="es-ES" CLASS="western">Lista desplegable N<B>ormal</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><SPAN LANG="es-ES">contiene
+algunas expresiones regulares útiles. Su descripción está disponible
+en la ayuda de OOo bajo el título <A HREF="vnd.sun.star.help://sbasic/text%2Fshared%2F01%2F02100001.xhp?Language=es&amp;System=UNIX">Lista
+de Expresiones Regulares</A>. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><A NAME="limitacion"></A><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">La sintaxis usada en expresiones regulares no es
+totalmente compatible con la de OOo original. Los problemas se dan
+especialmente con búsquedas, cuando se usan comodines </SPAN><TT CLASS="western"><SPAN LANG="es-ES">*
++ ? {n,n}</SPAN></TT> <SPAN LANG="es-ES">cerca de una subexpresión
+anterior encerrada entre paréntesis (). <BR>P.e . </SPAN><TT CLASS="western"><SPAN LANG="es-ES">(Mi)?ster</SPAN></TT>
+<SPAN LANG="es-ES">no se encontrará (sin embargo, cuando se usa </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Contar ]</SPAN></VAR> <SPAN LANG="es-ES">devolverá la cuenta correcta
+- esta función sólo está usando el modo compatible). Además, si se
+buscan subexpresiones del tipo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">(.*)algo</SPAN></TT>
+<SPAN LANG="es-ES">o </SPAN><TT CLASS="western"><SPAN LANG="es-ES">(.+)algo</SPAN></TT>
+<SPAN LANG="es-ES">entonces se encuentra la ocurrencia más corta que
+cumpla la condición, contrariamente a OOo estándar, que encontrará la
+ocurrencia más larga que la cumpla. Si es necesario conservar la
+compatibilidad, se puede delimitar completamente la expresión de
+búsqueda con un par de paréntesis extra: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">((Mi)?ster)</SPAN></TT><SPAN LANG="es-ES">.
+Con ello se perderá, por supuesto, la oportunidad de citar la
+subexpresión en la expresión de reemplazo como la referencia, </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\#</SPAN></TT>
+<SPAN LANG="es-ES">donde # es el número de referencia (max. 9) de la
+subexpresión. También es imposible usar al mismo tiempo referencia a
+la subexpresión (entre paréntesis </SPAN><TT CLASS="western"><SPAN LANG="es-ES">()</SPAN></TT><SPAN LANG="es-ES">)
+en la expresión de búsqueda y en la de reemplazo. Ver también
+<A HREF="#subexpresiones">subexpresiones</A>.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm">Otros
+parámetros, comodines especiales:</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\l</SPAN></TT>
+<SPAN LANG="es-ES">- representa cualquier carácter alfabético; es lo
+mismo que </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[:alpha:]{1,1}</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\d
+</SPAN></TT><SPAN LANG="es-ES">- representa un dígito decimal; es lo
+mismo que </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[0-9]</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\p
+</SPAN></TT><SPAN LANG="es-ES">- representa la marca de terminación
+de párrafo,</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">al
+contrario que OOo estándar $, es capaz de representar también un
+párrafo vacío. Se pueden usar los comodines </SPAN><TT CLASS="western"><SPAN LANG="es-ES">+</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">*</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">{min,max}</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">\p{1,}
+</SPAN></TT><SPAN LANG="es-ES">- buscará el final de párrafo más
+cercano seguido de un bloque ilimitado de párrafos vacíos. Es lo
+mismo que </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\p*</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">\p{2,4}
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">buscará el final de párrafo
+más cercano seguido de al menos uno, máximo tres párrafos vacíos;
+entonces serán en total como mínimo 2 y como máximo 4 párrafos uno
+tras otro.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+Lento al usarse por separado<SPAN LANG="es-ES">. Algunas veces hay
+problemas al buscar en dirección hacia atrás. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\xhhhh
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">permitirá introducir el código
+de carácter con un número hexadecimal (como hhhh)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\#ddddd
+</SPAN></TT><SPAN LANG="es-ES">- permitirá introducir el código de
+carácter con un número decimal (como ddddd)</SPAN></P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 4cm">Si el
+siguiente carácter no es un dígito, no es necesario llenar las 5
+posiciones de ddddd. En otro caso es necesario rellenar con ceros
+desde la izquierda.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\c
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">búsqueda de salto de columna
+manual. </SPAN><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+Lento al usarse por separado<SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\m
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">búsqueda de salto de página
+manual. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">Lento al usarse por separado. Si se usa la
+subexpresión </SPAN><TT CLASS="western"><SPAN LANG="es-ES">()</SPAN></TT><SPAN LANG="es-ES">,
+el parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\m</SPAN></TT>
+<SPAN LANG="es-ES">debe estar al principio de la cadena de búsqueda,
+o no puede estar solo: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\m(...)</SPAN></TT>
+<SPAN LANG="es-ES">pero no </SPAN><TT CLASS="western"><SPAN LANG="es-ES">(...)\m</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\s
+</SPAN></TT><SPAN LANG="es-ES">- representa cualquier espacio:
+espacio, espacio de no separación, tabulador, salto de linea manual.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Es lo
+mismo que </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[
+\xA0\x9\xA]</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\S
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">representa el carácter:
+espacio de no separación (</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\x00A0
+</SPAN></TT><SPAN LANG="es-ES">o</SPAN><TT CLASS="western"> </TT><TT CLASS="western"><SPAN LANG="es-ES">\#160</SPAN></TT><SPAN LANG="es-ES">)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P LANG="es-ES" CLASS="western">Lista desplegable <B>Ampliado</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::BigBlock::]</SPAN></TT>
+<SPAN LANG="es-ES">- busca bloques de párrafos (longitud ilimitada),
+delimitados por algún texto conocido</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">inicio[::BigBlock::]fin</SPAN></TT>
+<SPAN LANG="es-ES">- en primer lugar busca </SPAN><TT CLASS="western"><SPAN LANG="es-ES">inicio</SPAN></TT>
+<SPAN LANG="es-ES">y tras encontrarlo busca </SPAN><TT CLASS="western"><SPAN LANG="es-ES">fin</SPAN></TT><SPAN LANG="es-ES">.
+Si encuentra ambos, se marca el bloque completo.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">En la
+cadena de reemplazo se pueden usar los parámetros </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\b</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">&amp;</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\e</SPAN></TT> <SPAN LANG="es-ES">para
+insertar el contenido de </SPAN><TT CLASS="western"><SPAN LANG="es-ES">inicio</SPAN></TT><SPAN LANG="es-ES">,</SPAN><TT CLASS="western">
+</TT><TT CLASS="western"><SPAN LANG="es-ES">bloque de párrafos
+encontrado</SPAN></TT><SPAN LANG="es-ES">, </SPAN><TT CLASS="western"><SPAN LANG="es-ES">fin</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">Es imposible usar el signo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">||</SPAN></TT>
+<SPAN LANG="es-ES">para búsquedas y reemplazos múltiples, ver más
+abajo.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Grow
+n1,n2::]</SPAN></TT> <SPAN LANG="es-ES">- el bloque de texto
+encontrado será expandido n1 caracteres a la izquierda y n2
+caracteres a la derecha</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Grow
+-1,-1::]texto</SPAN></TT> &ndash; <SPAN LANG="es-ES">si la palabra
+existe en el texto se encontrará </SPAN><TT CLASS="western"><SPAN LANG="es-ES">texto</SPAN></TT><SPAN LANG="es-ES">,
+pero sólo se marcará </SPAN><TT CLASS="western"><SPAN LANG="es-ES">ext</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<TT CLASS="western"><SPAN LANG="es-ES">[::Grow...</SPAN></TT> <SPAN LANG="es-ES">es
+necesario usarla siempre al principio de la cadena de búsqueda y tras
+ella la expresión de búsqueda. Si los desplazamientos establecidos
+producen números negativos, puede ocurrir (dependiendo del tama&ntilde;o
+y de contenido de la expresión de búsqueda) que en la siguiente
+búsqueda se encuentre cíclicamente en el mismo lugar.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">texto1||texto2||texto3||&hellip;</SPAN></TT>
+<SPAN LANG="es-ES">- búsqueda y reemplazo múltiple en un paso</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Esta
+opción a&ntilde;adirá al final de las expresiones de búsqueda y de
+reemplazo el signo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">||</SPAN></TT><SPAN LANG="es-ES">,
+que delimita la búsqueda y el reemplazo parcial.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Buscar:
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">texto1||texto2||texto3</SPAN></TT>
+<SPAN LANG="es-ES"><BR>Reemplazar con: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">cambio1||cambio2||cambio3</SPAN></TT>
+<SPAN LANG="es-ES"><BR>Al efectuar la búsqueda </SPAN><TT CLASS="western"><SPAN LANG="es-ES">texto1</SPAN></TT>
+<SPAN LANG="es-ES">será reemplazado por </SPAN><TT CLASS="western"><SPAN LANG="es-ES">cambio1</SPAN></TT><SPAN LANG="es-ES">,
+al continuar buscando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">texto2</SPAN></TT>
+<SPAN LANG="es-ES">será reemplazado con </SPAN><TT CLASS="western"><SPAN LANG="es-ES">cambio2</SPAN></TT>
+<SPAN LANG="es-ES">etc.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">es imposible usar aquí el parámetro
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::BigBlock::]</SPAN></TT><SPAN LANG="es-ES">,
+al igual que es imposible usar <A HREF="#skupiny">subexpresiones.</A></SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><DFN CLASS="western"><SPAN LANG="es-ES">Búsqueda
+de algunos Objetos</SPAN></DFN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Note::]
+</SPAN></TT><SPAN LANG="es-ES">- búsqueda de notas de texto (cuadros
+amarillos) en función de su contenido</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Note::]
+</SPAN></TT><SPAN LANG="es-ES">- buscará cualquier nota de texto</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Note::]poco.
+</SPAN></TT><SPAN LANG="es-ES">- buscará la nota de texto que
+contenga la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">poco.</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">Sólo busca subcadenas en el contenido de notas -
+es imposible usar expresiones regulares completas.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Field::]
+</SPAN></TT><SPAN LANG="es-ES">- busca campos de texto según su
+contenido</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Field::]
+</SPAN></TT><SPAN LANG="es-ES">- buscará cualquier campo de texto
+común</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Field::]oveja
+</SPAN></TT><SPAN LANG="es-ES">buscará un campo de texto que muestre
+en el documento el texto </SPAN><TT CLASS="western"><SPAN LANG="es-ES">oveja</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">Es la misma que para </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Note::]</SPAN></TT><SPAN LANG="es-ES">.
+Ver anteriormente.<BR>Cualquier campo especial (p.e. oculto) no se
+encontrará.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]
+</SPAN></TT><SPAN LANG="es-ES">- busca marcos de texto según su
+nombre</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]
+</SPAN></TT><SPAN LANG="es-ES">- buscará cualquier marco de texto</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]marco1
+</SPAN></TT><SPAN LANG="es-ES">- buscará cualquier marco de texto que
+contenga la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">marco1</SPAN></TT>
+<SPAN LANG="es-ES">en el nombre</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">1. al usar el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Buscar ]</SPAN></VAR><SPAN LANG="es-ES">, encontrará el siguiente
+marco de texto sólo si el marco está seleccionado o el cursor está
+dentro del marco. Si está muy lejos en el texto, siempre se encuentra
+primero el marco de texto del la lista interna de marcos. Actualmente
+no funciona la opción &quot;Sólo selección actual&quot;.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">2. La
+utilidad practica del botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Reemplazar ]</SPAN></VAR> <SPAN LANG="es-ES">está, en consecuencia
+con el punto 1, severamente limitada.</SPAN></P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 4cm">3. Orden de
+las coincidencias de búsqueda (desafortunada y provisionalmente,
+espero) orden de inserción de los marcos de texto en el documento y
+<B>no</B> orden desde el principio del documento hasta el final, en
+función de las páginas.</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 4cm">4. Búsqueda
+sólo de subcadenas en el nombre del marco - es imposible usar
+expresiones regulares (normales) completas.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">El uso
+de </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[ Buscar todosl ]</SPAN></VAR>
+<SPAN LANG="es-ES">y </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Reemplazar todos ]</SPAN></VAR> <SPAN LANG="es-ES">podría ser
+completamente funcional, inclusive la opción &quot;Solo selección
+actual&quot;. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Picture::]
+</SPAN></TT><SPAN LANG="es-ES">- búsqueda de imágenes según su nombre</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Picture::]</SPAN></TT>
+<SPAN LANG="es-ES">- buscará cualquier imagen</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Picture::]obra1
+</SPAN></TT><SPAN LANG="es-ES">- buscará cualquier imagen que
+contenga la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">obra1</SPAN></TT>
+<SPAN LANG="es-ES">en su nombre</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">Es la misma que para </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]</SPAN></TT><SPAN LANG="es-ES">.
+Ver anteriormente.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::TextTable::]
+</SPAN></TT><SPAN LANG="es-ES">- búsqueda de tablas según su nombre</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::TextTable::]</SPAN></TT>
+<SPAN LANG="es-ES">- buscará cualquier tabla</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::TextTable::]tabla1
+</SPAN></TT><SPAN LANG="es-ES">- buscará cualquier tabla que contenga
+la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">tabla1</SPAN></TT>
+<SPAN LANG="es-ES">en su nombre</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">Es la misma que para </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]</SPAN></TT><SPAN LANG="es-ES">.
+Ver anteriormente.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::]
+</SPAN></TT><SPAN LANG="es-ES">- búsqueda de notas al pie (NP)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::]
+</SPAN></TT><SPAN LANG="es-ES">buscará el ancla de cualquier NP</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::]5
+</SPAN></TT><SPAN LANG="es-ES">buscará el ancla de cualquier NP cuyo
+ancla contenga la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">5</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::]\\texto</SPAN></TT>
+<SPAN LANG="es-ES">buscará el ancla de cualquier NP cuyo texto
+contenga la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">texto</SPAN></TT><SPAN LANG="es-ES">.
+Si se usa el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Buscar todos ]</SPAN></VAR><SPAN LANG="es-ES">, se seleccionará el
+texto de todas las NP que contengan la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">text</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::]\\</SPAN></TT>
+<SPAN LANG="es-ES">con el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Buscar todos ]</SPAN></VAR> <SPAN LANG="es-ES">se seleccionará el
+texto de todas las NP (práctico para asignación múltiple de estilo de
+párrafo a todas las NP)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">Funciona bien a partir de la versión 2.3 de OOo </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Endnote::]
+</SPAN></TT><SPAN LANG="es-ES">- búsqueda de notas finales</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">El uso
+de parámetros y limitaciones son las mismas que para </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::]</SPAN></TT><SPAN LANG="es-ES">.
+Ver anteriormente. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::ReferenceMark::]
+</SPAN></TT><SPAN LANG="es-ES">- búsqueda de marcador de destino de
+referencias cruzadas</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::ReferenceMark::]</SPAN></TT>
+<SPAN LANG="es-ES">buscará cualquier texto establecido como marcador
+de referencia</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::ReferenceMark::]texto</SPAN></TT>
+<SPAN LANG="es-ES">buscará texto establecido como marcador de
+referencia, que contiene la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">texto</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::ReferenceMark::]\\referencia1</SPAN></TT>
+<SPAN LANG="es-ES">buscará texto establecido como marcador de
+referencia, cuyo nombre contiene la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">referencia1</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::ReferenceMark::]\\\\</SPAN></TT>
+<SPAN LANG="es-ES">buscará texto establecido como marcador de
+referencia, cuyo texto está vacío</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Reference::]
+</SPAN></TT><SPAN LANG="es-ES">- búsqueda de campo de texto
+(referencia cruzada) que hace referencia al marcador</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Reference::]
+</SPAN></TT><SPAN LANG="es-ES">buscará todos los campos de texto de
+tipo referencias cruzadas</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Reference::]sobre</SPAN></TT>
+<SPAN LANG="es-ES">buscará referencia cruzada que contenga la
+subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">sobre</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Reference::]\\referencia1</SPAN></TT>
+<SPAN LANG="es-ES">buscará la referencia cruzada cuyo nombre contenga
+la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">referencia1</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Reference::]\\\\</SPAN></TT>
+<SPAN LANG="es-ES">buscará la referencia cruzada, cuyo texto esté
+vació</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si se
+elige </SPAN><TT CLASS="western"><SPAN LANG="es-ES">Referencia
+cruzada </SPAN></TT><SPAN LANG="es-ES">de la lista desplegable
+</SPAN><SPAN LANG="es-ES"><B>Ampliado</B></SPAN> <SPAN LANG="es-ES">al
+tiempo que el cursor está en cualquier texto que sea una marca de
+referencia, entonces automáticamente se insertará en el recuadro
+</SPAN><SPAN LANG="es-ES"><B>Buscar </B></SPAN><SPAN LANG="es-ES">el
+nombre (de referencia) previamente introducido, y se podrá buscar
+inmediatamente.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P LANG="es-ES" CLASS="western">Lista desplegable <B>Propiedades</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">activa
+la búsqueda en función de propiedades (atributos), eventualmente
+también de sus valores. <BR>El valor introducido debe comenzar por la
+cadena </SPAN></SPAN></SPAN><TT CLASS="western"><SPAN LANG="es-ES">[:::</SPAN></TT><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">,
+seguida de </SPAN></SPAN></SPAN><TT CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">nombre</SPAN></SPAN></TT>
+<SPAN LANG="es-ES">de la propiedad (más nombres separados usando el
+signo </SPAN><TT CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">|</SPAN></SPAN></TT>
+<SPAN LANG="es-ES"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">)
+y la cadena final </SPAN></SPAN></SPAN><TT CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">::]</SPAN></SPAN></TT><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">.
+Tras ella puede seguir la especificación del texto buscado. Si debe
+buscarse un valor concreto de propiedades, se usará la construcción
+</SPAN></SPAN></SPAN><TT CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">nombre=valor</SPAN></SPAN></TT>
+<SPAN LANG="es-ES"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">.
+</SPAN></SPAN></SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL::]
+</SPAN></TT><SPAN LANG="es-ES">- busca dentro del texto aquella parte
+con el atributo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">HyperLinkURL</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL::]
+</SPAN></TT><SPAN LANG="es-ES">- encontrará todos los hiperenlaces</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL::]enlace
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">encontrará la parte del
+hiperenlace que contenga el texto </SPAN><TT CLASS="western"><SPAN LANG="es-ES">enlace</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL=file:///c:/archivo.odt::]
+</SPAN></TT><SPAN LANG="es-ES">- encontrará el hiperenlace cuya URL
+contenga la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">file:///c:/archivo.odt</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL=file:///c:/archivo.odt::]enlace
+</SPAN></TT><SPAN LANG="es-ES">encontrará la parte del hiperenlace en
+cuya URL se encuentre la subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">file:///c:/archivo.odt</SPAN></TT>
+<SPAN LANG="es-ES">y que contenga el texto </SPAN><TT CLASS="western"><SPAN LANG="es-ES">enlace</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><SPAN LANG="es-ES">La
+lista de los atributos de texto disponibles con sus valores actuales
+(de acuerdo a la selección actual) se puede cargar usando el botón
+</SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Escoger
+propiedad&nbsp;]</SPAN></VAR> <SPAN LANG="es-ES">y se mostrará al
+lado en una lista desplegable. En su mayoría se puede encontrar su
+descripción resumida <A HREF="http://api.openoffice.org/docs/common/ref/com/sun/star/style/module-ix.html">aquí</A>.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">Formato
+de carácter similar </SPAN></TT><SPAN LANG="es-ES">- esta función
+carga cualquier atributo de carácter cambiado a mano (en función de
+la selección actual) para buscar lugares formateados de modo
+parecido. Si p.e. el cursor está en lugar cuyo nombre de fuente se ha
+cambiado a mano, se buscarán todos los lugares con el mismo nombre de
+fuente </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[:::CharFontName::]</SPAN></TT>
+<SPAN LANG="es-ES">cambiados a mano. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">Mismo
+formato de carácter </SPAN></TT><SPAN LANG="es-ES">- esta función
+carga cualquier atributo de carácter cambiado a mano (según la
+selección actual) para buscar lugares formateados del mismo modo. Si
+p.e. el cursor está en un lugar cuyo nombre de fuente se ha cambiado
+a mano, se buscarán todos lugares con nombre de fuente cambiado a
+mano y con el </SPAN><SPAN LANG="es-ES"><B>mismo</B></SPAN> <SPAN LANG="es-ES">nombre
+de fuente </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[:::CharFontName=Arial::]</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">No están soportadas todas las propiedades de
+carácter y de párrafo que soporta el motor de búsqueda de OOo. No
+todas sus combinaciones funcionan de acuerdo a lo esperado y bien.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<H6 LANG="es-ES" CLASS="western"><A NAME="reemplazar"></A>Reemplazar:</H6>
+<P LANG="es-ES" CLASS="western">Lista desplegable <B>Reemplazar</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">&amp;
+\0 &ndash;</SPAN></TT> <SPAN LANG="es-ES">ambos parámetros significan
+lo mismo &ndash; en el reemplazo representan el texto completo
+encontrado</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si la
+expresión se buscó usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::BigBlock::]</SPAN></TT>
+<SPAN LANG="es-ES">entonces estos parámetros representan sólo el
+bloque de párrafos entre las marcas inicial y final.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si el
+objeto se buscó usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Note::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Field::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Picture::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::TextTable::]
+</SPAN></TT><SPAN LANG="es-ES">entonces estos parámetros representan
+directamente estos objetos (introducir mediante el portapapeles).</SPAN></P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\b
+\e &ndash;</SPAN></TT> <SPAN LANG="es-ES">Si la expresión se buscó
+usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::BigBlock::]</SPAN></TT>
+<SPAN LANG="es-ES">entonces estos parámetros representan el contenido
+de las marcas inicial y final. </SPAN><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">es imposible usando <A HREF="#subexpresiones">subexpresiones
+().</A></SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><A NAME="subexpresiones"></A>
+<TT CLASS="western"><SPAN LANG="es-ES">\1 \2 \3 \4 \5 \6 \7 \8 \9 &ndash;</SPAN></TT>
+<SPAN LANG="es-ES">contenido de subexpresiones</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si la
+expresión de búsqueda se buscó usando paréntesis (), entonces</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\1</SPAN></TT>
+<SPAN LANG="es-ES">representa el contenido correspondiente a el
+primer par de paréntesis, de modo similar </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\2</SPAN></TT>
+<SPAN LANG="es-ES">corresponde a el segundo par () etc., máximo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\9</SPAN></TT>
+<SPAN LANG="es-ES">corresponde a el 9&ordm; par. Sólo es valido el
+1er nivel de paréntesis, los siguientes niveles anidados se
+ignorarán.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Ejemplo:<BR>Mediante
+de la expresión </SPAN><TT CLASS="western"><SPAN LANG="es-ES">(\d{1,2})\.
+*(\d{1,2})\. *\d{2,2}(\d{2,2})</SPAN></TT> <SPAN LANG="es-ES">se
+puede encontrar fecha en formato </SPAN><SPAN LANG="es-ES"><I>01. 12.
+2007 y reemplazar con</I></SPAN> <SPAN LANG="es-ES">07-12-01 mediante
+la expresión de reemplazo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\3-\2-\1</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 4cm">Si se tiene
+que desactivar el procesado de subexpresiones (p.e. para
+compatibilidad de base con expresiones regulares en OOo estándar) es
+necesario insertar la expresión completa de búsqueda en un par de
+paréntesis adicionales (). Todos los demás niveles de paréntesis
+anidados se ignorarán.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">El uso de subexpresiones es relativamente lento y
+no es completamente compatible con la búsqueda original de OOo.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">La
+incompatibilidad al buscar con comodines inmediatamente detrás de una
+subexpresión </SPAN><TT CLASS="western"><SPAN LANG="es-ES">(sal)*</SPAN></TT>
+<SPAN LANG="es-ES">está causada por el principio búsqueda secuencial
+consiguientes bloques de textos, ver <A HREF="#limitacion">esto</A>.
+En estos casos las funciones </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Contar ]</SPAN></VAR> <SPAN LANG="es-ES">y </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[
+Buscar todos ]</SPAN></VAR> <SPAN LANG="es-ES">devuelven la cuenta
+real correcta mientras otro sin cambiar a modo de compatibilidad no
+encontrará nada. En casos más complicados es necesario examinar el
+comportamiento, y verificarlo experimentalmente. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\p
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta un párrafo vació</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\t
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta un tabulador (</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\x0009
+\#9</SPAN></TT><SPAN LANG="es-ES">)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\s
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta un espacio de no
+separación (</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\x00A0
+\#160</SPAN></TT><SPAN LANG="es-ES">)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\n
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta un salto de linea
+manual (</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\x000A \#10</SPAN></TT><SPAN LANG="es-ES">)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\c
+</SPAN></TT><SPAN LANG="es-ES">- activa salto de columna manual
+&quot;anterior&quot; en los párrafo(s) encontrado(s)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\m
+</SPAN></TT><SPAN LANG="es-ES">- activa salto de página manual
+&quot;anterior&quot; en los párrafo(s) encontrado(s)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\M
+</SPAN></TT><SPAN LANG="es-ES">- activa salto de columna manual
+&quot;posterior&quot; en los párrafo(s) encontrado(s)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\r
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">desactiva salto manual de
+columna o página en los párrafo(s) encontrado(s)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\xhhhh
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta con código hexadecimal
+de número (como hhhh)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\#ddddd
+</SPAN></TT><SPAN LANG="es-ES">- inserta con código decimal de número
+(como ddddd).</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\h{direcciónURL}
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">establece el texto encontrado
+como hiperenlace el cual apunta a la URL </SPAN><TT CLASS="western"><SPAN LANG="es-ES">direcciónURL</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">\h{}</SPAN></TT><SPAN LANG="es-ES">,</SPAN><TT CLASS="western">
+</TT><TT CLASS="western"><SPAN LANG="es-ES">\h </SPAN></TT><SPAN LANG="es-ES">establece
+el texto encontrado como hiperenlace el cual ahora apunta a la URL
+cadena vacía - borra la URL de hiperenlace (por supuesto el texto del
+hiperenlace permanece sin cambios). </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\H{subcadena}
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">reemplaza la subcadena en la
+URL del hiperenlace</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Es
+necesario usarlo junto con la búsqueda por </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL=::]</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si la
+expresión se buscó p.e. usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL=subcadena::]</SPAN></TT><SPAN LANG="es-ES">,
+entonces se encontrarán sólo hiperenlaces cuya URL incluya la
+subcadena </SPAN><TT CLASS="western"><SPAN LANG="es-ES">subcadena</SPAN></TT>
+<SPAN LANG="es-ES">. Usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\H{cambiada}</SPAN></TT>
+<SPAN LANG="es-ES">en la expresión de reemplazo buscará en la URL el
+texto </SPAN><TT CLASS="western"><SPAN LANG="es-ES">subcadena</SPAN></TT>
+<SPAN LANG="es-ES">y lo reemplazará con </SPAN><TT CLASS="western"><SPAN LANG="es-ES">cambiada</SPAN></TT><SPAN LANG="es-ES">.
+</SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\u
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta en la expresión de
+reemplazo la dirección URL del texto encontrado (si se encuentra el
+hiperenlace)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\P{Texto}
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">establece el estilo de Párrafo
+(</SPAN><TT CLASS="western"><SPAN LANG="es-ES">Texto</SPAN></TT><SPAN LANG="es-ES">)
+en el/los párrafo(s) encontrado(s)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 3.75cm"><SPAN LANG="es-ES">El
+estilo se aplica en el párrafo en el cual está el texto de la
+expresión de reemplazo. Se puede usar </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\P</SPAN></TT>
+<SPAN LANG="es-ES">o </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\P{}</SPAN></TT>
+<SPAN LANG="es-ES">para establecer el estilo &quot;Predeterminado&quot;.
+Si se usa este parámetro un número de veces con párrafo(s)
+insertado(s), entonces se cambia el estilo con cada nuevo parámetro,
+que es válido hasta el final del párrafo. Ejemplo: Si la expresión se
+reemplazó usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">bloque1\P{Subtitulo}\p
+bloque2\P{Encabezado 1}</SPAN></TT> <SPAN LANG="es-ES">entonces en el
+documento se insertará </SPAN><TT CLASS="western"><SPAN LANG="es-ES">bloque1</SPAN></TT>
+<SPAN LANG="es-ES">asignándole el estilo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">Subtitulo</SPAN></TT>
+<SPAN LANG="es-ES">y tras ello se insertará un nuevo párrafo con el
+texto </SPAN><TT CLASS="western"><SPAN LANG="es-ES">bloque2</SPAN></TT>
+<SPAN LANG="es-ES">y el estilo asignado </SPAN><TT CLASS="western"><SPAN LANG="es-ES">Encabezado
+1</SPAN></TT><SPAN LANG="es-ES">. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\C{Destacado}
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">establece el estilo de
+Carácter (</SPAN><TT CLASS="western"><SPAN LANG="es-ES">Destacado</SPAN></TT><SPAN LANG="es-ES">)
+en el texto encontrado</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">El
+estilo se aplica al texto completo de la expresión de reemplazo. Para
+establecer el estilo &quot;predeterminado&quot; se puede usar </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\C</SPAN></TT>
+<SPAN LANG="es-ES">o </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\C{}</SPAN></TT><SPAN LANG="es-ES">.
+Si se usa este parámetro un número de veces, entonces el estilo de se
+cambia con cada nuevo parámetro, y el último es valido hasta el final
+de las expresiones de reemplazo. Ejemplo: Si la expresión se
+reemplazó usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">bloque1\C{Destacado}bloque2\C{Ejemplo}</SPAN></TT>
+<SPAN LANG="es-ES">entonces se insertará en el documento </SPAN><TT CLASS="western"><SPAN LANG="es-ES">bloque1</SPAN></TT>
+<SPAN LANG="es-ES">con el estilo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">Destacado</SPAN></TT><SPAN LANG="es-ES">,
+tras ello se insertará el texto </SPAN><TT CLASS="western"><SPAN LANG="es-ES">bloque2</SPAN></TT>
+<SPAN LANG="es-ES">con el estilo asignado </SPAN><TT CLASS="western"><SPAN LANG="es-ES">Ejemplo</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\N{Enumeración
+3} &ndash;</SPAN></TT> <SPAN LANG="es-ES">establece el estilo de
+Lista (</SPAN><TT CLASS="western"><SPAN LANG="es-ES">Enumeración 3</SPAN></TT><SPAN LANG="es-ES">)
+en el/los párrafo(s) encontrado(s)</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Se
+aplican reglas de uso análogas a las del parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\P{}</SPAN></TT><SPAN LANG="es-ES">.
+El estilo de Lista se puede eliminar usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\N</SPAN></TT>
+<SPAN LANG="es-ES">o </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\N{}</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\D
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">establece el formato
+predeterminado por defecto para el texto buscado, como con
+Ctrl+Mayúsculas+Espacio </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Se
+aplican reglas de uso análogas a las del parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\C{}</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\d
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">restablece atributos de texto
+a los predeterminados sólo en el lugar de uso. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Contrariamente
+a </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\D</SPAN></TT> <SPAN LANG="es-ES">no
+tiene ningún efecto en el texto insertado previamente. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\F{Nueva
+nota al pie} &ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta una nueva
+nota al pie que contiene </SPAN><TT CLASS="western"><SPAN LANG="es-ES">Nueva
+nota al pie</SPAN></TT> <SPAN LANG="es-ES">en el lugar de reemplazo</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">En el
+interior de las llaves se pueden usar parámetros tales como </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\i</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\I</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">&amp;</SPAN></TT><SPAN LANG="es-ES">,
+o </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\1</SPAN></TT></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\E{Nueva
+nota final} </SPAN></TT><SPAN LANG="es-ES">- inserta nueva nota final
+en el lugar de reemplazo, análoga a </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\F
+</SPAN></TT>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\B{referencia1|texto}
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta el texto </SPAN><TT CLASS="western"><SPAN LANG="es-ES">texto</SPAN></TT>
+<SPAN LANG="es-ES">que representa el marcador de nombre </SPAN><TT CLASS="western"><SPAN LANG="es-ES">referencia1</SPAN></TT>
+<SPAN LANG="es-ES">para referencias cruzadas </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">En el
+interior de las llaves se pueden usar parámetros tales como </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\i</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\I</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">&amp;</SPAN></TT><SPAN LANG="es-ES">,
+o </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\1</SPAN></TT> 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\L{0,0,referencia1}
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta (campo de) referencia
+cruzada con los parámetros</SPAN><TT CLASS="western"> </TT><TT CLASS="western"><SPAN LANG="es-ES">0,0
+</SPAN></TT><SPAN LANG="es-ES">y nombre de marcador de referencia
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">referencia1</SPAN></TT></P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 4cm">Significado
+de parámetros numéricos</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 6cm"><I>primer
+número</I> &ndash; tipo de referencia: 0 &ndash; números de página
+arábigos, 1 - número de capítulo, 2 &ndash; el texto de referencia ,
+3 - encima/debajo, 4 &ndash; número de página que usa un tipo de
+numeración definida en estilo de página, 5 &ndash; categoría y número
+de un título, 6 &ndash; el texto de título, 7 &ndash; número de un
+campo de orden (título)</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 6cm"><I>segundo
+número</I> &ndash; tipo de origen de un campo de referencia; el
+origen es: 0 &ndash; una marca de referencia, 1 &ndash; un número de
+campo de orden/secuencia, 2 &ndash; un marcador, 3 &ndash; una nota
+al pie, 4 &ndash; una nota final</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\o
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta el contenido de texto
+de objeto encontrado</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si la
+expresión se buscó usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Note::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Endnote::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Picture::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::TextTable::]
+</SPAN></TT><SPAN LANG="es-ES">entonces se insertará el texto que
+contienen estos objetos. Una tabla se convierte usando tabuladores
+entre columnas y párrafos entre filas.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">El tama&ntilde;o máximo resultante de conversión
+de tablas está limitado a 65 kB en total.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si la
+expresión se buscó usando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Field::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Reference::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::ReferenceMark::]</SPAN></TT>
+<SPAN LANG="es-ES">entonces se insertará el texto mostrado del ancla
+o del campo.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\O
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta el Nombre de objeto
+encontrado</SPAN></P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 4cm">Si la
+expresión se buscó con la ayuda de</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::TextFrame::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Picture::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::TextTable::] </SPAN></TT><SPAN LANG="es-ES">-
+se insertará el nombre de este objeto.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Note::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::Field::] </SPAN></TT><SPAN LANG="es-ES">-
+se insertará la especificación del tipo del campo de texto</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Reference::]</SPAN></TT><SPAN LANG="es-ES">,
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">[::ReferenceMark::] </SPAN></TT><SPAN LANG="es-ES">-
+se insertará el nombre de la marca de referencia</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western"><SPAN LANG="es-ES">[::Footnote::],
+[::Endnote::] </SPAN></TT><SPAN LANG="es-ES">- se insertará el texto
+mostrado del ancla</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\i
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta el contador de
+ocurrencias encontradas &ndash; sólo si se usa </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Reemplazar
+todos&nbsp;]</SPAN></VAR> 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\I
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta en número de página,
+en el que se encuentra la expresión de búsqueda</SPAN></P>
+<P CLASS="western" ALIGN=LEFT STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si
+se usa Redirigir la expresión de reemplazo(</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\R</SPAN></TT><SPAN LANG="es-ES">),
+entonces se insertará el número de página de la posición de inicio
+del texto encontrado. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western"><SPAN LANG="es-ES">Limitación:</SPAN></DFN>
+<SPAN LANG="es-ES">No funciona correctamente en notas al pie,
+encabezamientos y pies de página.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\v
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">inserta el contenido del
+portapapeles</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\V
+</SPAN></TT><SPAN LANG="es-ES">- inserta el contenido del
+portapapeles como texto sin formato</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\f
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">conserva el formato</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Si se
+usa </SPAN><TT CLASS="western"><SPAN LANG="es-ES">&amp;</SPAN></TT> <SPAN LANG="es-ES">o
+</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\0</SPAN></TT> <SPAN LANG="es-ES">en
+la expresión de reemplazo, entonces el reemplazo se realizará sobre
+el portapapeles. Si el texto encontrado contiene campos de texto,
+notas, referencias etc, podrían ser preservados en su estado
+original.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\R
+&ndash;</SPAN></TT> <SPAN LANG="es-ES">Redirige la expresión de
+reemplazo a otro fichero de texto</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Esta
+opción provoca la escritura de la expresión de reemplazo al nuevo
+archivo .ODT en lugar de de reemplazarla en el lugar en que la
+encuentre. El archivo original debería permanecer sin cambios. Se
+puede introducir el nombre del archivo con </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\R{Nombre_de_archivo}</SPAN></TT><SPAN LANG="es-ES">.
+El nombre debe tener el formato preciso de la ventana de OOo
+terminado en &quot; - OpenOffice.org Writer&quot;. Los registros se
+a&ntilde;aden siempre al final del archivo. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Ejemplo:<BR>Si
+la expresión de búsqueda se buscó utilizando </SPAN><TT CLASS="western"><SPAN LANG="es-ES">[:::HyperLinkURL::]
+</SPAN></TT><SPAN LANG="es-ES">y la expresión de reemplazo fue </SPAN><TT CLASS="western"><SPAN LANG="es-ES">Enlace
+\i, página \I: &amp; (URL: \u)\p\R</SPAN></TT><SPAN LANG="es-ES">,
+entonces tras pulsar el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Replace
+all&nbsp;]</SPAN></VAR> <SPAN LANG="es-ES">se escribirá en un nuevo
+archivo todos los hiperenlaces encontrados en el archivo original, en
+el siguiente formato: Enlace </SPAN><SPAN LANG="es-ES"><I>1, página
+1: textoDelHiperenlace (URL: direcciónURL)</I></SPAN> <SPAN LANG="es-ES">en
+párrafos </SPAN><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">separados.</SPAN></SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-bottom: 0cm">Botón y
+Lista desplegable <B>Escoger propiedad</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><SPAN LANG="es-ES"><SPAN STYLE="font-weight: normal">Mediante
+el botón </SPAN></SPAN><VAR CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-weight: normal">[&nbsp;Escoger
+propiedad]</SPAN></SPAN></VAR> <SPAN LANG="es-ES">se puede actualizar
+la lista de (algunas) propiedades y sus valores del objeto recién
+seleccionado. Se puede hojear y elegir desde la lista desplegable
+lateral</SPAN><SPAN LANG="es-ES"><SPAN STYLE="font-weight: normal">. </SPAN></SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western"><SPAN LANG="es-ES">\A{propiedad=valor}</SPAN></TT>
+&ndash; <SPAN LANG="es-ES">establece en la expresión de reemplazo el
+valor de la propiedad especificada.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><SPAN LANG="es-ES">Aplica
+el uso de reglas análogas a las del parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\C{}</SPAN></TT><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western" STYLE="margin-left: 4cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm; margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="lotes"></A><SPAN LANG="es-ES">Uso del
+modo por lotes:</SPAN><SPAN STYLE="background: transparent"> </SPAN><VAR CLASS="western"><FONT COLOR="#000000"><SPAN STYLE="text-decoration: none"><SPAN LANG="es-ES"><SPAN STYLE="font-weight: normal">[
+Lotes &gt;&gt; ]</SPAN></SPAN></SPAN></FONT></VAR></H6>
+<P LANG="es-ES" CLASS="western"><IMG SRC="img/altsearch_script_es.png" NAME="obrázky2" ALIGN=RIGHT HSPACE=6 WIDTH=419 HEIGHT=286 BORDER=0>El
+modo por lotes permite guardar y cargar parámetros preestablecidos de
+búsqueda y reemplazo. Se pueden guardar varias búsquedas y reemplazos
+en orden en una única secuencia y después rápidamente cargarla y
+ejecutarla. 
+</P>
+<P CLASS="western"><SPAN LANG="es-ES">Se pueden guardar los valores
+actuales de todos los parámetros utilizando el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Guardar
+lote&nbsp;]</SPAN></VAR><SPAN LANG="es-ES">. En el diálogo que se
+mostrará, se ofrece renombrar el nombre del último lote usado. Si el
+nombre que se introduce ya existe, se puede elegir, si reescribir el
+antiguo contenido o si conservarlo y a&ntilde;adir el nuevo contenido
+al final. Se guarda el lote de modo que cuando se vuelva a ejecutar
+se usa la función (botón) por defecto &quot;Reemplazar todo&quot;.
+Este comando puede cambiarse más adelante editando el fichero de
+reglas del lote.</SPAN></P>
+<P CLASS="western"><SPAN LANG="es-ES">El botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Lotes&nbsp;&gt;&gt;&nbsp;]</SPAN></VAR>
+<SPAN LANG="es-ES">cambiará al diálogo </SPAN><SPAN LANG="es-ES"><B>Gestor
+de lotes</B></SPAN> <SPAN LANG="es-ES">donde se pueden ejecutar y
+editar lotes. Se puede volver al diálogo de búsqueda usando el botón
+</SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;&lt;&lt;&nbsp;Búsqueda&nbsp;]</SPAN></VAR><SPAN LANG="es-ES">.</SPAN></P>
+<P CLASS="western"><SPAN LANG="es-ES">Todos los parámetros del lote
+se guardan en el fichero de texto </SPAN><SAMP CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">AltSearchScript.txt</SPAN></SPAN></SAMP>
+<SPAN LANG="es-ES">dentro del directorio de usuario
+</SPAN><SAMP CLASS="western">&hellip;</SAMP><SAMP CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">/OpenOffice.org2/user/config/</SPAN></SPAN></SAMP><SPAN LANG="es-ES">,
+el cual puede ser abierto y editado desde el diálogo </SPAN><SPAN LANG="es-ES"><B>Gestor
+de lotes,</B></SPAN> <SPAN LANG="es-ES">usando el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Editar&nbsp;]</SPAN></VAR><SPAN LANG="es-ES">.
+Para la edición está preestablecido el editor </SPAN><SPAN LANG="es-ES"><B>notepad,</B></SPAN>
+<SPAN LANG="es-ES">sin embargo se puede establecer cualquier otro
+editor de texto, editando el archivo </SPAN><SAMP CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">AltSearchEditor.ini
+</SPAN></SPAN></SAMP><SPAN LANG="es-ES">en el mismo directorio. Tras
+cambiar manualmente y guardar el fichero de lotes se puede actualizar
+la lista de nombres de lotes con el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Actualizar&nbsp;]</SPAN></VAR><SPAN LANG="es-ES">.
+La sintaxis usada en el archivo </SPAN><SAMP CLASS="western"><SPAN LANG="es-ES">AltSearchScript.txt</SPAN></SAMP>
+<SPAN LANG="es-ES">está descrita en su propio comienzo, codificado en
+UTF-8 (desde v1.1.1).</SPAN></P>
+<P CLASS="western"><SPAN LANG="es-ES">Tras hacer doble click en la
+lista de elementos, o mediante el botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Ejecutar]</SPAN></VAR><SPAN LANG="es-ES">,
+se cargará la secuencia elegida, y se ejecutarán las búsquedas y
+reemplazos. Cuando se usen lotes en un área seleccionada se aconseja
+dejar al principio y tras el final de la selección uno o dos párrafos
+vacíos.</SPAN></P>
+<P CLASS="western"><SPAN LANG="es-ES">El botón </SPAN><VAR CLASS="western"><SPAN LANG="es-ES">[&nbsp;Pasar&nbsp;]</SPAN></VAR>
+<SPAN LANG="es-ES">se usa para transferir los parámetros de búsqueda,
+reemplazo y valores a el diálogo de búsqueda sin ejecutarlo
+realmente. Si el lote contiene una secuencia de varias búsquedas y
+reemplazos sólo se transferirá la última parte de la secuencia.</SPAN></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+<H6 LANG="es-ES" CLASS="western"><A NAME="limitaciones"></A>Limitaciones:</H6>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm">Si las
+limitaciones ya se conocen, en su mayoría se citan cerca de la
+descripción de parámetros individuales. Generalmente se aplica:</P>
+<UL>
+	<UL>
+		<UL>
+			<LI><P LANG="es-ES" CLASS="western">Si está activada la opción
+			&ldquo;Sólo selección actual&rdquo;, entonces no se encontrará
+			textos que estén dentro de marcos o tablas, incluso si estuvieran
+			dentro de los bloques seleccionados. La búsqueda dentro de bloques
+			sólo está delimitada dentro del mismo área de texto que el bloque
+			seleccionado. La selección múltiple de bloques no está soportada.</P>
+		</UL>
+	</UL>
+</UL>
+<UL>
+	<UL>
+		<UL>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">La función &quot;Buscar
+			todos&quot; fallará al seleccionar una marca de párrafo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\p</SPAN></TT><SPAN LANG="es-ES">,
+			porque para la selección se usa la propiedad &quot;Resaltado&quot;
+			(color de fondo de carácter) que es imposible usar para marca de
+			párrafo. Por lo tanto continua, ademas, la limitación para estas
+			funciones sólo a textos, donde la propiedad &quot;Resaltado&quot;
+			no se usa. Si el documento contiene resaltado, cuando se use
+			&ldquo;Buscar todos&rdquo; aparecerá un diálogo de advertencia.</SPAN></P>
+			<LI><P LANG="es-ES" CLASS="western">Al reemplazar las expresiones
+			más complicadas la función &quot;Deshacer&quot; se descompone en
+			pasos parciales de reemplazo, entonces ocurre fácilmente que el
+			número de pasos de deshacer no coincidirán al restaurar al estado
+			original.</P>
+		</UL>
+	</UL>
+</UL>
+<P CLASS="western" STYLE="margin-left: 3.75cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 LANG="es-ES" CLASS="western"><A NAME="historial"></A>Historial de
+cambios:</H6>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm"><B>Versión
+1.1.1 3/08</B> 
+</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm">Novedades:</P>
+<UL>
+	<UL>
+		<UL>
+			<LI><P LANG="es-ES" CLASS="western">Traducción al Ruso</P>
+		</UL>
+	</UL>
+</UL>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm">Errores
+corregidos:</P>
+<UL>
+	<UL>
+		<UL>
+			<LI><P LANG="es-ES" CLASS="western">casca cuando durante la
+			ejecución de la búsqueda o reemplazo se abre o se cambia a otro
+			fichero OOo de texto 
+			</P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">el archivo con
+			parámetros de lote guardados </SPAN><SAMP CLASS="western"><SPAN LANG="es-ES"><SPAN STYLE="font-style: normal">.../config/AltSearchScript.txt</SPAN></SPAN></SAMP>
+			<SPAN LANG="es-ES">desde ahora se codifica en UTF-8</SPAN></P>
+		</UL>
+	</UL>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm"><B>Versión
+1.1 2/08</B> 
+</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm">Novedades:</P>
+<UL>
+	<UL>
+		<UL>
+			<LI><P CLASS="western"><SPAN LANG="es-ES"><I>búsqueda:</I></SPAN>
+			<SPAN LANG="es-ES">parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\l</SPAN></TT>
+			<SPAN LANG="es-ES">para buscar cualquier alfabético</SPAN></P>
+			<LI><P LANG="es-ES" CLASS="western"><I>búsqueda:</I> parámetro
+			para texto o nombre de marcas de Referencia y Referencias cruzadas</P>
+			<LI><P LANG="es-ES" CLASS="western"><I>búsqueda:</I> parámetro
+			para Notas al pie y Notas finales. Funciona bien desde la versión
+			2.3 de OOo</P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES"><I>reemplazo:</I></SPAN>
+			<SPAN LANG="es-ES">parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\d</SPAN></TT>
+			<SPAN LANG="es-ES">para restablecer los atributos de texto a
+			predeterminado</SPAN></P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES"><I>reemplazo:</I></SPAN>
+			<SPAN LANG="es-ES">parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\F{}</SPAN></TT>
+			<SPAN LANG="es-ES">y </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\E{}</SPAN></TT>
+			<SPAN LANG="es-ES">para crear Notas al pie y Notas finales
+			(parámetro cambiado para conservar formato de </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\F</SPAN></TT>
+			<SPAN LANG="es-ES">a </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\f</SPAN></TT>
+			<SPAN LANG="es-ES">)</SPAN></P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES"><I>reemplazo:</I></SPAN>
+			<SPAN LANG="es-ES">parámetro </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\B{etiqueta|texto}</SPAN></TT>
+			<SPAN LANG="es-ES">para insertar Marca de referencia y
+			</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\L{1,0,etiqueta}</SPAN></TT>
+			<SPAN LANG="es-ES">para insertar campo de texto de Referencia
+			cruzada</SPAN></P>
+		</UL>
+	</UL>
+</UL>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm">Errores
+corregidos:</P>
+<UL>
+	<UL>
+		<UL>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">soporte para introducir
+			un número hexadecimal (&amp;Hnnnnnn) dentro del parámetro de
+			reemplazo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\A{}</SPAN></TT></P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">soporte para usar </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\}</SPAN></TT>
+			<SPAN LANG="es-ES">y </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\I</SPAN></TT>
+			<SPAN LANG="es-ES">dentro de los parámetros de reemplazo </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\P{}</SPAN></TT><SPAN LANG="es-ES">,
+			</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\C{}</SPAN></TT><SPAN LANG="es-ES">,
+			</SPAN><TT CLASS="western"><SPAN LANG="es-ES">\F{}</SPAN></TT> 
+			</P>
+			<LI><P LANG="es-ES" CLASS="western">con &quot;Buscar todos&quot;
+			para propiedades NEGRITA etc. no se muestra el mensaje con el
+			número de coincidencias</P>
+			<LI><P LANG="es-ES" CLASS="western">aumentada la altura del botón
+			&quot;Escoger propiedad&quot; y texto recortado &quot;?&quot;
+			debajo en win XP</P>
+			<LI><P LANG="es-ES" CLASS="western">mensaje de error y fallo de
+			lotes en traducciones diferentes de EN y CS 
+			</P>
+			<LI><P LANG="es-ES" CLASS="western">al buscar Notas, Campos de
+			texto, Marcas de Referencia, Referencias cruzadas, Notas al pie,
+			Notas finales mediante el botón &quot;Buscar&quot; se procede
+			según el orden de la página, soportándose la búsqueda dentro de
+			una selección 
+			</P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">al buscar: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\ptexto</SPAN></TT>
+			<SPAN LANG="es-ES">y reemplazar con: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">&amp;</SPAN></TT>
+			<SPAN LANG="es-ES">se inserta un salto de linea extra después del
+			párrafo</SPAN></P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">al buscar: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\p</SPAN></TT>
+			<SPAN LANG="es-ES">y reemplazar con: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\p\p</SPAN></TT>
+			<SPAN LANG="es-ES">ocurre un bucle infinito</SPAN></P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">al buscar: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">(texto)\p</SPAN></TT>
+			<SPAN LANG="es-ES">y reemplazar con </SPAN><TT CLASS="western"><SPAN LANG="es-ES">\1</SPAN></TT>
+			<SPAN LANG="es-ES">ocurre el mensaje de error </SPAN><SPAN LANG="es-ES"><I>repldo:
+			lin: 2842</I></SPAN></P>
+			<LI><P CLASS="western"><SPAN LANG="es-ES">bucle de búsqueda
+			infinito al buscar: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">^.*$</SPAN></TT>
+			<SPAN LANG="es-ES">y reemplazar con: </SPAN><TT CLASS="western"><SPAN LANG="es-ES">x&amp;x</SPAN></TT>
+						</P>
+		</UL>
+	</UL>
+</UL>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P LANG="es-ES" CLASS="western" STYLE="margin-left: 2cm"><B>Versión
+1.0 12/07</B> &ndash; Primera distribución Pública 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+</BODY>
+</HTML>

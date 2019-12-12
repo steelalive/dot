@@ -1,0 +1,9 @@
+l'auteur de cette extension s'appelle:
+    André Schnabel   (andreschnabel@openoffice.org)
+Copyright 2007-2011. Certains droits réservés.
+
+Cette extension est un logiciel libre ('"free software"): vous pouvez donc la redistribuer et / ou la modifier, en accord avec les termes de la LGPL (GNU Lesser General Public Licence) version 3.0, telle qu'elle a été publiée par la Free Software Foundation.
+
+Cette extension est mise à votre disposition avec l'espoir qu'elle vous soit utile. Elle n'est attachée à AUCUNE GARANTIE d'aucune sorte, sans même la garantie intrinsèque de vice caché.
+
+http://www.gnu.org/licenses/

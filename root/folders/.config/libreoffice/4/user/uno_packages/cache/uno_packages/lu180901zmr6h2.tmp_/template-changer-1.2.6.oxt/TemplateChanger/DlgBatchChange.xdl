@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgBatchChange" dlg:left="137" dlg:top="134" dlg:width="202" dlg:height="152" dlg:page="1" dlg:closeable="true" dlg:moveable="true" dlg:title="Vorlage für mehrere Dateien zuweisen">
+ <dlg:bulletinboard>
+  <dlg:button dlg:id="cBtnCancel" dlg:tab-index="13" dlg:left="153" dlg:top="132" dlg:width="45" dlg:height="15" dlg:page="1" dlg:value="Abbrechen" dlg:button-type="cancel"/>
+  <dlg:button dlg:id="cBtnOK" dlg:tab-index="12" dlg:left="104" dlg:top="132" dlg:width="45" dlg:height="15" dlg:page="1" dlg:default="true" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:text dlg:id="lblTemplateFile" dlg:tab-index="14" dlg:left="2" dlg:top="4" dlg:width="74" dlg:height="10" dlg:page="1" dlg:value="Vorlagendatei"/>
+  <dlg:text dlg:id="lblDocPath" dlg:tab-index="15" dlg:left="2" dlg:top="20" dlg:width="74" dlg:height="10" dlg:page="1" dlg:value="Dokumentverzeichnis"/>
+  <dlg:textfield dlg:id="TextField2" dlg:tab-index="16" dlg:left="166" dlg:top="14" dlg:width="2" dlg:height="0" dlg:page="1"/>
+  <dlg:textfield dlg:id="txtTemplateFile" dlg:tab-index="1" dlg:left="79" dlg:top="2" dlg:width="110" dlg:height="12" dlg:page="1" dlg:maxlength="256"/>
+  <dlg:button dlg:id="cBtnFileSelect" dlg:tab-index="2" dlg:left="189" dlg:top="2" dlg:width="10" dlg:height="12" dlg:page="1" dlg:value="...">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:TemplateChanger.BatchChange.dlgBC_cBtnFileSelect_onAction?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="txtDocPath" dlg:tab-index="3" dlg:left="79" dlg:top="18" dlg:width="110" dlg:height="12" dlg:page="1" dlg:maxlength="256">
+   <script:event script:event-name="on-blur" script:macro-name="vnd.sun.star.script:TemplateChanger.BatchChange.dlgBC_txtDocPath_onLeave?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:textfield>
+  <dlg:button dlg:id="cBtndocPathSelect" dlg:tab-index="4" dlg:left="189" dlg:top="18" dlg:width="10" dlg:height="12" dlg:page="1" dlg:value="...">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:TemplateChanger.BatchChange.dlgBC_cBtnDocPath_onAction?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:checkbox dlg:id="cBoxSubDirs" dlg:tab-index="7" dlg:left="79" dlg:top="50" dlg:width="118" dlg:height="10" dlg:page="1" dlg:value="Unterverzeichnisse einbeziehen" dlg:checked="false"/>
+  <dlg:checkbox dlg:id="cBoxODT" dlg:tab-index="8" dlg:left="5" dlg:top="78" dlg:width="175" dlg:height="10" dlg:page="1" dlg:value="ODF Textdokumente (*.odt)" dlg:checked="true"/>
+  <dlg:checkbox dlg:id="cBoxSXW" dlg:tab-index="9" dlg:left="5" dlg:top="90" dlg:width="175" dlg:height="10" dlg:page="1" dlg:value="OpenOffice.org 1.x Textdokumente (*.sxw)" dlg:checked="true"/>
+  <dlg:titledbox dlg:id="frmDocTypes" dlg:tab-index="0" dlg:left="2" dlg:top="64" dlg:width="197" dlg:height="63" dlg:page="1">
+   <dlg:title dlg:value="Dokumenttypen verarbeiten"/>
+  </dlg:titledbox>
+  <dlg:text dlg:id="lblDestPath" dlg:tab-index="17" dlg:left="2" dlg:top="36" dlg:width="74" dlg:height="10" dlg:page="1" dlg:value="Zielverzeichnis"/>
+  <dlg:button dlg:id="cBtnDestPath" dlg:tab-index="6" dlg:left="189" dlg:top="34" dlg:width="10" dlg:height="12" dlg:page="1" dlg:value="...">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:TemplateChanger.BatchChange.dlgBC_cBtnDestPath_onAction?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:checkbox dlg:id="cBoxOTT" dlg:tab-index="10" dlg:left="5" dlg:top="102" dlg:width="175" dlg:height="10" dlg:page="1" dlg:value="ODF Textdokumentvorlagen (*.ott)" dlg:checked="false"/>
+  <dlg:textfield dlg:id="txtDestPath" dlg:tab-index="5" dlg:left="79" dlg:top="34" dlg:width="110" dlg:height="12" dlg:page="1" dlg:maxlength="256">
+   <script:event script:event-name="on-blur" script:macro-name="vnd.sun.star.script:TemplateChanger.BatchChange.dlgBC_txtDestPath_onLeave?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:textfield>
+  <dlg:checkbox dlg:id="cBoxODM" dlg:tab-index="11" dlg:left="5" dlg:top="114" dlg:width="175" dlg:height="10" dlg:page="1" dlg:value="ODF Globaldokument (*.odm)" dlg:checked="false"/>
+ </dlg:bulletinboard>
+</dlg:window>

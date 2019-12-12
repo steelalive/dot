@@ -49,7 +49,23 @@ call dein#add('mkarmona/colorsbox')
 call dein#add('dracula/vim')
 call dein#add('jacoborus/tender.vim')
 call dein#add('kyoz/purify')
-call dein#add('neomake/neomake')
+"call dein#add('neomake/neomake')
+call dein#add('Shougo/deoplete')
+call dein#add('autozimu/LanguageClient-neovim', {
+    \ 'rev': 'next',
+    \ 'build': 'bash install.sh',
+    \ })
+call dein#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
+
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
 "call dein#add('')
 "call dein#add('')
 "call dein#add('')
@@ -114,9 +130,9 @@ let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \}
 let g:powerline_pycmd = 'py3'
-let g:python3_host_prog = '/usr/bin/python'
+"let g:python3_host_prog = '/usr/bin/python'
 let g:python_highlight_all = 1
-let g:python_host_prog = '/usr/bin/python2.7'
+"let g:python_host_prog = '/usr/bin/python2.7'
 let g:tex_flavor = 'latex'
 let g:ycm_max_num_candidates = 25
 let g:ycm_min_num_of_chars_for_completion = 2
@@ -199,7 +215,7 @@ set wildignorecase
 set wildmenu          " visual autocomplete for command menu
 set wildmode=list:longest
 let mapleader=','
-let maplocalleader = ','
+"let maplocalleader = ','
 syntax enable         " enables syntax highlighting
 
 hi! Normal ctermbg=NONE guibg=NONE
@@ -217,17 +233,6 @@ nmap <silent> <leader>q :wq $MYVIMRC<CR>
 nnoremap ; :
 
 
-function! s:super_duper_tab(k, o)
-  let line = getline('.')
-  let col = col('.') - 2
-  if !empty(line) && line[col] =~? '\k' && line[col + 1] !~? '\k'
-    return a:k
-  else
-    return a:o
-  endif
-endfunction
-inoremap <expr> <tab>   <SID>super_duper_tab("\<c-n>", "\<tab>")
-inoremap <expr> <s-tab> <SID>super_duper_tab("\<c-p>", "\<s-tab>")
 
 
 " vim: sw=4 sts=4 et

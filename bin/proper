@@ -3,6 +3,7 @@
 #2#::.. Last edit: - Thu May 31 08:12:29 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.7.3 - #_# #@#310518#@# #2#
 #3#::..#####################_/dot/bin/propper_#######################..::#3#
 # vi: set filetype=sh:
+
 export cmd=' androidboot.selinux=permissive buildvariant=eng threadirqs nowatchdog fsck.repair=yes commit=30 errors=remount-ro rootfstype=ext4 raid=noautodetect plymouth.enable=0 smsc95xx.turbo_mode=N net.ifnames=0 noatime libahci.ignore_sss=1 cgroup_disable=memory sysrq_always_enabled'
 export PATH=$PATH:/data/dot/bin:/data/dot/bin/final:/data/dot/slash/sbin
 mount /system
@@ -12,68 +13,58 @@ mount /nvdata
 mount -o remount,rw /vendor
 mount -o remount,rw /nvdata
 
-for i in $(find /vendor -name default.prop) \
-	$(find /system -name default.prop) \
-	$(find /vendor -name prop.default) \
-	$(find /system -name prop.default) \
-	$(find /vendor -name build.prop) \
-	$(find /system -name build.prop) \
+for i in \
 	/system/default.prop \
 	/system/system/build.prop \
 	/system/system/product/build.prop \
-	/vendor/build.prop \
 	/prog/AIK-Linux/ramdisk/default.prop \
 	ramdisk/default.prop \
 	/system/system/etc/prop.default \
 	ramdisk/build.prop "$@"; do
-	rpath+="$(realpath "$i")"
-done
-healme="$(sort <<<$rpath | uniq)"
-for tosed in $healme; do
-	[[ -r $tosed ]] || continue
+	[[ -r $i ]] || continue
 	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
 		-e "s/ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
 		-e "s/ro.debuggable=0/ro.debuggable=1/" \
 		-e "s/ro.secure=1/ro.secure=0/" \
 		-e "s/ro.adb.secure=1/ro.adb.secure=0/" \
-		-e "s/ro.product.cpu.abilist64=/ro.product.cpu.abilist64=arm64-v8a/" \
+		-e "s/ro.product.cpu.abilist64=.*/ro.product.cpu.abilist64=arm64-v8a/" \
 		-e "s/ro.product.cpu.abilist=armeabi-v7a,armeabi/ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi/" \
 		-e "s/ro.build.type=user$/ro.build.type=userdebug/" \
-		-e "s|ro.build.tags=release-keys|ro.build.tags=test-keys|" \
-		-e "s/#ro.boot.selinux=disable/ro.boot.selinux=disable/" \
-		-e "s/MM-dd-yyyy/dd-MM-yyyy/" \
-		-e "s/ro.storage_manager.enabled=1/ro.storage_manager.enabled=0/" \
+		-e "s|ro.build.tags=release-keys$|ro.build.tags=test-keys|" \
+		-e "s/MM-dd-yyyy$/dd-MM-yyyy/" \
 		-e "s/=en-US$/=en-CA/" \
-		-e "s/dalvik.vm.isa.arm.variant=cortex-a9/dalvik.vm.isa.arm.variant=cortex-a53/" \
-		-e "s/^ro.platform.keepbackground.app=.*/#ro.platform.keepbackground.app=/" \
-		-e "s/ro.net.pppoe=true/ro.net.pppoe=false/" \
-		-e "s/ro.platform.has.pppoe.*/ro.platform.has.pppoe=false/" \
 		-e "s/ro.product.locale=.*/ro.product.locale=en-CA/" \
 		-e "s/=US$/=CA/" \
 		-e "s|=q201$|=S912|" \
 		-e "s|=q9377$|=S912|" \
 		-e "s/=cortex-a7$/=cortex-a53/" \
-		-e "s/ro.platform.has.pppoe=true$/ro.platform.has.pppoe=false/" \
-		-i "$tosed"
-	ANBG "Edited ${tosed}${R}...\\n${R}"
+		-i "$i" && ANBG "Edited ${i}${R}...\\n${R}"
 done
+cd /system && {
+	rm etc
+	ln -s system/etc etc
+	rm bin
+	ln -s system/bin bin
+	rm product
+	ln -s system/product product
+}
 #for file in /nvdata/fstab* /vendor/etc/fstab.mt6765; do
 #	sed -e "s|,encryptable=/dev/block/platform/bootdevice/by-name/metadata||" \
 #		-e "s|,quota||" \
 #		-e "s|,encryptable=userdata||" \
 #		-i "$file"
 #done
-[[ -e /vendor/etc/fstab.enableswap ]] && rm -v /vendor/etc/fstab.enableswap
+#[[ -e /vendor/etc/fstab.enableswap ]] && rm -v /vendor/etc/fstab.enableswap
 #	-e "s/ro.secure=1$/ro.secure=0/" \
 #-e "s/adb.secure=1/adb.secure=0/" \
 #	-e "s/persist.sys.usb.config=.*/persist.sys.usb.config=adb/" \
 
 #	-e "s/=verify-profile$/=everything/" \
 #	-e "s/=speed$/=everything/" \
-for i in init.rc /init.rc ramdisk/init.rc output/initrd/init.rc; do
-	[[ -e $i ]] || continue
-	sed -e "s|write /proc/sys/kernel/sysrq 0|write /proc/sys/kernel/sysrq 1|" -i "$i"
-done
+#for i in init.rc /init.rc ramdisk/init.rc output/initrd/init.rc; do
+#	[[ -e $i ]] || continue
+#	sed -e "s|write /proc/sys/kernel/sysrq 0|write /proc/sys/kernel/sysrq 1|" -i "$i"
+#done
 
 #to_edit=split_img/boot.img-cmdline
 #if [[ -e $to_edit ]] && ! grep sysrq_always_enabled $to_edit; then

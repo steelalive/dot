@@ -16,12 +16,14 @@ recovery_miracle() {
 	#	cp -av $slash/etc/mk ../etc/mkshrc
 	#	cp -av $slash/etc/mk ../etc/rc
 	#	cp -av nemo/ramdisk/recovery.fstab ramdisk/etc/recovery.fstab
-	select bbox in /last/misc-android/busybox*; do
-		break
-	done
-	select toybox in /last/misc-android/toybox*; do
-		break
-	done
+	#	select bbox in /last/misc-android/busybox*; do
+	#		break
+	#	done
+	#	select toybox in /last/misc-android/toybox*; do
+	#		break
+	#	done
+	bbox=/last/misc-android/busybox
+	toybox=/last/misc-android/toybox-aarch64
 	cp -av "$bbox" ./
 	mv "$(basename $bbox)" ./busybox
 	cp -av "$toybox" ./toybox
@@ -29,30 +31,38 @@ recovery_miracle() {
 	cp -av $slash/sbin/nano.bin .
 	cp -av $slash/sbin/nano .
 	cp -av $slash/sbin/coreutils .
-	for exe in $(<$slash/bb_list); do
+	for exe in $(</ext/AIK-Linux/bb_noselist); do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv busybox "$exe"
 	done
-	for exe in acpi base64 basename blkid blockdev bunzip2 bzcat cal cat catv chattr chgrp chmod chown chroot chrt chvt cksum clear cmp comm count cp cpio crc32 cut date df dirname dmesg dos2unix du echo egrep eject env expand factor fallocate false fgrep file find flock fmt free freeramdisk fsfreeze fstype fsync ftpget ftpput grep groups halt head help hexedit hostname hwclock iconv id ifconfig inotifyd insmod install ionice iorenice iotop kill killall killall5 link ln logger login logname losetup ls lsattr lsmod lspci lsusb makedevs md5sum microcom mix mkdir mkfifo mknod mkpasswd mkswap mktemp modinfo mount mountpoint mv nbd-client nc netcat netstat nice nl nohup nproc od oneit partprobe passwd paste patch pgrep pidof pivot_root pkill pmap poweroff printenv printf ps pwd pwdx readahead readlink realpath reboot renice reset rev rfkill rm rmdir rmmod sed seq setfattr setsid sha1sum shred sleep sort split stat strings swapoff swapon switch_root sync sysctl tac tail taskset tee time timeout top touch true truncate tty tunctl umount uname uniq unix2dos unlink uptime usleep uudecode uuencode vconfig vmstat w wc which who whoami xargs xxd yes; do
+	for exe in $(</ext/AIK-Linux/toylist); do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv toybox "$exe"
 	done
 	for exe in b2sum base32 base64 basename basenc cat chcon chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold ginstall groups head hostid id join kill link ln logname ls md5sum mkdir mkfifo mknod mktemp mv nice nl nohup nproc numfmt od paste pathchk pinky pr printenv printf ptx pwd readlink realpath rm rmdir runcon seq sha1sum sha224sum sha256sum sha384sum sha512sum shred shuf sleep split stat stdbuf stty sum sync tac tail tee test touch tr true truncate tsort tty uname unexpand uniq unlink uptime users vdir wc who whoami yes; do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv coreutils "$exe"
 	done
-	ln -svf coreutils ls
+	cd $aik/ramdisk/sbin
 	[[ -e su ]] && echo rm su && rm -v su sulogin
+	#Hard link warning beacause of ../ and I don't care enough to look online so I expect YOu to look and correct me if i'm not wrong at this time of the day if it work.
 	ln -svf ../init ueventd
-	ln -svf ../init uevent
 	ln -svf ../init watchdogd
-	ln -svf ./busybox blkid
-	rm -v ./*.apk
+	rm -v ./*.apk 2 &>/dev/null
 	#	chown -R 2000:2000 ./*
 	chown -R 0:0 ./*
 	for exe in ./busybox ./coreutils ./toybox ./nano* ./bash ./ssl_helper; do
-		chmod 4777 "$exe"
+		chmod 0777 "$exe"
 	done
-	cp -av $aik/prop.default $aik/ramdisk/
+	ln -svf ./busybox blkid
+	ln -svf ./coreutils ls
 	cp -av /last/misc-android/ui.zip $aik/ramdisk/twres/
 	cp -av $aik/ramdisk/sbin/zip $aik/ramdisk/twres/
+	cp -av $aik/mkshrc $aik/ramdisk/etc/
+	cp -av $aik/permissive.sh $aik/ramdisk/sbin/
+	#	cp -av $aik/prop.default $aik/ramdisk/
+	#	(
+	#		cd $aik/ramdisk
+	#		rm -rfv $aik/ramdisk/system
+	#		ln -sv system_root/system system
+	#	)
 	echo mt-6765 >$aik/split_img/recovery.img-board
 }
 

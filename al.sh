@@ -17,6 +17,7 @@ alias ..='builtin \cd .. && lk '
 alias mnt=". $dot/bin/mnt "
 #When you leave an empty space at the end of an alias, bash compeltion is decided you mean to tab a comletio. A space made after the crime will disappoint bash completion. At least there is a way to make him proud, unlike our respective fathers.
 alias ad=". $dot/bin/ad "
+alias aikunpack='cd /ext/AIK-Linux; ./unpackimg.sh recovery.img; recovery_miracle '
 alias rmv="command \rm -rfv --one-file-system --preserve-root --dir "
 alias cpv="command \cp -av --dereference --strip-trailing-slashes --update --context "
 alias cdpkg='command \cd $AURDEST '
@@ -37,7 +38,7 @@ alias gitclone=". $dot/bin/gitclone "
 alias git='command \git --no-pager '
 alias l="command $dot/bin/lk $LS_OPTIONS -l "
 alias lkcat='cat /last/power/rooted-rom/lk.img | adb shell "dd of=/dev/block/by-name/lk"; adb reboot recovery'
-alias ll="exa -l "
+alias ll="exa -l@ --group-directories-first "
 alias lh="lk -lH "
 alias lsl='lk -l '
 alias ip="command \ip -c -a -p -d -h "

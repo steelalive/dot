@@ -1,0 +1,24 @@
+TemplateChanger
+Udvidelser;TemplateChanger
+Skabeloner;anvend ny dokumentskabelon
+Dokumenter;sammenkæd til skabeloner
+
+Template Changer
+
+	Du kan anvende en dokument-skabelon til en eller flere tekst-dokumenter ved,
+	at bruge udvidelsen TemplateChanger. Alle typografier (afsnit, tegn, ramme, 
+	side, og listetypografier) bliver indlæst fra skabelonen, og erstatter dokumentets
+	nuværende typografier.
+
+
+	Dokumentet bliver kædet sammen med skabelonen. Fremover vil dokumentet virke,
+	som var det oprettet ved hjælp af skabelonen.
+
+
+        Vælg Filer - Skabeloner - Anvend skabelon (dette dokument) (kun %PRODUCTNAME Writer)
+    
+
+        Vælg Filer - Skabeloner - Anvend skabelon (mappe)
+    
+
+

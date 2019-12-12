@@ -10,18 +10,18 @@ arg3="${3}"
 readl="$(realpath ${arg1})"
 basename="$(basename "${arg1}")"
 export arg1 basename
-EDITOR=${EDITOR:-nvim}
+EDITOR="${EDITOR:-nvim}"
 congrats() {
 	ANBG 'CONGRATULATION!'" File${R}${C} $arg1 ${BG}is error free.${R}\n"
 }
-if [[ $USER == master ]]; then
-	mkdir
+if [[ $USER == shell ]]; then
+	mkdir -p /tmp/delete
 	sudo +user -R /tmp/delete "${HOME:-/root}"
 else
 	#+master -R /tmp/delete "${HOME:-/root}"
 	true
 fi
-[[ -d /tmp/delete ]] || mkdir /tmp/delete
+[[ -d /tmp/delete ]] || mkdir -p /tmp/delete
 export tmp_copy="/tmp/delete/${basename}.delete"
 [[ -e ${tmp_copy} ]] && rm "${tmp_copy}"
 if [[ $arg2 =~ [0-9] ]]; then
@@ -63,7 +63,7 @@ shell_edit_check() {
 		if [[ $sc_ret =~ [0-9] ]]; then
 			export sc_ret
 			sc "${arg1}" | grep --after-context=16 "line ${sc_ret}"
-			ANBW TERM=xterm-color /bin/nano '+'"${sc_ret}" "${arg1}" "${arg2}" "${arg3}" && lk
+			ANBW "TERM=xterm-color /bin/nano '+'"${sc_ret}" "${arg1}" "${arg2}" "${arg3}"\n" && lk
 		else
 			lk
 			congrats "$arg1"
@@ -86,14 +86,14 @@ gui_ed_sc() {
 cp "${arg1}" "${tmp_copy}"
 if [[ $EUID == 0 ]]; then
 	[[ $arg2 =~ [-.*] ]] || unset arg2
-	eval ${EDITOR} ${nano_line} ${arg2} ${arg3} "$arg1"
+	eval "${EDITOR}" "${nano_line}" "${arg2}" "${arg3}" "$arg1"
 else
 	sudo sh -c "eval ${EDITOR} $arg2 $arg3 $arg1"
 fi
 shell_edit_check "$readl" "$arg2" "$arg3"
 echo
 if diff "${arg1}" "${tmp_copy}" &>/dev/null; then
-	ANG "No change detected in ${C}${readl}${RES}"
+	ANG "No change detected in ${C}${readl}${RES}\n"
 	echo
 else
 	#	if [[ $HOSTNAME == PC ]]; then

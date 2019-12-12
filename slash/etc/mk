@@ -36,7 +36,11 @@ if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 else
 	umask 022
 fi
-
+(
+	mount -o remount,rw /
+	mount -o remount,rw /system
+	mount -o remount,rw /system_root
+) 2>dev/null
 unset LD_PRELOAD LD_LIBRARY_PATH
 shopt -u execfail &>/dev/null
 #su_bin=/sbin/su
@@ -44,7 +48,7 @@ if [[ ! -e /external_sd ]]; then
 	[[ -x $su_bin ]] || su_bin="$(command -v su 2>/dev/null)"
 	if [[ -x $su_bin ]]; then
 		if [[ $USER == root ]] || [[ -e /external_sd ]]; then
-			true
+			grep "bash" <<<"$0" || exec /sbin/bash --init-file /data/dot/slash/etc/mk
 		else
 			exec $su_bin 0 -mm -s /data/dot/slash/sbin/bash || su 0 -l -mm
 			#		shopt | grep autocd &>/dev/null || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk

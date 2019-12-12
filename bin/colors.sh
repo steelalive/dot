@@ -99,6 +99,7 @@
 # BgreyV () { printf '\e[8;47m'"$*"'\e[m'; }
 # BwhiteV () { printf '\e[8;47m'"$*"'\e[m'; }
 ANG "ps1bg.sh test \n"
+. $dot/ps1bg.sh
 export start=0
 export increment=1
 for i in {0..101..1}; do

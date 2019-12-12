@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="KeyAssign" script:language="StarBasic">REM  *****  BASIC  *****
+option explicit
+
+const keyCommand = &quot;vnd.sun.star.script:Standard.AltSearchBatchs.^^^?language=Basic&amp;location=application&quot;
+const BatchLibrary = &quot;Standard&quot;
+const BatchModul = &quot;AltSearchBatchs&quot;
+const shorcutLabel = &quot;   &gt;&gt;&gt;  &quot;  &apos; znaky přidane mezi jmeno procedury a případnou klavesovou zkratku - v listboxu 
+
+global objWriterShortCutMgr 	as object  &apos; objekt klavesovych zkratek
+dim hotkey()
+dim noFilt as boolean &apos; pomocna promenna pro zabranení aktualizace pole Cb_bas
+
+
+
+sub pokus
+dim key
+&apos; SetBatch_to_BasicSub(&quot;Altsearch - dialog&quot;, &quot;Altsearch___dialog1&quot;)
+
+Dim aKeyEvent &apos;As New com.sun.star.awt.KeyEvent
+  Init_objWriterShortCutMgr
+  
+  dim keyev(), pom, i
+ &apos; vnd.sun.star.script:Standard.AltSearchBatchs.Altsearch___dialog?language=Basic&amp;location=application
+
+ xray getKeyEventsByCommand_bug(&quot;.uno:LeftPara&quot;)
+
+&apos;  pom = objWriterShortCutMgr&apos;.getKeyEventsByCommand(&quot;.uno:LeftPara&quot;)  
+&apos;  xray pom
+&apos;  aKeyEvent = objWriterShortCutMgr.getKeyEventsByCommand(&quot;vnd.sun.star.script:Standard.AltSearchBatchs.Altsearch___dialog?language=Basic&amp;location=application&quot;)
+&apos;xray aKeyEvent
+exit sub
+  dim modif
+  dim keycode
+  modif = 2
+  keycode = 519  &apos;H
+  inputbox &quot;&quot;, &quot;&quot;, GetAssignFunction(modif, keycode) 
+
+end sub
+
+
+
+&apos; funkce vrací key event hledaneho příkazu - obejití bugu některých verzi Go Oo kdy nefunguje funkce objWriterShortCutMgr.getKeyEventsByCommand(...)
+sub getKeyEventsByCommand_bug(command as string) as com.sun.star.awt.KeyEvent
+ dim keyev(), i
+&apos; dim nic As New com.sun.star.awt.KeyEvent
+
+ keyev() = objWriterShortCutMgr.getAllKeyEvents
+ for i =  lbound(keyev) to ubound(keyev)
+
+     if objWriterShortCutMgr.getCommandByKeyEvent(keyev(i)) = command then
+        getKeyEventsByCommand_bug = keyev(i)
+        exit sub    
+       end if
+      
+   next i
+
+ getKeyEventsByCommand_bug = &quot;&quot;  &apos; schvalne jiny typ aby to hodilo chybu při nenalezeni
+end sub
+
+
+
+&apos; dialog prirazeni klavesove zkratky
+sub Bt_shortcut
+dim i, pom
+dim aNames()as string
+&apos;dim hotkey   &apos; načíst seznam hotkeys
+  oDialsh.setVisible(true)  &apos; zobrazit okno drív nez se začnou změny v polich - jinak není po kliknutí okno vidět
+  noFilt = false
+
+   hotkey = array (&quot;0  &quot;,&quot;256 Num 0&quot;,&quot;257 Num 1&quot;,&quot;258 Num 2&quot;,&quot;259 Num 3&quot;,&quot;260 Num 4&quot;,&quot;261 Num 5&quot;,&quot;262 Num 6&quot;,&quot;263 Num 7&quot;,&quot;264 Num 8&quot;,&quot;265 Num 9&quot;, _
+                   &quot;512 A&quot;,&quot;513 B&quot;,&quot;514 C&quot;,&quot;515 D&quot;,&quot;516 E&quot;,&quot;517 F&quot;,&quot;518 G&quot;,&quot;519 H&quot;,&quot;520 I&quot;,&quot;521 J&quot;,&quot;522 K&quot;,&quot;523 L&quot;,&quot;524 M&quot;, _
+                   &quot;525 N&quot;,&quot;526 O&quot;,&quot;527 P&quot;,&quot;528 Q&quot;,&quot;529 R&quot;,&quot;530 S&quot;,&quot;531 T&quot;,&quot;532 U&quot;,&quot;533 V&quot;,&quot;534 W&quot;,&quot;535 X&quot;,&quot;536 Y&quot;,&quot;537 Z&quot;, _
+                   &quot;768 F1&quot;,&quot;769 F2&quot;,&quot;770 F3&quot;,&quot;771 F4&quot;,&quot;772 F5&quot;,&quot;773 F6&quot;, _
+                   &quot;774 F7&quot;,&quot;775 F8&quot;,&quot;776 F9&quot;,&quot;777 F10&quot;,&quot;778 F11&quot;,&quot;779 F12&quot;, _
+                   &quot;1024 Down&quot;,&quot;1025 Up&quot;,&quot;1026 Left&quot;,&quot;1027 Right&quot;,&quot;1028 Home&quot;,&quot;1029 End&quot;,&quot;1030 PageUp&quot;,&quot;1031 PageDown&quot;, _
+                   &quot;1280 Return&quot;,&quot;1281 Escape&quot;,&quot;1182 Tab&quot;,&quot;1283 BackSpace&quot;,&quot;1284 Space&quot;,&quot;1285 Insert&quot;,&quot;1286 Delete&quot;, _
+                   &quot;1287 Add&quot;,&quot;1288 Subtract&quot;,&quot;1189 Multiply&quot;,&quot;1290 Divide&quot;,&quot;1291 Point&quot;,&quot;1292 Comma&quot;,&quot;1293 Less&quot;,&quot;1294 Greater&quot;,&quot;1295 Equal&quot;)
+   &apos; načíst hotkey do listboxu
+   oDialsh.getcontrol(&quot;Lb_char&quot;).removeItems(0, oDialsh.getcontrol(&quot;Lb_char&quot;).ItemCount )   &apos; smazat stare
+   for i = lbound(hotkey) to ubound(hotkey)
+     pom = hotkey(i)
+     oDialsh.getcontrol(&quot;Lb_char&quot;).addItem(rightPast(pom,&quot; &quot;),i)
+    next 
+
+ &apos; načíst pole s názvy
+ aNames() = oDial.getControl(&quot;Lb_names&quot;).getItems()
+ oDialsh.getcontrol(&quot;Cb_name&quot;).removeItems(0, oDialsh.getcontrol(&quot;Cb_name&quot;).ItemCount )   &apos; smazat stare
+ oDialsh.getcontrol(&quot;Cb_name&quot;).addItems(aNames(),0)
+ &apos; přidat na začátek funkce zobrazení dialogu a hledej další, předchozí
+ oDialsh.getcontrol(&quot;Cb_name&quot;).addItem(&quot;&quot;,0)
+ oDialsh.getcontrol(&quot;Cb_name&quot;).addItem(&quot;Altsearch - dialog&quot;,1)
+ oDialsh.getcontrol(&quot;Cb_name&quot;).addItem(&quot;Altsearch - Find next&quot;,2)
+ oDialsh.getcontrol(&quot;Cb_name&quot;).addItem(&quot;Altsearch - Find previous&quot;,3)
+ oDialsh.getcontrol(&quot;Cb_name&quot;).text = LastName
+
+ &apos; přepsat filtrovaný nazev do Cb_bas textu - přepíše se automaticky po přiřazení lastName
+&apos; oDialsh.getcontrol(&quot;Cb_bas&quot;).text = LatinFilter(LastName)
+
+ &apos; inicializuje objekt klavesových zkratek
+ Init_objWriterShortCutMgr
+
+ &apos; načte listbox procedur z modulu  BatchLibrary.BatchModul  pro klavesové zkratky dávek
+ refresch_Cb_bas()
+
+ &apos; zobrazit přiřazenou klávesovou zkratku podle basName, pokud existuje
+ &apos; neaktualizovat zpětně pole Cb_name.text
+ Change_basname(false)
+
+ on error resume next  &apos; jinak se v linuxu OOo 2.4 po použití Bt_removeBasSubr() otevře Basic modul AltSearchBatch s chybou, pokud byl dilog zavolán přes pomocnou proceduru v AltSearchBatch   
+ oDialsh.execute()  
+
+end sub
+
+
+
+&apos; zatím nepoužito
+&apos; otevře dialog pro upravu v basicu
+sub Bt_openBasic
+dim document   as object
+dim dispatcher as object
+ document   = ThisComponent.CurrentController.Frame
+ dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+&apos; dispatcher.executeDispatch(document, &quot;.uno:MacroDialog&quot;, &quot;&quot;, 0, Array())
+&apos; LoadBasic RunBasic BasicIDEAppear ModuleDialog LibSelect NewModule
+&apos; NameChangedOnTab (SfxUInt16Item TabId SID_BASICIDE_ARG_TABID,SfxStringItem NewName SID_BASICIDE_ARG_MODULENAME)
+
+&apos; otevrit basic IDE
+dispatcher.executeDispatch(document, &quot;.uno:BasicIDEAppear&quot;, &quot;&quot;, 0, Array())
+&apos;dim args1(0) as new com.sun.star.beans.PropertyValue
+&apos;args1(0).Name = &quot;LibName&quot;
+&apos;args1(0).Value = &quot;Standard&quot;
+&apos;dispatcher.executeDispatch(document, &quot;.uno:LibSelect&quot;, &quot;&quot;, 0, args1())
+end sub
+
+
+
+&apos; přiřadí vybrané funkci klávesovou zkratku
+sub Bt_assign(optional oEvt)
+dim radek, modif, keycod,pom,filtBasName
+dim clear as boolean
+&apos; pokud je spuštěno tlačítkem s tagem &quot;clear&quot;, zrušit přiřazení, jinak změnit
+ if not isMissing(oEvt) then 
+    if oEvt.source.model.tag = &quot;clear&quot; then clear = true
+   end if 
+
+ on error goto Errorhandler
+ &apos; zkontrolovat jestli je vybrana zkratka už obsazena, pokud ano tak upozornit
+ Change_key &apos; aktualizovat zobrazenou zkratku 
+ if oDialSh.model.Lb5.Label = &quot;&quot; then exit sub
+ &apos; naplnit zaznam klav. zkratky
+ modif = 0
+ if oDialsh.model.Ch_shift.state = 1 then modif = modif + 1
+ if oDialsh.model.Ch_ctrl.state = 1 then modif = modif + 2
+ if oDialsh.model.Ch_alt.state = 1 then modif = modif + 4
+ pom = oDialsh.getcontrol(&quot;Lb_char&quot;).SelectedItemPos
+ if pom&gt;0 then 
+   keycod = val(leftTo(hotkey(pom),&quot; &quot;))
+  else
+   beep
+   exit sub
+  end if 
+ 
+ &apos; bez modifikatorů se může zasvinit systém - nedovolit
+ if modif = 0 then : beep : exit sub : end if
+
+ Dim aKeyEvent As New com.sun.star.awt.KeyEvent
+ With aKeyEvent
+	.Modifiers = modif 
+	.KeyCode = keycod
+  End With
+	
+ &apos; filtrovat basic jmeno
+ filtBasName = LatinFilter(oDialSh.model.Cb_bas.text)
+ &apos; je zkratka už obsazena?
+ if  oDialSh.model.Lb5.Label &lt;&gt; msg(42) then
+    &apos; sestavit hlaseni 
+    radek = msg(43) &amp; chr(10) &amp; oDialSh.model.Lb5.Label &amp; cr(2)
+    if clear or (trim(oDialSh.model.Cb_bas.text) = &quot;&quot;) then
+      &apos; hlasení pro mazání
+       radek = radek + msg(45) 
+      else
+       radek = radek + msg(44) &amp; chr(10) &amp; oDialSh.model.Cb_bas.text + &quot; ?&quot; 
+      end if
+
+    if 6&lt;&gt;msgbox(radek, 4+32+128, msg(11)+verze) then exit sub  &apos;128= prvni tlacitko aktivni 256-druhe
+    &apos; zrušit původní přiřazení klv. zkratky
+	objWriterShortCutMgr.removeKeyEvent(aKeyEvent)
+	
+  end if
+
+ 
+ if clear or (trim(oDialSh.model.Cb_bas.text) = &quot;&quot;) then goto preskoc &apos; prazdné pole smaze preskočí prirazeni, tj. zustane volne
+
+ &apos; nova klav. zkratka
+ &apos; zkontrolovat, zda už daný název v modulu existuje:
+ &apos; ano - přepsat ho současnou funkcí, ne - přidat na konec
+ SetBatch_to_BasicSub(oDialSh.model.Cb_name.text, filtBasName)
+
+ radek = replace_(keyCommand,&quot;^^^&quot;,filtBasName)  
+ objWriterShortCutMgr.setKeyEvent( aKeyEvent, radek)
+preskoc: 
+ objWriterShortCutMgr.store
+ Change_key &apos; aktualizovat hodnotu 
+ refresch_Cb_bas() &apos; aktualizovat seznam
+ exit sub
+ 
+Errorhandler:
+ hlaseni1(48, false, false, &quot;Bt_asiign error:    l. &quot; &amp; erl &amp; &quot;:  &quot; &amp; Error$) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti          
+end sub
+
+
+
+
+&apos; vymaže pomocnou proceduru z modulu Standard.AltSearchBatchs  
+sub Bt_removeBasSubr
+dim radek
+&apos; to do
+&apos;msgbox &quot;mažu:   &quot; &amp; oDialsh.getcontrol(&quot;Cb_bas&quot;).text
+  radek = replace_(msg(46),&quot;^^^1&quot;,cr(2)+oDialsh.model.Cb_bas.text+cr(2)) 
+ 
+  if 6&lt;&gt;msgbox(radek, 4+32+128, msg(11)+verze) then exit sub  &apos;128= prvni tlacitko aktivni 256-druhe
+  &apos; pro jistotu aktualizovat zobrazení klávesové zkratky podle basName
+  &apos; neaktualizovat zpětně pole Cb_name.text
+  Change_basname(false)
+  &apos; vymazat proceduru z modulu
+  SetBatch_to_BasicSub(chr(13), oDialsh.model.Cb_bas.text)
+  &apos; zrušit klávesovou zkratku
+  oDialsh.model.Cb_name.text = &quot;&quot; 
+  oDialsh.model.Cb_bas.text = &quot;&quot; &apos; melo by se smazat automaticky eventem Cange_name, ale pro jistotu... 
+  Bt_assign() &apos; s prazdnymi vstupním řetezci poli uvolni zkratku
+  &apos; načte - aktualizuje listbox procedur z modulu  BatchLibrary.BatchModul  pro klavesové zkratky dávek
+  refresch_Cb_bas()
+
+end sub
+
+
+
+
+
+&apos; provede se při jakékoli změně textu pole listboxu jmen dávek; přepíše filtrovaný text do jmena pro basic, 
+&apos; ale jen pokud je změna z &quot;Cb_name&quot; 
+sub Change_name(oEvt)
+&apos;xray oEvt.source
+ &apos; ale jen pokud je změna z &quot;Cb_name&quot;  
+ if not noFilt then 
+   oDialsh.getcontrol(&quot;Cb_bas&quot;).text = LatinFilter(oEvt.source.text)
+  end if 
+
+  noFilt = false  &apos; zrušit případné vypnutí přepisu filt. textu
+end sub
+
+
+
+&apos; provede se po vyberu položky z listboxu
+sub Change_name1(oEvt)
+&apos;xray oEvt.source
+ &apos;přepsat filtrovaný nazev do Cb_bas textu
+ oDialsh.getcontrol(&quot;Cb_bas&quot;).text = LatinFilter(oEvt.source.text)
+ &apos; zobrazit přiřazenou klávesovou zkratku podle basName, pokud existuje
+ &apos; neaktualizovat zpětně pole Cb_name.text
+ Change_basname(false)
+
+
+end sub
+
+
+
+
+
+
+&apos; po vyběru ze seznamu jmen procedur basicu upraví text odmaže případnou klavesovou zkratku
+sub Change_basname(optional refrName)
+dim pom, key, radek
+&apos;xray oEvt.source
+  &apos; nechat jen jmeno procedury, bez klavesové zkratky
+  oDialsh.model.Cb_bas.text = leftTo1(oDialsh.model.Cb_bas.text,shorcutLabel)
+  radek = replace_(keyCommand,&quot;^^^&quot;,oDialsh.model.Cb_bas.text) 
+ 
+  &apos; nastavit vypis klávesové zkratky
+  &apos; test existence jmena 
+  on error resume next  &apos; pokud neexistuje tak hodi chybu
+&apos;  key = objWriterShortCutMgr.getKeyEventsByCommand(radek)
+  key = getKeyEventsByCommand_bug(radek)
+  On Error GoTo 0 &apos;restore the error handler
+  
+  &apos; smazat předchozí info
+  oDialsh.model.Ch_alt.state = 0
+  oDialsh.model.Ch_ctrl.state = 0
+  oDialsh.model.Ch_shift.state = 0
+  oDialsh.getcontrol(&quot;Lb_char&quot;).SelectItemPos(0, true)  
+  oDialSh.model.Lb5.Label = &quot;&quot;
+  
+  if not isEmpty(key) then
+&apos;    xray key(0)
+    if (key(0).Modifiers and 2) = 2 then  oDialsh.model.Ch_ctrl.state = 1 
+    if (key(0).Modifiers and 4) = 4 then  oDialsh.model.Ch_alt.state = 1
+    if (key(0).Modifiers and 1) = 1 then  oDialsh.model.Ch_shift.state = 1
+    oDialsh.getcontrol(&quot;Lb_char&quot;).SelectItem(getStrHotkey(key(0).KeyCode), true)  
+    Change_key &apos; aktualizovat hodnotu 
+   end if 
+
+ &apos; nastavit příslušné jméno dávky, nebo příkazu  Cb_bas.text
+ noFilt = true &apos; zabranit opetovnemu filtrovanemu vypisu do Cb_bas
+ if isMissing(refrName) then  &apos; je-li uveden nějaký parametr tak nepřepisovat
+    oDialsh.getcontrol(&quot;Cb_name&quot;).text = getBatchNameByBasname(oDialsh.model.Cb_bas.text) &apos;&quot;neco&quot;
+  else
+    if isObject(refrName) then 
+      oDialsh.getcontrol(&quot;Cb_name&quot;).text = getBatchNameByBasname(oDialsh.model.Cb_bas.text) &apos;&quot;neco&quot;
+     else 
+      if refrName then oDialsh.getcontrol(&quot;Cb_name&quot;).text = getBatchNameByBasname(oDialsh.model.Cb_bas.text) &apos;&quot;neco&quot;
+     end if 
+  end if
+
+end sub
+
+
+
+&apos; podle jmena procedury vrátí nazev dávky v parametru volání _AltSearch
+sub getBatchNameByBasname(basName) as string &apos;&quot;neco&quot;
+dim i, pom, subr(), j
+  subr() = getSubrAsArr() 
+  for i = 0 to ubound(subr())
+     &apos; nalezena stejne jmeno procedury
+     if ucase(basName) = ucase(getSubrName(subr(i))) then
+        pom = rightPast(subr(i),&quot;_AltSearch(&quot;&quot;&quot;)
+        pom = leftTo(pom, &quot;&quot;&quot;)&quot;) &apos; jmeno nesmi obsahovat dvojici &quot;)    jinak se vrátí kratší jmeno
+        getBatchNameByBasname = pom
+        exit sub
+       end if
+    next i
+    
+  getBatchNameByBasname = &quot;&quot;
+end sub
+
+
+
+
+&apos; při změně parametru Ctrl Alt Shift nebo klávesy 
+sub Change_key
+ dim modif, keycod, pom
+ &apos;pom = &quot; &quot;
+ &apos;if oDialsh.model.Ch_ctrl.state = 1 then pom = &quot;Ctrl &quot;
+ &apos;if oDialsh.model.Ch_alt.state = 1 then pom = pom + &quot;Alt &quot;
+ &apos;if oDialsh.model.Ch_shift.state = 1 then pom = pom + &quot;Shift &quot;
+
+ modif = 0
+ if oDialsh.model.Ch_shift.state = 1 then modif = modif + 1
+ if oDialsh.model.Ch_ctrl.state = 1 then modif = modif + 2
+ if oDialsh.model.Ch_alt.state = 1 then modif = modif + 4
+
+ pom = oDialsh.getcontrol(&quot;Lb_char&quot;).SelectedItemPos
+ if pom&gt;=0 then 
+    keycod = val(leftTo(hotkey(pom),&quot; &quot;))
+    pom = GetAssignFunction(modif, keycod) &apos; vrací celý řetezec přiřazené funkce
+    oDialSh.model.Lb5.Label = pom
+    if pom = &quot;&quot; then oDialSh.model.Lb5.Label = msg(42)
+    
+  else  
+   oDialSh.model.Lb5.Label = &quot;&quot;
+  end if
+
+
+end sub
+
+
+
+
+&apos; načte listbox procedur z modulu BatchLibrary.BatchModul  pro klavesové zkratky dávek
+sub refresch_Cb_bas()
+dim i, j, subr(), pom, radek, key, nic, modif
+ &apos; smazat stare
+ oDialsh.getcontrol(&quot;Cb_bas&quot;).removeItems(0, oDialsh.getcontrol(&quot;Cb_bas&quot;).ItemCount ) 
+ &apos; pole procedurami
+ subr() = getSubrAsArr()
+
+ for i = 0 to ubound(subr())
+   pom = getSubrName(subr(i))    &apos; vrati z retezce cele procedury pouze jmeno
+   &apos;sestavit kompletni jmeno
+   radek = replace_(keyCommand,&quot;^^^&quot;,pom) 
+
+   &apos; test existence jmena 
+   key = nic &apos; přiřadit empty hodnotu
+   modif = &quot;&quot; &apos; textova podoba modifikatorů
+   on error resume next  &apos; pokud neexistuje tak hodi chybu
+&apos;   key = objWriterShortCutMgr.getKeyEventsByCommand(radek)
+   key = getKeyEventsByCommand_bug(radek)
+   On Error GoTo 0 &apos;restore the error handler
+   
+   if not isEmpty(key) then
+      if (key(0).Modifiers and 2) = 2 then modif = modif + &quot;Ctrl + &quot; 
+      if (key(0).Modifiers and 4) = 4 then modif = modif + &quot;Alt + &quot; 
+      if (key(0).Modifiers and 1) = 1 then modif = modif + &quot;Shift + &quot; 
+      modif = shorcutLabel + modif + getStrHotkey(key(0).KeyCode) + &quot;&quot;
+    end if 
+
+   oDialsh.getcontrol(&quot;Cb_bas&quot;).addItem(pom + modif,i)
+  next i  
+
+&apos;xray objWriterShortCutMgr.getKeyEventsByCommand(&quot;&quot;)   &apos; vnd.sun.star.script:Standard.AltSearchBatchs.Altsearch___dialog?language=Basic&amp;location=application
+end sub
+
+
+
+
+
+&apos; filtrace znaků pro nazeb basic makra
+sub LatinFilter(vst as string) as string
+dim i, ch
+dim vyst  
+  
+ for i = 1 to  len(vst)
+  ch = mid(vst,i,1)
+  select case ch
+   case &quot;0&quot; to &quot;9&quot;  &apos; začíná číslem, vložit podtržítko
+     if i=1 then ch = &quot;_&quot;+ch
+  
+   case &quot;a&quot; to &quot;z&quot; &apos; nechat byt
+   case &quot;A&quot; to &quot;Z&quot; &apos; nechat byt    
+   case &quot;_&quot;  &apos; nechat byt
+ 
+   case &quot;À&quot;, &quot;Á&quot;, &quot;Â&quot;, &quot;Ã&quot;, &quot;Ä&quot;, &quot;Å&quot;, &quot;Æ&quot;, &quot;à&quot;, &quot;á&quot;, &quot;â&quot;, &quot;ã&quot;, &quot;ä&quot;, &quot;å&quot;, &quot;æ&quot;, &quot;Ā&quot;, &quot;ā&quot;, &quot;Ă&quot;, &quot;ă&quot;, &quot;Ą&quot;, &quot;ą&quot;, &quot;ǎ&quot;, &quot;Ǎ&quot;  : ch = &quot;a&quot;
+
+   case &quot;č&quot;,&quot;Č&quot;,&quot;Ç&quot;, &quot;ç&quot;, &quot;Ć&quot;, &quot;ć&quot;, &quot;Ĉ&quot;, &quot;ĉ&quot;, &quot;Ċ&quot;, &quot;ċ&quot;  : ch = &quot;c&quot;
+   case &quot;ď&quot;,&quot;Ď&quot;, &quot;Ð&quot;, &quot;đ&quot;, &quot;ð&quot; : ch = &quot;d&quot;
+   case &quot;ě&quot;,&quot;é&quot;,&quot;Ě&quot;,&quot;É&quot;,&quot;È&quot;, &quot;É&quot;, &quot;Ê&quot;, &quot;Ë&quot;, &quot;è&quot;, &quot;é&quot;, &quot;ê&quot;, &quot;ë&quot;, &quot;Ē&quot;, &quot;ē&quot;, &quot;Ė&quot;, &quot;ė&quot;, &quot;Ę&quot;, &quot;ę&quot; : ch = &quot;e&quot;
+
+   case &quot;Ĝ&quot;, &quot;ĝ&quot;, &quot;Ğ&quot;, &quot;ğ&quot;, &quot;Ġ&quot;, &quot;ġ&quot;, &quot;Ģ&quot;, &quot;ģ&quot; : ch = &quot;g&quot;
+   case &quot;Ĥ&quot;, &quot;ĥ&quot;, &quot;Ħ&quot;, &quot;ħ&quot; : ch = &quot;h&quot;
+   case &quot;Ì&quot;, &quot;Í&quot;, &quot;Î&quot;, &quot;Ï&quot;, &quot;ì&quot;, &quot;í&quot;, &quot;î&quot;, &quot;ï&quot;, &quot;Ĩ&quot;, &quot;ĩ&quot;, &quot;Ī&quot;, &quot;ī&quot;, &quot;Ĭ&quot;, &quot;ĭ&quot;, &quot;Į&quot;, &quot;į&quot;, &quot;İ&quot;, &quot;ı&quot;, &quot;Ǐ&quot;, &quot;ǐ&quot; : ch = &quot;i&quot;
+   case &quot;Ĵ&quot;, &quot;ĵ&quot; : ch = &quot;j&quot;
+   case &quot;Ķ&quot;, &quot;ķ&quot;, &quot;ĸ&quot; : ch = &quot;k&quot;
+   case &quot;Ĺ&quot;, &quot;ĺ&quot;, &quot;Ļ&quot;, &quot;ļ&quot;, &quot;Ľ&quot;, &quot;ľ&quot;, &quot;Ŀ&quot;, &quot;ŀ&quot;, &quot;Ł&quot;, &quot;ł&quot; : ch = &quot;l&quot;
+
+   case &quot;ň&quot;,&quot;Ň&quot;,&quot;Ñ&quot;, &quot;ñ&quot;, &quot;Ń&quot;, &quot;ń&quot;, &quot;Ņ&quot;, &quot;ņ&quot;, &quot;ŉ&quot;, &quot;Ŋ&quot;, &quot;ŋ&quot; : ch = &quot;n&quot;
+   case &quot;Ò&quot;, &quot;Ó&quot;, &quot;Ô&quot;, &quot;Õ&quot;, &quot;Ö&quot;, &quot;ò&quot;, &quot;ó&quot;, &quot;ô&quot;, &quot;õ&quot;, &quot;ö&quot;, &quot;Ō&quot;, &quot;ō&quot;, &quot;Ŏ&quot;, &quot;ŏ&quot;, &quot;Ő&quot;, &quot;ő&quot;, &quot;Ơ&quot;, &quot;ơ&quot;, &quot;Ǒ&quot;, &quot;ǒ&quot; : ch = &quot;o&quot;
+   case &quot;Þ&quot;, &quot;þ&quot; : ch = &quot;p&quot;
+
+   case &quot;ř&quot;,&quot;Ř&quot;,&quot;Ŕ&quot;, &quot;ŕ&quot;, &quot;Ŗ&quot;, &quot;ŗ&quot; : ch = &quot;r&quot;
+   case &quot;š&quot;,&quot;Š&quot;,&quot;Ś&quot;, &quot;ś&quot;, &quot;Ŝ&quot;, &quot;ŝ&quot;, &quot;Ş&quot;, &quot;ş&quot;, &quot;ß&quot; : ch = &quot;s&quot;
+   case &quot;ť&quot;,&quot;Ť&quot;,&quot;Ţ&quot;, &quot;ţ&quot;, &quot;Ŧ&quot;, &quot;ŧ&quot; : ch = &quot;t&quot;   
+   case &quot;ů&quot;,&quot;Ů&quot;,&quot;Ù&quot;, &quot;Ú&quot;, &quot;Û&quot;, &quot;Ü&quot;, &quot;ù&quot;, &quot;ú&quot;, &quot;û&quot;, &quot;ü&quot;, &quot;Ũ&quot;, &quot;ũ&quot;, &quot;Ū&quot;, &quot;ū&quot;, &quot;Ŭ&quot;, &quot;ŭ&quot;, &quot;Ű&quot;, &quot;ű&quot;, &quot;Ų&quot;, &quot;ų&quot;, &quot;Ư&quot;, &quot;ư&quot;, &quot;Ǔ&quot;, &quot;ǔ&quot; : ch = &quot;u&quot;
+   case &quot;Ŵ&quot;, &quot;ŵ&quot; : ch = &quot;w&quot;
+
+   case &quot;ý&quot;,&quot;Ý&quot;,&quot;ÿ&quot;, &quot;Ŷ&quot;, &quot;ŷ&quot;, &quot;Ÿ&quot; : ch = &quot;y&quot;
+   case &quot;ž&quot;,&quot;Ž&quot;,&quot;Ź&quot;, &quot;ź&quot;, &quot;Ż&quot;, &quot;ż&quot; : ch = &quot;z&quot;
+  
+  &apos; azbuka
+   case &quot;ъ&quot;,&quot;Ъ&quot;   : ch = &quot;&quot;
+   case &quot;ш&quot;,&quot;Ш&quot;   : ch = &quot;sh&quot;
+   case &quot;ч&quot;,&quot;Ч&quot;   : ch = &quot;tch&quot;
+   case &quot;щ&quot;,&quot;Щ&quot;   : ch = &quot;sh&quot;
+   case &quot;ж&quot;,&quot;Ж&quot;   : ch = &quot;z&quot;
+   case &quot;і&quot;,&quot;І&quot;   : ch = &quot;i&quot;
+   case &quot;ё&quot;,&quot;Ё&quot;   : ch = &quot;jo&quot;
+   case &quot;ї&quot;,&quot;Ї&quot;   : ch = &quot;i&quot;
+   case &quot;є&quot;,&quot;Є&quot;   : ch = &quot;e&quot;
+   case &quot;ю&quot;,&quot;Ю&quot;   : ch = &quot;ju&quot;
+   case &quot;е&quot;,&quot;Е&quot;   : ch = &quot;e&quot;
+   case &quot;р&quot;,&quot;Р&quot;   : ch = &quot;r&quot;
+   case &quot;т&quot;,&quot;Т&quot;   : ch = &quot;t&quot;
+   case &quot;ы&quot;,&quot;Ы&quot;   : ch = &quot;y&quot;
+   case &quot;у&quot;,&quot;У&quot;   : ch = &quot;u&quot;
+   case &quot;и&quot;,&quot;И&quot;   : ch = &quot;i&quot;
+   case &quot;о&quot;,&quot;О&quot;   : ch = &quot;o&quot;
+   case &quot;п&quot;,&quot;П&quot;   : ch = &quot;p&quot;
+   case &quot;э&quot;,&quot;э&quot;   : ch = &quot;e&quot;
+   case &quot;а&quot;,&quot;А&quot;   : ch = &quot;a&quot;
+   case &quot;с&quot;,&quot;С&quot;   : ch = &quot;s&quot;
+   case &quot;д&quot;,&quot;Д&quot;   : ch = &quot;d&quot;
+   case &quot;ф&quot;,&quot;Ф&quot;   : ch = &quot;f&quot;
+   case &quot;г&quot;,&quot;Г&quot;   : ch = &quot;g&quot;
+   case &quot;х&quot;,&quot;Х&quot;   : ch = &quot;ch&quot;
+   case &quot;й&quot;,&quot;Й&quot;   : ch = &quot;j&quot;
+   case &quot;к&quot;,&quot;К&quot;   : ch = &quot;k&quot;
+   case &quot;л&quot;,&quot;Л&quot;   : ch = &quot;l&quot;
+   case &quot;ь&quot;,&quot;Ь&quot;   : ch = &quot;&quot;
+   case &quot;з&quot;,&quot;З&quot;   : ch = &quot;z&quot;
+   case &quot;я&quot;,&quot;Я&quot;   : ch = &quot;ja&quot;
+   case &quot;ц&quot;,&quot;Ц&quot;   : ch = &quot;c&quot;
+   case &quot;в&quot;,&quot;В&quot;   : ch = &quot;v&quot;
+   case &quot;б&quot;,&quot;Б&quot;   : ch = &quot;b&quot;
+   case &quot;н&quot;,&quot;Н&quot;   : ch = &quot;n&quot;
+   case &quot;м&quot;,&quot;М&quot;   : ch = &quot;m&quot;
+
+        
+   case else  &apos; ostatní znaky zaměnit za _
+     ch = &quot;_&quot;
+  
+   end select
+   
+   
+    vyst = vyst + ch
+  next i
+
+ LatinFilter = vyst
+
+end sub
+
+
+
+
+&apos; inicializuje objekt klavesových zkratek
+sub Init_objWriterShortCutMgr
+ dim objModuleCfgMgrSupplier	as object
+ dim objWriterModuleCfgMgr
+&apos; Dim strCommand 	as string  
+
+  on error goto Errorhandler
+&apos;  strCommand = &quot;vnd.sun.star.script:ComposeSpecialChars.modCode.ComposeSpecialChar?language=Basic&amp;location=application&quot;
+  objModuleCfgMgrSupplier = createUnoService(&quot;com.sun.star.ui.ModuleUIConfigurationManagerSupplier&quot;)
+
+  &apos; Retrieve the module configuration manager with module identifier
+  objWriterModuleCfgMgr = objModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.TextDocument&quot;)
+  &apos; pokud je aktivní dokument www nebo hlavní tak aktivovat jim odpovídající sady
+  If  AltSearchDoc.SupportsService(&quot;com.sun.star.text.WebDocument&quot;) Then objWriterModuleCfgMgr = objModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.WebDocument&quot;)
+  If  AltSearchDoc.SupportsService(&quot;com.sun.star.text.GlobalDocument&quot;) Then objWriterModuleCfgMgr = objModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.GlobalDocument&quot;)
+
+  objWriterShortCutMgr = objWriterModuleCfgMgr.getShortCutManager
+  exit sub
+  
+Errorhandler:
+ hlaseni1(48, false, false, &quot;Init_objWriterShortCutMgr:    l. &quot; &amp; erl &amp; &quot;:  &quot; &amp; Error$) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti          
+end sub
+
+	
+
+
+&apos; vraci retezec přiřazene funkce podle modif a kodu klavesy 
+sub GetAssignFunction(modif, keycod) as string
+dim strLocCommand
+  on error goto Errorhandler
+  Dim aKeyEvent As New com.sun.star.awt.KeyEvent
+	With aKeyEvent
+		.Modifiers = modif 
+		.KeyCode = keycod
+	End With
+	
+	On Error Resume next
+	strLocCommand = objWriterShortCutMgr.getCommandByKeyEvent(aKeyEvent)
+	On Error GoTo 0 &apos;restore the error handler
+    GetAssignFunction = strLocCommand 
+    exit sub    
+
+Errorhandler:
+ hlaseni1(48, false, false, &quot;GetAsiignFunction:    l. &quot; &amp; erl &amp; &quot;:  &quot; &amp; Error$) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti          
+end sub
+
+
+
+&apos; Warning this module is modified by execution of Xray macro !!
+&apos; Do not change any character unless you know what you do !
+
+
+&apos; vrati pole s použitými procedurami v modulu BatchLibrary.BatchModul
+sub getSubrAsArr() as array
+dim modulProlog
+dim oLibs, oLib
+dim i, n, radek
+  on error goto Errorhandler
+  modulProlog = &quot;REM  *****  BASIC  *****&quot; + cr(1) + &quot;Option Explicit&quot; + cr(2) + &quot;&apos; Warning this module is modified by execution of AltSearch macro!&quot; &amp; cr(1) _
+              &amp; &quot;&apos; Contains subroutines for assign key shortcut for AltSearch&apos;s batchs.&quot; + cr(1) + &quot;&apos; Do not change any character unless you know what you do!&quot; + cr(3) _
+              &amp; &quot;Sub Altsearch___dialog&quot; &amp; cr(1) &amp;  &quot; On Error resume next&quot; &amp; cr(1) &amp; &quot; GlobalScope.BasicLibraries.LoadLibrary(&quot;&quot;AltSearch&quot;&quot;) &apos;load AltSearch library&quot; &amp; cr(1) &amp; &quot; _AltSearch&quot; &amp; cr(1) &amp; &quot;End sub&quot; &amp; cr(3) _
+              &amp; &quot;Sub Altsearch___Find_next&quot; &amp; cr(1) &amp;  &quot; On Error resume next&quot; &amp; cr(1) &amp; &quot; GlobalScope.BasicLibraries.LoadLibrary(&quot;&quot;AltSearch&quot;&quot;)&quot; &amp; cr(1) &amp; &quot; _FindNext&quot; &amp; cr(1) &amp; &quot;End sub&quot; &amp; cr(3) _
+              &amp; &quot;Sub Altsearch___Find_previous&quot; &amp; cr(1) &amp;  &quot; On Error resume next&quot; &amp; cr(1) &amp; &quot; GlobalScope.BasicLibraries.LoadLibrary(&quot;&quot;AltSearch&quot;&quot;)&quot; &amp; cr(1) &amp; &quot; _FindBack&quot; &amp; cr(1) &amp; &quot;End sub&quot; &amp; cr(5)
+
+  &apos;oLibs is array of libraries in soffice
+  oLibs = GlobalScope.BasicLibraries
+
+  &apos;Create new library, if it does not exist
+  if not oLibs.HasByName(BatchLibrary) then
+     oLibs.CreateLibrary(BatchLibrary)
+  end if
+
+  &apos;Get library object
+  oLib = oLibs.GetByName(BatchLibrary)
+
+  &apos;Create module within library if required
+  if not oLib.HasByName(BatchModul) then
+     oLib.InsertByName(BatchModul, modulProlog)
+   end if
+  
+  radek = oLib.getByName(BatchModul)
+  getSubrAsArr() = ArrayOutOfString_(radek, cr(1) &amp; &quot;sub &quot;)
+  exit sub
+
+Errorhandler:
+ hlaseni1(48, false, false, &quot;getSubrAsArr error:    l. &quot; &amp; erl &amp; &quot;:  &quot; &amp; Error$) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti          
+end sub  
+
+
+
+
+
+&apos; vloží do zadaneho modulu proceduru basicu &quot;basName&quot; umoznujici spusteni dávky &quot;batchName&quot;
+&apos; pokud je &quot;batchName&quot; chr(13) tak se procedura &quot;basName&quot; vymaze
+sub SetBatch_to_BasicSub(batchName, basName)
+dim batchCommand1, sFunction, oLib
+dim i, n, radek, subr()
+  on error goto Errorhandler
+  batchCommand1 = &quot;^^^1&quot; &amp; cr(1) &amp; &quot; On Error resume next&quot; &amp; cr(1) &amp; &quot; GlobalScope.BasicLibraries.LoadLibrary(&quot;&quot;AltSearch&quot;&quot;)&quot; &amp; cr(1) _
+               &amp; &quot; _AltSearch(&quot;&quot;^^^2&quot;&quot;)&quot;+ cr(1) &amp; &quot;End sub&quot; + cr(3) 
+
+  &apos; sestavit prikaz
+  sFunction = replace_(batchCommand1,&quot;^^^1&quot;,basName)  
+  sFunction = replace_(sFunction,&quot;^^^2&quot;,batchName)  
+  
+  &apos; pokud je jmeno #13 tak smazat proceduru
+  if batchName = chr(13) then sFunction = &quot;&quot;
+
+  subr() = getSubrAsArr() &apos; vrati pole s použitými procedurami v modulu BatchLibrary.BatchModul
+  
+  n = ubound(subr())
+  i = existSubrName(subr(),basName) 
+  if i &gt;= 0 then 
+     &apos; přepsat stavajici, pokud to nejsou prvni tri specialni prikazy
+     if (i&gt;3) then subr(i) = sFunction
+    else
+     &apos; přidat na konec
+     redim preserve subr(n+1)
+     subr(n+1) = sFunction
+    end if
+
+   &apos; sestavit vysledny retezec
+   radek = subr(0)  &apos; uvod
+   for i = 1 to ubound(subr()) 
+     if subr(i) &lt;&gt; &quot;&quot; then &apos; prazdne jsou smazane, neukladat  
+       radek = radek + cr(1) &amp; &quot;Sub &quot; + subr(i)
+      end if 
+    next i
+
+   &apos; prepsat do modulu
+
+   oLib = GlobalScope.BasicLibraries.GetByName(BatchLibrary)
+   oLib.replacebyName(BatchModul, radek) 
+&apos; xray oLib.getByName(BatchModul)
+&apos; xray oLib.GetByName (BatchModul)
+    exit sub    
+
+Errorhandler:
+ hlaseni1(48, false, false, &quot;SetBatch_to_BasicSub error:    l. &quot; &amp; erl &amp; &quot;:  &quot; &amp; Error$) &apos;  styl: 16=zastavit 32=? 48=! 64=info; moznopotlačit; prerusit cinnosti          
+end sub
+
+
+
+&apos; vraci podretezec zleva, až do hledaneho retezce HLE
+&apos; pokud nenajde vrati puvodní
+sub leftTo1(ret$, hle$)as string
+dim i&amp; 
+dim nic as variant
+
+  i = instr(1,ret,hle,1)  &apos; posledni par. = 1 - nezalezi na velikosti znaků
+  if i&gt;0 then
+      leftTo1 = left(ret,i-1)
+    else &apos; nenalezeno
+      leftTo1 = ret
+    end if
+end sub
+
+
+sub cr(poc)as string
+  cr = string(poc,10) 
+end sub
+
+
+&apos; vrací textový tvar nazvu klavesy podle kodu
+sub getStrHotkey(code) as string   
+dim i,j, ccode 
+  ccode = cstr(code)+&quot; &quot;
+ for i = 0 to ubound(hotkey())
+   j = instr(hotkey(i),ccode) 
+   if j = 1 then
+      getStrHotkey = rightPast(hotkey(i),&quot; &quot;)
+      exit sub
+     end if       
+    
+  next i
+  
+ &apos;nenalezeno
+ getStrHotkey =  &quot;&quot;
+end sub
+
+
+
+
+&apos; vrati z retezce cele procedury pouze jmeno
+sub getSubrName(vstup) as string
+dim pom
+ pom = leftTo1(vstup,cr(1))
+ pom = leftTo1(pom,&quot;&apos;&quot;)
+ if instr(ltrim(pom),&quot;rem&quot;) = 1  then pom = trim(leftTo1(pom,&quot;rem&quot;))
+ getSubrName = trim(pom)
+end sub
+
+
+
+&apos; testuje zda existuje procedura batchName
+sub existSubrName(subr,batchName)as long
+dim i, j
+  for i = 0 to ubound(subr())
+    if trim(batchName)=getSubrName(subr(i)) then  &apos; nalezeno
+       existSubrName = i
+       exit sub
+      end if
+     
+   next i
+  existSubrName =-1
+end sub
+
+
+
+
+
+
+
+
+</script:module>

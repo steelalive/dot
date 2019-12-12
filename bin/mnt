@@ -57,9 +57,7 @@ for i; do
 	fsck.exfat "$dev_path" 2>/dev/null
 	e2fsck "$dev_path" 2>/dev/null
 	mkdir -vp "$mnt_path" 2>/dev/null
-	sh_return || return $?
 	mount -v "$dev_path" "$mnt_path"
-	sh_return || return $?
 	cd "$mnt_path" || true
 	part_mapper
 	lk "$mnt_path"

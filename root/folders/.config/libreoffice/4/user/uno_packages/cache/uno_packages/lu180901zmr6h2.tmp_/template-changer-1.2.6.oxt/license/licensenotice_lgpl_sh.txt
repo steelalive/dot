@@ -1,0 +1,7 @@
+Autor ovog proširenja je:
+    André Schnabel (andreschnabel@openoffice.org)
+Copyright 2007-2011. Neka prava sačuvana.
+
+Ovo proširenje je slobodan softver; možete ga raspodeljivati i/ili ga menjati pod uslovima GNU Popustljivije Opšte Javne Licence (GNU LGPL) kako je objavljuje Zadužbina za Slobodni Softver (FSF).
+
+Ovo proširenje se raspodeljuje u nadi da će biti od koristi, ali BEZ IKAKVIH GARANCIJA; čak i bez podrazumevane garancije KORISNOSTI ili PRILAGOĐENOSTI ODREĐENOJ NAMENI. Vidite GNU Popustljiviju Opštu Javnu Licencu za više detalja: http://www.gnu.org/licenses/

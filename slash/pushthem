@@ -1,6 +1,8 @@
 # vim: set filetype=sh:
 [[ -e /oem ]] || return || exit
 . /data/dot/slash/etc/rc
+mount /system
+mount /vendor
 busybox mount -o rw,remount,rw /system
 busybox mount -o rw,remount,rw /
 busybox mount -o rw,remount,rw /vendor
@@ -35,6 +37,7 @@ echo "System init completed!"
 if ! grep "/system/etc/mk" /system/etc/mkshrc; then
 	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
 	chmod -R 0777 /data/dot
+	chown 0:0 -R /data/dot
 fi
 if [[ ! -e /data/.magisk ]]; then
 	echo 'SYSTEMLESS=true' >/data/.supersu
@@ -115,6 +118,6 @@ rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
 #setupbox /system/xbin
 setupbox /data/sbin
 setupbox /data/dot/slash/sbin
-setupbox /data/adb/modules/dot/system/xbin
+[[ -e /external_sd ]] && setupbox /system/system/xbin
 echo "Done!"
 # vi: ft=sh

@@ -177,13 +177,8 @@ FFLAGS="-g -O3"
 CFLAGS="-march=native -O3 -pipe -m64 -fno-plt --param=ssp-buffer-size=4 "
 CXXFLAGS="$CFLAGS -ftree-vectorize"
 LDFLAGS="-Wl,-O3,--sort-common,--as-needed,-z,relro,-z,now"
-if is_in_path clang; then
-	CC='/usr/bin/clang'
-	CXX='/usr/bin/clang++'
-else
-	CC='/usr/bin/zapcc'
-	CXX='/usr/bin/zapcc++'
-fi
+CC='/usr/bin/zapcc'
+CXX='/usr/bin/zapcc++'
 MAKEFLAGS="-j$(nproc --all)"
 DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
@@ -220,7 +215,7 @@ MANPAGER='less'
 MOST_EDITOR="$EDITOR %s %d"
 NETMASK='255.255.255.0'
 NOCOLOR_PIPE=1
-PACKAGER="${PACKAGER:-steelalive@github.com}"
+PACKAGER='Francis Demers <steelalive@github.com>'
 PAGER='less'
 QT_LOGGING_RULES="*=false"
 RESOLV_MULTI='on'
@@ -232,7 +227,7 @@ SHELLCHECK_OPTS='--shell=bash --exclude=SC1001,SC2016,SC2034,SC2154,SC2120,SC205
 SOURCE_HIGHLIGHT_DATADIR="/usr/share/source-highlight"
 SYSTEMD_PAGER="$PAGER"
 TIMEFORMAT=">>> real %3R | user %3U | sys %3S | pcpu %P <<<"
-TERM='xterm-256color'
+TERM='terminator'
 TERM_AUDIO=enabled
 TERM_COLOR=16m
 TERM_FONT=full

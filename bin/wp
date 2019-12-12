@@ -81,11 +81,11 @@ while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	ip link set "$NET" up
 	s1 222
 	#	wpa_supplicant -Dnl80211 -B -i"$NET" -C $(wpa_passphrase $(grep '#3' /last/wifi.txt | cut -d' ' -f2-3))
-	if [[ $number ]]; then
-		wpa_supplicant -Dnl80211 -B -i"$NET" -C$(wpa_passphrase $(grep "#$number" /last/wifi.txt | cut -d' ' -f2-3))
-	else
-		wpa_supplicant -Dnl80211 -B -i"$NET" -c$dot/bin/wpa_supplicant.conf
-	fi
+	#	if [[ $number ]]; then
+	#		wpa_supplicant -Dnl80211 -B -i"$NET" -C$(wpa_passphrase $(grep "#$number" /last/wifi.txt | cut -d' ' -f2-3))
+	#	else
+	wpa_supplicant -Dnl80211 -B -i"$NET" -c$dot/bin/wpa_supplicant.conf
+	#	fi
 	s1 133
 	center_string "${RED}${UNDER}DHCPCD${R}\\n"
 	s1 189

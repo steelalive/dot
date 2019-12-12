@@ -27,10 +27,7 @@ if [[ $1 == aosp ]]; then
 /usr/local/bin
 /usr/local/sbin
 /data/sbin
-/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin
-/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin
-/ext/opt/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabi/bin
-/opt/aarch64-linux-android-gcc/bin
+/ext/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin
 $src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin
 $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin
 $src/prebuilts/gcc/linux-x86
@@ -88,7 +85,11 @@ $HOME/toolchain/bin
 /system/sbin
 /data/dot/slash/sbin
 /usr/lib/bash-utils
-$(echo $(printf "%s\n" /ext/opt/build-tools/* | sort | head -n1)/bin)
+$(printf "%s\n" /ext/opt/build-tools/* | tail -n1)
+/ext/opt/ndk-bundle
+/ext/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin
+/ext/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/aarch64-linux-gnu/bin
+/usr/aarch64-linux-gnu/bin
 $dot/bin
 $dot/bin/final
 $dot"

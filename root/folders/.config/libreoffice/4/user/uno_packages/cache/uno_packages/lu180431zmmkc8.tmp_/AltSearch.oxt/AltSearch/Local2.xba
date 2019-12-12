@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Local2" script:language="StarBasic">REM  *****  BASIC  *****
+
+
+Sub Load_nl
+REM test: ěščřžýáíé юертыъшчщжі
+dim i as long
+dim pom as string
+  findReg = array(&quot; Eerste teken van een alinea       &quot;+chr(160)+&quot;^.&quot;, _
+                  &quot; Einde van een alinea              &quot;+chr(160)+&quot;$&quot;, _
+                  &quot; Lege alinea                       &quot;+chr(160)+&quot;^$&quot;, _
+                  &quot; Willekeurige tekst in één alinea  &quot;+chr(160)+&quot;.*&quot;, _
+                  &quot; Willekeurige letter [:alpha:]{1,1}&quot;+chr(160)+&quot;\l&quot;, _
+                  &quot; Willekeurig decimaal getal  [0-9] &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Begin van een woord               &quot;+chr(160)+&quot;\&lt;&quot;, _
+                  &quot; Einde van een woord               &quot;+chr(160)+&quot;\&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Alinea (eindemarkering)   &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Reeks lege alinea&apos;s       &quot;+chr(160)+&quot;^$\p*&quot;, _
+                  &quot; Tabulator                 &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Handmatig regeleinde      &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Handmatig kolomeinde      &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Handmatig pagina-einde    &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Willekeurige witruimte [ \xA0\x9\xA]   &quot;+chr(160)+&quot;\s&quot;, _
+                  &quot; Niet-afbrekende spatie (\xA0)          &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Gebruikergedefinieerde afbreekstreepjes&quot;+chr(160)+&quot;\x00AD&quot;, _
+                  &quot; Niet-afbrekend streepje                &quot;+chr(160)+&quot;\x2011&quot;, _
+                  &quot; A ingevoegd met decimale code          &quot;+chr(160)+&quot;\#65&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Punt                 &quot;+chr(160)+&quot;\.&quot;, _
+                  &quot; Haakjes     ()       &quot;+chr(160)+&quot;\(\)&quot;, _
+                  &quot; Vierkante haakjes [] &quot;+chr(160)+&quot;\[\]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)
+                  
+&apos;                   &quot; Další symboly:  \^$*+?| &quot;+chr(160)+&quot;\\\^\$\*\+\?\|&quot;, _                  
+&apos;                 &quot; Gekrulde haakjes  {}         &quot;+chr(160)+&quot;\{\}&quot;, _
+  oDial.getcontrol(&quot;Cb_findReg&quot;).addItems(findReg,0)
+
+  findExt = array(&quot; Reeks alinea&apos;s (begrensd tussen begin- en eindemarkering) &quot;+chr(160)+&quot;[::BigBlock::]&quot;, _
+                  &quot; Breidt de gevonden selectie één teken naar beide zijden uit &quot;+chr(160)+&quot;[::Grow 1,1::]&quot;, _
+                  &quot; Voeg teken || toe voor meerdere vervangingen (in één stap)  &quot;+chr(160)+&quot;||&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Tekst tussen () (binnen één alinea)&quot;+chr(160)+&quot;(\(([^\)])+\))&quot;, _
+                  &quot; Tekst tussen [] (binnen één alinea)&quot;+chr(160)+&quot;(\[([^\]])+\])&quot;, _
+                  &quot; Tekst tussen {} (binnen één alinea)&quot;+chr(160)+&quot;({([^}])+})&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; emailadres&quot;+chr(160)+&quot;[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_].?@[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_]\.[a-zA-Z0-9_]{2,4}&quot;, _
+                  &quot; Internet, URL, www-adres&quot;+chr(160)+&quot;(((news|http|ftp|https|file):\/\/|www\.)[a-zA-Z0-9_]+((\.[a-zA-Z0-9_]+)+)(([a-zA-Z0-9_\-\.,@?^=%&amp;:/~\+#]*[a-zA-Z0-9_\-\@?^=%&amp;/~\+#])?))&quot;, _
+                  &quot; HTML-tag&quot;+chr(160)+&quot;(&lt;(&quot;&quot;[^&quot;&quot;]*&quot;&quot;|&apos;[^&apos;]*&apos;|[^&apos;&quot;&quot;&gt;])*&gt;)&quot;, _
+                  &quot; HTML-tag (openen)&quot;+chr(160)+&quot;&lt;[^/][^&gt;]+&gt;&quot;, _
+                  &quot; HTML-tag (sluiten) &quot;+chr(160)+&quot;&lt;/[^&gt;]+&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Notities (gele ballonnen) - zoekt subtekenreeks in inhoud van notities&quot;+chr(160)+&quot;[::Note::]&quot;, _
+                  &quot; Tekstvelden - zoekt subtekenreeks in inhoud van velden&quot;+chr(160)+&quot;[::Field::]&quot;, _
+                  &quot; Tekstframe - zoekt subtekenreeks in namen van frames&quot;+chr(160)+&quot;[::TextFrame::]&quot;, _
+                  &quot; Tabel - zoekt subtekenreeks in namen van tabellen&quot;+chr(160)+&quot;[::TextTable::]&quot;, _
+                  &quot; Afbeelding - zoekt subtekenreeks in namen van afbeeldingen&quot;+chr(160)+&quot;[::Picture::]&quot;, _
+                  &quot; Voetnoot - tekst van anker; voeg \\ toe voor het zoeken in de inhoud van voetnoten&quot;+chr(160)+&quot;[::Footnote::]&quot;, _
+                  &quot; Eindnoten - tekst van anker; voeg \\ toe voor het zoeken in de inhoud van eindnoten&quot;+chr(160)+&quot;[::Endnote::]&quot;, _
+                  &quot; Markering kruisverwijzing (tekst); \\ voor zoeken in naam; \\\\ voor zoeken naar lege tekst&quot;+chr(160)+&quot;[::ReferenceMark::]&quot;, _
+                  &quot; Kruisverwijzing (tekst); \\ voor zoeken in naam markering; \\\\ voor zoeken naar lege tekst&quot;+chr(160)+&quot;[::Reference::]&quot;, _
+                  &quot; Bladwijzer - zoekt subtekenreeks in tekst van Bladwijzers; voeg \\ toe om te zoeken in namen&quot;+chr(160)+&quot;[::Bookmark::]&quot;,_ 
+                  &quot; &quot;+chr(160)+&quot;&quot;)           
+                  
+                         
+  for i = lbound(findExt) to ubound(findExt) 
+    pom = findExt(ubound(findExt)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findExt&quot;).addItem(pom,0)                     
+   next i 
+
+  findAtr = array(&quot; Alineaopmaakprofiel&quot;+chr(160)+&quot;[:::ps::]&quot;, _
+                  &quot; Tekenopmaakprofiel&quot;+chr(160)+&quot;[:::chs::]&quot;, _
+                  &quot; Lijstopmaakprofiel&quot;+chr(160)+&quot;[:::ns::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Hyperlink&quot;+chr(160)+&quot;[:::HyperLinkURL::]&quot;, _
+                  &quot; Hyperlink - subtekenreeks in URL &quot;+chr(160)+&quot;[:::HyperLinkURL=file:///::]&quot;,_
+                  &quot; Cursief&quot;+chr(160)+&quot;[:::CharPosture::]&quot;, _
+                  &quot; Vet&quot;+chr(160)+&quot;[:::CharWeight::]&quot;, _
+                  &quot; Vet cursief&quot;+chr(160)+&quot;[:::CharPosture|CharWeight::]&quot;, _
+                  &quot; Lettertype Naam (manual changed name)&quot;+chr(160)+&quot;[:::CharFontName::]&quot;, _
+                  &quot; Lettertype Grootte&quot;+chr(160)+&quot;[:::CharHeight::]&quot;, _
+                  &quot; Lettertype Kleur&quot;+chr(160)+&quot;[:::CharColor::]&quot;, _
+                  &quot; Lettertype achtergrond (accentuering)&quot;+chr(160)+&quot;[:::CharBackColor::]&quot;, _
+                  &quot; Onderstreept&quot;+chr(160)+&quot;[:::CharUnderline::]&quot;, _
+                  &quot; Index (elke)&quot;+chr(160)+&quot;[:::CharEscapement::]&quot;, _
+                  &quot; Subscript (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=-101::]&quot;, _
+                  &quot; Superscript (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=101::]&quot;, _
+                  &quot; Index gedefinieerd door lettergrootte en escapement &quot;+chr(160)+&quot;[:::CharEscapementHeight=70|CharEscapement=30::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Soortgelijke opmaak van tekens (gebaseerd op cursorpositie)&quot;+chr(160)+&quot;[:::p::]&quot;, _
+                  &quot; Dezelfde opmaak van tekens (gebaseerd op cursorpositie)&quot;+chr(160)+&quot;[:::s::]&quot;)
+                  
+  &apos; není podporováno  &quot; Znakové styly&quot;+chr(160)+&quot;[:::CharStyleName::]&quot;, _                  
+  
+  for i = lbound(findAtr) to ubound(findAtr) 
+    pom = findAtr(ubound(findAtr)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findAtr&quot;).addItem(pom,0)                     
+   next i 
+
+
+  replExt = array(&quot; Gehele gevonden tekst                              &quot;+chr(160)+&quot;&amp;&quot;, _
+                  &quot; Inhoud van beginmarkering (\b) of eindmarkering (\e), begrensde reeks alinea&apos;s &quot;+chr(160)+&quot;\b\e&quot;, _
+                  &quot; Inhoud van 1ste groep, gevonden binnen () in zoekuitdrukking (max. \9)         &quot;+chr(160)+&quot;\1&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Einde van alinea (nieuwe alinea)                   &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Tabulator                                          &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Niet-afbrekende spatie                             &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Handmatig regeleinde                               &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Handmatig kolomeinde vóór                          &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Handmatig regeleinde vóór (na \M)                  &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Verwijder handmatig pagina- of kolomeinde          &quot;+chr(160)+&quot;\r&quot;, _
+                  &quot; A ingevoegd met hexadecimale code, (decimaal \#65) &quot;+chr(160)+&quot;\x0041&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Instelling van URL van hyperlink&apos;s                 &quot;+chr(160)+&quot;\h{file///C:...}&quot;, _
+                  &quot; Vervangen van gevonden subtekenreeks door &apos;subtekenreeks&apos; in URL&quot;+chr(160)+&quot;\H{subst}&quot;, _
+                  &quot; Geeft de URL van de hyperlink van de gevonden koppeling &quot;+chr(160)+&quot;\u&quot;, _
+                  &quot; Alinea-opmaakprofiel                               &quot;+chr(160)+&quot;\P{Text}&quot;, _
+                  &quot; Tekenopmaakprofiel                                 &quot;+chr(160)+&quot;\C{Quotation}&quot;, _
+                  &quot; Lijstopmaakprofiel                                 &quot;+chr(160)+&quot;\N{List 3}&quot;, _
+                  &quot; Instellen van eigenschap object naar waarde        &quot;+chr(160)+&quot;\A{CharBackColor=&amp;Hffcc00}&quot;, _
+                  &quot; Instellen standaardopmaak door tekenopmaakprofiel  &quot;+chr(160)+&quot;\D&quot;, _
+                  &quot; ResetAttributes op de gebruikte plaats             &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Voetnoot invoegen                                  &quot;+chr(160)+&quot;\F{}&quot;, _
+                  &quot; Eindnoot invoegen                                  &quot;+chr(160)+&quot;\E{}&quot;, _
+                  &quot; Markering+tekst invoegen voor kruisverwijzing      &quot;+chr(160)+&quot;\B{ref1|text}&quot;, _
+                  &quot; Kruisverwijzing voor markering invoegen            &quot;+chr(160)+&quot;\L{0,0,ref1}&quot;, _
+                  &quot; Bladwijzer invoegen (w, b,e - blok, begin, einde)  &quot;+chr(160)+&quot;\K{w,BladwNaam}&quot;, _ 
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Tekstinhoud van object (frame, tabel, )            &quot;+chr(160)+&quot;\o&quot;, _
+                  &quot; Naam van object (frame, tabel, afbeelding, )       &quot;+chr(160)+&quot;\O&quot;, _
+                  &quot; Plak inhoud van Klembord (\V plakt alleen niet-opgemaakte tekst) &quot;+chr(160)+&quot;\v&quot;, _
+                  &quot; Behoudt opmaak bij vervangen (vervangen &amp; via Klembord)          &quot;+chr(160)+&quot;\f&quot;, _
+                  &quot; Telling van vervangingen invoegen (alleen met Alles vervangen)   &quot;+chr(160)+&quot;\i{1,3}&quot;, _
+                  &quot; Paginanummer invoegen                                            &quot;+chr(160)+&quot;\I&quot;, _
+                  &quot; Verplaatsen van vervangingsuitdrukking naar een ander bestand    &quot;+chr(160)+&quot;\R&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)                  
+
+  oDial.getcontrol(&quot;Cb_replExt&quot;).addItems(replExt,0)
+  
+&apos; berichten
+ msg(0)  = &quot;Volgende entiteit van gezochte uitdrukking&quot;
+ msg(1)  = &quot;niet gevonden. &quot;
+ msg(2)  = &quot;Zoeken binnen de selectie is voltooid. &quot;
+ msg(3)  = &quot;Einde van document bereikt. Doorgaan met zoeken vanaf begin? &quot;
+ msg(4)  = &quot;Begin van document bereikt. Doorgaan met zoeken vanaf einde? &quot;
+ msg(5)  = &quot;Het is onmogelijk om in dit object tekst te vinden. &quot;
+ msg(6)  = &quot;In het huidige document bestaat geen object zoals dit. &quot;
+ msg(7)  = &quot; (ESC in document voor onderbreken) – Gevonden alinea&apos;s/doorloop: &quot;
+ msg(8)  = &quot;Onderbreken&quot;
+ msg(9)  = &quot;Sluiten&quot;
+ msg(10) = &quot;Niet-ondersteunde eigenschappen. &quot;
+ msg(11) = &quot;Alternatieve Zoeken en vervangen voor Writer  &quot;
+ msg(12) = &quot;Selectiefout – niet ondersteund. &quot;
+ msg(13) = &quot;Gezochte uitdrukking  &quot;
+ msg(14) = &quot;werd gevonden  &quot;
+ msg(15) = &quot;  keer. &quot;
+ msg(16) = &quot;   Gevonden: &quot;
+ msg(17) = &quot;Bestand van Help kan niet geopend worden. &quot;
+ msg(18) = &quot;Het is niet mogelijk om meer dan één object van dit type te selecteren &quot;
+ msg(19) = &quot;Selectie van alle gevonden uitdrukkingen kan lang duren en &apos;accentuering&apos; vernietigen, als die is gebruikt in dit document, zonder de mogelijkheid voor &apos;Ongedaan maken&apos;. &quot; + chr(10) + chr(10) + &quot;Wilt u werkelijk Alles zoeken gebruiken? &quot;
+ msg(20) = &quot;Opmaakprofiel   &apos;&quot;
+ msg(21) = &quot;&apos;   is niet opgenomen in het huidige document. &quot;
+ msg(22) = &quot;&lt;&lt; gebruik de knop links om deze lijst te vernieuwen &lt;&lt;&quot;
+ msg(23) = &quot;Telling van de niet gelukte instelling van eigenschappen:  &quot;
+ msg(24) = &quot;Nieuwe zoekactie&quot;
+ msg(25) = &quot;Batch &quot;+chr(10)+ &quot;&apos;^^&apos;&quot; +chr(10)+ &quot;bestaat al.&quot;
+ msg(26) = &quot;Fout bij openen van bestand:&quot;
+ msg(27) = &quot;Sla de huidige instelling van zoeken en vervangen op als naam: &quot;
+ msg(28) = &quot;Fout bij starten van tekstbewerker. Stel het pad voor uw tekstbewerker in: &quot; + chr(10) + &quot;(bijvoorbeeld in Windows:  notepad      voor Linux:  kwrite&quot;
+ msg(29) = &quot;Batch   &apos;^^1&apos;   is beëindigd. &quot;+chr(10)+chr(10)+&quot;^^2  vervangingen zijn gemaakt.&quot;
+ msg(30) = &quot;werd vervangen   &quot;
+ msg(31) = &quot;   Aantal vervangingen: &quot;
+ msg(32) = &quot;Standaard&quot;
+ msg(33) = &quot;Afdruk van vervangingen - OpenOffice.org Writer&quot;
+ msg(34) = &quot;Deze functie is niet geďmplementeerd.&quot;
+ msg(35) = &quot;Batch bevat meerdere zoeken en vervangen-parameters. &quot; + chr(10) + &quot;Alleen de laatste parameters werden overgedragen. &quot; 
+ msg(36) = &quot;Bijwerken van selectie... &quot;
+ msg(37) = &quot;Repareren van de achtergrond van de selectie... &quot;  
+ msg(38) = &quot;Maken van de voet-/eindnoot is niet mogelijk. &quot;
+ msg(39) = &quot;Fout bij invoegen van markering van kruisverwijzing – markering moet uniek zijn. &quot;
+ msg(40) = &quot;Laden, lijst van velden sorteren: &quot; 
+ &apos;v1.2
+ msg(41) = &quot;Toewijzen sneltoetsen&quot;
+ msg(42) = &quot;Leeg&quot;
+ msg(43) = &quot;Geselecteerde sneltoets wordt al gebruikt voor de functie: &quot;
+ msg(44) = &quot;Wilt u echt de sneltoets opnieuw toewijzen voor de functie: &quot;
+ msg(45) = &quot;Wilt u echt de sneltoets verwijderen voor die functie?&quot;
+ msg(46) = &quot; Wilt u echt de hulp-subroutine: ^^^1 uit module:   Standard.AltSearchBatchs  verwijderen?&quot;
+ &apos;v1.3
+ msg(47) = &quot; Selecteer opmaakprofiel&quot;
+ &apos;v1.4
+ msg(48) = &quot;Batch is niet geselecteerd - selecteer uit de lijst!&quot;
+ msg(49) = &quot;Geen geselecteerde documenten - selecteer uit de lijst!&quot;
+ msg(50) = &quot;Voer de geselecteerde batch uit met meerdere geopende tekstdocumenten&quot; 
+
+&apos; hoofddialoogvenster
+with oDial.model
+
+ .title = msg(11)+verze
+ oDial.getcontrol(&quot;Cb_replAtr&quot;).addItem(msg(22),0)  &apos; Kies eigenschappen met knop 
+
+&apos; Pagina 1
+ &apos; knoppen
+   .Bt_find.Label       =&quot;Zoeken&quot;
+   .Bt_findall.Label    =&quot;Alles zoeken&quot;
+   .Bt_count.Label      =&quot;Tellen&quot;
+   .Bt_repl.Label       =&quot;Vervangen&quot;
+   .Bt_replall.Label    =&quot;Alles vervangen&quot;
+   .CB_help.HelpText    =&quot;Open Help-bestand&quot;
+   .CB_help.Label       =&quot;?&quot;
+   .Bt_save1.Label      =&quot;Sla batch op&quot;
+   .Bt_batch.HelpText   =&quot;Schakelen naar batchbeheer&quot;
+   .Bt_batch.Label      =&quot;Batch &gt;&gt;&quot;
+   .Bt_close.Label      =&quot;Sluiten&quot;
+ &apos; keuzelijsten
+   .Lb1.Label           =&quot;Zoeken naar:&quot;
+   .T_find.Label        =&quot;Regulier&quot;
+   .T_findExt.Label     =&quot;Uitgebreid&quot;    
+   .T_findAtr.Label     =&quot;Eigenschappen&quot;
+   .Lb_info.Label       =&quot;&quot;  &apos; info label – leeg laten
+   .T_repl.Label        =&quot;Vervangen door:&quot;
+   .Cb_loadAtr.HelpText =&quot;Lijst van eigenschappen voor geselecteerd object laden&quot;
+   .Cb_loadAtr.Label    =&quot;Eigenschappen kiezen&quot;
+ &apos; parameters
+   .Fr1.Label           =&quot;Opties: &quot;
+   .Ch_case.Label       =&quot;Gelijke hoofd-/kleine letters&quot;
+   .Ch_word.Label       =&quot;Alleen gehele woorden&quot;
+   .Ch_styl.Label       =&quot;Alinea-opmaakprofielen&quot;
+   .Ch_reg.Label        =&quot;Reguliere uitdrukkingen&quot;
+   .Fr2.Label           =&quot;Zoekbereik en -richting:&quot;
+   .Ch_csele.Label      =&quot;Alleen huidige selectie&quot;
+   .Ch_zpet.Label       =&quot;Achterwaarts&quot;
+   &apos;v1.3
+.Ch_preservecap.HelpText=&quot;Als de gevonden tekst met een hoofdletter begint, zal ook de vervanging van de tekst beginnen met een hoofdletter&quot;  &apos; &quot;Pokud nalezený text začíná velkým písmenem, bude velkým písmenem začínat i text nahrazený
+.Ch_preservecap.Label   =&quot;Hoofdletters behouden&quot;
+
+
+ &apos; Pagina 2
+ &apos; Titel 
+    .Lb2_1.Label        =&quot;Batchbeheer&quot;
+ &apos; buttons 
+   .Bt_run.HelpText     =&quot;Geselecteerde batch uitvoeren&quot;
+   .Bt_run.Label        =&quot;Uitvoeren&quot;
+   .Bt_tranfer.HelpText =&quot;Draag alleen de parameters van de geselecteerde batch over, zonder Uitvoeren&quot;
+   .Bt_tranfer.Label    =&quot;Overdragen&quot;
+   .Bt_save2.Label      =&quot;Sla batch op&quot;
+   .Bt_edit.HelpText    =&quot;Open bestand met batchdefinities in tekstbewerker&quot;
+   .Bt_edit.Label       =&quot;Bewerken&quot;
+   .Bt_refr.HelpText    =&quot;Vernieuw lijst met batchs&quot;
+   .Bt_refr.Label       =&quot;Vernieuwen&quot;
+   .Cb_swfind.Label     =&quot;&lt;&lt; Zoeken&quot;
+   &apos;v1.2
+   .Bt_short.HelpText   =&quot;Sneltoets toewijzen aan batch&quot;
+   .Bt_short.Label      =&quot;Sneltoetsen&quot;
+
+ end with  
+   
+&apos; keuze dialoogvenster
+ with oDia.model   
+   .Lb3.Label       =&quot;Naam van batch&quot;
+   .Bt_app.HelpText =&quot;Huidige parameters toevoegen aan einde van bestaande batch&quot;
+   .Bt_app.Label    =&quot;Toevoegen&quot;
+   .Bt_back.Label   =&quot;Hernoemen&quot;
+   .Bt_rep.Label    =&quot;Vervangen&quot;
+
+end with
+
+&apos; dialoogvenster D_toetsen  &apos;v1.2
+ with oDialSh.model   
+   .Lb1.Label            =&quot;1e. selecteer functie of naam van AltSearch&apos;s batch:&quot;
+   .Lb2.Label            =&quot;2e. indien vereist, wijzig de naam van de hulp-subroutine voor OOo BASIC:&quot;
+   .Lb3.Label            =&quot; 3e. selecteer en wijs de sneltoets toe &quot;
+   .Lb4.Label            =&quot;Gebruikt voor de functie:&quot;
+   .Lb5.Label            =&quot;&quot;
+   .Cb_bas.HelpText      =&quot;Alleen de tekens _ A..Z a..z 0..9 zijn toegestaan, getallen mogen niet aan het begin staan&quot;
+   .Bt_assign.HelpText   =&quot;Sneltoetsen toewijzen aan geselecteerde hulp-subroutine en de naam van de batch&quot;
+   .Bt_assign.Label      =&quot;Toewijzen&quot;
+   .Bt_clear.HelpText    =&quot;Hef de geselecteerde sneltoets op&quot;
+   .Bt_basremove.HelpText=&quot;Verwijder de BASIC hulp-subroutine voor sneltoets van de batch&quot;
+
+   .title           = msg(41)
+   .Bt_close.Label  = oDial.model.Bt_close.Label
+
+end with
+
+
+&apos; dialog D_morefiles  &apos;v1.4
+ with oDmof.model
+   .Title                 = msg(50) + &quot;:&quot;
+   .Lb1.Label             =&quot;De batch zal worden uitgevoerd op de geselecteerde documenten :&quot;
+   .Bt_selectAll.Label    =&quot;Alles selecteren&quot;
+   .Bt_start.Label        =&quot;Start&quot;
+   .Cb_DisabRepBatch.Helptext=&quot;Berichten na verwerken van elk document uitschakelen, maar behoudt het uiteindelijke rapport.&quot;
+   .Cb_DisabRepBatch.Label=&quot;Berichten uitschakelen&quot;
+
+end with 
+
+
+
+End Sub
+
+
+
+
+
+
+
+
+Sub Load_it 
+REM Charset: UTF-8   test: ěščřžýáíé юертыъшчщжі
+dim i as long
+dim pom as string
+  on error resume next &apos; za provozu vypnout chyby lokalizace
+  findReg = array(&quot; Primo carattere di un paragrafo  &quot;+chr(160)+&quot;^.&quot;, _
+                  &quot; Fine del paragrafo               &quot;+chr(160)+&quot;$&quot;, _
+                  &quot; Paragrafo vuoto                  &quot;+chr(160)+&quot;^$&quot;, _
+                  &quot; Qualsiasi testo                  &quot;+chr(160)+&quot;.*&quot;, _
+                  &quot; Qualsiasi lettera  [:alpha:]{1,1}&quot;+chr(160)+&quot;\l&quot;, _
+                  &quot; Qualsiasi cifra decimale [0-9]   &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Inizio parola                    &quot;+chr(160)+&quot;\&lt;&quot;, _
+                  &quot; Fine parola                      &quot;+chr(160)+&quot;\&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Fine paragrafo                   &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Blocco di paragrafi vuoti        &quot;+chr(160)+&quot;^$\p*&quot;, _
+                  &quot; Tabulazione                      &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Interruzione manuale di riga     &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Interruzione manuale di colonna  &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Interruzione manuale di pagina   &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Qualsiasi spazio   [ \xA0\x9\xA] &quot;+chr(160)+&quot;\s&quot;, _
+                  &quot; Spazio indivisibile (\xA0)       &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Trattino opzionale               &quot;+chr(160)+&quot;\x00AD&quot;, _
+                  &quot; Trattino indivisibile            &quot;+chr(160)+&quot;\x2011&quot;, _
+                  &quot; A in codifica decimale           &quot;+chr(160)+&quot;\#65&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Punto                     &quot;+chr(160)+&quot;\.&quot;, _
+                  &quot; Parentesi tonde ()        &quot;+chr(160)+&quot;\(\)&quot;, _
+                  &quot; Parentesi quadrate []     &quot;+chr(160)+&quot;\[\]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;            &quot;)
+                  
+&apos;                   &quot; Další symboly:  \^$*+?| &quot;+chr(160)+&quot;\\\^\$\*\+\?\|&quot;, _                  
+&apos;                  &quot; Curly brackets  {}         &quot;+chr(160)+&quot;\{\}&quot;, _
+  oDial.getcontrol(&quot;Cb_findReg&quot;).addItems(findReg,0)
+
+  findExt = array(&quot; Blocco di testo compreso tra marcatori di inizio e fine &quot;+chr(160)+&quot;[::BigBlock::]&quot;, _
+                  &quot; Espande di un carattere in entrambi i lati il testo trovato &quot;+chr(160)+&quot;[::Grow 1,1::]&quot;, _
+                  &quot; Aggiunge || per effettuare ricerche multiple (in un colpo solo)&quot;+chr(160)+&quot;||&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Testo fra () (all’interno di un paragrafo)&quot;+chr(160)+&quot;(\(([^\)])+\))&quot;, _
+                  &quot; Testo fra [] (all’interno di un paragrafo)&quot;+chr(160)+&quot;(\[([^\]])+\])&quot;, _
+                  &quot; Testo fra {} (all’interno di un paragrafo)&quot;+chr(160)+&quot;({([^}])+})&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Indirizzo e-mail &quot;+chr(160)+&quot;[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_].?@[a-zA-Z0-9_][-._a-zA-Z0-9_]*[a-zA-Z0-9_]\.[a-zA-Z0-9_]{2,4}&quot;, _
+                  &quot; Internet, URL, indirizzo www&quot;+chr(160)+&quot;(((news|http|ftp|https|file):\/\/|www\.)[a-zA-Z0-9_]+((\.[a-zA-Z0-9_]+)+)(([a-zA-Z0-9_\-\.,@?^=%&amp;:/~\+#]*[a-zA-Z0-9_\-\@?^=%&amp;/~\+#])?))&quot;, _
+                  &quot; Tag HTML         &quot;+chr(160)+&quot;(&lt;(&quot;&quot;[^&quot;&quot;]*&quot;&quot;|&apos;[^&apos;]*&apos;|[^&apos;&quot;&quot;&gt;])*&gt;)&quot;, _
+                  &quot; Tag HTML d’apertura  &quot;+chr(160)+&quot;&lt;[^/][^&gt;]+&gt;&quot;, _
+                  &quot; Tag HTML di chiusura &quot;+chr(160)+&quot;&lt;/[^&gt;]+&gt;&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Note (caselle gialle) – cerca la sottostringa nelle note &quot;+chr(160)+&quot;[::Note::]&quot;, _
+                  &quot; Campi di testo – cerca la sottostringa nel contenuto dei campi di testo &quot;+chr(160)+&quot;[::Field::]&quot;, _
+                  &quot; Caselle di testo – cerca la sottostringa nei nomi delle caselle &quot;+chr(160)+&quot;[::TextFrame::]&quot;, _
+                  &quot; Tabella – cerca la sottostringa nei nomi delle tabelle  &quot;+chr(160)+&quot;[::TextTable::]&quot;, _
+                  &quot; Immagine – cerca la sottostringa nei nomi delle immagini &quot;+chr(160)+&quot;[::Picture::]&quot;, _
+                  &quot; Nota a piè di pagina – testo di ancoraggio; aggiunge \\ per cercare nelle note a piè di pagina &quot;+chr(160)+&quot;[::Footnote::]&quot;, _
+                  &quot; Nota di chiusura – testo di ancoraggio; aggiunge \\ per cercare nelle note di chiusura  &quot;+chr(160)+&quot;[::Endnote::]&quot;, _
+                  &quot; Indicatore di riferimento incrociato (testo); \\ per cercare nel Nome; \\\\ per cercare testo vuoto&quot;+chr(160)+&quot;[::ReferenceMark::]&quot;, _
+                  &quot; Riferimento incrociato (testo); \\ per cercare nel Nome; \\\\ per cercare testo vuoto &quot;+chr(160)+&quot;[::Reference::]&quot;, _
+                  &quot; Bookmark - searches substring in text of Bookmarks; add \\ for searches in Names&quot;+chr(160)+&quot;[::Bookmark::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)           
+&apos;                   &quot; Číslo poznámky pod čarou (podřetězec)&quot;+chr(160)+&quot;[::Footnote::]&quot;, _                  
+                         
+  for i = lbound(findExt) to ubound(findExt) 
+    pom = findExt(ubound(findExt)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findExt&quot;).addItem(pom,0)                     
+   next i 
+
+  findAtr = array(&quot; Stile di Paragrafo&quot;+chr(160)+&quot;[:::ps::]&quot;, _
+                  &quot; Stile di Carattere&quot;+chr(160)+&quot;[:::chs::]&quot;, _
+                  &quot; Stile di Elenco&quot;+chr(160)+&quot;[:::ns::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Hyperlink &quot;+chr(160)+&quot;[:::HyperLinkURL::]&quot;, _
+                  &quot; Hyperlink – sottostringa dell&apos;URL &quot;+chr(160)+&quot;[:::HyperLinkURL=file:///::]&quot;,_
+                  &quot; Corsivo &quot;+chr(160)+&quot;[:::CharPosture::]&quot;, _
+                  &quot; Grassetto &quot;+chr(160)+&quot;[:::CharWeight::]&quot;, _
+                  &quot; Grassetto Corsivo &quot;+chr(160)+&quot;[:::CharPosture|CharWeight::]&quot;, _
+                  &quot; Nome del carattere (nome cambiato manualmente) &quot;+chr(160)+&quot;[:::CharFontName::]&quot;, _
+                  &quot; Dimensione carattere &quot;+chr(160)+&quot;[:::CharHeight::]&quot;, _
+                  &quot; Colore carattere &quot;+chr(160)+&quot;[:::CharColor::]&quot;, _
+                  &quot; Sfondo carattere (Evidenziato) &quot;+chr(160)+&quot;[:::CharBackColor::]&quot;, _
+                  &quot; Sottolineato &quot;+chr(160)+&quot;[:::CharUnderline::]&quot;, _
+                  &quot; Indice (qualsiasi) &quot;+chr(160)+&quot;[:::CharEscapement::]&quot;, _
+                  &quot; Pedice (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=-101::]&quot;, _
+                  &quot; Apice (Auto) &quot;+chr(160)+&quot;[:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=101::]&quot;, _
+                  &quot; Indice definito da dimensioni font ed escapement &quot;+chr(160)+&quot;[:::CharEscapementHeight=70|CharEscapement=30::]&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Formato caratteri simile (basato sul cursore)&quot;+chr(160)+&quot;[:::p::]&quot;, _
+                  &quot; Stesso formato caratteri (basato sul cursore)&quot;+chr(160)+&quot;[:::s::]&quot;)
+                  
+  &apos; není podporováno  &quot; Znakové styly&quot;+chr(160)+&quot;[:::CharStyleName::]&quot;, _                  
+  
+  for i = lbound(findAtr) to ubound(findAtr) 
+    pom = findAtr(ubound(findAtr)-i)
+    pom = left(pom,instr(pom,chr(160)))
+    oDial.getcontrol(&quot;Cb_findAtr&quot;).addItem(pom,0)                     
+   next i 
+
+
+  replExt = array(&quot; Tutto il testo trovato                             &quot;+chr(160)+&quot;&amp;&quot;, _
+                  &quot; Contenuto dei marcatori di inizio (\b) o fine (\e), che delimitano un blocco di testo    &quot;+chr(160)+&quot;\b\e&quot;, _
+                  &quot; Contenuto del primo gruppo trovato delimitato da () nell&apos;espressione di ricerca (max. \9)&quot;+chr(160)+&quot;\1&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Fine di paragrafo (nuovo paragrafo)                &quot;+chr(160)+&quot;\p&quot;, _
+                  &quot; Tabulazione                                        &quot;+chr(160)+&quot;\t&quot;, _
+                  &quot; Spazio indivisibile                                &quot;+chr(160)+&quot;\S&quot;, _
+                  &quot; Interruzione manuale di riga                       &quot;+chr(160)+&quot;\n&quot;, _
+                  &quot; Interruzione di colonna prima                      &quot;+chr(160)+&quot;\c&quot;, _
+                  &quot; Interruzione manuale di pagina prima (dopo \M)     &quot;+chr(160)+&quot;\m&quot;, _
+                  &quot; Elimina interruzione manuale di pagina o di colonna&quot;+chr(160)+&quot;\r&quot;, _
+                  &quot; A in codifica esadecimale, (decimale \#65)         &quot;+chr(160)+&quot;\x0041&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Impostazione dell&apos;URL del link                        &quot;+chr(160)+&quot;\h{file///C:...}&quot;, _
+                  &quot; Sostituisce sottostringa trovata con &apos;subst&apos; nella URL&quot;+chr(160)+&quot;\H{subst}&quot;, _
+                  &quot; Restituisce la URL del link trovato                   &quot;+chr(160)+&quot;\u&quot;, _
+                  &quot; Stile paragrafo                                       &quot;+chr(160)+&quot;\P{Testo}&quot;, _
+                  &quot; Stile carattere                                       &quot;+chr(160)+&quot;\C{Citazione}&quot;, _
+                  &quot; Stile elenco                                          &quot;+chr(160)+&quot;\N{Elenco 3}&quot;, _
+                  &quot; Assegnamento proprietà=valore                         &quot;+chr(160)+&quot;\A{CharBackColor=&amp;Hffcc00}&quot;, _
+                  &quot; Applica lo stile di default del testo                 &quot;+chr(160)+&quot;\D&quot;, _
+                  &quot; Resetta gli attributi al valore di default            &quot;+chr(160)+&quot;\d&quot;, _
+                  &quot; Inserisci nota a piè di pagina                        &quot;+chr(160)+&quot;\F{}&quot;, _
+                  &quot; Inserisci nota di chiusura                            &quot;+chr(160)+&quot;\E{}&quot;, _
+                  &quot; Inserisci marcatore+testo per riferimento incrociato  &quot;+chr(160)+&quot;\B{ref1|text}&quot;, _
+                  &quot; Inserisci riferimento incrociato al marcatore         &quot;+chr(160)+&quot;\L{0,0,ref1}&quot;, _
+                  &quot; Insert Bookmark (w, b,e - Block, to Start, to End)    &quot;+chr(160)+&quot;\K{w,BookmName}&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;, _
+                  &quot; Testo contenuto nell&apos;oggetto (casella di testo, tabella, …)              &quot;+chr(160)+&quot;\o&quot;, _
+                  &quot; Nome dell&apos;oggetto (tabella, immagine...)                                 &quot;+chr(160)+&quot;\O&quot;, _
+                  &quot; Incolla il contenuto degli appunti (\V incolla solo testo non formattato)&quot;+chr(160)+&quot;\v&quot;, _
+                  &quot; Mantiene la formattazione nella sostituzione                             &quot;+chr(160)+&quot;\f&quot;, _
+                  &quot; Inserisci contatore delle sostituzioni (solo con Sostituisci tutto)      &quot;+chr(160)+&quot;\i{1,3}&quot;, _
+                  &quot; Inserisci il numero di pagina                                            &quot;+chr(160)+&quot;\I&quot;, _
+                  &quot; Reindirizza l&apos;espressione da sostituire ad un file                       &quot;+chr(160)+&quot;\R&quot;, _
+                  &quot; &quot;+chr(160)+&quot;&quot;)                  
+&apos;Pravděpodobný
+  oDial.getcontrol(&quot;Cb_replExt&quot;).addItems(replExt,0)
+  
+&apos; messages
+ msg(0)  = &quot;Prossima occorrenza dell’espressione cercata&quot;
+ msg(1)  = &quot;non trovato. &quot;
+ msg(2)  = &quot;La ricerca all&apos;interno della selezione è terminata. &quot;
+ msg(3)  = &quot;Raggiunta la fine del documento. Continuo la ricerca dall’inizio? &quot;
+ msg(4)  = &quot;Raggiunto l’inizio del documento. Continuo la ricerca dalla fine? &quot;
+ msg(5)  = &quot;Impossibile trovare del testo in questo oggetto. &quot;
+ msg(6)  = &quot;Nel documento corrente non c’è un oggetto come questo. &quot;
+ msg(7)  = &quot; (premere ESC per interrompere) – Trovati paragrafi/loop: &quot;
+ msg(8)  = &quot;Interrompi &quot;
+ msg(9)  = &quot;Chiudi &quot;
+ msg(10) = &quot;Proprietà non supportate. &quot;
+ msg(11) = &quot;Trova e Sostituisci alternativo per Writer  &quot;
+ msg(12) = &quot;Errore di selezione – non supportato. &quot;
+ msg(13) = &quot;Espressione cercata  &quot;
+ msg(14) = &quot;trovato  &quot;
+ msg(15) = &quot;  volte. &quot;
+ msg(16) = &quot;   Trovato: &quot;
+ msg(17) = &quot;Impossibile aprire il file della Guida. &quot;
+ msg(18) = &quot;Impossibile selezionare più d’un oggetto di questo tipo &quot;
+ msg(19) = &quot;Selection of all founded expressions can take a long time and destroy &apos;Highlighting&apos;, if it is used in this document, without possibilities &apos;Undo&apos;. &quot; + chr(10) + chr(10) + &quot; really want to use Find All? &quot;
+ msg(20) = &quot;Stile   &apos;&quot;
+ msg(21) = &quot;   non è incluso nel documento corrente. &quot;
+ msg(22) = &quot;&lt;&lt; usa il pulsante a sinistra per aggiornare questo elenco &lt;&lt;&quot;
+ msg(23) = &quot;Numero di proprietà non impostate correttamente: &quot;
+ msg(24) = &quot;Nuova ricerca&quot;
+ msg(25) = &quot;Batch &quot;+chr(10)+ &quot;&apos;^^&apos;&quot; +chr(10)+ &quot;esiste già.&quot;
+ msg(26) = &quot;Errore nell’apertura del file:&quot;
+ msg(27) = &quot;Salva le impostazioni correnti di cerca e sostituisci con nome: &quot;
+ msg(28) = &quot;Errore editor di testo. Impostare il percorso dell&apos;editor di testo: &quot; + chr(10) + &quot;(e.g. in Windows:  notepad      in Linux:  kwrite&quot;
+ msg(29) = &quot;Batch   &apos;^^1&apos;  terminato. Eseguite &quot;+chr(10)+chr(10)+&quot;^^2  sostituzioni.&quot;                                        
+ msg(30) = &quot;è stato sostituito  &quot;                                                                                              
+ msg(31) =    &quot;Numero di sostituzioni: &quot;                                                                                      
+ msg(32) = &quot;Predefinito&quot;                                                                                                     
+ msg(33) = &quot;Rapportino sostituzioni - OpenOffice.org Writer&quot;                                                                 
+ msg(34) = &quot;Questa funzione non è implementata.&quot;                                                                             
+ msg(35) = &quot;Il batch contiene più parametri di ricerca e sostituzione. &quot; + chr(10) + &quot;Trasferiti solo gli ultimi parametri. &quot; 
+ msg(36) = &quot;Aggiornamento della selezione... &quot;                                                                                
+ msg(37) = &quot;Ripristino della selezione... &quot;                                                                                    
+ msg(38) = &quot;Impossibile creare la nota a piè di pagina/di chiusura. &quot;                                                         
+ msg(39) = &quot;Errore inserimento del marcatore di riferimento incrociato – il marcatore deve essere unico. &quot;                    
+ msg(40) = &quot;Caricamento, ordinamento lista dei campi: &quot;                                                                       
+ &apos;v1.2
+ msg(41) = &quot;Assegnazione scorciatoie da tastiera&quot;                                                          
+ msg(42) = &quot;Vuoto&quot;                                                                                         
+ msg(43) = &quot;La combinazione di tasti selezionata è già in uso per la funzione: &quot;                            
+ msg(44) = &quot;Vuoi veramente riassegnare la combinazione di tasti alla funzione: &quot;                            
+ msg(45) = &quot;Vuoi veramente eliminare la combinazione di tasti per quella funzione?&quot;                        
+ msg(46) = &quot;Vuoi veramente eliminare la funzione ausiliaria: ^^^1 dal modulo:   Standard.AltSearchBatchs ?&quot;
+ &apos;v1.3
+ msg(47) = &quot; Seleziona stile&quot;
+ &apos;v1.4
+ msg(48) = &quot;Batch is not selected - select from the list!&quot;
+ msg(49) = &quot;No selected documents - select from the list!&quot; 
+ msg(50) = &quot;Execute the selected batch with more opened text documents&quot;
+
+
+&apos; main dialog
+with oDial.model
+
+ .title = msg(11)+verze
+ oDial.getcontrol(&quot;Cb_replAtr&quot;).addItem(msg(22),0)  &apos; Pick properties by button 
+
+&apos; Page 1
+ &apos; buttons
+   .Bt_find.Label       =&quot;Trova&quot;                 
+   .Bt_findall.Label    =&quot;Trova tutto&quot;           
+   .Bt_count.Label      =&quot;Conta&quot;                 
+   .Bt_repl.Label       =&quot;Sostituisci&quot;           
+   .Bt_replall.Label    =&quot;Sostituisci tutto&quot;     
+   .CB_help.HelpText    =&quot;Apri Guida&quot;            
+   .CB_help.Label       =&quot;?&quot;                     
+   .Bt_save1.Label      =&quot;Salva batch&quot;           
+   .Bt_batch.HelpText   =&quot;Passa a Gestione batch&quot;
+   .Bt_batch.Label      =&quot;Batch &gt;&gt;&quot;              
+   .Bt_close.Label      =&quot;Chiudi&quot;                
+ &apos; list boxes
+   .Lb1.Label           =&quot;Cerca per:&quot;                                           
+   .T_find.Label        =&quot;Regolari&quot;                                             
+   .T_findExt.Label     =&quot;Estesa&quot;                                               
+   .T_findAtr.Label     =&quot;Proprietà&quot;                                            
+   .Lb_info.Label       =&quot;&quot;                                                     
+   .T_repl.Label        =&quot;Sostituisci:&quot;                                         
+   .Cb_loadAtr.HelpText =&quot;Carica lista delle proprietà dell&apos;oggetto selezionato&quot;
+   .Cb_loadAtr.Label    =&quot;Scegli proprietà&quot;                                     
+ &apos; parametrs
+   .Fr1.Label           =&quot;Opzioni:&quot;                            
+   .Ch_case.Label       =&quot;Maiuscole/Minuscole&quot;                 
+   .Ch_word.Label       =&quot;Solo parole intere&quot;                  
+   .Ch_styl.Label       =&quot;Stili di paragrafo&quot;                  
+   .Ch_reg.Label        =&quot;Espressioni regolari&quot;                
+   .Fr2.Label           =&quot;Intervallo e direz. ricerca&quot;
+   .Ch_csele.Label      =&quot;Solo nella selezione corrente&quot;       
+   .Ch_zpet.Label       =&quot;Indietro&quot;                            
+   &apos;v1.3
+.Ch_preservecap.HelpText=&quot;Se il testo trovato comincia con una lettera maiuscola, anche il testo sostituito inizierà con una lettera maiuscola&quot;  &apos; &quot;Pokud nalezený text začíná velkým písmenem, bude velkým písmenem začínat i text nahrazený
+.Ch_preservecap.Label   =&quot;Conserva maiuscole&quot;
+
+
+ &apos; Page 2
+ &apos; Title 
+    .Lb2_1.Label        =&quot;Gestione batch&quot;
+ &apos; buttons 
+   .Bt_run.HelpText     =&quot;Esegui batch selezionato&quot;                                                
+   .Bt_run.Label        =&quot;Esegui&quot;                                                                  
+   .Bt_tranfer.HelpText =&quot;Trasferisce solamente i parametri del batch selezionato, senza eseguirlo&quot;
+   .Bt_tranfer.Label    =&quot;Trasferisci&quot;                                                             
+   .Bt_save2.Label      =&quot;Salva batch&quot;                                                             
+   .Bt_edit.HelpText    =&quot;Apri file con definizione del batch in un editor di testo&quot;               
+   .Bt_edit.Label       =&quot;Modifica&quot;                                                                
+   .Bt_refr.HelpText    =&quot;Aggiorna lista dei batch&quot;                                                
+   .Bt_refr.Label       =&quot;Aggiorna&quot;                                                                
+   .Cb_swfind.Label     =&quot;&lt;&lt; Cerca e Sost.&quot;                                                  
+   &apos;v1.2                                                                                         
+   .Bt_short.HelpText   =&quot;Assegna combinazione di tasti a batch&quot;                                   
+   .Bt_short.Label      =&quot;Combinazioni di tasti&quot;                                                   
+
+ end with  
+   
+&apos; dialog choice
+ with oDia.model   
+   .Lb3.Label       =&quot;Nome del batch&quot;                                          
+   .Bt_app.HelpText =&quot;Aggiunge parametri attuali alla fine del batch esistente&quot;
+   .Bt_app.Label    =&quot;Aggiungi&quot;                                                
+   .Bt_back.Label   =&quot;Rinomina&quot;                                                
+   .Bt_rep.Label    =&quot;Sostituisci&quot;                                             
+
+end with
+
+
+&apos; dialog D_keys  &apos;v1.2
+ with oDialSh.model   
+   .Lb1.Label            =&quot;Selezionare il nome del batch dal menu a discesa&quot;                                    &apos;1st. select function or AltSearch&apos;s batch name:
+   .Lb2.Label            =&quot;Cambiare il nome della funzione ausiliaria in Basic, se necessario&quot;                
+   .Lb3.Label            =&quot;Impostare la combinazione di tasti desiderata&quot;                                        &apos;3rd. select and assign key shortcut
+   .Lb4.Label            =&quot;Usata per la funzione:&quot;                                                            
+   .Lb5.Label            =&quot;&quot;                                                                                  
+   .Cb_bas.HelpText      =&quot;Sono permessi solo caratteri A..Z a..z 0..9, i numeri non devono essere all&apos;inizio&quot;
+   .Bt_assign.HelpText   =&quot;Assegna la combinazione alla funzione ausiliaria selezionata e al nome del batch&quot;  
+   .Bt_assign.Label      =&quot;Assegna&quot;                                                                           
+   .Bt_clear.HelpText    =&quot;Rilascia la combinazione di tasti selezionata&quot;                                     
+   .Bt_basremove.HelpText=&quot;Rimuove la funzione ausiliaria BASIC per la combinazione di tasti&quot;                 
+
+   .title           = msg(41)
+   .Bt_close.Label  = oDial.model.Bt_close.Label
+
+end with
+
+
+End Sub
+
+
+
+
+
+
+
+
+</script:module>

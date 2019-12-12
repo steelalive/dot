@@ -7,12 +7,14 @@
 #chown master:wheel -R $BUILDDIR $HOME/.cache
 #is_pi && sed -i 's/arch=.*/arch=("armv7h")/' PKGBUILD
 package="$(basename $(realpath .))"
-+user -R /tmp/makepkg $BUILDDIR /ext/yay
-rm -rf /tmp/makepkg
++user -R /tmp/makepkg $BUILDDIR /ext/yay /tmp/makepkg
+#rm -rf /tmp/makepkg
 if [[ $1 ]]; then
 	cd ..
 	suuser "yay --getpkgbuild "$package""
 	cd "$package"
 	shift
+	cd ..
+	cd "$package"
 fi
 suuser "command \makepkg -i --syncdeps --skippgpcheck --skipinteg $*"

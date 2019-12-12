@@ -3,30 +3,33 @@
 #vi:set noro
 TITLE="\e]2;-----------------ANDROID-----------------\$\a"
 PS1=$TITLE
-PS1='ANDROID\$ '
+PS1='\W\$ '
 #unalias -a
+if [[ $1 ]]; then
 
-for func in $(declare -f | grep ".* ()" | cut -d' ' -f1); do unset $func; done
-# get USER, HOME and DISPLAY and then completely clear environment
-U=$USER
-H=$HOME
-D=$DISPLAY
+	for func in $(declare -f | grep ".* ()" | cut -d' ' -f1); do unset $func; done
+	# get USER, HOME and DISPLAY and then completely clear environment
+	U=$USER
+	H=$HOME
+	D=$DISPLAY
 
-for i in $(env | awk -F"=" '{print $1}'); do
-	unset "$i" 2 &>/dev/null
-done
+	for i in $(env | awk -F"=" '{print $1}'); do
+		unset "$i" 2 &>/dev/null
+	done
 
-# set USER, HOME and DISPLAY and set minimal path.
-export USER=$U
-export HOME=$H
-export DISPLAY=$D
+	# set USER, HOME and DISPLAY and set minimal path.
+	export USER=$U
+	export HOME=$H
+	export DISPLAY=$D
 
-# initial path
-export PATH=/usr/androbin:/usr/bin:/usr/local/bin:/dot/bin:/dot/bin/final
-#. /usr/share/bash-completion/bash_completion
-unset O U H D
+	# initial path
+	export PATH=/usr/androbin:/usr/bin:/usr/local/bin:/dot/bin:/dot/bin/final
+	#. /usr/share/bash-completion/bash_completion
+	unset O U H D
+fi
 export src=/ext/src
 export dot=/dot
+
 cd $src || return
 PS1="ANDROID-\W-\$ "
 # . /dot/anset.sh
@@ -34,9 +37,9 @@ PS1="ANDROID-\W-\$ "
 #. /dot/ex.sh
 unset JAVA_HOME ANDROID_JAVA_HOME ANDROID_TOOLCHAIN ANDROID_JAVA_TOOLCHAIN O OUT_DIR CXXFLAGS CFLAGS APP_CFLAGS LDFLAGS CC CXX CONFIG_CROSS_COMPILE CROSS_COMPILE TARGET_TOOLS_PREFIX ARCH SUBARCH CROSS_COMPILE ROM_LUNCH PROMPT_COMMAND LD_LIBRARY_PATH FC_FLAGS FFLAGS DEBUG_CFLAGS DEBUG_CXXFLAGS CGO_LDFLAGS CGO_FFLAGS CGO_CXXFLAGS CGO_CFLAGS
 set -a
-ANDROID_API="android-28"
+ANDROID_API="android-29"
 ANDROID_ARCH="arch-arm64"
-ANDROID_NDK_ROOT='/ext/opt/ndk-bundle'
+ANDROID_NDK_ROOT='/ext/opt'
 ANDROID_DEV="$ANDROID_NDK_ROOT/platforms/$ANDROID_API/$ANDROID_ARCH/usr"
 ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx3G"
 ANDROID_MAJOR_VERSION=28
@@ -44,15 +47,16 @@ ANDROID_SYSROOT="$ANDROID_NDK_ROOT/platforms/$ANDROID_API/$ANDROID_ARCH"
 ANDROID_TOOLCHAIN="$CROSS_COMPILE"
 ARCH="arm64"
 BUILD_WITH_COLORS=1
-CC='/usr/bin/zapcc'
+#CC='/usr/bin/zapcc'
 CCACHE_DIR='/var/.ccache'
 CCACHE_TEMPDIR='/tmp/.ccache'
-CFLAGS='-pipe -Ofast -mandroid -marm64 -w64 -fPIE -fPIC -fno-plt'
+#CFLAGS='-pipe -Ofast -mandroid -marm64 -w64 -fPIE -fPIC -fno-plt'
 CM_ROOT=$O
-CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
-CROSS_COMPILE_ARM32='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
-CXX='/usr/bin/zapcc++'
-CXXFLAGS="$CFLAGS"
+CROSS_COMPILE='/ext/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
+#CROSS_COMPILE='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-'
+#CROSS_COMPILE_ARM32='/ext/opt/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin/armv8l-linux-gnueabihf-'
+#CXX='/usr/bin/zapcc++'
+#CXXFLAGS="$CFLAGS"
 DEVICE='zerofltecan'
 DEVICE_COMMON='zero-common'
 HOSTCC="$CC"
@@ -103,7 +107,7 @@ unset LC_COLLATE LC_NUMERIC
 #BREAKFAST_DEVICE="$rom"
 #TARGET_PREBUILT_KERNEL="$O/kernel.prebuilt"
 ccache -M 50G
-cd "$src" || return
+#cd "$src" || return
 [[ $1 == here ]] && src="$PWD"
 [[ "$PS1" ]] || PS1="$(tput setaf 1)#\\u$(tput setaf 2)@$(tput setaf 3)\h:$(tput setaf 2)\w$(tput setaf 6)#$(tput setaf 5)~~$(tput setaf 6)\d$(tput setaf 5)~~$(tput setaf 6)\@$(tput setaf 5)~$(tput setaf 2)\t$(tput setaf 5)~HIST:\!~CMD:$(tput sgr0)\n\#\$ "
 sysctl -w net.ipv4.tcp_window_scaling=0
@@ -150,6 +154,7 @@ if sed -r "s|:+|:|g" <<<$PATH &>/dev/null; then
 	export PATH
 fi
 
+return
 [[ $1 == quit ]] && return
 #[[ -e $O/target/product/harpia/obj/BOOTANIMATION/bootanimation.zip ]] || {
 #	cp -av /last/misc-android/Pixel2MOD-Dark.zip $O/target/product/zerofltecan/obj/BOOTANIMATION/bootanimation.zip

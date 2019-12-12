@@ -1,0 +1,1262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1250">
+	<TITLE></TITLE>
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin-left: 2.2cm; margin-right: 2.2cm }
+		P { margin-bottom: 0.2cm; line-height: 100% }
+		P.western { font-family: "Arial", sans-serif; font-size: 11pt }
+		H1 { margin-top: 0cm; margin-bottom: 0.3cm; color: #800000; text-align: center }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt; font-style: normal }
+		H1.ctl { font-family: "Mangal" }
+		H6 { margin-top: 0cm; margin-bottom: 0.2cm; color: #2300dc; text-align: left; page-break-before: auto; page-break-after: auto }
+		H6.western { font-family: "Arial", sans-serif; font-size: 12pt; font-style: italic }
+		H6.ctl { font-family: "Mangal" }
+		TT { color: #00ae00; background: transparent }
+		TT.western { font-size: 11pt; font-weight: bold }
+		DFN { color: #800000 }
+		DFN.western { font-family: "Arial", sans-serif; font-weight: bold }
+		VAR { background: #cccccc; text-decoration: underline }
+		VAR.western { font-size: 10pt; font-style: normal }
+		SAMP.western { font-size: 10pt; font-style: normal; font-weight: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="cs-CZ" BGCOLOR="#fffacd" DIR="LTR">
+<H1 CLASS="western"><IMG SRC="img/altsearchz_26.png" NAME="graphics2" ALIGN=RIGHT WIDTH=49 HEIGHT=48 BORDER=0>Makro
+AltSearch</H1>
+<P CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm; font-weight: normal">
+<FONT FACE="Arial, sans-serif">(Alternativní dialog pro hledání
+a&nbsp;nahrazení ve Writeru)</FONT></P>
+<P CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm; font-weight: normal">
+<FONT FACE="Arial, sans-serif">verze 1.4.2</FONT></P>
+<P CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" ALIGN=CENTER>| <A HREF="#hlavnif">Co nabízí toto
+rozšíření</A> | <A HREF="#hledat">Hledání</A> | <A HREF="#nahradit">Nahrazení</A>
+| <A HREF="#davky">Dávkové zpracování</A> | <A HREF="#omezeni">Omezení</A>
+| <A HREF="#historie">Historie změn</A> | 
+</P>
+<P CLASS="western" ALIGN=CENTER><BR><BR>
+</P>
+<P CLASS="western"><B>Autor:</B> <A HREF="http://www.volny.cz/macrojtb/">Tomáš
+Bílek &ndash; &copy; 2007-2013</A><BR><B>Licence:</B> LGPL, která je
+dostupná např. zde: <A HREF="http://www.volny.cz/macrojtb/0gnu-lgpl_cs.html">http://www.volny.cz/macrojtb/0gnu-lgpl_cs.html</A></P>
+<P CLASS="western" STYLE="margin-left: 1cm; background: transparent"><FONT SIZE=3><B>Tento
+program je rozšiřován v&nbsp;naději, že bude užitečný, avšak BEZ
+JAKÉKOLI ZÁRUKY.</B></FONT></P>
+<P CLASS="western" STYLE="margin-left: 1cm; background: transparent"><BR><BR>
+</P>
+<H6 CLASS="western"><A NAME="hlavnif"></A>Co nabízí toto rozšíření
+oproti standardnímu dialogu &quot;Najít a&nbsp;nahradit&quot; OOo:</H6>
+<UL>
+	<LI><P CLASS="western">Dialog hledání a&nbsp;nahrazení bez nutnosti
+	mačkat často tlačítko <VAR CLASS="western">[ Více voleb ]</VAR> pro
+	zjištění stavu přepínačů, možnost rychlého výběru přednastavených
+	regulárních a&nbsp;rozšířených výrazů pro hledání a nahrazení 
+	</P>
+	<LI><P CLASS="western">Zjištění počtu nalezených výskytů hledaného
+	výrazu tlačítkem <VAR CLASS="western">[ Spočítat ]</VAR></P>
+	<LI><P CLASS="western">Hledaný text se může skládat z&nbsp;více než
+	jednoho odstavce, při nahrazení je možno vkládat odstavce</P>
+	<LI><P CLASS="western">Možnost hexadecimálního i&nbsp;dekadického
+	zadání znaků pro hledání i&nbsp;nahrazení</P>
+	<LI><P CLASS="western">Vyhledání ručního zalomení sloupce nebo
+	stránky a&nbsp;jejich zrušení</P>
+	<LI><P CLASS="western">Vyhledání bloku odstavců ohraničeného
+	textovými značkami</P>
+	<LI><P CLASS="western">Možnost rozšíření nebo zúžení výběru
+	nalezeného textu o&nbsp;zadaný počet znaků</P>
+	<LI><P CLASS="western">Vícenásobné hledání a&nbsp;nahrazení v&nbsp;jednom
+	kroku</P>
+	<LI><P CLASS="western">Hledání: Poznámek, Textových polí, Křížových
+	odkazů a jejich značek (odkazu) podle jejich obsahu, názvu nebo
+	značky (odkazu) a jejich vkládání 
+	</P>
+	<LI><P CLASS="western">Hledání objektů Tabulek, Obrázků a&nbsp;Textových
+	rámců podle jejich názvů; Možnost jejich nahrazení textem, textovým
+	obsahem, názvem, obsahem schránky 
+	</P>
+	<LI><P CLASS="western">Hledání a vkládání Poznámek pod čarou a
+	Vysvětlivek (od verze OOo 2.3). Lze naráz vybrat texty všech
+	poznámek nebo vysvětlivek a přiřadit jim hromadně odstavcový styl 
+	</P>
+	<LI><P CLASS="western">Hledání podobně nebo stejně naformátovaných
+	částí textu podle místa kurzoru</P>
+	<LI><P CLASS="western">Manipulace s&nbsp;částmi (seskupeními)
+	hledaného textu uzavřenými v&nbsp;kulatých závorkách při nahrazování</P>
+	<LI><P CLASS="western">Možnost změnit v nalezeném nebo nahrazovaném
+	textu Odstavcový, Znakový, Seznamový styl a&nbsp;URL Hypertextového
+	odkazu a nastavovat textové vlastnosti 
+	</P>
+	<LI><P CLASS="western">Možnost vkládat při nahrazení obsah schránky
+	a&nbsp;vkládat počitadlo nahrazení a číslo stránky</P>
+	<LI><P CLASS="western">Možnost přesměrovat výsledek nahrazovaného
+	výrazu do jiného textového souboru</P>
+	<LI><P CLASS="western">Dávkové zpracování: uložení a&nbsp;načtení
+	parametrů hledání a&nbsp;nahrazení; je možné uložit několik hledání
+	a&nbsp;nahrazení za sebou do jediné sekvence a&nbsp;tu pak celou
+	rychle provést. [v1.4]: Provedení dávky na více otevřených textových
+	souborech najednou</P>
+	<LI><P CLASS="western">[v1.2] Vlastní dialog pro rychlé přiřazení
+	klávesových zkratek pro jednotlivé dávky</P>
+	<LI><P CLASS="western">[v1.3] Zachovat velká písmena - pokud
+	nalezený text začíná velkým písmenem, bude velkým písmenem začínat i
+	text nahrazený</P>
+	<LI><P CLASS="western">[v1.3] Hledání znakových stylů, výběr stylu z
+	nabídky použitých stylů</P>
+	<LI><P CLASS="western">[v1.3.1] Hledání odstavcových a seznamových
+	stylů v roletě Atributy</P>
+	<LI><P CLASS="western">[v1.4] Hledání a vkládání záložek (Bookmarks)</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western">Tip na klávesové zkratky pro zrychlení práce pro
+častější používání:</P>
+<P CLASS="western">1. Otevřít dialog <B>Nástroje - Přizpůsobit -
+Klávesnice</B> 
+</P>
+<P CLASS="western">2. V poli <B>Kategorie</B> se proklikat na Makra
+<B>OOo - User - AltSearch - AltSearch</B></P>
+<P CLASS="western">3. V poli Funkce vybrat a přiřadit tlačítkem
+Změnit:<BR>_AltSearch a přiřadit zkratku Ctrl+H (otevře dilog pro
+hledání);<BR>_FindNext a přiřadit zkratku Ctrl+L (hledá další výskyt
+za kurzorem i bez otevřeného dialogu);<BR>_FindBack a přiřadit
+zkratku Ctrl+Shift+L (hledá další výskyt před kurzorem i bez
+otevřeného dialogu);</P>
+<P CLASS="western">[v1.2] Od verze 1.2 se také dají klávesové zkratky
+přiřadit dialogem přímo přes AltSearch - viz <A HREF="#davky">Dávkové
+zpracování</A> 
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+<H6 CLASS="western"><IMG SRC="img/altsearch_main_cs.png" NAME="obrázky1" ALIGN=RIGHT HSPACE=6 WIDTH=455 HEIGHT=299 BORDER=0>Roletové
+nabídky (nad poli pro zadání hledaného a&nbsp;nahrazovaného výrazu)</H6>
+<P CLASS="western">obsahují často používané nebo složité regulární
+výrazy nebo parametry pro nahrazení. Po výběru položky se do pole
+(nebo obou polí) přenesou odpovídající parametry. Ty mohou být podle
+situace vloženy několika způsoby: na začátek, na konec, ke kurzoru
+nebo původní text zcela nahradí. Zároveň je aktivován přepínač
+&quot;Regulární výrazy&quot;. 
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="hledat"></A>Hledat :</H6>
+<P CLASS="western">Roleta <B>Regulární</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm">obsahuje některé vybrané
+regulární výrazy. Jejich popis je k&nbsp;dispozici v&nbsp;nápovědě
+OOo pod heslem <A HREF="vnd.sun.star.help://sbasic/text%2Fshared%2F01%2F02100001.xhp?Language=cs&amp;System=UNIX">Seznam
+regulárních výrazů</A>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><A NAME="skupiny0"></A><DFN CLASS="western">Omezení:</DFN>
+Syntaxe použitých regulárních výrazů <B>není</B> plně kompatabilní s
+původní z OOo. Problémy jsou u hledání při použití metaznaků <TT CLASS="western">*
++ ? {n,n}</TT> těsně za seskupením vymezeným závorkami (). Např.
+<TT CLASS="western">(Mi)?ster</TT> nebude nalezeno (avšak při použití
+<VAR CLASS="western">[ Spočítat ]</VAR> bude vrácen reálný počet -
+tato funkce používá pouze kompatabilní režim). Dále pokud se hledá
+seskupení typu <TT CLASS="western">(.*)neco</TT> nebo <TT CLASS="western">(.+)neco</TT>
+tak je vyhledána <B>nejkratší</B> vyhovující varianta oproti
+standardu, který naopak vyhledá nejdelší vyhovující možnost. Pokud je
+třeba zachovat kompatabilitu, je možno celý hledaný výraz uzavřít do
+dalšího páru závorek: <TT CLASS="western">((Mi)?ster)</TT>. Tím se
+ovšem pozbyde možnost odkazovat se na seskupení v nahrazovacím výrazu
+pomocí reference <TT CLASS="western">\#</TT> kde # je pořadové číslo
+(max. 9) seskupení. Nelze také <B>současně</B> použít referenci na
+seskupení (vymezené závorkami <TT CLASS="western">()</TT>) v hledaném
+i nahrazovaném výrazu. Viz také <A HREF="#skupiny">seskupení</A>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm">Další, nestandardní
+zástupné parametry:</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\l</TT>
+- reprezentuje jakékoli písmeno; totéž jako <TT CLASS="western">[:alpha:]{1,1}</TT>.
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\d </TT>-
+reprezentuje desítkovou číslici; totéž jako <TT CLASS="western">[0-9]</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\p </TT>-
+reprezentuje znak ukončení jakéhokoliv odstavce,</P>
+<P CLASS="western" STYLE="margin-left: 4cm">na rozdíl od v&nbsp;OOo
+standardního $, i&nbsp;prázdného. Lze použít metaznaky <TT CLASS="western">+</TT>,
+<TT CLASS="western">*</TT>, <TT CLASS="western">{min,max}</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">\p{1,}
+</TT>- najde nejbližší konec odstavce následovaný libovolně dlouhým
+blokem prázdných odstavců. Totéž co <TT CLASS="western">\p*</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">\p{2,4}
+</TT>- najde nejbližší konec odstavce následovaný minimálně jedním,
+maximálně 3 prázdnými odstavci, celkem tedy minimálně 2 maximálně 4
+odstavce za sebou.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Pomalé při samostatném použití. Někdy problémy při zpětném hledání. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\xhhhh
+</TT>- umožní zadat kód znaku hexadecimálním číslem (místo hhhh)</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\#ddddd
+</TT>- umožní zadat kód znaku dekadickým číslem (místo ddddd).</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud následující znak
+není číslice, není nutno dodržet dodržet všech 5 míst ddddd. Jinak je
+třeba doplnit nulami zleva. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\c </TT>-
+vyhledá ruční zalomeni slupce. <DFN CLASS="western">Omezení:</DFN>
+Pomalé při samostatném použití.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\m </TT>-
+vyhledá ruční zalomeni stránky. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Pomalé při samostatném použití. Pokud se používají skupiny <TT CLASS="western">()</TT>
+tak parametr <TT CLASS="western">\m</TT> musí být na začátku
+hledaného řetězce, nebo nesmí být sám: <TT CLASS="western">\m(...)</TT>
+ale ne <TT CLASS="western">(...)\m</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\s </TT>-
+reprezentuje jakoukoli mezeru; totéž jako <TT CLASS="western">[
+\xA0\x9\xA]</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\S </TT>-
+reprezentuje znak pevné, nedělitelné mezery (<TT CLASS="western">\x00A0
+\#160</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western">Roleta <B>Rozšířené</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::BigBlock::]</TT>
+- najde libovolně dlouhý blok odstavců ohraničený zadaným textem</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">začátek[::BigBlock::]konec</TT>
+- hledá se text &quot;začátek&quot; a&nbsp;po jeho nalezení je hledán
+text &quot;konec&quot;, pokud je obojí nalezeno je celý blok označen.</P>
+<P CLASS="western" STYLE="margin-left: 4cm">V&nbsp;nahrazovacím
+řetězci je možno pro samostatné vložení části &quot;začátek&quot;,
+blok odstavců, &quot;konec&quot; použít parametry <TT CLASS="western">\b</TT>,
+<TT CLASS="western">&amp;</TT>, <TT CLASS="western">\e</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+V&nbsp;počáteční a&nbsp;konečné značce nelze použít symboly <TT CLASS="western">||</TT>
+pro vícenásobné hledání-nahrazení, viz níže.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Grow
+n1,n2::]</TT> - nalezený text bude rozšířen o&nbsp;n1 znaků doleva
+a&nbsp;n2 znaků doprava</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Grow
+-1,-1::]text</TT> - pokud v&nbsp;textu existuje slovo <TT CLASS="western">text</TT>
+tak bude nalezeno, ale označeno bude pouze <TT CLASS="western">ex</TT>.
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+parametr je třeba uvádět vždy na začátku hledaného řetězce a&nbsp;za
+ním hledaný výraz. Pokud se nastaví posuny na zápornou hodnotu, pak
+může v&nbsp;závislosti na délce hledaného výrazu dojít při dalším
+hledání k&nbsp;cyklickému nalezení stejného místa.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">text1||text2||text3||&hellip;</TT>
+- vícenásobné hledání-nahrazení v&nbsp;jednom kroku</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Tato volba přidá vždy na
+konec hledaného i&nbsp;nahrazovacího řetězce symboly || ohraničující
+jednotlivá dílčí hledání, nahrazení.</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Hledej:
+<TT CLASS="western">text1||text2||text3</TT> <BR>Nahraď:
+<TT CLASS="western">neco1||neco2||neco3</TT> Provede se hledání <TT CLASS="western">text1</TT>
+nahradí se <TT CLASS="western">neco1</TT>, pokračuje hledáním <TT CLASS="western">text2</TT>
+nahradí se <TT CLASS="western">neco2</TT> atd.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+nelze zde zároveň použít parametr <TT CLASS="western">[::BigBlock::]</TT>,
+nelze používat <A HREF="#skupiny">seskupení.</A></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><DFN CLASS="western">Hledání
+objektů</DFN></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Note::]
+</TT>- hledání textových poznámek (žluté bubliny) podle jejich obsahu</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Note::]
+</TT>vyhledá se jakákoli textová poznámka</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Note::]pozn.
+</TT>vyhledá se textová poznámka obsahující podřetězec <TT CLASS="western">pozn.</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Vyhledává se pouze podřetězec v&nbsp;obsahu - nelze použít plné
+regulární symboly. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Field::]
+</TT>- hledání textových polí podle jejich obsahu</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Field::]
+</TT>vyhledá se jakékoli (neplatí na 100%) textové pole</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Field::]obsah
+</TT>vyhledá se textové pole zobrazující v&nbsp;dokumentu text <TT CLASS="western">obsah</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Platí obdobná jako pro <TT CLASS="western">[::Note::]</TT>. Viz výše.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::TextFrame::]
+</TT>- hledání textových rámců podle jejich názvu</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::TextFrame::]
+</TT>vyhledá se jakýkoli textový rámec</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::TextFrame::]rám1
+</TT>vyhledá se textový rámec obsahující v&nbsp;názvu podřetězec <TT CLASS="western">rám1</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+1. při použití <VAR CLASS="western">[ Najít ]</VAR> se vyhledá
+následující rámec jen pokud je vybrán rámec nebo kurzor stojí
+v&nbsp;rámci. Pokud je jinde v&nbsp;textu, je nalezen vždy první
+rámec ze seznamu. Nefunguje při tom omezení na &quot;Pouze současný
+výběr&quot;.</P>
+<P CLASS="western" STYLE="margin-left: 4cm">2. Praktická použitelnost
+<VAR CLASS="western">[ Nahradit ]</VAR> je v&nbsp;důsledku bodu 1.
+silně omezená.</P>
+<P CLASS="western" STYLE="margin-left: 4cm">3. Pořadí hledání
+odpovídá (naneštěstí, prozatím) posloupnosti vložení rámců do
+dokumentu a&nbsp;NE pořadí od začátku dokumentu do konce podle
+stránek.</P>
+<P CLASS="western" STYLE="margin-left: 4cm">4. Vyhledává se
+podřetězec v&nbsp;názvu - nelze použít plné regulární symboly.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><VAR CLASS="western">[
+Najít vše ]</VAR> a&nbsp;<VAR CLASS="western">[ Nahradit vše ]</VAR>
+by mělo být funkční včetně, ohraničení na současný výběr. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Picture::]
+</TT>- hledání obrázků podle jejich názvu</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Picture::]</TT>
+vyhledá se jakýkoli obrázek</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Picture::]obr1
+</TT>vyhledá se obrázek obsahující v&nbsp;názvu podřetězec <TT CLASS="western">obr1</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Picture::]\\text
+</TT>vyhledá se podřetězec <TT CLASS="western">text</TT> v
+Alternativním textu obrázku [v1.4]</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Picture::]\\
+</TT>vyhledají se všechny obrázky s prázdným Alternativním textem
+[v1.4]</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Platí obdobná jako pro <TT CLASS="western">[::TextFrame::]</TT>. Viz
+výše.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::TextTable::]
+</TT>- hledání tabulek podle jejich názvu</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::TextTable::]</TT>
+vyhledá se jakákoli tabulka</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::TextTable::]tab1
+</TT>vyhledá se tabulka obsahující v&nbsp;názvu podřetězec <TT CLASS="western">tab1</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Platí obdobná jako pro <TT CLASS="western">[::TextFrame::]</TT>. Viz
+výše.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Footnote::]
+</TT>- hledání poznámek pod čarou (dále jen PP)</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Footnote::]
+</TT>vyhledá se kotva v textu pro jakoukoli PP</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Footnote::]5
+</TT>vyhledá se kotva PP která obsahuje podřetězec <TT CLASS="western">5</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Footnote::]\\text</TT>
+vyhledá se kotva PP jejíž text obsahuje podřetězec <TT CLASS="western">text</TT>,
+pokud se použije tlačítko <VAR CLASS="western">[ Najít vše ]</VAR>
+tak se vyberou celé texty PP které obsahují podřetězec <TT CLASS="western">text</TT>.
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Footnote::]\\</TT>
+s tlačítkem <VAR CLASS="western">[ Najít vše ]</VAR> vybere celé
+texty všech PP (vhodné např. pro hromadné přiřazení stylů všem PP) 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Funkce pracuje správně až od verze OOo 2.3 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Endnote::]
+</TT>- hledání vysvětlivek</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Použití parametrů i
+omezení je obdobné jako u Poznámek pod čarou, viz výše 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::ReferenceMark::]
+</TT>- hledání textu označeného jako značka (odkaz) pro Křížový odkaz</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::ReferenceMark::]
+</TT>vyhledá jakýkoli text nastavený jako značka 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::ReferenceMark::]text</TT>
+vyhledá text nastavený jako značka, který obsahuje podřetězec <TT CLASS="western">text</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::ReferenceMark::]\\ref1</TT>
+vyhledá text nastavený jako značka, jejíž Název obsahuje podřetězec
+<TT CLASS="western">ref1</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::ReferenceMark::]\\\\</TT>
+vyhledá text nastavený jako značka, který má nulovou délku 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Reference::]
+</TT>- hledá textové pole (křížový odkaz) odkazující na značku</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Reference::]
+</TT>vyhledá textové pole typu křížový odkaz</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Reference::]pod</TT>
+vyhledá křížového odkaz, který obsahuje podřetězec <TT CLASS="western">pod</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Reference::]\\ref1</TT>
+vyhledá křížový odkaz, jehož Název obsahuje podřetězec <TT CLASS="western">ref1</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Reference::]\\\\</TT>
+vyhledá křížový odkaz, jehoř text má nulovou délku</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud se tento parametr
+vybere pomocí rolety <B>Rozšířené</B> a kurzor stojí na textu, který
+je nastaven jako značka (odkaz) pro křížový odkaz, je do pole hledání
+přenesen i odpovídající Název pro Křížový odkaz a je možné ho ihned
+vyhledat. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[::Bookmark::]</TT>
+- hledá v záložkách (Bookmarks) [v1.4]</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Bookmark::]</TT>
+vyhledá místo v textu nebo blok textu označený jako záložka</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Bookmark::]text</TT>
+vyhledá slovo <TT CLASS="western">text</TT>, pokud je uvnitř
+textového bloku označeného jako záložka</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Bookmark::]\\RefHeading</TT>
+vyhledá záložku v jejímž názvu je obsažen podřetězec <TT CLASS="western">RefHeading</TT>
+(hledá v názvu)</P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western">Roleta <B>Atributy</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">umožňuje
+hledání podle zadaných vlastností (atributů), případně i hodnot.
+Zápis musí začínat řetězcem </SPAN></SPAN><TT CLASS="western"><SPAN STYLE="font-style: normal">[:::</SPAN></TT><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">,
+následuje </SPAN></SPAN><TT CLASS="western"><SPAN STYLE="font-style: normal">jméno</SPAN></TT>
+<SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">vlastnosti
+(více jmen se odděluje pomocí znaku </SPAN></SPAN><TT CLASS="western"><SPAN STYLE="font-style: normal">|</SPAN></TT>
+<SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">)
+a končí řetězcem </SPAN></SPAN><TT CLASS="western"><SPAN STYLE="font-style: normal">::]</SPAN></TT><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">.
+Po něm může ještě následovat upřesnění hledaného textu pomocí
+zástupných znaků. Pokud se má hledat i konkrétní hodnota vlastnosti
+použije se konstrukce </SPAN></SPAN><TT CLASS="western"><SPAN STYLE="font-style: normal">jméno=hodnota</SPAN></TT>.
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[:::ParaStyleName::]
+</TT>- hledání odstavcového stylu [v1.3.1]</P>
+<P CLASS="western" STYLE="margin-left: 4cm; text-indent: -0.2cm"><TT CLASS="western">[:::ParaStyleName=::]
+</TT>vyhledá všechny celé odstavce s nastaveným odstavcovým stylem
+jiným než <TT CLASS="western">Výchozí</TT> 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm; text-indent: -0.2cm"><TT CLASS="western">[:::ParaStyleName=Příklad::]</TT>
+vyhledá celý odstavec s odstavcovým stylem <TT CLASS="western">Příklad
+</TT>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm; text-indent: -0.2cm"><TT CLASS="western">[:::ParaStyleName=Příklad::]
+něco</TT> vyhledá text <TT CLASS="western">něco</TT> který je v
+odstavci formátovaném odstavcovým stylem<TT CLASS="western"> Příklad</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm; text-indent: -0.2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Nenajde některé části textu s nulovou délkou, např. prázdný
+odstavec.<BR>Nelze kombinovat s ostatními atributy.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[:::CharStyleName::]
+</TT>- hledání znakového stylu [v1.3]</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[:::CharStyleName=::]
+</TT>vyhledá část textu s nastaveným znakovým stylem jiným než
+<TT CLASS="western">Výchozí</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[:::CharStyleName=Příklad::]</TT>
+vyhledá části textu na které je použit znakový styl <TT CLASS="western">Příklad</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[:::CharStyleName=Příklad::]něco</TT>
+vyhledá text <TT CLASS="western">něco</TT> pokud je formátován
+znakovým stylem <TT CLASS="western">Příklad</TT> 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Funguje jen dopředu - přepínač <B>Pozpátku</B> není funkční (hlásí
+nenalezeno). <BR>Nenajde některé části textu s nulovou délkou, např.
+prázdný odstavec. [v1.3.1]<BR>Nelze kombinovat s ostatními atributy.
+[v1.3.1]</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[:::NumberingStyleName::]
+</TT>- hledání stylu seznamu - použití podobné jako hledání
+odstavcového stylu, viz výše. [v1.3.1]</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">[:::HyperLinkURL::]
+</TT>- hledá částí textu s nastaveným atributem <TT CLASS="western">HyperLinkURL</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[:::HyperLinkURL::]
+</TT>vyhledá jakýkoli hypertextový odkaz</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[:::HyperLinkURL::]odkaz
+</TT>vyhledá část hypertextového odkazu<BR>obsahujícího text <TT CLASS="western">odkaz</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[:::HyperLinkURL=file:///c:/pokus.odt::]
+</TT>vyhledá hypertextový odkaz v&nbsp;jehož URL je nalezen
+podřetězec <TT CLASS="western">file:///c:/pokus.odt</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[:::HyperLinkURL=file:///c:/pokus.odt::]odkaz
+</TT>vyhledá část hypertextového odkazu v&nbsp;jehož URL je nalezen
+podřetězec <TT CLASS="western">file:///c:/pokus.odt</TT> a
+obsahujícího text <TT CLASS="western">odkaz</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm">Seznam dostupných
+textových atributů s jejich současnými hodnotami podle současného
+výběru lze načíst pomocí tlačítka <VAR CLASS="western">[&nbsp;Načíst&nbsp;vlastnosti&nbsp;]</VAR>
+a zobrazit v roletové nabídce vedle. Jejich stručný význam lze
+většinou najít <A HREF="http://api.openoffice.org/docs/common/ref/com/sun/star/style/module-ix.html">zde</A>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">Podobné
+znakové atributy </TT>- tato funkce načte některé ručně změněné
+znakové atributy (podle současného výběru) pro vyhledání podobně
+formátovaných míst. Pokud je např. kurzor na ručně změněném názvu
+písma, budou hledána všechna místa se změněným jménem písma - bude se
+hledat <TT CLASS="western">[:::CharFontName::]</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">Stejné
+znakové atributy </TT>- tato funkce načte některé ručně změněné
+znakové atributy (podle současného výběru) pro vyhledání stejně
+formátovaných míst. Pokud je např. kurzor na ručně změněném názvu
+písma, budou hledána všechna místa se změněným a zároveň <B>stejným</B>
+jménem písma - bude se hledat <TT CLASS="western">[:::CharFontName=Arial::]</TT>.
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><DFN CLASS="western">Omezení:</DFN>
+Ne všechny existující vlastnosti odstavce a písma OOo podporuje pro
+hledání, ne všechny kombinace fungují podle očekávání a správně.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="nahradit"></A>Nahradit:</H6>
+<P CLASS="western">Listbox <B>Nahradit</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">&amp;
+\0 </TT>- oba tyto zástupné znaky znamenají totéž - při nahrazení
+představují celý nalezený text</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud se hledalo pomocí
+<TT CLASS="western">[::BigBlock::]</TT> tak představují jen blok
+odstavců mezi značkami začátku a konce.</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud byl hledán objekt
+pomocí <TT CLASS="western">[::Note::]</TT>, <TT CLASS="western">[::Field::]</TT>,
+<TT CLASS="western">[::TextFrame::]</TT>, <TT CLASS="western">[::Picture::]</TT>,
+<TT CLASS="western">[::TextTable::] </TT>tak představují přímo tyto
+objekty (vkládají se přes schránku).</P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\b \e
+</TT>- pokud se hledalo pomocí <TT CLASS="western">[::BigBlock::]</TT>
+tak představují obsah začáteční a ukončující značky. <DFN CLASS="western">Omezení:</DFN>
+nelze používat <A HREF="#skupiny">seskupení ().</A></P>
+<P CLASS="western" STYLE="margin-left: 2cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><A NAME="skupiny"></A><TT CLASS="western">\1
+\2 \3 \4 \5 \6 \7 \8 \9 </TT>- obsah seskupení</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud byly v hledaném
+výrazu použity závorky (), pak <TT CLASS="western">\1</TT>
+představuje v pořadí první nalezený text, příslušný obsahu prvních
+(), podobně <TT CLASS="western">\2</TT> přísluší druhému páru () atd,
+maximálně <TT CLASS="western">\9</TT> přísluší 9. páru. Za platnou je
+považována pouze 1. úroveň zanoření závorek, další úrovně jsou
+ignorovány. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Příklad:</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pomocí výrazu <TT CLASS="western">(\d{1,2})\.
+*(\d{1,2})\. *\d{2,2}(\d{2,2})</TT> lze např. najít datum ve formátu
+01. 12. 2007 a nahradit za 07-12-01 pomocí výrazu pro nahrazení
+<TT CLASS="western">\3-\2-\1</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud je třeba zpracování
+seskupení vypnout (např. z důvodu plné kompatibility regulárních
+výrazů ve standardu OOo) je třeba celý hledaný výraz vložit do
+dalšího páru (). 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+použití sekupení je poměrně pomalé, není plně kompatabilní s
+původními v OOo. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Nekompatabilita při
+hledáni kde je metznak ihned za seskupením <TT CLASS="western">(opak)*</TT>
+je dána principem postupného vyhledávání navazujících bloků textů a
+nijak jednoduše ji se mi ji nedaří odstranit, viz také <A HREF="#skupiny0">zde</A>.
+V těchto případech poskytují funkce <VAR CLASS="western">[ Spočítat ]</VAR>
+a <VAR CLASS="western">[ Najít vše ]</VAR> správné reálné počty
+zatímco ostatní bez zapnutí kompatability nenajdou nic. Ve
+složitějších případch je třeba chování vyzkoušet a zkusmo ověřit. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\p </TT>-
+vloží do nahrazovaného výrazu nový odstavec</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\t </TT>-
+vloží do nahrazovaného výrazu tabulátor (<TT CLASS="western">\x0009
+\#9</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\s </TT>-
+vloží do nahrazovaného výrazu nedělitelnou mezeru (<TT CLASS="western">\x00A0
+\#160</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\n </TT>-
+vloží do nahrazovaného výrazu ruční zalomení řádku (<TT CLASS="western">\x000A
+\#10</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\c </TT>-
+nastaví v nalezeném odstavci ruční zalomeni slupce před</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\m </TT>-
+nastaví v nalezeném odstavci ruční zalomeni stránky před</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\M </TT>-
+nastaví v nalezeném odstavci ruční zalomeni stránky za</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\r </TT>-
+zruší ruční zalomení stránky, sloupce v nalezeném odstavci</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\xhhhh
+</TT>- vloží znak zadaný hexadecimálním číslem (místo hhhh)</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\#ddddd
+</TT>- vloží znak zadaný dekadickým číslem (místo ddddd).</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\h{adresaURL}
+</TT>- nastaví nalezenému textu URL hypertextového odkazu na
+<TT CLASS="western">adresaURL</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">\h{}</TT>,<TT CLASS="western">
+\h </TT>nastaví nalezenému textu URLhypertextového odkazu na prázdný
+řetězec čímž odkaz smaže z dokumentu (text popisu samozřejmě v
+dokumentu zůstává). 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\H{substr}
+</TT>- nahrazení podřetězce v URL adrese odkazu 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Nutno použít současně s
+hledáním <TT CLASS="western">[:::HyperLinkURL=::]</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud bylo hledáno např.
+pomocí výrazu <TT CLASS="western">[:::HyperLinkURL=substr::] </TT>pak
+se vyhledájí pouze odazy jejichž URL obsahuje podřetězec <TT CLASS="western">substr</TT>.
+Použití <TT CLASS="western">\H{repl}</TT> v&nbsp;nahrazení pak
+vyhledá v URL adrese text <TT CLASS="western">substr</TT> a nahradí
+jej textem <TT CLASS="western">repl</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\u </TT>-
+vloží v nahrazovaném výrazu URL adresu nalezeného textu (pokud jde o
+hypertextový odkaz)</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\P{Text}
+</TT>- nastaví v odstavci kde je nalezený text zadaný odstavcový styl
+(<TT CLASS="western">Text</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Styl se aplikuje na
+odstavec ve kterém je text nahrazovacího výrazu. Pro nastavení
+&quot;Výchozího&quot; stylu lze použít <TT CLASS="western">\P</TT>
+nebo <TT CLASS="western">\P{}</TT>. Pokud je parametr použit vícekrát
+s&nbsp;vloženými odstavci, tak se styl mění s každým novým
+parametrem, a&nbsp;platí až do konce odstavce. Např. pokud je výraz
+pro nahrazení <TT CLASS="western">blok1\P{Popisek}\p blok2\P{Nadpis
+1}</TT> tak se vloží text <TT CLASS="western">blok1</TT> a&nbsp;celému
+odstavci se přiřadí styl <TT CLASS="western">Popisek</TT> a za něj se
+vloží nový odstavec s textem <TT CLASS="western">blok2</TT> a&nbsp;stylem
+<TT CLASS="western">Nadpis 1</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\C{Citace}
+</TT>- nastaví v nahrazovaném výrazu zadaný znakový styl (<TT CLASS="western">Citace</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Styl se aplikuje na celý
+text nahrazovacího výrazu. Pro nastavení &quot;Výchozího&quot; stylu
+lze použít <TT CLASS="western">\C</TT> nebo <TT CLASS="western">\C{}</TT>.
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud je parametr použit
+vícekrát s různým stylem, pak se znakový styl mění s&nbsp;každým
+novým parametrem; poslední se většinou aplikuje až do konce výrazu,
+protože následně vložené části textu přebírají atributy podle
+předchozích. Tomu se dá zabránit nastavením &quot;Výchozího&quot;
+stylu těsně za zadaným, např. <TT CLASS="western">\C{Citace}\C</TT>. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Např. pokud je výraz pro
+nahrazení <TT CLASS="western">blok1\C{Citace}blok2\C{Iniciály}</TT>
+tak se vloží text <TT CLASS="western">blok1</TT> se znakovým stylem
+<TT CLASS="western">Citace</TT> a za něj text <TT CLASS="western">blok2</TT>
+se znakovým stylem <TT CLASS="western">Iniciály</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\N{Seznam
+3} </TT>- nastaví v odstavci kde je nalezený text zadaný styl
+číslování (<TT CLASS="western">Seznam 3</TT>)</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Platí obdobná pravidla
+použití jako pro parametr <TT CLASS="western">\P{}</TT>. Zrušení
+stylu číslování odstavce se dosáhne použitím <TT CLASS="western">\N</TT>
+nebo <TT CLASS="western">\N{}</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\D </TT>-
+nastaví v nalezeném textu výchozí formátování podle přiřazeného
+odstavcového stylu</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Zruší ručně provedené
+změny formátování textu, podobně jako když se použije
+Ctrl+Shift+Space. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Platí obdobná pravidla
+použití jako pro parametr <TT CLASS="western">\C{}</TT>.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\d </TT>-
+resetuje na výchozí textové atributy pouze v místě použití. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Narozdíl od <TT CLASS="western">\D</TT>
+nemá vliv na předchozí vložený text, ale jen na následující. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\F{Nová
+PP} </TT>- vloží do místa náhrady novou poznámku pod čarou obsahující
+text <TT CLASS="western">Nová PP</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm">Uvniř závorek lze přitom
+použít parametry pro části nalezeného textu, např. <TT CLASS="western">&amp;</TT>
+nebo <TT CLASS="western">\1</TT> 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\E{Nová
+vysvětlivka} </TT>- vloží do místa náhrady novou vysvětlivku, podobne
+jako <TT CLASS="western">\F </TT>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\B{značka|text}
+</TT>- vloží text <TT CLASS="western">text</TT> reprezentující značku
+o názvu <TT CLASS="western">značka</TT> pro křížový okaz 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Uvniř závorek lze přitom
+použít parametry pro části nalezeného textu, např. <TT CLASS="western">&amp;</TT>
+nebo <TT CLASS="western">\1</TT> 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\L{0,0,značka}
+</TT>- vloží křížový odkaz (pole) o zadaných parametrech s názvem
+značky <TT CLASS="western">značka</TT></P>
+<P CLASS="western" STYLE="margin-left: 4cm">Význam číselných
+parametrů (oddělených čárkou)</P>
+<P CLASS="western" STYLE="margin-left: 6cm"><I>první číslo</I> - typ
+odkazu: 0 - arabské číslo stránky, 1 - číslo kapitoly, 2 - odkaz
+(text značky), 3 - pod/nad, 4 - číslo stránky podle stylu stránky, 5
+- kategorie a číslo popisku, 6 - text popisku, 7 - číslování
+(popisku)</P>
+<P CLASS="western" STYLE="margin-left: 6cm"><I>druhé číslo</I> - typ
+zdrojové značky, tj odkaz na: 0 - značku křížového odkazu, 1 -
+interval číslování, 2 - záložku, 3 - poznámku pod čarou, 4 -
+vysvětlivku 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\K{w,jmeno_zalozky}
+</TT>- vloží záložku s názvem <TT CLASS="western">jmeno_zalozky</TT>.
+[v1.4]</P>
+<P CLASS="western" STYLE="margin-left: 4cm">První parametr určuje
+způsob vložení záložky pokud je vkládán (nalezen) blok textu:</P>
+<P CLASS="western" STYLE="margin-left: 6cm">w - bude vložena záložka
+na celý blok textu</P>
+<P CLASS="western" STYLE="margin-left: 6cm">b - bude vložena záložka
+k začátku bloku</P>
+<P CLASS="western" STYLE="margin-left: 6cm">e - bude vložena záložka
+ke konci bloku</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">\K{}</TT>,<TT CLASS="western">
+\K</TT> pokud je v daném místě textu definována záložka tak bude
+vymazána. Pokud je nalezen blok textu označený jako záložka bude
+záložka smazána, textový blok zůstane nezměněn. <BR><TT CLASS="western">\K{w,nove_jmeno}\K</TT>
+- přejmenování záložky - musí být ale vyhledána pomocí <TT CLASS="western">[::Bookmark::]</TT></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\o </TT>-
+vloží do nahrazovaného výrazu textový obsah nalezeného objektu</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud byl hledán objekt
+pomocí <TT CLASS="western">[::Note::]</TT>, <TT CLASS="western">[::Footnote::]</TT>,
+<TT CLASS="western">[::Endnote::]</TT>, <TT CLASS="western">[::TextFrame::]</TT>,
+<TT CLASS="western">[::Picture::]</TT>, <TT CLASS="western">[::TextTable::]
+</TT>tak se vloží text který tyto objekty obsahují. Tabulka je
+převedena pomocí tabulátorů mezi sloupci a odstavců mezi řádky.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Maximální velikost převáděné tabulky je omezena na 65 kB výsledného
+textu celkem.</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud se hledalo pomocí
+<TT CLASS="western">[::Field::]</TT>, <TT CLASS="western">[::Reference::]</TT>,
+<TT CLASS="western">[::ReferenceMark::]</TT> tak se vloží zobrazený
+text kotvy nebo pole. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\O </TT>-
+vloží do nahrazovaného výrazu název nalezeného objektu (pokud byly
+hledány objekty)</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud byl hledán objekt
+pomocí:</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::TextFrame::]</TT>,
+<TT CLASS="western">[::Picture::]</TT>, <TT CLASS="western">[::TextTable::]
+</TT>- vloží se názvy těchto objektů.</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Note::]</TT>,
+<TT CLASS="western">[::Field::] </TT>- vloží se označení typu
+textového pole</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Reference::]</TT>,
+<TT CLASS="western">[::ReferenceMark::] </TT>- vloží se název značky
+pro odkaz</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">[::Footnote::],
+[::Endnote::] </TT>- vloží se text kotvy (index poznámky) 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\i </TT>-
+vloží do nahrazovaného výrazu počitadlo nahrazení - jen pokud se
+použije <VAR CLASS="western">[&nbsp;Nahradit&nbsp;vše&nbsp;]</VAR> 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><TT CLASS="western">\i{start,digit}</TT>
+- formát počítadla: <TT CLASS="western">\i{9,4}</TT> - čísluje od 9,
+na 4 místa (0009, 0010, 0011,...) [v1.4]</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\I </TT>-
+vloží do nahrazovaného výrazu číslo stránky na které je vyhledaný
+text. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud je použito
+přesměrování náhrad (<TT CLASS="western">\R</TT>) tak bude vloženo
+číslo stránky na které byl začátek nalezeného textu. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><DFN CLASS="western">Omezení:</DFN>
+Nefunguje (vrací 1) v poznámkách pod čarou, záhlaví a zápatí. 
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\v </TT>-
+vloží do nahrazovaného výrazu obsah schránky</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\V </TT>-
+vloží do nahrazovaného výrazu obsah schránky jako neformátovaný text</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\f </TT>-
+zachovat formátování</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Pokud se v nahrazovaném
+výrazu vkládá i nalezený text (<TT CLASS="western">&amp;</TT> nebo
+<TT CLASS="western">\0</TT>) tak bude vkládán přes schránku. Pokud
+tedy obsahuje textová pole, poznámky, odkazy apod. měly by se vložit
+v&nbsp;původním stavu.</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\R </TT>-
+přesměrování nahrazení do jiného souboru</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Volba způsobí výpis
+nahrazovaného výrazu do nového souboru .ODT namísto přepsání
+nalezeného místa. Původní soubor by měl tedy zůstat beze změny. Jméno
+rámu lze zadat pomoci <TT CLASS="western">\R{jmeno}</TT>. Pokud je
+třeba zapisovat do dříve uloženého otevřeného souboru, je nutno zadat
+přesně stejné jméno jako je v titulku okna včetně &quot; -
+OpenOffice.org Writer&quot;. Záznamy se přidávají vždy na konec
+souboru. 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm">Příklad:<BR>Pokud bylo
+hledáno např. pomocí výrazu <TT CLASS="western">[:::HyperLinkURL::] </TT>a
+nahrazovací výraz byl <TT CLASS="western">Odkaz \i, strana \I: &amp;
+(URL: \u)\p\R</TT> pak po použití <VAR CLASS="western">[&nbsp;Nahradit&nbsp;vše&nbsp;]</VAR>
+budou v novém souboru vypsány všechny hypertextové odkazy nalezené v
+původním souboru ve tvaru: <I>Odkaz 1, strana 1: textOdkazu (URL:
+URLadresa)</I> <SPAN STYLE="font-style: normal">v&nbsp;samostatném
+odstavci.</SPAN> 
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm">Tlačítko a roleta
+<B>Načíst vlastnosti</B></P>
+<P CLASS="western" STYLE="margin-left: 2cm"><SPAN STYLE="font-weight: normal">Pomocí
+tlačítka </SPAN><VAR CLASS="western"><SPAN STYLE="font-weight: normal">[&nbsp;Načíst
+vlastnosti&nbsp;]</SPAN></VAR> <SPAN STYLE="font-weight: normal">je
+možné aktualizovat seznam (některých) vlastností a jejich hodnot
+právě vybraného objektu. Prohlížet a vybrat lze z rolety vedle. </SPAN>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm"><TT CLASS="western">\A{vlastnost=hodnota}</TT>
+- nastaví v nahrazovaném výrazu hodnotu zadané vlastnosti</P>
+<P CLASS="western" STYLE="margin-left: 4cm; margin-bottom: 0cm">Platí
+obdobná pravidla použití jako pro parametr <TT CLASS="western">\C{}</TT>.
+Více vlastností naráz (pro stejnou část textu) lze nastavit jejich
+uvedením za sebou - <TT CLASS="western">\A{v1=h1}\A{v2=h2}... </TT>
+</P>
+<P CLASS="western" STYLE="margin-left: 4cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm; margin-bottom: 0cm"><BR>
+</P>
+<P CLASS="western" STYLE="margin-left: 2cm; margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="davky"></A>Dávkové zpracování:<SPAN STYLE="background: transparent">
+</SPAN><VAR CLASS="western"><FONT COLOR="#ffffcc"><SPAN STYLE="background: #e6e6e6">[
+Dávky &gt;&gt; ]</SPAN></FONT></VAR></H6>
+<P CLASS="western"><IMG SRC="img/altsearch_script_cs.png" NAME="obrázky2" ALIGN=RIGHT HSPACE=6 WIDTH=455 HEIGHT=299 BORDER=0>Umožňuje
+ukládat a&nbsp;načítat nastavené hledání a&nbsp;nahrazení. Je možné
+uložit několik hledání a&nbsp;nahrazení za sebou do jediné sekvence
+a&nbsp;tu pak celou rychle načíst a&nbsp;provést. 
+</P>
+<P CLASS="western">Momentální nastavení všech parametrů je možné
+uložit pomocí <VAR CLASS="western">[&nbsp;Uložit&nbsp;dávku&nbsp;]</VAR>.
+V&nbsp;dialogu pro pojmenování, který se ukáže, je nabídnuto jméno
+poslední použité dávky. Pokud zadáte existující jméno, můžete
+rozhodnout, zda se starý obsah přepíše, nebo bude zachován a&nbsp;nové
+se přidá na konec. Přitom se automaticky uloží příkaz &quot;NahraditVše&quot;
+se kterým bude dávka následně spuštěna. To se dá později změnit při
+úpravě souboru s dávkami.</P>
+<P CLASS="western">Tlačítko <VAR CLASS="western">[&nbsp;Dávky&nbsp;&gt;&gt;&nbsp;]</VAR>
+přepne na dialog <B>Správa dávek</B> <SPAN STYLE="font-weight: normal">kde
+lze dávky spouštět a upravovat. N</SPAN>ávrat zpátky do dialogu
+hledání přes tlačítko <VAR CLASS="western">[&nbsp;&lt;&lt;&nbsp;Hledání&nbsp;]</VAR>.</P>
+<P CLASS="western">Všechny dávky se ukládají do textového souboru
+<SAMP CLASS="western"><SPAN STYLE="font-style: normal">AltSearchScript.txt</SPAN></SAMP>
+v&nbsp;uživatelském adresáři <SAMP CLASS="western">&hellip;</SAMP><SAMP CLASS="western"><SPAN STYLE="font-style: normal">/OpenOffice.org2/user/config/</SPAN></SAMP>,
+který lze pomocí tlačítka <VAR CLASS="western">[&nbsp;Upravit&nbsp;]</VAR>
+z&nbsp;dialogu <B>Správa dávek</B> otevřít a&nbsp;upravovat. Pro
+úpravy je přednastavený textový editor <B>notepad,</B> je však možno
+zadat jakýkoli jiný, úpravou souboru <SAMP CLASS="western"><SPAN STYLE="font-style: normal">AltSearchEditor.ini
+</SPAN></SAMP>ve stejném adresáři<I>.</I> Po změnách a&nbsp;uložení
+souboru s&nbsp;dávkami je možné aktualizovat seznam jmen dávek pomocí
+<VAR CLASS="western">[&nbsp;Občerstvit&nbsp;]</VAR>. Syntaxe souboru
+<SAMP CLASS="western">AltSearchScript.txt </SAMP>je popsána na jeho
+začátku. Kódování tohoto souboru je od verze 1.1.1 v UTF-8 (dříve
+windows-1250 nebo ISO 8859-2 na linuxu); pokud je třeba zachovat
+definice dávek uložených v předešlé verzi které obsahují diakritiku,
+je třeba soubor najít, otevřít ve vhodném editoru (pspad, kwrite) a
+ručně převést na UTF-8. Jinak hrozí při prvním uložení nebo přidání
+další dávky nevratná ztráta diakritických znaků! 
+</P>
+<P CLASS="western">Po dvojkliku na položku seznamu, nebo tlačítkem
+<VAR CLASS="western">[&nbsp;Spustit&nbsp;]</VAR> se vybraná sekvence
+načte a provedou se uložené hledání a náhrady. Při použití dávek na
+vybranou oblast doporučuji nechat na začátku i konci výběru 1-2
+prázdné odstavce.</P>
+<P CLASS="western">Tlačítko <VAR CLASS="western">[&nbsp;Přenést&nbsp;]</VAR>
+slouží k přenesení parametrů hledání, nahrazení a nastavení přepínačů
+do dialogu hledání bez toho, aby se náhrady skutečně provedly. Pokud
+dávka obsahuje sekvencí více navazujících hledání a náhrad, přenese
+se jen poslední.</P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><IMG SRC="img/altsearch_shortcuts_cs.png" NAME="obrázky3" ALIGN=RIGHT HSPACE=5 WIDTH=396 HEIGHT=273 BORDER=0>[v1.2]
+Tlačítko <VAR CLASS="western">[&nbsp;Klávesové zkratky&nbsp;]</VAR>
+otevře dialog, který umožní přiřadit klávesové zkratky existujícím
+dávkám. Popis funkce: <BR><B>1. vybrat v prvním listboxu jméno dávky</B>
+<BR><B>2. nastavit požadovanou klávesovou zkratku</B> <BR><B>3.
+zmáčknout tlačítko</B> <VAR CLASS="western">[&nbsp;Přiřadit&nbsp;]</VAR>
+<BR>Aby to fungovalo, je v okamžiku přiřazení vytvořena pomocná
+procedura v Basic modulu <SAMP CLASS="western">Standard.AltSearchBatchs</SAMP>
+se jménem upraveným podle syntaxe Basicu. Toto jméno je zobrazeno ve
+druhém poli dialogu. Spuštěním této pomocné procedury se vyvolá
+dialog AltSearch a ihned se automaticky provede zadaná dávka. Správná
+funkce je vázána na shodu jména dávky uvedenou uvnitř pomocné
+procedury a jména existující dávky. Pokud tedy změníte jméno dávky ke
+které už byla dříve přiřazena klávesová zkratka, je třeba klávesovou
+zkratku znovu přiřadit (starou pomocnou proceduru s původním jménem
+je možno smazat pomocí jejího vybrání ve druhém listboxu a vedlejším
+tlačítkem <VAR CLASS="western">[&nbsp;</VAR><VAR CLASS="western"><B>x</B></VAR><VAR CLASS="western">&nbsp;]</VAR>).
+Jakoukoli klávesovou zkratku, která je v OOo writeru použita, je
+možno uvolnit pomocí dolního tlačítka <VAR CLASS="western">[&nbsp;</VAR><VAR CLASS="western"><SPAN STYLE="font-weight: normal">x</SPAN></VAR><VAR CLASS="western">&nbsp;]</VAR>,
+proto pozor ať si nechtěně nesmažete nějakou důležitou zkratku. 
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western">[v1.4] 
+</P>
+<H6 CLASS="western"><IMG SRC="img/altsearch_multi_cs.png" NAME="obrázky4" ALIGN=RIGHT HSPACE=5 WIDTH=400 HEIGHT=303 BORDER=0>Vícenásobné
+spuštění</H6>
+<P CLASS="western">Dávku vybranou ve <B>Správě dávek</B> lze spustit
+a aplikovat i na více právě otevřených textových souborů naráz: <BR>1.
+Vybrat kliknutím v seznamu dávku kterou chceme použít.<BR>2. Kliknout
+na tlačítko <VAR CLASS="western">[Vícenásobné spuštění&gt;&gt;]</VAR>
+<BR>3. Vybrat pomocí Ctrl + klik myší soubory ze seznamu na kterých
+chceme vykonat dávku vybranou v bodě v bodě 1.<BR>V seznamu jsou
+pouze právě otevřené soubory typu &quot;writer&quot;.<BR>4.
+Stisknutím tlačítka <VAR CLASS="western">[Start]</VAR> se spustí
+provedení dávky na všech vybraných souborech. V průběhu zpracování
+může problikávat zobrazení - doporučiji po tuto dobu do ničeho v Ooo
+nezasahovat.</P>
+<P CLASS="western">Volba &quot;<B>Potlačit hlášení</B>&quot; potlačí
+hlášení o provedených změnách po zpracování každého z vybraných
+souborů ale vypíše jen závěrečné souhrnné hlášení po zpracování
+posledního z vybraných souborů.</P>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+<H6 CLASS="western"><A NAME="omezeni"></A>Omezení:</H6>
+<P CLASS="western" STYLE="margin-left: 2cm">pokud jsou známa, jsou
+uváděna většinou u popisu jednotlivých parametrů. Obecně platí:</P>
+<UL>
+	<LI><P CLASS="western">Použití regulárních výrazů není plně
+	kompatabilní s původním z OOo, zvláště při použití <A HREF="#skupiny">seskupení</A>.</P>
+	<LI><P CLASS="western">Pokud je nastavena volba &quot;Pouze současný
+	výběr&quot; tak se nevyhledají a nenahradí texty, které jsou v
+	podřízených rámcích nebo tabulkách, i když jsou jsou uvnitř
+	označeného bloku. Hledání uvnitř bloku je omezeno pouze na stejnou
+	textovou oblast jako je označený blok. Vícenásobný blok není
+	podporován.</P>
+	<LI><P CLASS="western">Funkce &quot;Najít vše&quot; nedokáže označit
+	značku odstavce <TT CLASS="western">\p</TT>, protože pro výběr textu
+	je používána vlastnost &quot;Zvýraznění&quot; (barva podkladu znaku)
+	a toto nelze použít pro samostatnou značku odstavce. Z toho také
+	plyne omezení této funkce <B>pouze</B> na texty, kde tato vlasnost -
+	zvýraznění - není použita. Pokud je v dokumentu zvýraznění použito a
+	použije se tato funkce, objeví se varovný dialog.</P>
+	<LI><P CLASS="western">Při nahrazování složitějšími výrazy je funkce
+	&quot;Zpět&quot; (Undo) fragmentována na jednotlivé kroky nahrazení,
+	takže se snadno stane že pak počet kroků zpět nestačí pro navrácení
+	do původního stavu. 
+	</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><A NAME="historie"></A>Historie změn:</H6>
+<P CLASS="western"><B>Verze 1.4.2&nbsp;&nbsp;&nbsp;3/2017</B>
+[v1.4.2] 
+</P>
+<UL>
+	<LI><P CLASS="western">Oprava chybějící závorky v load_fr - msg(29)
+	- chyba po spuštění na LO 5.3.1.2</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.4.1&nbsp;&nbsp;&nbsp;11/2015</B>
+[v1.4.1] 
+</P>
+<UL>
+	<LI><P CLASS="western">Aktualizace holandské (nl) lokalizace 
+	</P>
+	<LI><P CLASS="western">Snaha opravit (ne)zobrazování šipek
+	roletových nabídek (Regulární , Rozšířené...) v některých Linuxových
+	verzích LO.</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.4&nbsp;&nbsp;&nbsp;12/2013</B> [v1.4] 
+</P>
+<P CLASS="western">Nové funkce a změny:</P>
+<UL>
+	<LI><P CLASS="western">Přidána podpora nového hledání ICU regullar
+	exppression zadaného hex kódem (indkace rozpoznání nového ICU v
+	pravém horním rohu dialogu + bublina verze Ooo): v novějších verzích
+	OOo je akceptován starý tvar \xhhhh i nový \uhhhh. ICU zavedeno v
+	Ooo od v 3.4, v Libreoffice asi od v 4.0. V obou případech s různými
+	chybami (iss. 21633, 93890).</P>
+	<LI><P CLASS="western">Přidáno tlačítko &quot;Vícenásobné spuštění&quot;
+	- umožní vykonat dávku na více otevřených textových dokumentech
+	najednou.</P>
+	<LI><P CLASS="western">Hledání záložek (Bookmarks), hledání
+	podřetězců v jejich textech (pokud odkazují na blok textu), hledání
+	v jejjich jménech</P>
+	<LI><P CLASS="western">Vkládání záložek (bookmark) přes parametr
+	\K{w|b|e,bookmarkName}. Je možné je hromadně mazat a přejmenovat</P>
+	<LI><P CLASS="western">Přidán formát počítadla náhrad: možnost
+	zadání počáteční hodnoty a počtu vložených číslic, např. \i{9,4} =
+	čísluje od 9, na 4 místa (0009, 0010, 0011,...) 
+	</P>
+	<LI><P CLASS="western">Hledání obrázků:<BR>- zobrazení
+	Alternativního textu (Title) pod názvem (za znakem )&gt;, v dialogu
+	po nalezení;<BR>- hledání podle Alternativního textu (Title) pomocí
+	\\</P>
+	<LI><P CLASS="western">Experimentální možnost přímo přepnout jazyk
+	lokalizace pomocí pravé myši na tlačítku [?]</P>
+</UL>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">oprava vyhledávání \\ (v režimu reg. symb. i
+	bez něj)</P>
+	<LI><P CLASS="western">upraven addon.xcu aby se zobrazovaly toolbary
+	i v novějších verzích Oo Lo</P>
+	<LI><P CLASS="western">hledat podřetězec v Hyperlink URL - nenašlo
+	nic; (ale v OOo v2.3 ještě fungovalo) 
+	</P>
+	<LI><P CLASS="western">drobné opravy textů v hlášeních 
+	</P>
+	<LI><P CLASS="western">nová verze 1.3.1 helpu nl 
+	</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.3.2&nbsp;&nbsp;&nbsp;6/10</B> [v1.3.2] 
+</P>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">Chyba při instalaci na některých OS
+	(addon.xcu: &lt;oor:component-data ...&gt; ...
+	&lt;/oor:component-data&gt;) 
+	</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.3.1&nbsp;&nbsp;&nbsp;4/10</B> [v1.3.1] 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western">Hledání seznamových a odstavcových stylů přes
+	roletu Atributy</P>
+	<LI><P CLASS="western">Přidána defaultní dávka pro převod (přidání
+	tagů) textu na BBcode. (Objeví se pouze při první &quot;čisté&quot;
+	instalaci AltSearch v &quot;AltSearchScript.txt&quot;. Při opakované
+	instalaci je třeba soubor &quot;AltSearchScript.txt&quot; najít,
+	přejmenovat a pak při prvním spuštění AltSearch se načtou defaultní
+	dávky.)</P>
+</UL>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">drobné změny v Italské lokalizaci</P>
+	<LI><P CLASS="western">aktualizovaný Holandský Help</P>
+	<LI><P CLASS="western">seznam vlastností (atributů) textu, vpravo od
+	tlačítka &quot;Načíst vlastnosti&quot; je nyní setříděný podle
+	abecedy</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.3&nbsp;&nbsp;&nbsp;11/09</B> [v1.3] 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western">možnost volby &quot;Zachovat velá písmena&quot;</P>
+	<LI><P CLASS="western">hledání znakových stylů (roleta Atributy -
+	Znakový styl) 
+	</P>
+	<LI><P CLASS="western">výběr hledaných, nahrazovaných stylů přes
+	nabídku (viz roleta Atributy - Znakový styl, Nahradit - Nastavit
+	styl znaků, atd.) 
+	</P>
+	<LI><P CLASS="western">hlavní dialog se snaží nezakrývat nalezený
+	text</P>
+	<LI><P CLASS="western">Italský Help</P>
+</UL>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">tabulky uvnitř bloku - hledalo se jen před
+	první tabulkou, dál už se už nic nenašlo</P>
+	<LI><P CLASS="western">drobné změny v Holandské lokalizaci</P>
+	<LI><P CLASS="western">při nastavené slovenštině se použije čeština</P>
+</UL>
+<P CLASS="western"><B>Verze 1.2.2&nbsp;&nbsp;&nbsp;5/09</B> [v1.2] 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western">lokalizace do Italštiny (bez Helpu)</P>
+	<LI><P CLASS="western">Francouzký Help (paralelní s Anglickým)</P>
+	<LI><P CLASS="western">přidána položka do hlavního menu OOo: Úpravy
+	- Alt. Najít a nahradit... (pod standardní)</P>
+	<LI><P CLASS="western">AltSearch zpřístupněn mimo Writer i pro
+	dokumenty typu <I>HTML</I> a <I>Hlavn</I>í. Pozor, pokud se
+	nahrazuje něco v <I>Hlavním</I> dokumentu, tak se změny uloží pouze
+	do něj, ale už NE do podřízených (přilinkovaných dokumentů)!</P>
+</UL>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">Anglický help opravený Annou Sharman</P>
+	<LI><P CLASS="western">drobné změny Anglického textu dialogu
+	klávesových zkratek</P>
+	<LI><P CLASS="western">příkaz Growe změněn na Grow (i Growe ale
+	funguje dál)</P>
+	<LI><P CLASS="western">klávesové zkratky teď fungují i pro <I>HTML</I>
+	a <I>Hlavn</I>í document</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.2.1&nbsp;&nbsp;&nbsp;7/08</B> [v1.2] 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western">lokalizace do Holandštiny</P>
+</UL>
+<P CLASS="western">Úpravy:</P>
+<UL>
+	<LI><P CLASS="western">od nyní nezávislé na BASICové knihovně
+	&quot;TOOLS&quot;</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.2&nbsp;&nbsp;&nbsp;7/08</B> [v1.2] 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western">vlastní dialog pro vytvoření klávesových
+	zkratek pro dávky</P>
+</UL>
+<UL>
+	<LI><P CLASS="western">částečná lokalizace do Francouštiny (bez
+	helpu)</P>
+	<LI><P CLASS="western">nový parametr pro dávky: noSummary
+	(BezSouhrnu) - nezobrazí se hlášení o skončení dávky</P>
+</UL>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">obejití bugu OOo 2.4 na linuxu (špatné
+	vyhodnocení funkce CASE v Basicu), což způsobí chyby typu: &quot;Bt_run:
+	Unknown command: [Find]...&quot; při spuštění dávky</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.1.2&nbsp;&nbsp;&nbsp;4/08</B> 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western">lokalizace do Němčiny</P>
+	<LI><P CLASS="western">lokalizace do Španělštiny</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.1.1&nbsp;&nbsp;&nbsp;3/08</B> 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western">lokalizace do Ruštiny</P>
+</UL>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">při probíhajícím hledání nebo nahrazování
+	havárie při pokusu o přepnutí nebo otevření jiného textového souboru</P>
+	<LI><P CLASS="western">Soubor s definicemi dávek
+	<SAMP CLASS="western"><SPAN STYLE="font-style: normal">.../config/AltSearchScript.txt
+	</SPAN></SAMP>je od nyní v kódování UTF-8, pro správnou funkci
+	azbuky apod.</P>
+</UL>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.1&nbsp;&nbsp;&nbsp;2/08</B> 
+</P>
+<P CLASS="western">Nové funkce:</P>
+<UL>
+	<LI><P CLASS="western"><I>hledání:</I> parametr <TT CLASS="western">\l</TT>
+	pro hledání jakéhokoliv písmene</P>
+	<LI><P CLASS="western"><I>hledání:</I> podpora vyhledání v textu i
+	názvu Značek pro reference a Křížových referencí</P>
+	<LI><P CLASS="western"><I>hledání:</I> poznámky pod čarou a
+	vysvětlivky (Footnotes a Endnotes); lze vybrat naráz i všechny texty
+	poznámek. Fungují správně až od verze OOo 2.3 !</P>
+	<LI><P CLASS="western"><I>nahrazení:</I> parametr <TT CLASS="western">\d</TT>
+	pro reset textových atributů v místě výskytu, takže dál se vkládá
+	default stylem</P>
+	<LI><P CLASS="western"><I>nahrazení:</I> parametry <TT CLASS="western">\F{}</TT>
+	a <TT CLASS="western">\E{}</TT> pro vytvoření poznámek pod čarou a
+	vysvětlivek (změněn parametr pro zachování formátu z <TT CLASS="western">\F</TT>
+	na <TT CLASS="western">\f</TT> !)</P>
+	<LI><P CLASS="western"><I>nahrazení:</I> parametr <TT CLASS="western">\B{label|text}</TT>
+	pro vložení značky (blib) pro referenci; a parametr <TT CLASS="western">\L{1,0,label}</TT>
+	pro vložení textového pole Reference (link) na značku</P>
+</UL>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western">Oprava chyb:</P>
+<UL>
+	<LI><P CLASS="western">zadání číselné hodnoty uvnitř vlastnosti <TT CLASS="western">\A{}</TT>
+	i pomocí hexadecimálního kódu</P>
+	<LI><P CLASS="western">Možnost vložit dovnitř parametru přepínačů
+	<TT CLASS="western">\P{}</TT>, <TT CLASS="western">\C{}</TT>, <TT CLASS="western">\F{}</TT>
+	atd. složenou zavírací závorku pomocí <TT CLASS="western">\}</TT> a
+	zpřístupnit parametr číslo stránky <TT CLASS="western">\I</TT> 
+	</P>
+	<LI><P CLASS="western">při &quot;Hledat vše&quot; Tučné (regulární
+	výrazy) se neukáže hlášení s počtem výskytů.</P>
+	<LI><P CLASS="western">grafika dialogu - zvětšena výška tlačítka
+	&quot;Načíst vlastnosti&quot; a &quot;?&quot; z 10 na 11 pt, na Win
+	XP byl oříznutý text zespodu 
+	</P>
+	<LI><P CLASS="western">chybová hlášení a nefunkčnost batch v
+	nepodporovaných lokalizacích (mimo EN a CS) 
+	</P>
+	<LI><P CLASS="western">při hledání Poznámek, Text. polí, Referencí,
+	Značek pro reference, Poznámek pod čarou a Vysvětlivek nyní funkce
+	&quot;Hledat&quot; prochází v pořadí výskytu podle stran, podpora
+	hledání v bloku 
+	</P>
+	<LI><P CLASS="western">při hledej: <TT CLASS="western">\ptext</TT>
+	nahraď: <TT CLASS="western">&amp;</TT> se vloží navíc ruční zalomení
+	řádku za odstavcem 
+	</P>
+	<LI><P CLASS="western">při hledej: <TT CLASS="western">\p</TT>
+	nahraď: <TT CLASS="western">\p\p</TT> se nekonečně zacyklí a nejde
+	přerušit</P>
+	<LI><P CLASS="western">při hledej: <TT CLASS="western">(text)\p</TT>
+	nahraď: <TT CLASS="western">\1</TT> se objeví chyba <I>repldo: lin:
+	2842</I></P>
+	<LI><P CLASS="western">nepřerušitelné nekonečné zacyklení při
+	hledej: <TT CLASS="western">^.*$</TT> nahraď: <TT CLASS="western">x&amp;x</TT>
+		</P>
+</UL>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western"><B>Verze 1.0&nbsp;&nbsp;&nbsp;12/07</B> - první
+zveřejněná verze</P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H6 CLASS="western"><BR><BR>
+</H6>
+<P CLASS="western" STYLE="margin-left: 2cm"><BR><BR>
+</P>
+<P CLASS="western"><BR><BR>
+</P>
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+AltSearch
+
+Copyright (c) 2007 Tomas BILEK 
+Alternative Find & Replace for Writer
+
+Copyright (c) 2007 Tomáš BÍLEK
+Alernativní funkce Najít a Nahradit pro Writer
+

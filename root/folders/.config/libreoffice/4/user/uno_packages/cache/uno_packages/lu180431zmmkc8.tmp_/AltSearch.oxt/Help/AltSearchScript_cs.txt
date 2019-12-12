@@ -1,0 +1,234 @@
+; Soubor s dávkami pro alternativní vyhledávání a nahrazování
+; pro rozšíření AltSearch.oxt pro OOo Writer
+; Kódování: UTF-8 (pro správnou funkci v národních abecedách)
+;
+; v1.3  11/09
+;
+; Syntaxe:
+; Řádky které nezačínají na nějaký řidící příkaz se ignorují.
+; Řídící příkaz je ohraničen v [] a je na začátku řádku.
+;  Před řídícím příkazem mohu být mezery, vše za ním se považuje za parametry.
+; 
+;  Popis řídících příkazů:
+;  [Nazev] - Název dávky (uvedený jako parametr za) - jednotlivá dávka začíná
+;      vždy tímto řídícím příkazem. Za konec dávky se považuje další výskyt
+;      příkazu [Nazev], nebo [Konec] pro poslední platnou dávku.
+;
+;  [Hledej] - hledaný řetězec - při spuštění dávky se přepíše do pole Hledej
+;  [Nahrad] - nahrazovaný retězec - při spuštění dávky se přepíše do pole Nahraď
+;  [Parametry] - parametry hledání a nahrazení - prázdný řetězec odpovídá
+;      nastavení všech parametrů na false, uvedením názvu se přepne na true. 
+;      Přípustné parametry: 
+;           Velikost  ZachovatVelkaPismena  CelaSlova  StylyOdst  Regularni
+;           SoucasnyVyber  Pozpatku  BezHlaseni  BezSouhrnu       
+;
+;      BezHlaseni - potlačí většinu chybových a informačních hlášení (jednotlivých hledání)
+;      BezSouhrnu - potlačí i závěrečné hlášení celé dávky (užitečné při použití klávesových zkratek) 
+; 
+;  [Prikaz] - určují způsob provedení hledání a náhrad
+;      Přípustné parametry:  Hledat  HledatVse  Nahradit  NahraditVse  Spocitat
+;
+;      Do budoucna by zde mohly být také příkazy pro posun kurzoru, nastavení
+;      záložek podle kurzoru a obnovení kurzoru podle záložek apod.	
+;       
+;  [Konec] - označuje konec poslední platné dávky - vše co je za se ignoruje  
+;
+; 
+
+************************************************************
+
+[Nazev] Html [Výběr]	Jednoduchý převod na Html tagy označeného bloku textu   	 
+  ; parametry stejné pro všechna hledání a náhrady 
+  [Parametry] BezHlaseni Regularni SoucasnyVyber
+
+  ; tučné
+  [Hledej][:::CharWeight::]
+  [Nahrad]<b>&</b>
+  [Prikaz] NahraditVse 
+
+  ; kurzíva
+  [Hledej][:::CharPosture::]
+  [Nahrad]<i>&</i>
+  [Prikaz] NahraditVse         	
+
+  ; Hyperlinkové odkazy 
+  [Hledej][:::HyperLinkURL::]
+  [Nahrad]<a href="\u">&</a>
+  [Prikaz] NahraditVse
+
+  ; Poznámky pod čarou
+  [Hledej][::Footnote::]
+  [Nahrad]<b><span Title="\o">…<span style="vertical-align: super; font-size: smaller;">\i</span></span></b>
+  [Prikaz] NahraditVse
+
+  ; Přidat tagy odstavců 
+  [Hledej]^.*$
+  [Nahrad]<p>&</p>
+  [Prikaz] NahraditVse
+
+  ; Odstranit přebytečné konce-začátky stejných tagů za sebou 
+  [Hledej]</i><i>|</b><b>|</p><p>
+  [Nahrad]
+  [Prikaz] NahraditVse
+ 
+[Nazev] Text [Výběr]	Převod bloku textu na BBcode
+  [Hledej][:::CharWeight::]
+  [Nahrad][b]&[/b]
+  [Parametry]   BezHlaseni  Regularni  SoucasnyVyber  
+  [Prikaz] NahraditVse
+
+  [Hledej][:::CharPosture::]
+  [Nahrad][i]&[/i]
+  [Prikaz] NahraditVse
+
+  [Hledej][:::CharUnderline::]
+  [Nahrad][u]&[/u]
+  [Prikaz] NahraditVse
+
+  [Hledej][:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=-101::]
+  [Nahrad][sub]&[/sub]\d
+  [Prikaz] NahraditVse
+
+  [Hledej][:::CharAutoEscapement=true|CharEscapementHeight=58|CharEscapement=101::]
+  [Nahrad][sup]&[/sup]\d
+  [Prikaz] NahraditVse
+
+  [Hledej][:::HyperLinkURL::]
+  [Nahrad][url=\u]&[/url]
+  [Prikaz] NahraditVse
+
+  [Hledej][::Picture::]
+  [Nahrad][img]\O[/img]
+  [Prikaz] NahraditVse
+
+  [Hledej][:::CharFontName=Courier New::]
+  [Nahrad][code]&[/code]
+  [Prikaz] NahraditVse
+
+  ; Odstranit přebytečné konce-začátky stejných tagů za sebou 
+  [Hledej]\[/b]\[b]|\[/i]\[i]|\[/u]\[u]|\[/sub]\[sub]|\[/sup]\[sup]|\[/code]\[code]
+  [Nahrad]
+  [Prikaz] NahraditVse
+  
+  ; code pres odstavec  
+  [Hledej]\[/code]\p\[code]
+  [Nahrad]\p
+  [Prikaz] NahraditVse
+
+  ; code pres rucni zalomeni radku  
+  [Hledej]\[/code]\n\[code]
+  [Nahrad]\n
+  [Prikaz] NahraditVse
+
+  ; seznamove polozky jako jednourovnový list
+  [Hledej][:::NumberingStyleName=::]
+  [Nahrad][list][*]&[/list]
+  [Prikaz] NahraditVse
+
+  [Hledej]\[/list]\p\[list]
+  [Nahrad]\p
+  [Prikaz] NahraditVse
+
+  
+  
+[Nazev] Text [Výběr]	Spojit odstavce neoddělené prázdnými řádky
+ ; blok prázdných odstavců zaměnit za jeden prázdný 
+  [Hledej]\p{2,}
+  [Nahrad]\p\p
+  [Parametry] BezHlaseni Regularni SoucasnyVyber 
+  [Prikaz] NahraditVse
+
+ ; zrušit mezery a tabulátory na začatcích a koncích odstavců
+  [Hledej](^( *\t*)*|( *\t*)*$)
+  [Nahrad]
+  [Prikaz] NahraditVse
+
+ ; zrušit konce odstavců   
+  [Hledej]\p
+  [Nahrad]  
+  [Prikaz] NahraditVse
+
+ ; zrušit mezeru na začátku odstavce za blokem prázdných odstavců 
+  [Hledej]^ 
+  [Nahrad]
+  [Prikaz] NahraditVse
+
+
+[Nazev] Text [Výběr]    Oddělit neprázdné odstavce prázdným řádkem
+  [Hledej]^.+$
+  [Nahrad]&\p
+  [Parametry]  BezHlaseni Regularni SoucasnyVyber
+  [Prikaz] NahraditVse
+
+
+[Nazev] Text [Výběr]	Zrušit českou dakritiku
+  ;áÁčČďĎéÉěĚíÍľĽňŇóÓřŘšŠťŤúÚůŮýÝžŽüÜëËöÖ
+  ;aAcCdDeEeEiIlLnNoOrRsStTuUuUyYzZuUeEoO
+  ; hezké ale dost pomalé  	
+  [Hledej]á||Á||č||Č||ď||Ď||é||É||ě||Ě||í||Í||ľ||Ľ||ň||Ň||ó||Ó||ř||Ř||š||Š||ť||Ť||ú||Ú||ů||Ů||ý||Ý||ž||Ž||ü||Ü||ë||Ë||ö||Ö
+  [Nahrad]a||A||c||C||d||D||e||E||e||E||i||I||l||L||n||N||o||O||r||R||s||S||t||T||u||U||u||U||y||Y||z||Z||u||U||e||E||o||O
+  [Parametry]  BezHlaseni  Regularni  SoucasnyVyber  Velikost
+  [Prikaz] NahraditVse
+
+
+[Nazev] Text [Výběr]	Jednopísmenné spojky a předložky svázat pevnou mezerou
+  ; hezké ale dost pomalé  	
+  [Hledej](\<a|\<v|\<i|\<o|\<ó|\<u|\<s) +
+  [Nahrad]\1\S
+  [Parametry]  BezHlaseni Regularni SoucasnyVyber 
+  [Prikaz] NahraditVse
+
+; separátor
+[Nazev] 
+
+[Nazev] Text [Celý]	Konvertovat datum z formátu  yyyy-mm-dd  na  dd.mm.yy
+  [Hledej](\d{2,2})(\d{2,2})-(\d{1,2})-(\d{1,2})
+  [Nahrad]\4.\3.\2
+  [Parametry]   BezHlaseni  Regularni  
+  [Prikaz] NahraditVse
+
+
+[Nazev] Text [Celý]	Konvertovat datum z formátu  dd.mm.yyyy  na  yy-mm-dd
+  [Hledej](\d{1,2})\. *(\d{1,2})\. *(\d{2,2})(\d{2,2})
+  [Nahrad]\4-\2-\1
+  [Parametry]   BezHlaseni  Regularni  
+  [Prikaz] NahraditVse
+
+
+[Nazev] Text [Celý]	Vypsat všechny Hypertextové odkazy do souboru
+  [Hledej][:::HyperLinkURL::]
+  [Nahrad]Odkaz č. \i, na stránce \I: \D\C{Example}\h&\h{\u}\C (URL: \C{Example}\u\C)\C{Example}\p\h\R
+  [Parametry]   BezHlaseni  Regularni  
+  [Prikaz] NahraditVse
+
+
+[Nazev] Text [Celý]	Vypsat všechny  Poznámky do souboru 
+  [Hledej][::Note::]
+  [Nahrad]Poznámka &č.\i, na stránce \I,  Obsah poznámky:\D\C{Example}\C\n\o\p\p\R
+  [Parametry]   BezHlaseni  Regularni  
+  [Prikaz] NahraditVse
+
+[Nazev] Text [Celý]    Vypsat všechny  Obrázky do souboru
+  [Hledej][::Picture::]
+  [Nahrad]Obrázek č. \i, na stránce \I, Název of pictute: \C\O\C{Example}&\p\p\C\R
+  [Parametry]   BezHlaseni  Regularni  
+  [Prikaz] NahraditVse
+
+[Nazev] Text [Celý]    Vypsat všechny Tabulky do souboru
+  [Hledej][::TextTable::]
+  [Nahrad]Tabulka č. \i, na stránce \I, Název tabulky: \C\O\C{Example}\p&\p\p\C\R
+  [Parametry]   BezHlaseni  Regularni  
+  [Prikaz] NahraditVse
+
+[Nazev] Text [Celý]    Vypsat všechny Textové Rámce do souboru
+  [Hledej][::TextFrame::]
+  [Nahrad]Textový rámec č. \i, na stránce \I, Název: \C\O\C{Example}\p&\p\p\C\R
+  [Parametry]   BezHlaseni  Regularni  
+  [Prikaz] NahraditVse
+
+; separátor
+[Nazev] 
+
+
+[Konec]  
+  

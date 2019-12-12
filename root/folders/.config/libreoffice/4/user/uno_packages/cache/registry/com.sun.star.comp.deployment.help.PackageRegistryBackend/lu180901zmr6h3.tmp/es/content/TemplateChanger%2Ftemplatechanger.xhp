@@ -1,0 +1,24 @@
+TemplateChanger
+extensiones;TemplateChanger
+plantillas;asignar nueva plantilla a documento
+documentos;enlazar con plantillas
+
+TemplateChanger
+
+	Puedes asignar una plantilla de documento a uno o varios documentos de
+	texto usando la extensión TemplateChanger. Todos los estilos (párrafo, carácter,
+	marco, página, y estilos de lista) serán cargados desde la plantilla, reemplazando
+	los estilos existentes en el documento.
+
+
+	El documento será enlazado con el fichero de plantilla. Desde ahora el documento se
+	comportará como si se hubiera creado usando el fichero de plantilla.
+
+
+		Selecciona Archivo - Plantillas - Asignar plantilla (documento actual) (%PRODUCTNAME sólo Writer)
+    
+
+        Selecciona Archivo - Plantillas - Asignar plantilla (carpeta)
+    
+
+

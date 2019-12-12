@@ -1,0 +1,2 @@
+﻿This extension enables you to assign a new template to writer documents.
+All styles and formatting will be loaded from that template and the documents will behave as it was created using that template.

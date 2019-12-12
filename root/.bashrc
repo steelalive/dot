@@ -83,3 +83,8 @@ src() {
 export ANDROID_HOME=/ext/opt/android-sdk
 # Run twolfson/sexy-bash-prompt
 . ~/.bash_prompt
+alias vim='nvim'
+alias vim='nvim'
+alias vim='nvim'
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

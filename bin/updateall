@@ -4,18 +4,19 @@
 #3#::..#####################_MAIN_#######################..::#3#
 # Author: #noharden
 
-#wp check for wirelless porn. If there is porn still on the internet, we may continue.
+#wp check for wirelless porn. If there is still porn on the internet, we may continue.
 wp || exit
 ntponce
 #I like the ccache to proudly display my name.
 [[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR 2>/dev/null
 
 #Here, I update things.
-suuser "yay -Syu --devel --needed --noconfirm" || {
-	ANBR "Error pamcan -Syu!$R\n"
+pacman -Syu || {
+	ANBR "Error -Syu!$R\n"
 	exit
 }
-suuser "yay -S --needed --noconfirm -ua"
+suuser "yay -u --devel --needed --noconfirm"
+suuser yay
 paccache --keep 1 --verbose --remove
 #That's it! We are done!
 
@@ -33,7 +34,7 @@ paccache --keep 1 --verbose --remove
 	### Back to relative sanity.
 
 	#This take care of android-studio. I now have duplicated mountain of executables a little more ordered than android source.
-	#[[ $1 ]] && sdkmanager --update
+	sdkmanager --update
 
 	#When pacman is away, mice dances and maintain the latest of the late ruby code
 	is_in_path bundle && bundle update
@@ -84,7 +85,7 @@ paccache --keep 1 --verbose --remove
 	###CHeck for mising files or disparities with pacman database
 	paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer"
 	pacfixer() {
-		prog=$(paccheck --list-broken | grep -v -e "cw" -e "memtest86+" -e "linux" -e "system-config-printer" -e "htop" -e "discover" -e "gtop" -e "how2" | cut -d: -f1 | sort | uniq)
+		prog=$(paccheck --list-broken | grep -v -e baloo -e "cw" -e "npm" -e "memtest86+" -e "linux" -e "system-config-printer" -e "htop" -e "discover" -e "gtop" -e "how2" | cut -d: -f1 | sort | uniq)
 		for i in $prog; do
 			ANW "Program ${RED}$i ${W}need fixing\n"
 			suuser yay "$i"

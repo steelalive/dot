@@ -1,0 +1,87 @@
+1.2.6 (2011/01/??)
+  - allow to store new files to a subdirectory of the existing files when
+    running in batch but subdirectories are not processed
+  - keep the batch parameter dialog open, if some of the input data are
+    not correct (e.g. path not found)
+  - russian help added (thanks to Nikolay Garbuz)
+  - do not show license info on update or if required by unopkg command line
+  - icon, description, publisher name and release info added
+  
+1.2.5 (2009/09/13)
+  - Spanish translation added (including help) - thanks to David Fernández
+
+1.2.4 (2009/06/28)
+  - added Czech translation (thanks to Petr Valach)
+
+1.2.3 (2008/12/01)
+  - added Svedish translation (thanks to Håkan Lidén)
+  - added Korean translation (thanks to JiHui Choi)
+
+1.2.2 (2008/10/08)
+  - fixed minor issue in French translation
+  - implememt workaround for issue 49754: 
+      TemplateChanger now restores original outline numbering of documents 
+      after loading styles from the template
+
+1.2.1 (2008/09/20)
+  - french translation fixed
+  - Danish Help added
+  - fixed small bug which prevented to have source and target paths at 
+    parallel locations
+
+1.2.0 (2008/09/17)
+  - French translation updated
+  - add handling of master documents to batch mode
+  - convert URL-like filenames so that these are properly displayed in 
+    File - Properties (e.g. whitespace instead of %20)
+  - fix a bug that caused batch mode to do nothing unless all document types 
+    were selected
+
+1.1.1 (2008/09/05)
+  - Dutch Translation updated, thanks to Cor Nouws
+  - Chinese (simplified) translation added, thanks to Yufeng Lan
+  - Enable menu item (Assigt template to current document) for master documents, thanks to Giuseppe Castagno
+  - English help added
+
+1.1.0 (2008/08/02)
+  - new "batch mode": assign a template to all files in a directory (with subdirectories).
+  - simple help added (German only)
+  - new way to submit translations
+
+1.0.0 (2008/07/13)
+  - file selector on Mac OS X native builds fixed
+  - removed Addon-Toolbar (needed for pre 2.3 versions of OOo)
+
+0.7.0 (2008/07/06)
+  - added French translation, thanks to Frederic Gaudy and Guillaume Got
+  - Templatechanger will now set the (internal) document setting "update from 
+    template" to true. This means if you once answered "no", when asked by 
+    OOo, you can reset this using TemplateChanger.
+
+0.6.0 (2008/05/25)
+  - added Serbian translation, thanks to Goran Rakic
+  - Template file name will now be displayed in documents, if template has no 
+    titel set
+
+0.5.0 (2008/05/06)
+  - added fix to work around a kde file picker bug (template changer will now 
+    use OOo file picker instead of the KDE native filepicker in case of 
+    troubles) - thanks to Cor Nouws for the hint
+  - Dutch translation added - thanks to Cor Nouws
+  - Danish translation added - thanks to Jens Bjerrum and Jørgen Rasmussen
+
+0.4.0 (2007/11/18)
+  - fixed META-INF path name to upper case (lower case might cause that the 
+    extension could not be activated on Linux)
+  - Pkg-Description added
+  - Russian translation added
+  thanks to Konstantin Lavrov for all the fixes and additional translation
+
+0.3.0 (2007/11/11)
+  - Added a toolbar button, as merging menu item is supported for OOo 2.3 and 
+    higher only
+  - added Spanish translation (thanks to Fabio A. Correa D.)
+  - added Italian translation (thanks to Emanuele Forner)
+
+0.2.0 (2007/11/04)
+  initial release
