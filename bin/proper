@@ -14,12 +14,12 @@ mount -o remount,rw /vendor
 mount -o remount,rw /nvdata
 
 for i in \
-	/system/default.prop \
-	/system/system/build.prop \
-	/system/system/product/build.prop \
+	$sys/default.prop \
+	$sys/build.prop \
+	$sys/product/build.prop \
 	/prog/AIK-Linux/ramdisk/default.prop \
 	ramdisk/default.prop \
-	/system/system/etc/prop.default \
+	$sys/etc/prop.default \
 	ramdisk/build.prop "$@"; do
 	[[ -r $i ]] || continue
 	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
@@ -31,7 +31,7 @@ for i in \
 		-e "s/ro.product.cpu.abilist=armeabi-v7a,armeabi/ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi/" \
 		-e "s/ro.build.type=user$/ro.build.type=userdebug/" \
 		-e "s|ro.build.tags=release-keys$|ro.build.tags=test-keys|" \
-		-e "s/MM-dd-yyyy$/dd-MM-yyyy/" \
+		-e "s/=MM-dd-yyyy$/dd-MM-yyyy/" \
 		-e "s/=en-US$/=en-CA/" \
 		-e "s/ro.product.locale=.*/ro.product.locale=en-CA/" \
 		-e "s/=US$/=CA/" \
@@ -41,13 +41,21 @@ for i in \
 		-i "$i" && ANBG "Edited ${i}${R}...\\n${R}"
 done
 cd /system && {
-	rm etc
-	ln -s system/etc etc
-	rm bin
-	ln -s system/bin bin
-	rm product
-	ln -s system/product product
+	rm -v etc
+	ln -sv system/etc etc
+	rm -v bin
+	ln -sv system/bin bin
+	rm -v product
+	ln -sv system/product product
+	mkdir -v tmp
 }
+cat $dot/bin/build.prop >/data/local.prop
+
+for i in $(find $system/priv-app -type d); do chmod -v 755 "$i"; done
+for i in $(find $system/app -type d); do chmod -v 755 "$i"; done
+for i in $(find $system/priv-app -type f); do chmod -v 644 "$i"; done
+for i in $(find $system/app -type f); do chmod -v 644 "$i"; done
+
 #for file in /nvdata/fstab* /vendor/etc/fstab.mt6765; do
 #	sed -e "s|,encryptable=/dev/block/platform/bootdevice/by-name/metadata||" \
 #		-e "s|,quota||" \

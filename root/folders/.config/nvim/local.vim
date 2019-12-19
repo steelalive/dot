@@ -49,7 +49,18 @@ call dein#add('mkarmona/colorsbox')
 call dein#add('dracula/vim')
 call dein#add('jacoborus/tender.vim')
 call dein#add('kyoz/purify')
-"call dein#add('neomake/neomake')
+call dein#add('jszakmeister/vim-togglecursor')
+call dein#add('sheerun/vim-polyglot')
+call dein#add('xolox/vim-colorscheme-switcher')
+call dein#add('Taverius/vim-colorscheme-manager')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+"call dein#add('')
+
+call dein#add('neomake/neomake')
 call dein#add('Shougo/deoplete')
 call dein#add('autozimu/LanguageClient-neovim', {
     \ 'rev': 'next',
@@ -100,7 +111,7 @@ let g:ycm_filetype_blacklist = {
 " powerline symbols
 let g:airline_left_alt_sep = ''
 let g:airline_left_sep = ''
-call neomake#configure#automake('nrwi', 1000)
+"call neomake#configure#automake('nrwi', 1000)
 let g:airline_right_alt_sep = ''
 let g:airline_right_sep = ''
 let g:airline_symbols.branch = ''
@@ -157,7 +168,13 @@ set expandtab         " tabs are converted into spaces
 
 "set fillchars=vert:│,fold:·
 set grepprg=grep\ -nH\ $*
-set guicursor=i-ci-ve:ver25-Cursor2/lCursor2i-blinkon10
+"set guicursor=i-ci-ve:ver25-Cursor2/lCursor2i-blinkon10
+set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+		  \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+		  \,sm:block-blinkwait175-blinkoff150-blinkon175
+
+
+
 highlight Cursor gui=reverse guifg=NONE guibg=NONE
 
 set helplang=en
@@ -232,7 +249,57 @@ nmap <silent> <leader>q :wq $MYVIMRC<CR>
 
 nnoremap ; :
 
+if v:version < 700 || exists('loaded_switchcolor') || &cp
+	finish
+endif
 
+let loaded_switchcolor = 1
+
+let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
+let s:swcolors = map(paths, 'fnamemodify(v:val, ":t:r")')
+let s:swskip = [ '256-jungle', '3dglasses', 'calmar256-light', 'coots-beauty-256', 'grb256' ]
+let s:swback = 0    " background variants light/dark was not yet switched
+let s:swindex = 0
+
+function! SwitchColor(swinc)
+
+	" if have switched background: dark/light
+	if (s:swback == 1)
+		let s:swback = 0
+		let s:swindex += a:swinc
+		let i = s:swindex % len(s:swcolors)
+
+		" in skip list
+		if (index(s:swskip, s:swcolors[i]) == -1)
+			execute "colorscheme " . s:swcolors[i]
+		else
+			return SwitchColor(a:swinc)
+		endif
+
+	else
+		let s:swback = 1
+		if (&background == "light")
+			execute "set background=dark"
+		else
+			execute "set background=light"
+		endif
+
+		" roll back if background is not supported
+		if (!exists('g:colors_name'))
+			return SwitchColor(a:swinc)
+		endif
+	endif
+
+	" show current name on screen. :h :echo-redraw
+	redraw
+	execute "colorscheme"
+endfunction
+
+ map <F8>        :call SwitchColor(1)<CR>
+imap <F8>   <Esc>:call SwitchColor(1)<CR>
+
+ map <S-F8>      :call SwitchColor(-1)<CR>
+imap <S-F8> <Esc>:call SwitchColor(-1)<CR>
 
 
 " vim: sw=4 sts=4 et

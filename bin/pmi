@@ -37,7 +37,8 @@ pminstall() {
 	[[ $1 ]] || command \ls *.apk
 	for apk; do
 		ANLO "Installing $apk ...\n"
-		pm install --user 0 -r -g "$apk"
+		cp -av "$apk" "/data/local/tmp/$apk"
+		pm install -r -g "/data/local/tmp/$apk"
 	done
 }
 

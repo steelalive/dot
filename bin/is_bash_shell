@@ -1,9 +1,0 @@
-#-*- coding: utf-8 -*-
-#1#_SCRIPT_#1# - by: steelalive
-#2#::.. Last edit: - Tue Jun 19 01:58:42 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-06-19#@# #2#
-# vi: set noro: ft=sh
-#3#::..#####################_/dot/bin/is_bash_shell_#######################..::#3#
-is_bash_shell() {
-	grep -q bash <<<$0 &>/dev/null
-}
-is_bash_shell || return 2

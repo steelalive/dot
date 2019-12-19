@@ -102,10 +102,17 @@ space*)
 
 	cd /root/.config/nvim || exit
 	;;
-*)
+rafi)
 
 	nvim-config "$@"
 	;;
+*)
+	cd /root/.config/nvim
+	make update
+	bash venv.sh
+
+	;;
+
 esac
 nvim_link
 nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es

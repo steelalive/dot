@@ -8,7 +8,7 @@ if [[ $SHELL == *bash* ]]; then
 	complete -d d
 	for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
 	for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
-	for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath execfail lithist; do
+	for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath execfail lithist; do
 		builtin shopt -s "$shopt_opt" &>/dev/null
 	done
 	enable -a &>/dev/null
@@ -36,9 +36,11 @@ if [[ ! -e /tmp/INIT ]] && is_root && [[ ! -e /oem ]] && is_pc; then
 	is_in_path dbus-launch && eval "$(dbus-launch 2>/dev/null)"
 	if tty | grep 1 &>/dev/null; then
 		ANG "Please be patient, file backup in progress...\n"
-		zip -rq -FS /last/BACKUP/dot.zip /dot &>/dev/null
-		ANG "$dot backed up!\n"
-		cp -au --backup=numbered /last/Google\ Drive/Acreation /ext/
+		(
+			zip -rq -FS /last/BACKUP/dot.zip /dot &>/dev/null
+			ANG "$dot backed up!\n"
+			cp -au --backup=numbered /last/Google\ Drive/Acreation /ext/
+		) &>/dev/null &
 		ANG "Google drive backed up!\n"
 	fi
 	rm_empty_dir /* /??.* /root/* /shell/* /root/??.* /shell/??.*
@@ -50,7 +52,7 @@ pgrep ssh-agent &>/dev/null || ssh-agent >/tmp/ssh-agent 2>/dev/null
 if [[ $HOSTNAME == PC ]]; then
 	SSH_KEY_PATH="/root/.ssh/id_rsa"
 	#	rs /dot /last/Acreation/ &>/dev/null
-	zip -rq -FS /last/dot.zip $dot/* $dot/.dir_colors &>/dev/null
+	(zip -rq -FS /last/dot.zip $dot/* $dot/.dir_colors &>/dev/null) &>/dev/null &
 	stfu ssh-add "$SSH_KEY_PATH"
 fi
 
@@ -227,7 +229,7 @@ SHELLCHECK_OPTS='--shell=bash --exclude=SC1001,SC2016,SC2034,SC2154,SC2120,SC205
 SOURCE_HIGHLIGHT_DATADIR="/usr/share/source-highlight"
 SYSTEMD_PAGER="$PAGER"
 TIMEFORMAT=">>> real %3R | user %3U | sys %3S | pcpu %P <<<"
-TERM='terminator'
+TERM='screen-256color'
 TERM_AUDIO=enabled
 TERM_COLOR=16m
 TERM_FONT=full
@@ -303,7 +305,7 @@ fi
 export NET
 # vi: set noro: ft=sh
 # Check for interactive bash and that we haven't already been sourced.
-
+. $dot/completion.bash
 if [ -n "${BASH_VERSION-}" ] && [ -n "${PS1-}" ] && [ -z "${BASH_COMPLETION_COMPAT_DIR-}" ]; then
 
 	# Check for recent enough version of bash.

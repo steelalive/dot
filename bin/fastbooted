@@ -87,6 +87,7 @@ lk)
 	fastreboot "$@"
 	;;
 aik)
+	recovery_miracle
 	fasterase lk lk2 recovery
 	fastb flash lk "$lk_mod"
 	fastb flash lk2 "$lk_mod"

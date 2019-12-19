@@ -5,7 +5,6 @@
 #3#::..#####################_MAIN_#######################..::#3#
 #highlight_fn() { highlight --quiet --out-format=truecolor --style=candy --stdout --plug-in=bash_functions --plug-in=comment_links --syntax=bash --pretty-symbols --validate-input "$@"; }
 highlight_hl() { highlight --quiet --out-format=truecolor --style=zmrok --stdout --plug-in=comment_links --syntax=bash --plug-in=bash_functions --plug-in=bash_ref_man7_org --pretty-symbols --validate-input "$@"; }
-export -f highlight_hl
 if is_in_path bat; then
 	highlight_bat() { bat --theme="Monokai Extended Origin" --plain --paging=never "$@"; }
 else
@@ -33,6 +32,7 @@ if [[ -e $1 ]]; then
 fi
 if [[ ! -e $1 ]]; then
 	search="$(on -s "$1" echo)"
-	is_text "$search" && highlight_hl "$search" && exit
+	highlight_hl "$search"
+	exit
 fi
 highlight_bat "$1"

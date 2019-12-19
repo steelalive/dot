@@ -16,8 +16,9 @@ dot="$(dirname "${BASH_SOURCE[0]}")"
 if [[ -e "$dot/init.sh" ]]; then
 	export dot
 else
-	[[ -e /dot/init.sh ]] && dot=/dot
-	[[ -e /data/dot/init.sh ]] && dot=/data/dot
+	[[ -e /dot/init.sh ]] && export dot=/dot
+	[[ -e /data/dot/init.sh ]] export && dot=/data/dot
+	[[ -e /system/dot ]] && export dot=/system/dot
 fi
 shopt &>/dev/null || {
 	echo "Sorry, this file is not compatible with ${SHELL}. You have to use bash.

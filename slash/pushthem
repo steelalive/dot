@@ -1,25 +1,25 @@
 # vim: set filetype=sh:
 [[ -e /oem ]] || return || exit
-. /data/dot/slash/etc/rc
+. /dot/slash/etc/rc || . /system/dot/slash/etc/rc
 mount /system
+mount /system_root
 mount /vendor
 busybox mount -o rw,remount,rw /system
 busybox mount -o rw,remount,rw /
 busybox mount -o rw,remount,rw /vendor
 . $dot/bin/remnt
 cd $slash
-chown 2000:2000 -R /data/dot
-chmod 777 -R /data/dot
-dot=/data/dot
+chown 2000:2000 -R $dot
+chmod 777 -R $dot
 #ln -sfv $slash/etc/mkshrc /system/etc/
 #ln -sfv $dot/root/.nanorc /system/etc/nanorc
 ln -sfv $dot/root/.nanorc /sdcard/
 #ln -sfv $slash/etc/bash /system/etc/ 2>/dev/null
 #cp -a $slash/etc/terminfo /system/etc/
-#ln -sfv $slash/EST5EDT /system/etc/localtime
+ln -sfv $slash/EST5EDT $sys/etc/localtime
 #ln -sfv $slash/etc/gps.conf /system/etc/gps.conf
 #ln -sfv $slash/etc/gps.conf /system/vendor/etc/gps.conf
-#ln -sfv /proc/self/mounts /system/etc/mtab
+ln -sfv /proc/self/mounts $sys/etc/mtab
 ln -sfv $slash/etc/mk /data/
 ln -sfv $slash/pushthem /data/pu
 rmdir /bin 2>/dev/null || rm /bin
@@ -28,7 +28,7 @@ cp $slash/sbin/bash /bin/bash
 echo EST5EDT >/system/etc/timezone
 echo "Initialize system..."
 busybox mount -o rw,remount /system
-bash /data/dot/bin/remnt
+bash $dot/bin/remnt
 #chmod 777 /system/etc/init.d/*
 echo "System init completed!"
 #cat $dot/bin/build.prop >/data/local.prop
@@ -36,8 +36,8 @@ echo "System init completed!"
 #sed -i '/<allow-in-data-usage-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
 if ! grep "/system/etc/mk" /system/etc/mkshrc; then
 	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
-	chmod -R 0777 /data/dot
-	chown 0:0 -R /data/dot
+	chmod -R 0777 $dot
+	chown 0:0 -R $dot
 fi
 if [[ ! -e /data/.magisk ]]; then
 	echo 'SYSTEMLESS=true' >/data/.supersu
@@ -117,7 +117,7 @@ rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
 . $slash/etc/mk
 #setupbox /system/xbin
 setupbox /data/sbin
-setupbox /data/dot/slash/sbin
-[[ -e /external_sd ]] && setupbox /system/system/xbin
+setupbox $dot/slash/sbin
+[[ -e /external_sd ]] && setupbox $sys/xbin
 echo "Done!"
 # vi: ft=sh

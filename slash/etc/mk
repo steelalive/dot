@@ -30,7 +30,7 @@ if [[ $- != *i* ]]; then
 fi
 export HOME=/data/dot/root
 alias src=". /data/dot/slash/etc/mk "
-export dot=/data/dot
+export dot=/dot || [[ -e /system/dot ]] && export dot=/system/dot
 if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 	umask 002
 else
@@ -44,11 +44,16 @@ fi
 unset LD_PRELOAD LD_LIBRARY_PATH
 shopt -u execfail &>/dev/null
 #su_bin=/sbin/su
+if test -e /external_sd; then
+
+	grep "bash" <<<"$0" || exec /sbin/bash --init-file /data/dot/slash/etc/mk
+fi
+
 if [[ ! -e /external_sd ]]; then
 	[[ -x $su_bin ]] || su_bin="$(command -v su 2>/dev/null)"
 	if [[ -x $su_bin ]]; then
 		if [[ $USER == root ]] || [[ -e /external_sd ]]; then
-			grep "bash" <<<"$0" || exec /sbin/bash --init-file /data/dot/slash/etc/mk
+			grep "bash" <<<"$0" || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
 		else
 			exec $su_bin 0 -mm -s /data/dot/slash/sbin/bash || su 0 -l -mm
 			#		shopt | grep autocd &>/dev/null || exec /data/dot/slash/sbin/bash --init-file /data/dot/slash/etc/mk
@@ -69,26 +74,21 @@ ln -s /data/dot/slash/sbin/bash /bin/bash
 [[ $PS1 ]] || return 0
 . "$dot/fn.sh"
 . /data/dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc
-#. $dot/setpath.sh
+
 shopt -s checkwinsize histappend
 
-export PATH="/data/sbin:/data/dot/slash/sbin:/system/xbin:/sbin:/data/adb/magisk:/system/bin:/vendor/bin:/bin:/system/sbin:/data/dot/bin:\
-/data/dot/bin/final:/data/dot"
-[[ -e /data/data/com.termux/files/usr/bin ]] && export PATH=$PATH:/data/data/com.termux/files/usr/bin
-
-unset use_color safe_term match_lhs
-
 test ! -e /data/misc/adb/adb_keys && cp $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
+. "$dot/setpath.sh" android
 . "$dot/anset.sh"
 . "$dot/al.sh"
 . "$dot/ex.sh"
 
+[[ -e /data/data/com.termux/files/usr/bin ]] && export PATH=$PATH:/data/data/com.termux/files/usr/bin:/data/data/com.termux/files/usr/bin/applets LD_LIBRARY_PATH=/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib:$termux/lib:/data/data/com.termux/files/usr/bin/applets
 if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
 	hash resize &>/dev/null && eval resize
 fi
-is_there dircolors && eval $(dircolors --sh $dot/.dir_colors)
-#cp -avu $ex/dot /data/
+
+is_there dircolors && eval $(dircolors --sh $dot/.dir_colors 2>/dev/null)
 greet 2>/dev/null
-PS1='$ '
-#export LD_LIBRARY_PATH=/sbin:/system/lib:/system/lib64:/system/system/lib:/system/system/lib64:/data/data/com.termux/files/usr/lib
+PS1='\W\$ '
 # vi: ft=sh:

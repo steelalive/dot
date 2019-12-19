@@ -17,7 +17,8 @@ alias ..='builtin \cd .. && lk '
 alias mnt=". $dot/bin/mnt "
 #When you leave an empty space at the end of an alias, bash compeltion is decided you mean to tab a comletio. A space made after the crime will disappoint bash completion. At least there is a way to make him proud, unlike our respective fathers.
 alias ad=". $dot/bin/ad "
-alias aikunpack='cd /ext/AIK-Linux; ./unpackimg.sh recovery.img; recovery_miracle '
+alias aikunpack='cd $aik; $aik/unpackimg.sh $aik/recovery.img; recovery_miracle '
+alias aikrepack="$aik/repackimg.sh"
 alias rmv="command \rm -rfv --one-file-system --preserve-root --dir "
 alias cpv="command \cp -av --dereference --strip-trailing-slashes --update --context "
 alias cdpkg='command \cd $AURDEST '
@@ -38,7 +39,7 @@ alias gitclone=". $dot/bin/gitclone "
 alias git='command \git --no-pager '
 alias l="command $dot/bin/lk $LS_OPTIONS -l "
 alias lkcat='cat /last/power/rooted-rom/lk.img | adb shell "dd of=/dev/block/by-name/lk"; adb reboot recovery'
-alias ll="exa -l@ --group-directories-first "
+alias ll="exa -l@ --group-directories-first 2>dev/null || ls -l"
 alias lh="lk -lH "
 alias lsl='lk -l '
 alias ip="command \ip -c -a -p -d -h "
@@ -49,12 +50,12 @@ alias lssize="command \ls -lhHAr --color=auto  --sort size "
 alias lt='command \ls --color=always -alt | head -20 '
 alias more='less '
 alias most='less '
-alias pacr='command \pacman -Rcsn '
-alias pacs='command \pacman -S --needed --noconfirm '
-alias reboot='command \systemctl reboot '
+alias pacr='command pacman -Rcsn '
+alias pacs='command pacman -S --needed --noconfirm '
+alias reboot='command \systemctl \reboot '
 alias suedit='SUDO_EDITOR=kate sudoedit '
-alias tree='command \tree --dirsfirst -pshF -C '
-alias udevreload='udevadm control --reload-rules; systemctl restart systemd-udevd.service;udevadm control --reload '
+alias tree='tree --dirsfirst -pshF -C '
+alias udevreload='command \udevadm control --reload-rules; systemctl restart systemd-udevd.service;udevadm control --reload '
 alias vnstat="vnstat -i wlan0 "
 alias ~='builtin \cd ~; lk '
 #if is_in_path pacmatic; then

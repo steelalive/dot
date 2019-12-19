@@ -17,7 +17,7 @@ hash consolidate-path &>/dev/null || consolidate-path() {
 	unset IFS
 }
 hash consolidate-path &>/dev/null || export -f consolidate-path
-unset IFS
+unset IFS allpath
 if [[ $1 == aosp ]]; then
 	allpath="/usr/androbin
 /usr/bin
@@ -26,7 +26,6 @@ if [[ $1 == aosp ]]; then
 /sbin
 /usr/local/bin
 /usr/local/sbin
-/data/sbin
 /ext/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin
 $src/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin
 $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin
@@ -36,14 +35,14 @@ $O/host/linux-x86/bin
 $src/development/scripts
 $src/prebuilts/devtools/tools
 $src/external/selinux/prebuilts/bin
-/src/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin
+$src/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin
 $src/prebuilts/android-emulator/linux-x86_64
 $O/debug/host/linux-x86/bin
 $O/host/linux-x86/bin
 /ext/opt/prebuilt/linux-x86_64/bin"
 fi
-allpath+="/usr/lib/cw
-/data/sbin
+if [[ $1 = android ]]; then
+	allpath+="/data/sbin
 /sbin/supersu/xbin
 /sbin/supersu/bin
 /data/adb/su/xbin
@@ -53,11 +52,14 @@ allpath+="/usr/lib/cw
 /su/sbin
 /supersu
 /su
+/sbin
 /system/xbin
 /system/bin
 /vendor/xbin
 /vendor/bin
-/usr/bin
+/data/dot/slash/sbin
+/system/sbin"
+allpath+="/usr/bin
 /usr/sbin
 /bin
 /sbin
@@ -82,8 +84,6 @@ $HOME/toolchain/bin
 /ext/opt/tools/bin
 /ext/opt/android-ndk
 /ext/opt/android-ndk/build/tools
-/system/sbin
-/data/dot/slash/sbin
 /usr/lib/bash-utils
 $(printf "%s\n" /ext/opt/build-tools/* | tail -n1)
 /ext/opt/ndk-bundle

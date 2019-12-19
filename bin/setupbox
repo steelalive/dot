@@ -1,7 +1,7 @@
 # vi: set ft=sh:
 setupbox() {
 
-	[[ $2 ]] && force=f
+	[[ $2 ]] && force=f && set -- ${@:1:$#-1}
 
 	toylist='acpi
 arch
@@ -629,106 +629,32 @@ zcip'
 
 	corelist='b2sum
 base32
-base64
-basename
 basenc
-cat
-chcon
-chgrp
-chmod
-chown
-chroot
-cksum
-comm
 cp
 csplit
-cut
-date
-dd
-df
 dir
 dircolors
-dirname
-du
-echo
-env
-expand
-expr
 factor
-false
-fmt
 fold
 ginstall
-groups
-head
-hostid
-id
 join
-kill
 link
-ln
-logname
-ls
-md5sum
-mkdir
-mkfifo
-mknod
-mktemp
 mv
-nice
-nl
-nohup
 nproc
 numfmt
-od
-paste
 pathchk
 pinky
 pr
-printenv
-printf
 ptx
-pwd
-readlink
-realpath
-rm
-rmdir
-runcon
-seq
-sha1sum
-sha224sum
-sha256sum
-sha384sum
-sha512sum
 shred
 shuf
-sleep
-split
-stat
-stty
 sum
-sync
-tac
-tail
-tee
-test
-touch
-tr
-true
-truncate
 tsort
-tty
-uname
 unexpand
-uniq
 unlink
-uptime
 users
 vdir
-wc
-who
-whoami
-yes'
+who'
 
 	[[ $1 ]] || set -- "$PWD"
 	ANLR "Setup busybox and coreutils in ${C}${1}${W}...${R}\n\n\n\n\n\n"
@@ -742,17 +668,17 @@ yes'
 	[[ -x ./toybox ]] && toylist="$(./toybox)"
 
 	(
-		ANY "Setup Busybox in $1...${R}\n\n\n\n\n\n\n"
+		ANY "\n\n\n\n\n\n\n\n\nSetup Busybox in $1...${R}"
 		for exe in $busylist; do
 			[[ -L $exe ]] && continue
 			ln -sv$force busybox "$exe" 2>/dev/null && ANORANGE "$PWD/busybox linked with ${W}$exe $R\n"
 		done
-		ANY "Setup coreutils in $1...${R}\n\n\n\n\n\n\n\n"
+		ANY "\n\n\n\n\n\n\n\n\nSetup coreutils in $1...${R}"
 		for exe in $corelist; do
 			[[ -L $exe ]] && [[ ! $force ]] && continue
-			ln -sv$force coreutils "$exe" 2>/dev/null && ANORANGE "$PWD/coreutils linked with ${W}$exe $R\n"
+			ln -svf coreutils "$exe" 2>/dev/null && ANORANGE "$PWD/coreutils linked with ${W}$exe $R\n"
 		done
-		ANY "Setup toybox in $1...${R}\n\n\n\n\n\n\n\n\n"
+		ANY "\n\n\n\n\n\n\n\n\nSetup toybox in $1...${R}"
 		for exe in $toylist; do
 			[[ -L $exe ]] && continue
 			ln -sv toybox "$exe" 2>/dev/null && ANORANGE "$PWD/toybox linked with ${W}$exe $R\n"
@@ -763,12 +689,12 @@ yes'
 		cp -av $slash/sbin/nano* ./
 		cp -av $slash/etc/mk ./
 		cp -av $slash/etc/rc ./
-		chmod 4755 ./bash busybox toybox coreutils nano*
+		chmod 755 ./bash busybox toybox coreutils nano*
 		chown 0:0 ./*
 	)
 }
 [[ $1 ]] || {
-	for doit in /data/sbin /data/dot/slash/sbin /system/system/xbin; do
+	for doit in /data/slash/sbin /data/dot/slash/sbin $sys/xbin; do
 		setupbox "$doit"
 	done
 	exit

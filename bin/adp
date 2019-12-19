@@ -20,8 +20,7 @@ export ADB_KEYS_LOCATION tmp_serial su_bin ex adb files_to_copy
 if ! $adb devices | grep 'device$' &>/dev/null; then
 	[[ $1 ]] || exit
 fi
-$adb root
-$adb remount
+#$adb root && $adb remount
 sutest() {
 	$adb shell "su -c ls $1 &>/dev/null && echo $1" | grep $1 &>/dev/null
 
@@ -29,7 +28,7 @@ sutest() {
 remnt() {
 	adbsu "busybox mount -o rw,remount,rw /"
 	adbsu "busybox mount -o rw,remount,rw /vendor"
-	adbsu "/data/dot/bin/remnt"
+	adbsu "$dot/bin/remnt"
 	$adb remount 2>/dev/null
 }
 export -f remnt
@@ -45,11 +44,12 @@ export -f adbconnect
 adbsyncdot() {
 	liner
 	set -x
-	adbsu mkdir -p /data/dot
-	adbsu "chmod -R 0755 /data/dot"
-	adbsu chmod -R 0755 /data/dot
-	adbsu chown 2000:2000 -R /data/dot
-	$adb push --sync $files_to_copy /data/dot
+	adbsu mkdir -p $dot
+	adbsu "chmod -R 0755 $dot"
+	adbsu chmod -R 0755 $dot
+	adbsu chown 2000:2000 -R $dot
+	[[ $ex == /external_sd ]] && $adb push --sync $files_to_copy /system/dot
+	#	[[ $ex = /external_sd ]] || $adb push --sync $files_to_copy /system/dot
 	#$adb push --sync /last/dot.zip $ex/
 	set +x
 	ANG 'Sync completed!\\n'
@@ -81,7 +81,7 @@ apk_to_() {
 	[[ $1 ]] || exit 2
 	folder="$1/$(pmname $2)"
 	apk="$folder/base.apk"
-	adbsu /data/dot/slash/sbin/remnt
+	adbsu $dot/slash/sbin/remnt
 	adbsu mkdir -pv "$folder"
 	adbsu chmod -v 755 "$folder"
 	adbde push "$2" "$apk"
@@ -261,8 +261,8 @@ push)
 	shift
 	download=$ex
 	(($# == 1)) && set -- $1 $ex/Download/
-	echo $adb push "$@"
-	$adb push "$@"
+	echo $adb push --sync "$@"
+	$adb push --sync "$@"
 	exit
 	;;
 devices)
@@ -270,7 +270,7 @@ devices)
 	;;
 pull)
 	shift
-	$adb pull "$@"
+	$adb pull --sync "$@"
 	exit
 	;;
 exit)
@@ -291,11 +291,11 @@ pushdot)
 	shift
 	adbsu "setenforce 0"
 	ANLO "/dot sync in progress...\n"
-	adbsu 'mkdir -p /data/dot'
-	adb shell "su -c 'chmod 0755 -R /data/dot'"
+	adbsu 'mkdir -p $dot'
+	adb shell "su -c 'chmod 0755 -R $dot'"
 	[[ $ex == *storage* ]] || {
 		adbde shell "mkdir -p $ex/dot"
-		#		sync_delete /dot/* /data/dot
+		#		sync_delete /dot/* $dot
 		adbsyncdot
 	}
 	if [[ $ex == /external_sd ]]; then
@@ -310,29 +310,33 @@ pushall | sync-delete)
 	#	$adb push --sync /last/misc-android $ex/
 	#	$adb shell twrp install /external_sd/misc-android/'Decrypt Power.zip'
 	#	$adb shell twrp restore lk_no_message_stock
-	$adb push /last/wifi.txt $ex
-	$adb shell bash /data/dot/slash/pushthem
-	$adb shell bash /data/dot/slash/etc/rc
-	$adb push /last/dot.zip $ex
+	$adb push --sync /last/wifi.txt $ex
+	$adb shell bash $dot/slash/pushthem
+	$adb shell bash $dot/slash/etc/rc
+	$adb push --sync /last/dot.zip $ex
 
 	ANG 'Sync completed! \n'
 	exit
 	;;
+pushmisc)
+	$adb push --sync /last/misc-android $ex/
+	;;
+
 syncdot)
 	sync_both_ways /dot /data
 	exit
 	;;
 syncall)
 	shift
-	sync_both_ways /dot/* /data/dot
+	sync_both_ways /dot/* $dot
 	sync_both_ways /last/misc-android $ex
-	adbde push /last/dot.zip $ex
+	adbde push --sync /last/dot.zip $ex
 	exit
 	;;
 syncmisc)
 	shift
 	sync_both_ways /last/misc-android $ex
-	adbde push /last/dot.zip $ex
+	adbde push --sync /last/dot.zip $ex
 	exit
 	;;
 ota)
@@ -390,7 +394,7 @@ if [[ ! $su_bin ]]; then
 	export su_bin
 fi
 if [[ ! $ex ]]; then
-	if ! { ex="$($adb shell '. /data/dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null)" && sutest "$ex"; }; then
+	if ! { ex="$($adb shell '. $dot/slash/etc/rc &>/dev/null; echo $ex' 2>/dev/null)" && sutest "$ex"; }; then
 		if $adb devices | grep -q recovery &>/dev/null; then
 			adbde shell '[ -d /external_sd ]' 2>/dev/null && export ex=/external_sd
 		elif adbde shell '[[ -d "$(echo /mnt/media_rw/????-???? 2>/dev/null)" ]]' 2>/dev/null; then

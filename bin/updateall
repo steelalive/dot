@@ -11,12 +11,12 @@ ntponce
 [[ -d $CCACHE_DIR ]] && +user -R $CCACHE_DIR $CCACHE_TEMPDIR 2>/dev/null
 
 #Here, I update things.
-pacman -Syu || {
+pacman -Syu --noconfirm --needed || {
 	ANBR "Error -Syu!$R\n"
 	exit
 }
 suuser "yay -u --devel --needed --noconfirm"
-suuser yay
+suuser "yay --noconfirm"
 paccache --keep 1 --verbose --remove
 #That's it! We are done!
 
@@ -71,17 +71,8 @@ paccache --keep 1 --verbose --remove
 	if cd $dot/.dotfiles2; then
 		make update
 	fi
+	setup-nvim
 	### Neovim setup ###
-	cd /root/.config/nvim && {
-		gitreset
-		local="$dot/root/folders/.config/nvim/local.vim"
-		init="$HOME/.config/nvim/init.vim"
-		if ! grep -q "$local" $init; then
-			echo "source $local" >>"$init"
-		fi
-		unset local init
-		nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es
-	}
 	###CHeck for mising files or disparities with pacman database
 	paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer"
 	pacfixer() {

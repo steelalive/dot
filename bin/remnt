@@ -6,22 +6,25 @@
 [[ -e /oem ]] || return 1 || exit
 remnt() {
 	unset arg fs
-	sys_block=$(find /dev/block -name system | tail -n1)
-	busybox mount -o rw,remount,rw "$sys_block" "/system" &>/dev/null ||
-		mount -o rw,remount /system &>/dev/null
+	sys_block=$(find /dev/block/by-name -name system | tail -n1)
+	#	busybox mount -o rw,remount,rw "$sys_block" "/system" &>/dev/null ||
+	#		mount -o rw,remount /system &>/dev/null
+	#	[[ -e /system_root ]] && busybox mount -o rw,remount,rw "$sys_block" "/system_root"
 
 	[[ $1 ]] && arg="$*"
-	for fs in "/" "/system" "/vendor" $arg; do
+	for fs in "/" "/system" "/vendor" /system_root $arg; do
+		[[ -e $fs ]] || continue
+		mountpoint $fs &>/dev/null || continue
 		mount -o rw,remount,rw "$fs" &>/dev/null ||
-			hash busybox &>/dev/null && busybox mount -o rw,remount "$fs" &>/dev/null ||
-			hash toybox &>/dev/null && toybox mount -o rw,remount "$fs" &>/dev/null ||
-			hash toybox &>/dev/null && toolbox mount -o rw,remount "$fs" &>/dev/null ||
-			hash busybox &>/dev/null && busybox mount -o rw,remount,rw "$fs" &>/dev/null ||
-			hash busybox &>/dev/null && busybox mount -o remount,rw "$fs" &>/dev/null ||
+			busybox mount -o rw,remount "$fs" &>/dev/null ||
+			toybox mount -o rw,remount "$fs" &>/dev/null ||
+			toolbox mount -o rw,remount "$fs" &>/dev/null ||
+			busybox mount -o rw,remount,rw "$fs" &>/dev/null ||
+			busybox mount -o remount,rw "$fs" &>/dev/null ||
 			mount -o remount,rw "$fs" &>/dev/null || mount -o rw,remount "$fs" &>/dev/null ||
 			ANRED "Can't remount $fs!${R}\n"
 	done
-	chmod 777 -R /data/dot
-	chown 0:0 -R /data/dot
+	chmod 755 -R /data/dot 2>/dev/null
+	chown 0:0 -R /data/dot 2>/dev/null
 }
 remnt "$@"
