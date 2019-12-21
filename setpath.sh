@@ -41,7 +41,7 @@ $O/debug/host/linux-x86/bin
 $O/host/linux-x86/bin
 /ext/opt/prebuilt/linux-x86_64/bin"
 fi
-if [[ $1 == android ]]; then
+if [[ $1 == android ]] || [[ -e /oem ]]; then
 	allpath+="/data/sbin
 /sbin/supersu/xbin
 /sbin/supersu/bin

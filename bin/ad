@@ -6,7 +6,7 @@ if is_in_path adb; then
 		ex=/external_sd
 		su_bin=/sbin/sh
 		adbsu() {
-			adb shell "$@"
+			$adb shell "$@"
 		}
 		adot=/dot
 	else

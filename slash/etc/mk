@@ -39,8 +39,8 @@ mountdot() {
 	rwroot
 	rm /dot 2>/dev/null
 	mkdir -p /dot
-	mount "/storage/????-????/dot.img" /dot
-	mount /external_sd/dot.img /dot
+	losetup /dev/block/loop2 /external_sd/dot.img || losetup /dev/block/loop2 /storage/????-????/dot.img
+	mount /dev/block/loop2 /dot
 }
 mountdot
 export HOME=/data/dot/root
@@ -92,15 +92,11 @@ mkdir -p /bin
 ln -s /data/dot/slash/sbin/bash /bin/bash
 [[ $PS1 ]] || return 0
 . "$dot/fn.sh"
-. /data/dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc
-
+. /data/dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc || . /dot/slash/etc/mk
+. $dot/init.sh
 shopt -s checkwinsize histappend
 
 test ! -e /data/misc/adb/adb_keys && cp $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
-. "$dot/setpath.sh" android
-. "$dot/anset.sh"
-. "$dot/al.sh"
-. "$dot/ex.sh"
 
 [[ -e /data/data/com.termux/files/usr/bin ]] && export PATH=$PATH:/data/data/com.termux/files/usr/bin:/data/data/com.termux/files/usr/bin/applets LD_LIBRARY_PATH=/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib:$termux/lib:/data/data/com.termux/files/usr/bin/applets
 if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
@@ -109,5 +105,5 @@ fi
 
 is_there dircolors && eval $(dircolors --sh $dot/.dir_colors 2>/dev/null)
 greet 2>/dev/null
-PS1='\W\$ '
+PS1='\w\$ '
 # vi: ft=sh:

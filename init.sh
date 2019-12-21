@@ -56,12 +56,12 @@ export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMC
 echo
 printf "%b" "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\n"
 for this in $dot_files; do
-	[[ -r $this ]] && "$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Sourcing...\x1b[0m" && source "$this"
+	[[ -r $this ]] && "$dot"/bin/linerl "\x1b[1;38;2;0;255;191m$this\x1b[1;38;2;30;144;99m-->Sourcing...\x1b[0m" && source "$this"
 	exit_code=$?
 	"$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Succesfully sourced!\x1b[0m" $exit_code || printf "%b" "${RED}Cannot source $this\\n"
 done
 printf %b "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\\n\\n"
-
+[[ -e /oem ]] && . $dot/setpath.sh android
 is_there /tmp/ssh-agent && . /tmp/ssh-agent &>/dev/null
 unalias ps
 unset IFS info this_4_real this future_path futur_path_test

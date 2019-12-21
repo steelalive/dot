@@ -22,18 +22,18 @@ for i in \
 	$sys/etc/prop.default \
 	ramdisk/build.prop "$@"; do
 	[[ -r $i ]] || continue
-	sed -e "s/security.perf_harden=1$/security.perf_harden=0/" \
-		-e "s/ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
-		-e "s/ro.debuggable=0/ro.debuggable=1/" \
-		-e "s/ro.secure=1/ro.secure=0/" \
-		-e "s/ro.adb.secure=1/ro.adb.secure=0/" \
-		-e "s/ro.product.cpu.abilist64=.*/ro.product.cpu.abilist64=arm64-v8a/" \
-		-e "s/ro.product.cpu.abilist=armeabi-v7a,armeabi/ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi/" \
-		-e "s/ro.build.type=user$/ro.build.type=userdebug/" \
-		-e "s|ro.build.tags=release-keys$|ro.build.tags=test-keys|" \
+	sed -e "s/^security.perf_harden=1$/security.perf_harden=0/" \
+		-e "s/^ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
+		-e "s/^ro.debuggable=0$/ro.debuggable=1/" \
+		-e "s/^ro.secure=1$/ro.secure=0/" \
+		-e "s/^ro.adb.secure=1$/ro.adb.secure=0/" \
+		-e "s/^ro.product.cpu.abilist64=.*/ro.product.cpu.abilist64=arm64-v8a/" \
+		-e "s/^ro.product.cpu.abilist=armeabi-v7a,armeabi$/ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi/" \
+		-e "s/^ro.build.type=user$/ro.build.type=userdebug/" \
+		-e "s|^ro.build.tags=release-keys$|ro.build.tags=test-keys|" \
 		-e "s/=MM-dd-yyyy$/dd-MM-yyyy/" \
 		-e "s/=en-US$/=en-CA/" \
-		-e "s/ro.product.locale=.*/ro.product.locale=en-CA/" \
+		-e "s/^ro.product.locale=.*/ro.product.locale=en-CA/" \
 		-e "s/=US$/=CA/" \
 		-e "s|=q201$|=S912|" \
 		-e "s|=q9377$|=S912|" \

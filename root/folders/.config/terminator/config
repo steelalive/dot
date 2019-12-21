@@ -33,13 +33,13 @@
       directory = ""
       order = 0
       parent = child1
-      profile = Monokai Vivid
+      profile = OceanicMaterial
       type = Terminal
       uuid = 56ca0c73-8a2d-4f21-89cd-8180c38bb347
     [[[terminal3]]]
       order = 1
       parent = child1
-      profile = Monokai Vivid
+      profile = OceanicMaterial
       type = Terminal
       uuid = 8a658dc7-fced-4f51-a23a-f3777d49aa17
 [plugins]

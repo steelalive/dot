@@ -46,18 +46,17 @@ if [[ ! -e /data/.magisk ]]; then
 KEEPFORCEENCRYPT=false
 RECOVERYMODE=false" >>/data/.magisk
 fi
-proper && echo "Proper executed sucessfully"
+yorn proper && proper && echo "Proper executed sucessfully"
 #rmbloat
 setupbox /data/sbin
 setupbox $dot/slash/sbin
 [[ -e /external_sd ]] && setupbox $sys/xbin
-rmbloat
+yorn rmbloat && rmbloat
 echo "Done!"
 # vi: ft=sh
 
-aline "$@"
-aline2 "$@"
-setupsystem "$@"
+yorn aline && aline "$@" && aline2 "$@"
+yorn setupsystem && setupsystem "$@"
 rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
 if [[ -x /sbin/twrp ]]; then
 	twrp restore lk_no_message_stock
