@@ -41,7 +41,7 @@ $O/debug/host/linux-x86/bin
 $O/host/linux-x86/bin
 /ext/opt/prebuilt/linux-x86_64/bin"
 fi
-if [[ $1 = android ]]; then
+if [[ $1 == android ]]; then
 	allpath+="/data/sbin
 /sbin/supersu/xbin
 /sbin/supersu/bin
@@ -57,8 +57,15 @@ if [[ $1 = android ]]; then
 /system/bin
 /vendor/xbin
 /vendor/bin
-/data/dot/slash/sbin
-/system/sbin"
+/data/sbin
+$slash/sbin
+$slash/etc
+$sys/bin
+$sys/xbin
+/system/sbin
+/data/data/com.termux/files/usr/bin
+/data/data/com.termux/files/usr/bin/applets"
+fi
 allpath+="/usr/bin
 /usr/sbin
 /bin

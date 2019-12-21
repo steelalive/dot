@@ -1,6 +1,7 @@
 # vim: set filetype=sh:
 [[ -e /oem ]] || return || exit
-. /dot/slash/etc/rc || . /system/dot/slash/etc/rc
+. /dot/slash/etc/mk || . /system/dot/slash/etc/mk || /system_root/dot/slash/etc/mk || . /data/dot/slash/etc/mk
+. /dot/init.sh || . /data/dot/init.sh
 mount /system
 mount /system_root
 mount /vendor
@@ -16,12 +17,13 @@ chmod 777 -R $dot
 ln -sfv $dot/root/.nanorc /sdcard/
 #ln -sfv $slash/etc/bash /system/etc/ 2>/dev/null
 #cp -a $slash/etc/terminfo /system/etc/
-ln -sfv $slash/EST5EDT $sys/etc/localtime
+#ln -sfv $slash/EST5EDT $sys/etc/localtime
 #ln -sfv $slash/etc/gps.conf /system/etc/gps.conf
 #ln -sfv $slash/etc/gps.conf /system/vendor/etc/gps.conf
 ln -sfv /proc/self/mounts $sys/etc/mtab
 ln -sfv $slash/etc/mk /data/
 ln -sfv $slash/pushthem /data/pu
+
 rmdir /bin 2>/dev/null || rm /bin
 mkdir /bin
 cp $slash/sbin/bash /bin/bash
@@ -29,11 +31,10 @@ echo EST5EDT >/system/etc/timezone
 echo "Initialize system..."
 busybox mount -o rw,remount /system
 bash $dot/bin/remnt
-#chmod 777 /system/etc/init.d/*
 echo "System init completed!"
-#cat $dot/bin/build.prop >/data/local.prop
-#sed -i '/<allow-in-power-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
-#sed -i '/<allow-in-data-usage-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
+cat $dot/bin/build.prop >/data/local.prop
+sed -i '/<allow-in-power-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
+sed -i '/<allow-in-data-usage-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
 if ! grep "/system/etc/mk" /system/etc/mkshrc; then
 	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
 	chmod -R 0777 $dot
@@ -45,79 +46,19 @@ if [[ ! -e /data/.magisk ]]; then
 KEEPFORCEENCRYPT=false
 RECOVERYMODE=false" >>/data/.magisk
 fi
-#if ! settings list system | grep 'en-US,fr-CA' ||
-if [[ $1 ]]; then
-	echo "Some defaults settings applied..."
-	set -x
-	settings put global policy_control immersive.full=
-	settings put global guest_user_enabled 0
-	settings put system time 24
-	settings put system system_locales en-US,fr-CA
-	#settings put global install_non_market_apps 1
-	settings put secure lockscreen.disabled 1
-	settings put secure night_display_activated 1
-	settings put global development_settings_enabled 1
-	settings put system accelerometer_rotation 0
-	settings put system blur_quicksettings_enabled 1
-	settings put system blur_quicksettings_percentage 60
-	settings put system com.android.onehand.onehanded_mode 0
-	settings put system enable_suggestions 0
-	settings put system force_expanded_notifications 1
-	settings put system lockscreen_battery_info 1
-	settings put system network_traffic_autohide_threshold 10
-	settings put system network_traffic_state 1
-	settings put system toast_icon 1
-	#settings put global adb_enabled 1
-	settings put global aggressive_battery_saver 1
-	#settings put global animator_duration_scale 0.5
-	settings put global auto_time_zone 0
-	#settings put global autofill_compat_mode_allowed_packages 'com.android.chrome[url_bar]:com.brave.browser[url_bar]:com.chrome.beta[url_bar]:com.chrome.dev[url_bar]:com.chrome.canary[url_bar]:com.microsoft.emmx[url_bar]:com.opera.browser[url_field]:com.opera.browser.beta[url_bar]:com.opera.mini.native[url_bar]:com.opera.mini.native.beta[url_bar]:com.sec.android.app.sbrowser[location_bar_edit_text]:com.sec.android.app.sbrowser.beta[location_bar_edit_text]:org.mozilla.fennec_aurora[url_bar]:org.mozilla.firefox[url_bar]:org.mozilla.firefox_beta[url_bar]'
-	settings put global wifi_max_dhcp_retry_count 3
-	settings put global zram_enabled 0
-	#settings put secure advanced_reboot 1
-	settings put secure autofill_field_classification 1
-	settings put secure lock_screen_lock_after_timeout 600000
-	settings put secure lock_screen_owner_info_enabled 1
-	settings put secure quick_settings_vibrate 1
-	settings put secure sysui_volume_down_silent 1
-	settings put secure sysui_volume_up_silent 1
-	settings put secure ui_night_mode 2
-	if settings list --cm system &>/dev/null; then
-		settings put --cm system systemui_burnin_protection 1 2>/dev/null
-		settings put --cm secure stats_collection 0
-		settings put --cm secure feature_touch_hovering 0
-	fi
-	if settings list --lineage system; then
-		settings put --lineage system double_tap_sleep_gesture 0
-		settings put --lineage system increasing_ring 1
-		settings put --lineage system qs_quick_pulldown 1
-		settings put --lineage system status_bar_battery_style 2
-		settings put --lineage system system_profiles_enabled 0
-		settings put --lineage system torch_long_press_power_gesture 1
-		settings put --lineage system trust_interface_hinted 1
-		settings put --lineage global weather_temperature_unit 2
-		#	settings put --lineage secure advanced_mode 1
-		#	settings put --lineage secure advanced_reboot 1
-		settings put --lineage secure device_hostname S6
-		settings put --lineage secure feature_touch_hovering 0
-		#	settings put --lineage secure kill_app_longpress_back 1
-		settings put --lineage secure qs_show_auto_brightness 1
-		settings put --lineage secure qs_show_brightness_slider 1
-		settings put --lineage secure stats_collection 0
-		settings put --lineage secure trust_warnings 2
-	fi
-	#settings put secure install_non_market_apps 1
-	#settings put secure lockscreen.disabled 1
-	set +x
-fi
-. $dot/fn.sh
-rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
-#proper && echo "Proper executed sucessfully"
+proper && echo "Proper executed sucessfully"
 #rmbloat
-. $slash/etc/mk
-#setupbox /system/xbin
 setupbox /data/sbin
 setupbox $dot/slash/sbin
 [[ -e /external_sd ]] && setupbox $sys/xbin
+rmbloat
 echo "Done!"
 # vi: ft=sh
+
+aline "$@"
+aline2 "$@"
+setupsystem "$@"
+rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
+if [[ -x /sbin/twrp ]]; then
+	twrp restore lk_no_message_stock
+fi

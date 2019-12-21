@@ -28,9 +28,28 @@ if [[ $- != *i* ]]; then
 	# Shell is non-interactive.  Be done now!
 	return
 fi
+rwroot() {
+	[[ -e /external_sd ]] && mount /dev/block/mmcblk0p31 /system_root || mount /dev/block/mmcblk0p31 /
+	mount -o remount,rw /
+	mount -o remount,rw /system
+	mount -o remount,rw /system_root
+}
+mountdot() {
+	mountpoint /dot && return
+	rwroot
+	rm /dot 2>/dev/null
+	mkdir -p /dot
+	mount "/storage/????-????/dot.img" /dot
+	mount /external_sd/dot.img /dot
+}
+mountdot
 export HOME=/data/dot/root
 alias src=". /data/dot/slash/etc/mk "
 export dot=/dot || [[ -e /system/dot ]] && export dot=/system/dot
+[[ -e /data/dot/init.sh ]] && export dot=/data/dot
+[[ -e /dot/init.sh ]] && export dot=/dot
+export slash=$dot/slash
+export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
 if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 	umask 002
 else

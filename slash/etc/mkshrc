@@ -21,21 +21,22 @@ bashrc="/storage/????-????/.bashrc"
 if test -f "$bashrc"; then
 	. "$bashrc" || . "/sdcard/.bashrc" || touch "$bashrc"
 fi
-########## -INIT-  ##########y
-busybox mount -o rw,remount,rw / 2>/dev/null
-busybox mount -o rw,remount,rw /system 2>/dev/null
-/data/dot/slash/sbin/remnt 2>/dev/null
-ln -s /data/dot/slash/etc/mk / 2>/dev/null
-ln -s /data/dot/slash/etc/rc / 2>/dev/null
-ln -s /data/dot/slash/pushthem /pushthem 2>/dev/null
-ln -s /data/dot/slash / 2>/dev/null
-ln -s /data/dot / 2>/dev/null
-rm /bin &>/dev/null || rmdir /bin &>/dev/null
-mkdir -p /bin
-ln -s $BASH /bin/bash
-chmod 777 -R /data/dot 2>/dev/null
+rwroot() {
+	[[ -e /external_sd ]] && mount /dev/block/mmcblk0p31 /system_root || mount /dev/block/mmcblk0p31 /
+	mount -o remount,rw /
+	mount -o remount,rw /system
+	mount -o remount,rw /system_root
+}
+mountdot() {
+	mountpoint /dot && return
+	rwroot
+	rm /dot 2>/dev/null
+	mkdir -p /dot
+	mount /storage/????-????/dot.img /dot || mount /external_sd/dot.img /dot
+}
+mountdot
 ########## _INIT_ ###########
-. /data/dot/slash/etc/mk || . /sbin/mk || . /etc/mk || . "$(find / -name mk | head -n1)"
+. /data/dot/slash/etc/mk || . /dot/mk || . mk || . /sbin/mk || . /etc/mk || . "$(find / -name mk | head -n1)"
 for p in ~/.bin /sbin /data/sbin /data/dot/slash/sbin /system/system/bin /system/system/xbin /system/bin /system/xbin; do
 	[[ -d $p/. ]] || continue
 	[[ :$PATH: == *:$p:* ]] || PATH=$p:$PATH

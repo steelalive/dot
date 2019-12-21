@@ -12,14 +12,14 @@ else
 fi
 
 dot="$(dirname "${BASH_SOURCE[0]}")"
-[[ -e /dot ]] || ln -sri $dot /
 if [[ -e "$dot/init.sh" ]]; then
 	export dot
 else
+	[[ -e /data/dot/init.sh ]] && export dot=/data/dot
 	[[ -e /dot/init.sh ]] && export dot=/dot
-	[[ -e /data/dot/init.sh ]] export && dot=/data/dot
-	[[ -e /system/dot ]] && export dot=/system/dot
+	[[ -e /system/dot/init.sh ]] && export dot=/system/dot
 fi
+[[ -e /dot ]] || ln -sri $dot /
 shopt &>/dev/null || {
 	echo "Sorry, this file is not compatible with ${SHELL}. You have to use bash.
 Do you want to launch $(command -v bash 2>/dev/null)?
@@ -27,15 +27,16 @@ Do you want to launch $(command -v bash 2>/dev/null)?
 	yorn && $(command -v bash) -il --init-file $dot/init.sh || return 0
 }
 
-sh $dot/bin/base16.bash
-[[ -e /system/etc/rc ]] && . /system/etc/rc
+#sh $dot/bin/base16.bash
+#[[ -e /etc/rc ]] && . /system/etc/rc
 
 export dot_dir="$dot" dbin="$dot/bin" lux dot
 export PATH="$PATH:$dot/bin:$dot/bin/final:$dot"
 
 for i in $(command \ps aux | command \grep ps1bg.sh | command \grep -v grep | command \awk '{print $2}'); do kill -9 "$i"; done ##kill ps1 background process
-
-. "$dot"/setpath.sh
+unset android
+is_android && android=android
+. "$dot"/setpath.sh $android
 
 src() {
 	[[ -x "$lux"/usr/local/bin/bash ]] && builtin exec "$lux"/usr/local/bin/bash --init-file /etc/profile
@@ -50,14 +51,14 @@ export -f setenv
 export source_files="ps1.sh al.sh ps4.sh fn.sh init.sh ex.sh anset.sh setpath.sh"
 export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh  /usr/share/fzf/key-bindings.bash /usr/share/fzf/completion.bash /usr/share/git/git-prompt.sh /usr/share/git/completion/git-prompt.sh $dot/ps1.sh" # $dot/ps4.sh  #$dot/bin/goto.sh$HOME/.bash_prompt
 
-[[ -e /oem ]] && dot_files="$dot_files $dot/g4.sh $dot/anset.sh"
+[[ -e /oem ]] && dot_files="$dot_files $dot/slash/etc/mk"
 [[ -e /oem ]] || dot_files="$dot_files $dot/ps1bg.sh"
 echo
 printf "%b" "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\n"
 for this in $dot_files; do
-	[[ -r $this ]] && source "$this"
+	[[ -r $this ]] && "$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Sourcing...\x1b[0m" && source "$this"
 	exit_code=$?
-	"$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Sourced...\x1b[0m" $exit_code || printf "%b" "${RED}Cannot source $this\\n"
+	"$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Succesfully sourced!\x1b[0m" $exit_code || printf "%b" "${RED}Cannot source $this\\n"
 done
 printf %b "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\\n\\n"
 

@@ -23,6 +23,7 @@ alias rmv="command \rm -rfv --one-file-system --preserve-root --dir "
 alias cpv="command \cp -av --dereference --strip-trailing-slashes --update --context "
 alias cdpkg='command \cd $AURDEST '
 alias cdp="builtin \cd -P "
+alias cpdot="cp -av $dot/* $dot/.histfile $dot/.dir_colors ./"
 alias e='. $dot/bin/e '
 alias mvv='mv -v '
 alias df='command \df -h '

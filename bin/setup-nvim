@@ -115,4 +115,5 @@ rafi)
 
 esac
 nvim_link
-nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | UpdateRemotePlugins | finally | qall! | qall! | endtry" -V1 -es
+nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | endtry" -V1 -es
+nvim -N -u /root/.config/nvim/init.vim -c "try | UpdateRemotePlugins | finally | qall! | endtry" -V1 -es

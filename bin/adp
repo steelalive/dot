@@ -5,6 +5,7 @@
 #3#::..#####################_/dot/bin/ad_#######################..::#3#
 [[ -e /oem ]] && exit
 [[ $HOSTNAME != PC ]] && exit
+
 files_to_copy="/dot/*.sh /dot/bin /dot/root /dot/slash"
 adb=/usr/bin/adb
 #export ex=/storage/B5A4-1BFB
@@ -44,11 +45,12 @@ export -f adbconnect
 adbsyncdot() {
 	liner
 	set -x
-	adbsu mkdir -p $dot
-	adbsu "chmod -R 0755 $dot"
-	adbsu chmod -R 0755 $dot
-	adbsu chown 2000:2000 -R $dot
-	[[ $ex == /external_sd ]] && $adb push --sync $files_to_copy /system/dot
+	adb shell 'mount -t ext4 /dev/block/platform/bootdevice/by-name/system /system_root'
+	adbsu mkdir -p $adot
+	adbsu "chmod -R 0755 $adot"
+	adbsu chmod -R 0755 $adot
+	adbsu chown 2000:2000 -R $adot
+	[[ $ex == /external_sd ]] && $adb push --sync $files_to_copy $adot
 	#	[[ $ex = /external_sd ]] || $adb push --sync $files_to_copy /system/dot
 	#$adb push --sync /last/dot.zip $ex/
 	set +x
@@ -292,7 +294,7 @@ pushdot)
 	adbsu "setenforce 0"
 	ANLO "/dot sync in progress...\n"
 	adbsu 'mkdir -p $dot'
-	adb shell "su -c 'chmod 0755 -R $dot'"
+	adb shell "su -c "chmod 0755 -R $adot""
 	[[ $ex == *storage* ]] || {
 		adbde shell "mkdir -p $ex/dot"
 		#		sync_delete /dot/* $dot
@@ -311,8 +313,8 @@ pushall | sync-delete)
 	#	$adb shell twrp install /external_sd/misc-android/'Decrypt Power.zip'
 	#	$adb shell twrp restore lk_no_message_stock
 	$adb push --sync /last/wifi.txt $ex
-	$adb shell bash $dot/slash/pushthem
-	$adb shell bash $dot/slash/etc/rc
+	$adb shell bash $adot/slash/pushthem
+	$adb shell bash $adot/slash/etc/rc
 	$adb push --sync /last/dot.zip $ex
 
 	ANG 'Sync completed! \n'
@@ -328,7 +330,7 @@ syncdot)
 	;;
 syncall)
 	shift
-	sync_both_ways /dot/* $dot
+	sync_both_ways /dot/* $adot
 	sync_both_ways /last/misc-android $ex
 	adbde push --sync /last/dot.zip $ex
 	exit

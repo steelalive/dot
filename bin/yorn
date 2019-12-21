@@ -10,10 +10,10 @@ from_process=($(ps -o comm=$PPID 2>/dev/null))
 from_process3="${from_process[2]}"
 from_func=${FUNCNAME[1]}
 ANW "Default to"
-[[ $1 =~ y ]] && ANG ' YES!\n'
-{ [[ $1 =~ n ]] || [[ ! $1 ]]; } && ANBR " NO!${R}\\n"
-
+[[ $1 =~ y ]] && ANG ' YES!\n' && shift
+{ [[ $1 =~ n ]] || [[ ! $1 ]]; } && ANBR " NO!${R}\\n" && shift
 ANW "${G}Yes${W}(0)${W} or ${RED}No${W}(1)${W} ------------------------->${DG}from ${W}${from_process3[*]} ${from_func[*]}${W}?${R}\\n"
+[[ $1 ]] && ANG "$*${W} ???${R}\\n"
 echo
 read -s -r -n 1 --
 case $REPLY in

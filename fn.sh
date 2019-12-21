@@ -172,8 +172,8 @@ yornq() {
 		exit 1
 		;;
 	*)
-		[[ $1 == yes ]] && return 0
-		[[ $1 == no ]] && exit 1
+		[[ $1 =~ y ]] && return 0
+		[[ $1 =~ n ]] && exit 1
 		ANW "(255)$BR$UNDER✗ Invalid Response. Exiting. ✗$R"
 		printf "\n"
 		exit 1

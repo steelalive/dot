@@ -148,7 +148,6 @@
 /dot/bin/remnt 18 1
 /root/wordlist.txt 6326 14
 /dot/bin/wp 92 31
-/dot/init.sh 75 73
 /dot/fn.sh 79 116
 /dot/bin/init_helper 43 1
 /etc/systemd/user.conf 27 1
@@ -198,3 +197,4 @@
 /dot/bin/rmspaceinfile 1 28
 /ext/AIK-Linux/prop.default 85 35
 /ext/AIK-Linux/ramdisk/recovery.fstab 3 101
+/dot/init.sh 22 1

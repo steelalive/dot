@@ -27,7 +27,7 @@ ANRED "Boot is ${W}$boot\n${R}"
 ANRED "Recovery is ${W}$recovery${R}\n"
 ANY "Now editing imgtoedit ${W}$imgtoedit${R}\n"
 # ad will give us external_sh or storage location in $ex var
-. /dot/bin/ad
+. /dot/bin/ad echo
 work_path=$ex
 export img_orig="${work_path}/${imgtoedit}.img"
 ANW "Now editing img_orig ${W}$img_orig${R}\n"
@@ -41,16 +41,16 @@ ANW "Now editing img_orig ${W}$img_orig${R}\n"
 case $1 in
 repack*)
 	#I don't care how it work, it just does for many cellphones, tablets and tv box without major edits...
-	bash repackimg.sh
+	recovery_miracle
 	imgtoedit=image-new.img
 	[[ -e unsigned_new.img ]] && cp unsigned-new.img ${imgtoedit}
 	$adb push ${imgtoedit} ${work_path}
 	img_orig="${work_path}/${imgtoedit}"
-	$adb shell "su -c "dd if=${img_orig} of="${block_to_write}" bs=4096"" ||
-		$adb shell "dd if=${img_orig} of="${block_to_write}" bs=4096"
+	#	$adb shell "su -c "dd if=${img_orig} of="${block_to_write}" bs=4096"" ||
+	#		$adb shell "dd if=${img_orig} of="${block_to_write}" bs=4096"
 	adb shell "dd if=${img_orig} of="${block_to_write}" bs=4096" || adb shell su -c "dd if=${img_orig} of="${block_to_write}" bs=4096"
-	$adb shell "su -c 'sync && sync'" ||
-		$adb shell "sync && sync"
+	#	$adb shell "su -c 'sync && sync'" ||
+	$adb shell "sync && sync"
 	$adb reboot recovery
 	exit
 	;;
@@ -74,23 +74,16 @@ setuprecovery)
 	liner
 	echo $boot_path $imgtoedit
 	liner
-	if [[ $1 != skip ]]; then
-		$adb shell su -c "dd if="${block_to_write}" of=${img_orig} bs=4096" || $adb shell "dd if="${block_to_write}" of=${img_orig} bs=4096"
-		$adb pull ${img_orig}
+	#		$adb shell su -c "dd if="${block_to_write}" of=${img_orig} bs=4096" || $adb shell "dd if="${block_to_write}" of=${img_orig} bs=4096"
+	#		$adb pull ${img_orig}
+	#	fi
+	if [[ $1 == unpack ]]; then
+		bash unpackimg.sh ${imgtoedit}.img || {
+			abootimg -x ${imgtoedit}.img
+			abootimg-unpack-initrd
+		}
 	fi
-	bash unpackimg.sh ${imgtoedit}.img || {
-		abootimg -x ${imgtoedit}.img
-		abootimg-unpack-initrd
-	}
-	echo "Copy proper?? config?(Don't)"
-	if yorn n; then
-		proper
-	fi
-	(
-		cd $aik/ramdisk
-		ln -sf ./init sbin/watchdogd
-		ln -sf ./init sbin/ueventd
-	)
+
 	if [[ $imgtoedit == recovery ]] && [[ $1 != repack ]]; then
 		ANORANGE "Perform recovery miracle?\n"
 		yorn && recovery_miracle

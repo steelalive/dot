@@ -8,7 +8,7 @@ if is_in_path adb; then
 		adbsu() {
 			adb shell "$@"
 		}
-
+		adot=/dot
 	else
 		adbsu() {
 			adb shell /sbin/su 0 -mm -c "$@"
@@ -16,8 +16,10 @@ if is_in_path adb; then
 
 		ex=/storage/B5A4-1BFB
 		su_bin=/sbin/su
+		adot=/dot
 	fi
 fi
+export ex su_bin adot
 adinteg() {
 	adb push /last/APK/app/com.android.chrome.apk /system/system/app/Chrome/Chrome.apk
 	adb push /last/APK/app/com.android.vending.apk /system/system/priv-app/Phonesky/Phonesky.apk
