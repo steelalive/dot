@@ -14,7 +14,7 @@ if is_in_path adb; then
 			adb shell /sbin/su 0 -mm -c "$@"
 		}
 
-		ex=/storage/B5A4-1BFB
+		ex=/storage/523D-A4D8
 		su_bin=/sbin/su
 		adot=/dot
 	fi

@@ -37,34 +37,7 @@ recovery_miracle() {
 	for exe in $(</ext/AIK-Linux/toylist); do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv toybox "$exe"
 	done
-	for exe in 'b2sum
-base32
-basenc
-cp
-csplit
-dir
-dircolors
-factor
-fold
-ginstall
-join
-link
-mv
-nproc
-numfmt
-pathchk
-pinky
-pr
-ptx
-shred
-shuf
-sum
-tsort
-unexpand
-unlink
-users
-vdir
-who'; do
+	for exe in b2sum base32 basenc cp csplit dir dircolors factor fold ginstall join link mv nproc numfmt pathchk pinky pr ptx shred shuf sum tsort unexpand unlink users vdir who; do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv coreutils "$exe"
 	done
 	cd $aik/ramdisk/sbin
@@ -79,11 +52,11 @@ who'; do
 		chmod 0777 "$exe"
 	done
 	ln -svf ./busybox blkid
-	ln -svf ./coreutils ls
 	cp -av /last/misc-android/ui.zip $aik/ramdisk/twres/
 	cp -av $aik/ramdisk/sbin/zip $aik/ramdisk/twres/
 	cp -av $aik/mkshrc $aik/ramdisk/etc/
 	cp -av $aik/permissive.sh $aik/ramdisk/sbin/
+	cp -av $aik/fstab $aik/ramdisk/etc/
 	#	cp -av $aik/prop.default $aik/ramdisk/
 	#	(
 	#		cd $aik/ramdisk

@@ -118,7 +118,7 @@ echo
 #	cat /tmp/xml.tmp >"$readl"
 #	ANLG 'Document was formated with xmllint. \n'
 #fi
-if [[ $basename =~ "fstab" ]] && [[ ! $basename =~ "recovery" ]]; then
+if [[ $basename =~ "fstab" ]]; then
 	is_in_path column && column -t "$readl" >/tmp/fstab || exit
 	is_empty /tmp/fstab || exit
 	cat /tmp/fstab >"$readl" || exit

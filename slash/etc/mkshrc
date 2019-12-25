@@ -5,14 +5,29 @@
 #-
 # Minimal /system/etc/mkshrc for Android
 # [[ -e /sbin/terminfo ]] && TERMINFO=/sbin/terminfo
+
+rwroot() {
+	[[ -e /external_sd ]] && mount -t ext4 /dev/block/mmcblk0p31 /system_root
+	mount -o remount,rw /
+	mount -o remount,rw /system
+	mount -o remount,rw /system_root
+}
+mountdot() {
+	mountpoint /dot 2>/dev/null && return
+	rwroot
+	rm /dot 2>/dev/null
+	mkdir -p /dot
+	mount -t ext4 /dev/block/mmcblk1p2 /dot
+}
+mountdot
 [[ -e /etc/terminfo ]] && TERMINFO=/etc/terminfo
-[[ -e /data/dot/slash/etc/terminfo ]] && TERMINFO=/data/dot/slash/etc/terminfo
-: "${TERM:=xterm-256color}" "${HOME:=/data/dot/root}" "${MKSH:=/data/dot/slash/sbin/bash}" "${HOSTNAME:=POWER}"
+[[ -e /dot/slash/etc/terminfo ]] && TERMINFO=/dot/slash/etc/terminfo
+: "${TERM:=xterm-256color}" "${HOME:=/dot/root}" "${MKSH:=/dot/slash/sbin/bash}" "${HOSTNAME:=POWER}"
 : "${SHELL:=$MKSH}" "${USER:=$(getprop ro.product.device)}" "${TMP:=/data/local/tmp}" "${TMPDIR:=$TMP}"
 PS1='$ '
 unset LD_PRELOAD
-if test -x /data/dot/slash/sbin/bash; then
-	BASH=/data/dot/slash/sbin/bash
+if test -x /dot/slash/sbin/bash; then
+	BASH=/dot/slash/sbin/bash
 	SHELL="$BASH"
 fi
 PS1='\?'
@@ -21,22 +36,9 @@ bashrc="/storage/????-????/.bashrc"
 if test -f "$bashrc"; then
 	. "$bashrc" || . "/sdcard/.bashrc" || touch "$bashrc"
 fi
-rwroot() {
-	[[ -e /external_sd ]] && mount /dev/block/mmcblk0p31 /system_root || mount /dev/block/mmcblk0p31 /
-	mount -o remount,rw /
-	mount -o remount,rw /system
-	mount -o remount,rw /system_root
-}
-mountdot() {
-	mountpoint /dot && return
-	rwroot
-	rm /dot 2>/dev/null
-	mkdir -p /dot
-	mount /storage/????-????/dot.img /dot || mount /external_sd/dot.img /dot
-}
-mountdot
+
 ########## _INIT_ ###########
-. /data/dot/slash/etc/mk || . /dot/mk || . mk || . /sbin/mk || . /etc/mk || . "$(find / -name mk | head -n1)"
+. /dot/slash/etc/mk || ./data/dot/slash/etc/mk || . mk || . /sbin/mk || . /etc/mk || . "$(find / -name mk | head -n1)"
 for p in ~/.bin /sbin /data/sbin /data/dot/slash/sbin /system/system/bin /system/system/xbin /system/bin /system/xbin; do
 	[[ -d $p/. ]] || continue
 	[[ :$PATH: == *:$p:* ]] || PATH=$p:$PATH

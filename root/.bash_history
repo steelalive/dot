@@ -1,14 +1,3 @@
-exit
-mkdir -p /usr/local/bin
-curl -L 'https://github.com/mvdan/sh/releases/download/v2.6.2/shfmt_v2.6.2_linux_amd64' --output  /usr/local/bin/shfmt
-chmod a+x /usr/local/bin/shfmt
-echo '**Enjoy shellscript!**'
-echo 'fork or star  https://github.com/foxundermoon/vs-shell-format'
-ls
-makepkgsu
-rm -rf /tmp/makepkg/
-makepkgsu
-exit
 . /dot/bin/env.sh
 path
 ls /ext/opt/platform
@@ -498,3 +487,14 @@ su
 su -
 su --
 exec sudo bash -il
+bash
+bash
+bash
+ls
+. /dot/init.sh
+mount -o remount,rw /
+nano /etc/fstab
+mount /dev/sda6 -o remount,rw /
+nano /etc/fstab
+mount -av
+reboot

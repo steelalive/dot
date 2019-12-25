@@ -630,7 +630,6 @@ zcip'
 	corelist='b2sum
 base32
 basenc
-cp
 csplit
 dir
 dircolors
@@ -693,10 +692,11 @@ who'
 		chown 0:0 ./*
 	)
 }
-[[ $1 ]] || {
-	for doit in /data/slash/sbin /data/dot/slash/sbin $sys/xbin; do
-		setupbox "$doit"
-	done
-	exit
-}
-setupbox "$@"
+#[[ $1 ]] || {
+#	for doit in /data/slash/sbin /data/dot/slash/sbin $sys/xbin; do
+#		setupbox "$doit"
+#	done
+#	exit
+#}
+#setupbox "$@"
+[[ -e $1 ]] && cp -av $slash/sbin/* "$1"

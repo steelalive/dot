@@ -1,6 +1,6 @@
 #!/bin/bash
 #-*- coding: utf-8 -*-
-:q#1#_SCRIPT_#1# - by: steelalive
+#1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Thu May 17 16:56:54 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.0 - #_# #@#170518#@# #2#
 #3#::..#####################_/dot/bin/nvim-setup_#######################..::#3#
 # vi: ft=sh:noro:
@@ -103,11 +103,20 @@ space*)
 	cd /root/.config/nvim || exit
 	;;
 rafi)
+	shift
 
 	nvim-config "$@"
 	;;
+
+link)
+	nvim_link
+
+	;;
 *)
+
 	cd /root/.config/nvim
+	gitreset
+	nvim_link
 	make update
 	bash venv.sh
 
@@ -115,5 +124,5 @@ rafi)
 
 esac
 nvim_link
-nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | endtry" -V1 -es
+#nvim -N -u /root/.config/nvim/init.vim -c "try | call dein#update() | finally | qall! | endtry" -V1 -es
 nvim -N -u /root/.config/nvim/init.vim -c "try | UpdateRemotePlugins | finally | qall! | endtry" -V1 -es

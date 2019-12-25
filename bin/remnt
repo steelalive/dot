@@ -24,7 +24,7 @@ remnt() {
 			mount -o remount,rw "$fs" &>/dev/null || mount -o rw,remount "$fs" &>/dev/null ||
 			ANRED "Can't remount $fs!${R}\n"
 	done
-	chmod 755 -R /data/dot 2>/dev/null
-	chown 0:0 -R /data/dot 2>/dev/null
+	chmod 755 -R $dot/bin 2>/dev/null
+	chown 0:0 -R $dot/bin 2>/dev/null
 }
 remnt "$@"

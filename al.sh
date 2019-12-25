@@ -38,7 +38,7 @@ alias fastboot='/ext/opt/platform-tools/fastboot --disable-verity --disable-veri
 alias hd='command \od -Ax -tx1z -v '
 alias gitclone=". $dot/bin/gitclone "
 alias git='command \git --no-pager '
-alias l="command $dot/bin/lk $LS_OPTIONS -l "
+alias l="command $dot/bin/lk $LS_OPTIONS -lL "
 alias lkcat='cat /last/power/rooted-rom/lk.img | adb shell "dd of=/dev/block/by-name/lk"; adb reboot recovery'
 alias ll="exa -l@ --group-directories-first 2>dev/null || ls -l"
 alias lh="lk -lH "

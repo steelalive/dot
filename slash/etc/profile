@@ -1,8 +1,13 @@
 # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
 # and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
 
-export HOME='/data/dot/root'
+export HOME='/dot/root'
 export USER=$(whoami)
 echo profile
 umask 022
-[[ -r /data/dot/slash/etc/mk ]] && . /data/dot/slash/etc/mk
+if [[ -r /etc/mkshrc ]]; then
+	. /etc/mkshrc
+else
+	MKSHRC="$(find /system -name mkshrc | head -n1 2>/dev/null)"
+	[[ -e $MKSHRC ]] && . "$MKSHRC"
+fi

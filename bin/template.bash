@@ -7,7 +7,7 @@ echo "#!/bin/bash
 #-*- coding: utf-8 -*-
 #1#_SCRIPT_#1# - by: "${PACKAGER}"
 #2#::.. Last edit: - "$(date)" ..::## #_# - VERSION=0.0.0.1 - #_# #@#"$(date -I)"#@# #2#
-# vi: set noro: ft=sh
+# vi: ft=sh
 #3#::..#####################_"${1}"_#######################..::#3#
 "
 cat <<"EOF"

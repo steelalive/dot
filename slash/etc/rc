@@ -8,6 +8,7 @@ export dot=/dot
 [[ -e /system/dot/init.sh ]] && export dot=/system/dot
 [[ -e /system_root/dot/init.sh ]] && export dot=/system_root/dot
 [[ -e /data/dot/init.sh ]] && export dot=/data/dot
+[[ -e /dot/init.sh ]] && export dot=/dot
 export slash="$dot/slash"
 if mountpoint /system; then
 	sysroot=/system
@@ -17,8 +18,8 @@ else
 	sysroot=/
 fi
 if [[ -e /external_sd ]]; then
-	export sys=/system
-	grep "^/system " /recovery.fstab &>/dev/null && sys=/system/system
+	[[ -e /system/build.prop ]] && sys=/system
+	[[ -e /system_root/build.prop ]] && sys=/system_root/system
 	export ex=/external_sd
 	export rootsys=$sysroot/system sys sysroot ex
 else
@@ -29,6 +30,7 @@ fi
 
 export ex="/mnt/media_rw/????-????"
 [[ -e $ex ]] || ex="/storage/????-????"
+[[ -e $ex ]] || ex="/external_sd"
 [[ -e $ex ]] || ex=/sdcard
 export termux="/data/data/com.termux/files/usr"
 export termuxbin="/data/data/com.termux/files/usr/bin"
@@ -99,12 +101,12 @@ hash remnt &>/dev/null && remnt
 unalias src 2>/dev/null
 unalias ls &>/dev/null
 unset ls LS_OPTIONS &>/dev/null
-if [[ -e $slash/sbin/ls ]]; then
-	LS_BIN="$slash/sbin/ls"
+if [[ -e $slash/sbin/dir ]]; then
+	LS_BIN="$slash/sbin/dir"
 elif [[ -e /system/xbin/ls ]]; then
-	LS_BIN="$slash/sbin/ls"
+	LS_BIN="$slash/sbin/dir"
 else
-	LS_BIN="ls"
+	LS_BIN="dir"
 fi
 
 if $LS_BIN --help 2>&1 | grep 'Z' &>/dev/null; then LS_OPTIONS=' -Z '; fi
@@ -113,9 +115,9 @@ if $LS_BIN --help 2>&1 | grep 'group-directories-first' &>/dev/null; then
 fi
 export LS_OPTIONS="--group-directories-first -AHhpFl --color "
 
-command -v coreutils && ls() { coreutils --coreutils-prog=ls $LS_OPTIONS "$@"; }
+command -v coreutils && ls() { coreutils --coreutils-prog=dir $LS_OPTIONS "$@"; }
 unset lk
-alias lk="command \ls --group-directories-first --color=auto $LS_OPTIONS"
+alias lk="command \dir --group-directories-first --color=auto $LS_OPTIONS"
 is_recovery && ls() { /sbin/ls $LS_OPTIONS "$@"; }
 
 nano=$termuxbin/nano
@@ -190,7 +192,8 @@ export -f 2sysEchoApp
 	}
 	sysname=$1
 	for i in $(2sysEchoApp $2); do
-		path="$(find $sys -type d -name "*$sysname*" | head -n1)"
+		path="$(find $sys/priv-app -type d -name "*$sysname*" | head -n1)"
+		[[ -e $path ]] || path="$(find $sys/app -type d -name "*$sysname*" | head -n1)"
 		[[ -e $path ]] || continue
 		[[ -e $i ]] || continue
 		rm -rf $i/oat $path/oat
@@ -248,7 +251,7 @@ fixpart() {
 		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
 		/sbin/e2fsck -f "$i"
 		resize2fs "$i"
-		[[ $1 == t ]] && /sbin/tune2fs -c 30 -m 1 -o journal_data_writeback,nobarrier "$i"
+		/sbin/tune2fs -c 30 -m 1 -o journal_data_writeback,nobarrier "$i"
 		echo "##############################---${i}---#######################################"
 	done
 	fat=/dev/block/mmcblk1p1
@@ -257,8 +260,6 @@ fixpart() {
 	fsck.fat $fat 2>/dev/null
 	fsck_msdos $fat 2>/dev/null
 	fsck.vfat $fat 2>/dev/null
-	aline
-	aline2
 
 }
 export -f fixpart
@@ -270,29 +271,51 @@ setupsystem() {
 				#		coreutils --coreutils-prog=cp -au /sdcard ./ || cp -av sdcard ./
 				coreutils --coreutils-prog=cp -ru ./sdcard /
 				mount /system
-				coreutils --coreutils-prog=cp -rvu /external_sd/magisk/dot1/system $sysroot/
-				coreutils --coreutils-prog=cp -rvu /external_sd/magisk/dot1/vendor /
-				coreutils --coreutils-prog=mv -ru /sdcard/Download/* /external_sd/Download/
-				coreutils --coreutils-prog=mv -ru /external_sd/Android/data/com.android.chrome/files/Download/* /external_sd/Download/
-				coreutils --coreutils-prog=cp -ru /sdcard /external_sd/
+				mount /system_root
+				mount /vendor
+				mount -o remount,rw /vendor
+				mount -o remount,rw /system
+				mount -o remount,rw /system_root
+				coreutils --coreutils-prog=cp -avu $dot/system $sysroot/
+				coreutils --coreutils-prog=cp -avu $dot/vendor /
+				coreutils --coreutils-prog=cp -avu $dot/slash/sbin/* $sys/xbin/
+				coreutils --coreutils-prog=mv /sdcard/Download/* /external_sd/Download/
+				coreutils --coreutils-prog=mv /external_sd/Android/data/com.android.chrome/files/Download/* /external_sd/Download/
+				coreutils --coreutils-prog=cp -avu /sdcard /external_sd/
 				clear
-				[[ -e $dot ]] || yornq y && {
-					mount /data
-					[[ -e $dot ]] || unzip /external_sd/dot.zip -d /data/
-				}
 				cp -av misc-android/config/Open-GApps /sdcard/ 2>/dev/null
-				cp -av $slash/sbin/bash /data/
+				ln -sv $slash/sbin/bash /data/
 				ln -sv $slash/etc/rc /data/
 				ln -sv $slash/etc/mk /data/
 				ln -sv $slash/pushthem /data/pu
 				2sys Phonesky com.android.vending-
 				2sys Chrome chrome-
 				2sys CalendarGoogle .calendar-
+				2sys Messages apps.messaging
+				2sys Street android.street
+				2sys GmsCore gms
+
 				[[ -e $(2sysEchoApp contacts 2>/dev/null) ]] && mv $(2sysEchoApp contacts 2>/dev/null) $sys/app/Contacts
 			}
 		)
 	fi
 }
+sysroot() {
+	echo "input any word to mount root on /system, no word=/system_root..."
+	mount $system /system_root
+	umount /system
+	mountpoint /system || rm -rf /system
+	ln -s /system_root/system /
+	[[ $1 ]] && {
+		umount /system
+		mountpoint /system || rm -rf /system
+		mkdir -p /system
+		mount $system /system
+		umount /system_root
+		rm -rf /system_root
+	}
+}
+export -f sysroot
 export -f setupsystem
 if ! grep 'KEEPVERITY=false' /data/.magisk; then
 	echo "KEEPVERITY=false
@@ -303,5 +326,5 @@ fi
 export LS_COLORS='bd=38;5;11:ca=38;5;6:cd=38;5;113;1:di=38;5;33:do=38;5;2:ex=38;5;1;1:pi=38;5;11:fi=0:ln=target:mh=38;5;222;1:no=0:or=48;5;196;38;5;232;1:ow=38;5;220;1:sg=48;5;3;38;5;0:su=38;5;220;1;3;100;1:so=38;5;197:st=38;5;86;48;5;234:tw=48;5;235;38;5;139;3:*.cmd=1;48;5;160;38;5;0:*.exe=1;48;5;178;38;5;0:*.com=1;48;5;130;38;5;0:*.btm=1;48;5;190;38;5;0:*.bat=1;48;5;196;38;5;0:*.sh=1;48;5;0;38;5;15:*.csh=1;48;5;124;38;5;0:*.service=48;5;0;38;5;10:*-=1;48;5;231;38;5;0:*.0=38;5;101:*.1=38;5;102:*.1p=38;5;7:*.32x=38;5;213:*.3g2=38;5;112:*.3ga=38;5;130;1:*.3gp=38;5;111:*.3p=38;5;7:*.4=1;38;5;99:*.7z=38;5;40:*.A64=38;5;213:*.BAT=1;38;5;229:*.BUILDINFO=38;5;160;1:*.BUP=38;5;241:*.C=38;5;81:*.CFUserTextEncoding=38;5;239:*.DS_Store=38;5;239:*.H=38;5;110:*.IFO=38;5;114:*.JPG=38;5;99:*.M=38;5;110:*.MANIFEST=38;5;243:*.MOV=38;5;114:*.Makefile=38;5;155:*.PDF=38;5;130:*.PFA=38;5;66:*.PKGINFO=38;5;214;1:*.PL=38;5;160:*.R=38;5;49:*.RData=38;5;178:*.Rproj=38;5;11:*.S=38;5;110:*.S3M=38;5;131;1:*.SKIP=38;5;244:*.TIFF=38;5;97:*.VOB=38;5;115;1:*.Xauthority=38;5;122:*.Z=38;5;40:*._64=48;5;21;1;38;5;214:*.a=38;5;40:*.a00=38;5;213:*.a52=48;5;23:*.a64=38;5;213:*.a78=38;5;213:*.aac=38;5;137;1:*.aac=00;36:*.accdb=38;5;63:*.accde=38;5;62:*.accdr=38;5;61:*.accdt=38;5;60:*.adf=38;5;213:*.afm=38;5;66:*.ahk=38;5;41:*.ai=38;5;99:*.aiff=38;5;135;1:*.alac=38;5;116;1:*.allow=38;5;112;4:*.am=38;5;130:*.am=38;5;242:*.anx=01;35:*.ape=38;5;166;1:*.apk=38;5;200:*.application=38;5;116:*.arj=38;5;40:*.asc=38;5;190;3:*.asf=38;5;116:*.asf=01;35:*.asm=38;5;81:*.atr=38;5;213:*.au=38;5;137;1:*.auth=4;38;5;122:*.automount=38;5;45:*.avi=38;5;115:*.avi=01;35:*.awk=38;5;172:*.axa=00;36:*.axv=01;35:*.bak=38;5;237:*.bash=38;5;214;4:*.bash_logout=1;48;5;172;1;38;5;232:*.bashrc=1;38;5;0;48;5;226:*.bat=1;38;5;228:*.bfe=38;5;192;3:*.bin=38;5;124:*.bmp=38;5;91:*.bsp=38;5;209:*.bz2=38;5;40:*.c=38;5;86:*.c++=01;38;5;74:*.cab=38;5;204:*.cache=1;38;5;0;48;5;45:*.cap=38;5;29:*.cbr=38;5;125:*.cbz=38;5;126:*.cc=38;5;113:*.cda=38;5;131;1:*.cdi=38;5;213:*.cdr=38;5;97:*.ces=4;38;5;220:*.cfg=38;5;75;1:*.cgm=01;35:*.chm=38;5;141:*.cl=38;5;81:*.cnc=38;5;7:*.coffee=38;5;87;1:*.colors=1;38;5;153:*.conf=01;38;5;45;1:*.cp=38;5;105:*.cpio=38;5;40:*.cpp=38;5;83:*.cr=38;5;81:*.cs=38;5;81:*.css=38;5;125;1:*.csv=38;5;78:*.ctp=38;5;81:*.cue=38;5;116:*.cxx=38;5;81:*.dat=38;5;134;1:*.db=38;5;61:*.deb=38;5;201:*.def=38;5;105;1:*.deny=01;05;37;41:*.description=38;5;125:*.device=38;5;185;4:*.diff=48;5;197;38;5;232:*.diff=00;32:*.directory=38;5;228:*.dist=1;38;5;214:*.divx=38;5;114:*.djvu=38;5;128:*.dl=01;35:*.dmg=38;5;124:*.dmp=38;5;29:*.doc=38;5;111:*.dockerignore=38;5;240:*.docm=38;5;111;4:*.docx=38;5;208:*.drw=38;5;99:*.dts=38;5;135;1:*.dump=38;5;241:*.emf=01;35:*.eml=38;5;125;1:*.enc=38;5;192;3:*.eps=38;5;209:*.eps=38;5;99:*.epsf=38;5;99:*.err=38;5;160;5:*.error=38;5;160;5:*.ers=1;38;5;196:*.etter=4;38;5;180:*.etx=38;5;184:*.ex=38;5;126:*.example=38;5;51:*.f=38;5;81:*.f4v=38;5;115:*.fcm=38;5;136;1:*.feature=38;5;27:*.fig=38;5;33;1:*.file=1;38;5;230:*.flac=38;5;126;1:*.flc=01;48;5;61:*.fli=01;48;5;10:*.flv=01;48;5;95:*.fm2=38;5;213:*.fmp12=38;5;60:*.fnt=38;5;66:*.fon=38;5;67:*.for=38;5;81:*.for=38;5;89:*.fp7=38;5;60:*.ftn=38;5;81:*.gb=38;5;214:*.gba=38;5;215:*.gbc=38;5;216:*.gbr=38;5;7:*.gel=38;5;217:*.gen=38;5;75;1:*.ger=38;5;7:*.gg=38;5;218:*.ggl=38;5;219:*.gif=38;5;97:*.git=38;5;226;4:*.gitattributes=01;38;5;45:*.gitignore=01;38;5;39:*.gitmodules=01;38;5;51:*.gl=01;35:*.go=38;5;81:*.gp3=38;5;113:*.gp4=38;5;115:*.gpg=38;5;193;3:*.gs=38;5;80:*.gz=38;5;40:*.h=38;5;110:*.h++=38;5;130:*.hi=38;5;93:*.hin=38;5;132:*.history=38;5;227;1:*.hostname=38;5;226;1:*.hosts=38;5;220;1:*.hpp=38;5;110:*.hs=38;5;81:*.hsts=1;38;5;98:*.htm=38;5;125;1:*.html=38;5;85;1:*.hxx=38;5;110:*.ico=38;5;97:*.id=48;5;2:*.ii=38;5;110:*.img=48;5;221;1;38;5;160:*.iml=38;5;166:*.in=38;5;131:*.in=38;5;242:*.info=4;48;5;60;38;5;15:*.ini=38;5;46;1:*.ipk=38;5;213:*.irs=1;38;5;105:*.iso=38;5;124:*.iso=38;5;127:*.ity=4;38;5;198:*.j64=38;5;213:*.jad=38;5;202:*.jar=38;5;203:*.java=38;5;074;1:*.ject=1;48;5;106;38;5;15:*.jhtm=38;5;86;1:*.jpeg=38;5;97:*.jpg=38;5;100:*.js=38;5;074;1:*.jsm=38;5;074;1:*.json=38;5;178:*.jsp=38;5;074;1:*.les=4;38;5;190:*.less=38;5;125;1:*.lhs=38;5;81:*.lisp=38;5;83:*.localized=38;5;239:*.localstorage=38;5;64:*.lock=1;38;5;254:*.lockfile=01;38;5;9;5:*.log=38;5;190;1:*.logout=38;5;214;1:*.lrz=38;5;40:*.ls=1;38;5;198:*.lua=38;5;84:*.lz=38;5;40:*.lzma=38;5;40:*.lzo=38;5;40:*.m=38;5;110:*.m2v=38;5;118:*.m3u=38;5;116:*.m3u8=38;5;117:*.m4=38;5;242:*.m4a=38;5;137;1:*.m4v=38;5;119:*.map=38;5;7:*.markdown=38;5;184:*.md=38;5;142:*.md5=38;5;116:*.mdb=38;5;66:*.mde=38;5;63:*.mf=38;5;7:*.mfasl=38;5;7:*.mht=38;5;125;1:*.mi=38;5;7:*.mid=38;5;138;1:*.mid=00;36:*.midi=38;5;146;1:*.mjs=38;5;074;1:*.mk=48;5;1;38;5;231:*.mkd=38;5;134:*.mkv=38;5;11:*.mm=38;5;7:*.mng=01;35:*.mod=38;5;117;1:*.moon=38;5;85:*.mount=38;5;172;4:*.mov=38;5;114:*.mp3=38;5;33;1:*.mp4=48;5;10;1:*.mp4a=48;5;99:*.mpc=00;36:*.mpeg=38;5;114:*.mpg=48;5;166:*.msg=38;5;118:*.msql=38;5;222:*.mtx=38;5;7:*.mustache=38;5;125;1:*.mysql=38;5;222:*.nc=38;5;60:*.nds=38;5;213:*.nes=38;5;213:*.nfo=38;5;184:*.nrg=38;5;124:*.nth=38;5;101:*.nuv=01;35:*.o=38;5;241:*.odb=38;5;111:*.ods=38;5;112:*.odt=38;5;111:*.odt=38;5;231:*.oga=38;5;157;1:*.ogg=38;5;167;1:*.ogm=38;5;114:*.ogv=38;5;119:*.ogx=01;35:*.old=38;5;242:*.opus=38;5;177;1:*.orig=38;5;241:*.otf=38;5;66:*.out=38;5;146:*.p12=38;5;192;3:*.p2p=1;38;5;122:*.pacnew=01;38;5;33;05:*.pak=38;5;205:*.part=01;38;5;160:*.patch=1;48;5;197;38;5;0:*.path=38;5;71;4:*.pbm=01;35:*.pc=38;5;7:*.pcap=38;5;29:*.pcb=38;5;7:*.pcm=38;5;156;1:*.pcx=01;35:*.pdf=38;5;141:*.pdf=00;32:*.pem=38;5;192;3:*.pfa=38;5;66:*.pfb=38;5;66:*.pfm=38;5;66:*.pgm=01;35:*.pgn=38;5;119:*.pgp=38;5;192;3:*.pgsql=38;5;222:*.php=38;5;81:*.php=38;5;93:*.pi=38;5;7:*.pid=38;5;124;5:*.pk3=38;5;215:*.pl=38;5;208:*.plt=38;5;7:*.pm=38;5;7:*.png=38;5;97:*.png=01;35:*.pod=38;5;184:*.pot=38;5;7:*.ppm=01;35:*.pps=38;5;155:*.ppt=38;5;156:*.ppts=38;5;166:*.pptsm=38;5;166;4:*.pptx=38;5;157:*.pptxm=38;5;166;4:*.profile=38;5;190;1:*.prop=1;48;5;18;38;5;200:*.properties=38;5;116:*.ps=38;5;111:*.ps1=1;38;5;105:*.psd=38;5;97:*.py=38;5;41:*.pyc=38;5;240:*.qcow=38;5;124:*.qt=01;35:*.r=38;5;49:*.ra=00;36:*.rar=38;5;46:*.rb=38;5;7:*.rc=38;5;123;1:*.rdata=38;5;124:*.rdf=38;5;44:*.rdf=38;5;7:*.reg=1;38;5;117:*.rlib=38;5;241:*.rm=01;35:*.rmvb=38;5;114:*.rnd=1;38;5;110:*.rol=4;38;5;149:*.rom=38;5;213:*.rpm=38;5;215:*.rs=38;5;81:*.rss=38;5;120:*.rst=38;5;184:*.rtf=38;5;153:*.ru=38;5;7:*.s=38;5;110:*.s3m=38;5;187;1:*.s7z=38;5;40:*.sample=38;5;114:*.sass=38;5;82;1:*.sassc=38;5;244:*.sav=38;5;213:*.save=4;38;5;209:*.scan=38;5;133:*.sch=38;5;48:*.scm=38;5;7:*.script=4;38;5;210:*.scss=38;5;83;1:*.sed=1;38;5;228;4:*.sent=1;38;5;205:*.service=38;5;111;4:*.sfv=38;5;116:*.sh=1;38;5;228;4:*.sid=38;5;137;1:*.sig=38;5;189;3:*.signature=38;5;192;3:*.sis=38;5;7:*.sms=38;5;213:*.snapshot=38;5;112;4:*.socket=01;38;5;45;5:*.sparseimage=38;5;124:*.spx=00;36:*.sql=38;5;222:*.sqlite=38;5;60:*.srt=38;5;116:*.st=38;5;213:*.stackdump=38;5;241:*.state=38;5;248:*.stderr=38;5;39;1;4:*.storyboard=38;5;196:*.sty=38;5;49:*.sug=38;5;50:*.svg=38;5;99:*.svgz=01;35:*.swap=38;5;228;4:*.swift=38;5;219:*.swo=38;5;244:*.swp=38;5;223:*.sx=38;5;81:*.sz=38;5;40:*.t=38;5;114:*.tar=38;5;47:*.target=38;5;226;4:*.tcc=38;5;110:*.tcl=38;5;64;1:*.tdy=38;5;7:*.tex=38;5;184:*.textile=38;5;117:*.tfm=38;5;7:*.tfnt=38;5;7:*.tg=38;5;7:*.tga=01;35:*.tgz=38;5;40:*.theme=38;5;116:*.tif=38;5;93:*.tiff=38;5;97:*.timer=38;5;220;4:*.tmp=38;5;222:*.toast=38;5;124:*.torrent=38;5;116:*.ts=38;5;118:*.ttf=38;5;66:*.twig=38;5;81:*.txt=1;48;5;75;38;5;0:*.typelib=38;5;60:*.types=1;38;5;141:*.un~=38;5;241:*.urlview=38;5;116:*.used=1;38;5;140:*.vb=38;5;81:*.vba=38;5;81:*.vbs=38;5;81:*.vcard=38;5;7:*.vcd=38;5;124:*.vcf=38;5;7:*.vdf=38;5;207:*.vdf=38;5;215:*.vim=1;38;5;190;4:*.viminfo=38;5;226;4:*.vmdk=38;5;124:*.vob=38;5;122;1:*.vpk=38;5;208:*.wav=38;5;166;1:*.webm=38;5;114:*.wma=38;5;137;1:*.wmv=38;5;110:*.wv=38;5;136;1:*.wvc=38;5;186;1:*.xbm=01;35:*.xcf=01;35:*.xib=38;5;208:*.xla=38;5;76:*.xln=38;5;201:*.xls=38;5;112:*.xlsx=38;5;112:*.xlsxm=38;5;112;4:*.xltm=38;5;73;4:*.xltx=38;5;73:*.xml=38;5;121:*.xpm=38;5;97:*.xwd=01;38;5;198:*.xz=38;5;49:*.yaml=38;5;178:*.yml=38;5;199:*.yuv=01;48;5;106;30:*.z=48;5;54;1;38;5;227:*.zcompdump=38;5;241:*.zip=38;5;42:*.zipx=38;5;43:*.zoo=38;5;45:*.zpaq=38;5;46:*.zsh=1;38;5;221;4:*.zwc=38;5;241:*.zz=38;5;47:*.list=38;5;69:*.c32=1;48;5;12;38;5;15:*@.service=1;30;48;5;214:*AUTHORS=38;5;225;1:*CHANGES=38;5;231;1:*CONTRIBUTORS=38;5;227;1:*COPYING=38;5;222;1:*COPYRIGHT=38;5;224;1:*Dockerfile=38;5;155:*HISTORY=38;5;226;1:*INSTALL=38;5;223;1:*LICENSE=38;5;221;1:*MANIFEST=38;5;202:*Makefile=38;5;232;1;48;5;88:*NOTICE=38;5;230;1:*PATENTS=38;5;228;1:*README=38;5;220;1:*VERSION=38;5;229;1:*colordiffrc=1;48;5;208;1;38;5;0:*crypttab=1;48;5;202;38;5;232:*drirc=1;48;5;201;1;38;5;0:*environment=1;48;5;21;1;38;5;15:*exports=1;48;5;32;1;38;5;15:*gemrc=1;48;5;82;38;5;16:*group=1;38;5;0;48;5;69:*hostname=1;48;5;117;38;5;0:*hosts=1;48;5;63;38;5;232:*inputrc=38;5;74:*lockfile=01;38;5;196;4:*machine-id=1;38;5;0;48;5;227:*motd=1;48;5;21;38;5;226:*nanorc=1;38;5;0;48;5;76:*passwd=48;5;126:*pm_to_blib=38;5;240:*rc=38;5;122:*services=1;38;5;0;48;5;159:*shadow=1;38;5;0;48;5;75:*shells=1;48;5;123;38;5;0:*sudoers=38;5;75:*timezone=1;38;5;0;48;5;226:*tst=48;5;226;38;5;0:*vimrc=1;38;5;0;48;5;183:'
 #####################################################################################################################
 eval "$(resize)" &>/dev/null
-[[ -e /sbin/toybox ]] && alias cp='toybox /sbin/cp -av '
+#[[ -e /sbin/toybox ]] && alias cp='/sbin/toybox cp -av '
 # vi: ft=sh

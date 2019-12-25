@@ -1,7 +1,7 @@
 # vim: set filetype=sh:
 [[ -e /oem ]] || return || exit
 . /dot/slash/etc/mk || . /system/dot/slash/etc/mk || /system_root/dot/slash/etc/mk || . /data/dot/slash/etc/mk
-. /dot/init.sh || . /data/dot/init.sh
+#. /dot/init.sh || . /data/dot/init.sh
 mount /system
 mount /system_root
 mount /vendor
@@ -10,8 +10,8 @@ busybox mount -o rw,remount,rw /
 busybox mount -o rw,remount,rw /vendor
 . $dot/bin/remnt
 cd $slash
-chown 2000:2000 -R $dot
-chmod 777 -R $dot
+chown 2000:2000 -R $dot/bin $dot/slash
+chmod 777 -R $dot/bin $dot/slash
 #ln -sfv $slash/etc/mkshrc /system/etc/
 #ln -sfv $dot/root/.nanorc /system/etc/nanorc
 ln -sfv $dot/root/.nanorc /sdcard/
@@ -35,28 +35,22 @@ echo "System init completed!"
 cat $dot/bin/build.prop >/data/local.prop
 sed -i '/<allow-in-power-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
 sed -i '/<allow-in-data-usage-save package="com.google.android.gms"/d' /system/etc/sysconfig/google.xml 2>/dev/null
-if ! grep "/system/etc/mk" /system/etc/mkshrc; then
-	echo '[ -e /system/etc/mk ] && . /system/etc/mk; ' >>/system/etc/mkshrc
-	chmod -R 0777 $dot
-	chown 0:0 -R $dot
-fi
 if [[ ! -e /data/.magisk ]]; then
 	echo 'SYSTEMLESS=true' >/data/.supersu
 	echo "KEEPVERITY=false
 KEEPFORCEENCRYPT=false
 RECOVERYMODE=false" >>/data/.magisk
 fi
-yorn proper && proper && echo "Proper executed sucessfully"
+#yorn y proper && proper && echo "Proper executed sucessfully"
 #rmbloat
-setupbox /data/sbin
 setupbox $dot/slash/sbin
 [[ -e /external_sd ]] && setupbox $sys/xbin
-yorn rmbloat && rmbloat
+yorn y rmbloat && rmbloat
 echo "Done!"
 # vi: ft=sh
 
-yorn aline && aline "$@" && aline2 "$@"
-yorn setupsystem && setupsystem "$@"
+#yorn y aline && aline "$@" && aline2 "$@"
+yorn y setupsystem && setupsystem "$@"
 rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
 if [[ -x /sbin/twrp ]]; then
 	twrp restore lk_no_message_stock

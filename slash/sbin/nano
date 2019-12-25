@@ -8,10 +8,10 @@ else
 fi
 
 clear
-for i in /data/dot/slash/sbin $slash/sbin /sbin /system/sbin /system/bin /system/xbin /su/bin /su/xbin; do
+for i in $slash/sbin $slash/sbin /sbin /system/sbin /system/bin /system/xbin /su/bin /su/xbin; do
 	[[ -e $i/nano.bin ]] && { bin=$i && break; }
 done
-for i in /data/dot/slash/etc  $slash/etc /sbin /system/etc /etc; do
+for i in $slash/etc $slash/etc /sbin /system/etc /etc; do
 	[[ -e $i/terminfo ]] && { etc=$i && break; }
 done
 unalias nano &>/dev/null

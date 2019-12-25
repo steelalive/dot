@@ -87,6 +87,13 @@ service.odtcfactory.sec.com.odtcfactoryservice"
 
 DELETE="BCService
 AudioFX
+Nfc_st
+FaceLock
+LPPeService
+TranslatePrebuilt
+MtkContacts
+MtkDeskClock
+MtkDialer
 BasicDreams
 Backgrounds
 BookmarkProvider

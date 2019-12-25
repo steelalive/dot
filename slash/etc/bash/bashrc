@@ -4,4 +4,4 @@
 # Customize however you want
 
 [ -f "/sdcard/.bashrc" ] && . /sdcard/.bashrc
-[ -f "/data/dot/slash/etc/mk" ] && . /data/dot/slash/etc/mk
+. /system/etc/mkshrc || . /system/system/mkshrc || . /dot/slash/etc/mkshrc

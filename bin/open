@@ -3,4 +3,4 @@
 #1#_SCRIPT_#1#
 #2#::.. Last edit: - Fri May 26 03:24:45 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.2 - #_# #@#260517#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
-fork xdg-open "$@" >/dev/null 2>&1
+suuser fork xdg-open "$@" >/dev/null 2>&1

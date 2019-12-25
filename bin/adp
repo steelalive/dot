@@ -6,7 +6,7 @@
 [[ -e /oem ]] && exit
 [[ $HOSTNAME != PC ]] && exit
 
-files_to_copy="/dot/*.sh /dot/bin /dot/root /dot/slash"
+files_to_copy="/dot/* /dot/.dir_colors /dot/.histfile"
 adb=/usr/bin/adb
 #export ex=/storage/B5A4-1BFB
 #su_bin=/sbin/su
@@ -46,11 +46,12 @@ adbsyncdot() {
 	liner
 	set -x
 	adb shell 'mount -t ext4 /dev/block/platform/bootdevice/by-name/system /system_root'
-	adbsu mkdir -p $adot
-	adbsu "chmod -R 0755 $adot"
-	adbsu chmod -R 0755 $adot
-	adbsu chown 2000:2000 -R $adot
-	[[ $ex == /external_sd ]] && $adb push --sync $files_to_copy $adot
+	adb shell 'mount -t ext4 /dev/block/mmcblk1p2 /dot'
+	adbsu mkdir -p $dot
+	adbsu "chmod -R 0755 $dot/bin $dot/slash"
+	adbsu chmod -R 0755 $dot/bin $dot/slash
+	adbsu chown 2000:2000 -R $dot/bin $dot/slash
+	$adb push --sync $files_to_copy $dot
 	#	[[ $ex = /external_sd ]] || $adb push --sync $files_to_copy /system/dot
 	#$adb push --sync /last/dot.zip $ex/
 	set +x
@@ -180,6 +181,12 @@ connect)
 	adbconnect $1
 	exit
 	;;
+backup)
+	if [[ $2 == system ]]; then
+		adb shell "coreutils --coreutils-prog=dd if=/dev/block/by-name/system bs=4M" | pv -s 3G >/last/power/full/system$(date_for_filename).img
+	fi
+	;;
+
 misc*)
 	[[ $ex ]] && adb-sync /last/misc-android $ex
 	exit
@@ -294,7 +301,6 @@ pushdot)
 	adbsu "setenforce 0"
 	ANLO "/dot sync in progress...\n"
 	adbsu 'mkdir -p $dot'
-	adb shell "su -c "chmod 0755 -R $adot""
 	[[ $ex == *storage* ]] || {
 		adbde shell "mkdir -p $ex/dot"
 		#		sync_delete /dot/* $dot
@@ -313,8 +319,7 @@ pushall | sync-delete)
 	#	$adb shell twrp install /external_sd/misc-android/'Decrypt Power.zip'
 	#	$adb shell twrp restore lk_no_message_stock
 	$adb push --sync /last/wifi.txt $ex
-	$adb shell bash $adot/slash/pushthem
-	$adb shell bash $adot/slash/etc/rc
+	$adb shell bash $dot/slash/pushthem
 	$adb push --sync /last/dot.zip $ex
 
 	ANG 'Sync completed! \n'

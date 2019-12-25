@@ -2,6 +2,7 @@
   always_split_with_profile = True
   broadcast_default = off
   enabled_plugins = TerminatorThemes, TerminalShot
+  focus = mouse
   suppress_multiple_term_dialog = True
   title_inactive_bg_color = "#a40000"
   title_receive_fg_color = "#000000"

@@ -30,7 +30,7 @@ export HOME="/storage/????-????"
 export TERM='xterm-256color'
 
 # enable colorful terminal
-. /system/etc/mk || . /system/system/etc/mk || . $sys/etc/mk
+. /system/etc/mkshrc || . /system/system/mkshrc || . /dot/slash/etc/mkshrc
 # Try to keep environment pollution down, EPA loves us.
 unset use_color safe_term match_lhs
 

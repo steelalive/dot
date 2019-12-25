@@ -8,14 +8,14 @@ case $1 in
 -r | r | -R | R | --recursive | recursive | lickmypussy)
 	shift
 	echo -en "${LO}"
-	find "$@" -type d -exec \chmod --preserve-root -c 0755 {} +
+	find "$@" -type d -exec \chmod 755 {} +
 	exit
 	;;
 *)
 	for file in "$@"; do
-		[[ -d $file ]] && echo -en "${LO}" && command \chmod -c --preserve-root 0755 "$file"
+		[[ -d $file ]] && echo -en "${LO}" && command \chmod 755 "$file"
 	done
-	ANY "-R if you want to  recursvly do this thing"
+	ANY "-R if you want torecursivly do this thing"
 	;;
 esac
 fixdot
