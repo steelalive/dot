@@ -5,24 +5,28 @@
 #3#::..#####################_/dot/bin/ad_#######################..::#3#
 [[ -e /oem ]] && exit
 [[ $HOSTNAME != PC ]] && exit
+if ! $adb devices | grep 'device$' &>/dev/null; then
+	[[ $1 ]] || exit
+fi
+
 export dot=/dot
 export files_to_copy="/dot/* /dot/.dir_colors /dot/.histfile"
 adb=/usr/bin/adb
 #export ex=/storage/B5A4-1BFB
 #su_bin=/sbin/su
-tmp_serial=/tmp/adbserial
+export tmp_serial=/tmp/adbserial
 [[ -e $tmp_serial ]] || touch /tmp/adbserial
-ADB_KEYS_LOCATION=/last/misc-android/adb_keys
+export ADB_KEYS_LOCATION=/last/misc-android/adb_keys
 export ADB_KEYS_LOCATION tmp_serial su_bin ex adb files_to_copy
 #eval $(<$tmp_serial)
 #if grep 5555 /tmp/adbserial; then
 #	adbconnect
 #fi
-if ! $adb devices | grep 'device$' &>/dev/null; then
-	[[ $1 ]] || exit
-fi
 #$adb root && $adb remount
 function lookForAdbDevice() {
+	echo "Requesting root..."
+	$adb root && $adb remount
+
 	echo "Waiting for device..."
 	$adb wait-for-any
 

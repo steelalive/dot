@@ -5,6 +5,6 @@ git init
 git add * .dir_colors
 git commit -am "Periodic update from ${HOSTNAME}:$(date)"
 git remote add origin git@github.com:steelalive/dot.git
-git push -u origin master
+git push --force -u origin master
 git log --graph --oneline --all --decorate --pretty="%C(bold)%ad%C(reset) %C(yellow)%h%C(reset) %an %C(blue)%s" --date=format:"%y/%m/%d"
 git status
