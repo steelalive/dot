@@ -14,11 +14,13 @@ mount -o remount,rw /vendor
 mount -o remount,rw /nvdata
 
 for i in \
-	$(find $sys -name default.prop) \
-	$(find $sys -name prop.default) \
-	$(find $sys -name build.prop) \
+	$(find $sysroot -type f -name default.prop) \
+	$(find $sysroot -type f -name prop.default) \
+	$(find $sysroot -type f -name build.prop) \
 	build.prop default.prop prop.default "$@"; do
+	#Check we can read and \$i is not a symlink because I supect sed -i ruin my symlinks.
 	[[ -r $i ]] || continue
+	[[ -L $i ]] && continue
 	sed -e "s/^security.perf_harden=1$/security.perf_harden=0/" \
 		-e "s/^ro.allow.mock.location=0$/ro.allow.mock.location=1/" \
 		-e "s/^ro.debuggable=0$/ro.debuggable=1/" \
@@ -27,7 +29,11 @@ for i in \
 		-e "s/^ro.product.cpu.abilist64=.*/ro.product.cpu.abilist64=arm64-v8a/" \
 		-e "s/^ro.product.cpu.abilist=armeabi-v7a,armeabi$/ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi/" \
 		-e "s/^ro.build.type=user$/ro.build.type=userdebug/" \
+		-e "s|ro.fota.platform=.*|ro.fota.platform=MTK6765_9.0|" \
+		-e "s|ro.fota.oem=.*|ro.fota.oem=Umidigi6765_9.0|" \
 		-e "s|^ro.build.tags=release-keys$|ro.build.tags=test-keys|" \
+		-e "s|ro.build.user=.*|ro.build.user=FrancisDemers|" \
+		-e "s|ro.build.host=.*|ro.build.host=FrancisDemers|" \
 		-e "s/=MM-dd-yyyy$/dd-MM-yyyy/" \
 		-e "s/=en-US$/=en-CA/" \
 		-e "s/^ro.product.locale=.*/ro.product.locale=en-CA/" \

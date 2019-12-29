@@ -5,13 +5,15 @@
 # vi: set noro: ft=sh
 #3#::..#####################_/dot/bin/unzipl_#######################..::#3#
 unzipl() {
+	dir=/ext/unzip
+	mkdir -p "$dir"
 	[[ "$1" ]] && fname="$1"
 	[[ "$1" ]] || fname="$1"
 	unzip -l "$1"
 	fname="$(sed "s|.zip||" <<<"$fname")"
-	echo "Extract to /prog/unzip/$fname"
+	echo "Extract to $dir/$fname"
 	if yorn y; then
-		unzip "$@" -d /prog/unzip/"$fname"
+		unzip "$@" -d "${dir}/$fname"
 	else
 		read -p "Enter path
     result:   path/$fname

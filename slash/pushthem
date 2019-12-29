@@ -2,16 +2,16 @@
 [[ -e /oem ]] || return || exit
 . /dot/slash/etc/mk || . /system/dot/slash/etc/mk || /system_root/dot/slash/etc/mk || . /data/dot/slash/etc/mk
 #. /dot/init.sh || . /data/dot/init.sh
-mount /system
-mount /system_root
-mount /vendor
+twrp mount system_root || twrp mount system
+twrp mount data
+twrp mount vendor
 busybox mount -o rw,remount,rw /system
 busybox mount -o rw,remount,rw /
 busybox mount -o rw,remount,rw /vendor
 . $dot/bin/remnt
 cd $slash
-chown 2000:2000 -R $dot/bin $dot/slash
-chmod 777 -R $dot/bin $dot/slash
+chown 2000:2000 -R $dot/bin
+chmod 777 -R $dot/bin
 #ln -sfv $slash/etc/mkshrc /system/etc/
 #ln -sfv $dot/root/.nanorc /system/etc/nanorc
 ln -sfv $dot/root/.nanorc /sdcard/

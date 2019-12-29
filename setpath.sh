@@ -3,7 +3,7 @@
 #2#::.. Last edit: - Thu May 31 03:10:37 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.6 - #_# #@#310518#@# #2#
 #3#::..#####################_/dot/bin/setpath.sh_#######################..::#3#
 dot=${dot:-/dot}
-export PATH=$PATH:$dot/bin:$dot/bin/final:$dot
+export PATH="$PATH:$dot/bin:$dot/bin/final:$dot"
 unset allpath
 hash consolidate-path &>/dev/null || consolidate-path() {
 	result=":"
@@ -41,31 +41,6 @@ $O/debug/host/linux-x86/bin
 $O/host/linux-x86/bin
 /ext/opt/prebuilt/linux-x86_64/bin"
 fi
-if [[ $1 == android ]] || [[ -e /oem ]]; then
-	allpath+="/data/sbin
-/sbin/supersu/xbin
-/sbin/supersu/bin
-/data/adb/su/xbin
-/data/adb/su/bin
-/su/xbin
-/su/bin
-/su/sbin
-/supersu
-/su
-/sbin
-/system/xbin
-/system/bin
-/vendor/xbin
-/vendor/bin
-/data/sbin
-$slash/sbin
-$slash/etc
-$sys/bin
-$sys/xbin
-/system/sbin
-/data/data/com.termux/files/usr/bin
-/data/data/com.termux/files/usr/bin/applets"
-fi
 allpath+="/usr/bin
 /usr/sbin
 /bin
@@ -100,12 +75,23 @@ $(printf "%s\n" /ext/opt/build-tools/* | tail -n1)
 $dot/bin
 $dot/bin/final
 $dot"
-#$(printf "%s\n" /ext/opt/**/bin 2>/dev/null)
-#path_file=/tmp/path.tmp
-#if [[ ! -e $path_file ]]; then
-#	printf "%s\n" /usr/lib/cw /usr/bin /usr/local/bin /usr/**/bin /home/**/bin /root/**/bin /opt/**/bin /sdk/**/bin /prog/**/bin /dot/**/bin /dot/bin/final /dot/slash/sbin | grep -v -e i686 -v -e mips -v -e lib -v -e twrp -v -e magisk >$path_file
-#fi
-#allpath="$(<$path_file)"
+if [[ $1 == android ]] || [[ -e /oem ]]; then
+	allpath="/sbin
+/system/xbin
+/system/bin
+/vendor/xbin
+/vendor/bin
+/data/sbin
+$slash/sbin
+$slash/etc
+$sys/bin
+$sys/xbin
+$slash/sbin
+$dot/bin
+$dot/bin/final
+$dot"
+fi
+
 future_path=$(for tmp_path in $(echo -e ${allpath//:/\\n}); do
 	[[ -d $tmp_path ]] || continue
 	echo -n "$tmp_path:"

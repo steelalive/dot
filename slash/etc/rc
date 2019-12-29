@@ -32,19 +32,21 @@ export ex="/mnt/media_rw/????-????"
 [[ -e $ex ]] || ex="/storage/????-????"
 [[ -e $ex ]] || ex="/external_sd"
 [[ -e $ex ]] || ex=/sdcard
-export termux="/data/data/com.termux/files/usr"
-export termuxbin="/data/data/com.termux/files/usr/bin"
-[[ -e $termux ]] || unset termux termuxbin
+export termux="$dot/termux"
+export HOME=/root
+export LD_LIBRARY_PATH="/sbin:$sys/lib64:$sys/lib:$termux/usr/lib:$termux/usr/bin/applets"
+export PATH="$termux/usr/bin:$termux/usr/bin/applets:$PATH"
 export LANG='en_US.UTF-8'
+export SHELL="$termux/usr/bin/bash"
 export pc=192.168.0.20 s4=192.168.0.8 tv=192.168.0.5
-export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
+export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$termux/usr/bin:$termux/usr/bin/applets:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
 result=":"
 IFS=:
 for p in $PATH; do
 	[[ $result == *:"$p":* ]] || result="${result}${p}:"
 done
 result="${result#:}" PATH="${result%:}"
-unset IFS
+unset IFS result p
 if shopt &>/dev/null; then
 	for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
 	for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
@@ -81,7 +83,7 @@ echo /init.* | grep mt6765 &>/dev/null && export HOSTNAME=POWER
 [[ -x $BASH ]] || BASH=$(command -v bash)
 [[ -x $BASH ]] || [[ -x "$lux/usr/bin/bash" ]] && export BASH=$lux/usr/bin/bash
 
-export LD_LIBRARY_PATH=/sbin:${sys}/lib64:${termux}/lib64
+[[ -e $termux ]] && export LD_LIBRARY_PATH=/sbin:${sys}/lib64:${termux}/lib64
 mkdir -p /tmp
 [[ -d /data/local/tmp ]] && TMP=/data/local/tmp
 [[ -d /tmp ]] && TMP=/tmp
@@ -120,8 +122,8 @@ unset lk
 alias lk="command \dir --group-directories-first --color=auto $LS_OPTIONS"
 is_recovery && ls() { /sbin/ls $LS_OPTIONS "$@"; }
 
-nano=$termuxbin/nano
-if [[ -x $nano ]] || [[ ! /external_sd ]]; then
+nano=$termux/usr/bin/nano
+if [[ -x $nano ]] || [[ ! -e /external_sd ]]; then
 	alias nano="$nano "
 	export EDITOR="$nano " VISUAL="$nano "
 fi
@@ -132,32 +134,15 @@ test -x /usr/bin/bash || {
 	rm /bin
 	mkdir -p /bin /usr/bin /system/sbin
 	[[ -x /bin/bash ]] || cp -av $slash/sbin/bash /bin/bash
-	test -f /root/histfile || {
+	test -f /root/.bashrc || {
 		mkdir -p /root
 		chmod 755 /root
-		mount -o rbind $dot/root /root
-	}
-	test -f /dot/init.sh || {
-		mkdir -p /dot
-		mount -o rbind $dot /dot
+		ln -s $dot/root/.???* /root/ 2>/dev/null
+		ln -s $dot/root/folders/.???* /root/ 2>/dev/null
 	}
 }
 #####_SETUP RC FILES_#####
 
-init_incantation='
-########## -INIT-  ##########
-busybox mount -o remount,rw / 2>/dev/null
-busybox mount -o remount,rw /system 2>/dev/null
-busybox mount -o remount,rw /system_root 2>/dev/null
-$slash/sbin/remnt 2>/dev/null
-ln -s $dot /
-ln -s $dot/slash/etc/mk / 2>/dev/null
-ln -s $dot/slash/etc/rc / 2>/dev/null
-ln -s $dot/slash / 2>/dev/null
-chmod 777 -R $dot
-########## _INIT_ ###########
-'
-eval $init_incantation
 pminstall() {
 	[[ $1 ]] || select apk in ./*.apk; do yorn y || break; done
 	for apk; do
@@ -167,19 +152,24 @@ pminstall() {
 }
 export -f pminstall
 cmdcompile() {
-	cmd package compile -a -m everything
 	if command -v fstrim; then
 		fstrim /system
 		fstrim /data
 		fstrim /cache
 		fstrim /vendor
 	fi
+	cmd package compile -a -m everything
 }
 export -f cmdcompile
 
 2sysEchoApp() {
-	for keyword in "$@"; do
-		datapath="$(printf "%s\n" /data/app/* | grep "$keyword")"
+	[[ $1 ]] || {
+		echo '$1 is the path of the folder for the app you want to fuzzyecho. $2 is a unique part of app folder.'
+		echo "Ex.: $0 /data/app spotify will return /data/app/spotifyomfsioemfoiesfnsoinefgoin35rm25r235=====. Easy."
+		return 1
+	}
+	for keyword in $2; do
+		datapath="$(printf "%s\n" $1/* | grep "$keyword")"
 		echo "$datapath"
 	done
 }
@@ -191,14 +181,15 @@ export -f 2sysEchoApp
 		return
 	}
 	sysname=$1
-	for i in $(2sysEchoApp $2); do
+	for i in $(2sysEchoApp /data/app $2); do
 		path="$(find $sys/priv-app -type d -name "*$sysname*" | head -n1)"
 		[[ -e $path ]] || path="$(find $sys/app -type d -name "*$sysname*" | head -n1)"
 		[[ -e $path ]] || continue
 		[[ -e $i ]] || continue
-		rm -rf $i/oat $path/oat
-		mv -v $i/base.apk $path/${sysname}.apk
-		mv -v $i/* $path/
+		rm -rf "$i"/oat "$path/oat"
+		mv -v "$i/base.apk" "$path/${sysname}.apk"
+		mv -v "$i"/* $path/
+		adperm "$path/${sysname}.apk"
 		rm -rfv "$i"
 		ls /data/app
 	done
@@ -268,8 +259,7 @@ setupsystem() {
 		(
 			cd /external_sd && {
 				mkdir -p /sdcard/TWRP /data/adb/modules
-				#		coreutils --coreutils-prog=cp -au /sdcard ./ || cp -av sdcard ./
-				coreutils --coreutils-prog=cp -ru ./sdcard /
+				coreutils --coreutils-prog=cp -ru /external_sd/sdcard /
 				mount /system
 				mount /system_root
 				mount /vendor
@@ -279,27 +269,66 @@ setupsystem() {
 				coreutils --coreutils-prog=cp -avu $dot/system $sysroot/
 				coreutils --coreutils-prog=cp -avu $dot/vendor /
 				coreutils --coreutils-prog=cp -avu $dot/slash/sbin/* $sys/xbin/
-				coreutils --coreutils-prog=mv /sdcard/Download/* /external_sd/Download/
-				coreutils --coreutils-prog=mv /external_sd/Android/data/com.android.chrome/files/Download/* /external_sd/Download/
+				coreutils --coreutils-prog=mv -v /sdcard/Download/* /external_sd/Download/
+				coreutils --coreutils-prog=mv -v /external_sd/Android/data/com.android.chrome/files/Download/* /external_sd/Download/
 				coreutils --coreutils-prog=cp -avu /sdcard /external_sd/
-				clear
-				cp -av misc-android/config/Open-GApps /sdcard/ 2>/dev/null
-				ln -sv $slash/sbin/bash /data/
-				ln -sv $slash/etc/rc /data/
-				ln -sv $slash/etc/mk /data/
-				ln -sv $slash/pushthem /data/pu
+				cu cp -avu /data/data/com.termux/files/* $dot/termux/
+				cp -av /external_sd/misc-android/config/Open-GApps /sdcard/ 2>/dev/null
+				ln -svf $slash/sbin/bash /data/
+				ln -svf $slash/etc/rc /data/
+				ln -svf $slash/etc/mk /data/
+				ln -svf $slash/pushthem /data/pu
 				2sys Phonesky com.android.vending-
 				2sys Chrome chrome-
 				2sys CalendarGoogle .calendar-
 				2sys Messages apps.messaging
 				2sys Street android.street
 				2sys GmsCore gms
-
-				[[ -e $(2sysEchoApp contacts 2>/dev/null) ]] && mv $(2sysEchoApp contacts 2>/dev/null) $sys/app/Contacts
+				2sysnew /data/app contacts app
+				echo "Clear?"
+				yorn && clear
 			}
 		)
 	fi
 }
+2sysnew() {
+	ThatDudeNeedMyHelp() {
+		echo '$1 is the parent folder of the app you want to'
+		echo "move in $sys/\$2/\$3 or $sys/\$2/\$1. When \$2 is empty, it will default to priv-app"
+		echo "ex.: \"$0 /data/app app\" will move 'net.sourceforge.opencamera-D8EQDInzFeMW7f6dUayWkw==' in $sys/app."
+		echo "...and set what I thinjk is the right permissions in /etc/permissions folder"
+		return 1
+	}
+	apptomove=$(2sysEchoApp "$1" "$2" "$3" 2>/dev/null)
+	targetfolder="$3"
+	[[ -f $apptomove ]] || {
+		ThatDudeNeedMyHelp
+		return
+	}
+	[[ $3 ]] || targetfolder=priv-app
+
+	case $targetfolder in
+	app | priv-app)
+		[[ -e $apptomove ]] && mv -v "$apptomove" "$sys/$targetfolder/$apptomove"
+		for i in $sys/$targetfolder/$apptomove/*.apk; do
+			adperm "$i"
+		done
+		;;
+	*)
+		ThatDudeNeedMyHelp
+		;;
+	esac
+
+}
+export -f 2sysnew
+cu() {
+	prog=$1
+	shift
+
+	coreutils --coreutils-prog="$prog" "$@"
+}
+export -f cu
+
 sysroot() {
 	echo "input any word to mount root on /system, no word=/system_root..."
 	mount $system /system_root

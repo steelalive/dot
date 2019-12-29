@@ -120,6 +120,7 @@ echo
 #fi
 if [[ $basename =~ "fstab" ]]; then
 	is_in_path column && column -t "$readl" >/tmp/fstab || exit
+	rmspaceinfile /tmp/fstab
 	is_empty /tmp/fstab || exit
 	cat /tmp/fstab >"$readl" || exit
 	rm /tmp/fstab

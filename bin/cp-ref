@@ -7,10 +7,10 @@ ref="$1"
 [[ -e /system ]] && system=/system
 [[ $1 == etc ]] && [[ -e /etc/clatd.conf ]] && ref=/etc/clatd.conf
 [[ $1 == bin ]] && ref=${system}/bin/sh
-
+is_in_path coreutils && cu=cu
 shift
 num_args=$#
 array=("${@}")
 last_arg="${array[$# - 1]}"
-chmod --changes --reference="$ref" "$@" 2>/dev/null
-chown --changes --reference="$ref" "$@" 2>/dev/null
+$cu chmod --changes --reference="$ref" "$@" 2>/dev/null
+$cu chown --changes --reference="$ref" "$@" 2>/dev/null

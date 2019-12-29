@@ -6,12 +6,14 @@
 #3#::..#####################_/dot/bin/recovery_miracle_#######################..::#3#
 aik=/ext/AIK-Linux
 slash=/dot/slash
+sbin=/last/BACKUP/sbin
 recovery_miracle() {
 	cd $aik/ramdisk/sbin || return 2
+	[[ $1 ]] && cd $1
 	rm -v mk rc bash nano.bin nano ssl_helper
 	cp -av $slash/etc/mk .
 	cp -av $slash/etc/rc .
-	cp -av $slash/sbin/bash .
+	cp -av /last/misc-android/bash .
 	cp -av $slash/etc/terminfo .
 	#	cp -av $slash/etc/mk ../etc/mkshrc
 	#	cp -av $slash/etc/mk ../etc/rc
@@ -28,18 +30,49 @@ recovery_miracle() {
 	mv "$(basename $bbox)" ./busybox
 	cp -av "$toybox" ./toybox
 	cp -av /last/misc-android/ssl_helper-arm ssl_helper
-	cp -av $slash/sbin/nano.bin .
-	cp -av $slash/sbin/nano .
-	cp -av $slash/sbin/coreutils .
-	for exe in $(</ext/AIK-Linux/bb_noselist); do
+	cp -av /last/BACKY/sbin/nano.bin .
+	cp -av $sbin/nano .
+	cp -av $sbin/coreutils .
+	cp -av $sbin/libpcre.so .
+
+	for exe in $(</ext/AIK-Linux/bb_list); do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv busybox "$exe"
 	done
 	for exe in $(</ext/AIK-Linux/toylist); do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv toybox "$exe"
 	done
-	for exe in b2sum base32 basenc cp csplit dir dircolors factor fold ginstall join link mv nproc numfmt pathchk pinky pr ptx shred shuf sum tsort unexpand unlink users vdir who; do
-		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv coreutils "$exe"
+	for exe in "b2sum
+base32
+basenc
+cp
+csplit
+dir
+dircolors
+factor
+fold
+ginstall
+join
+link
+mv
+nproc
+numfmt
+pathchk
+pinky
+pr
+ptx
+shred
+shuf
+sum
+tsort
+unexpand
+unlink
+users
+vdir
+who"; do
+		[[ -L $exe ]] || [[ ! -f $exe ]] && echo ln -sv coreutils "$exe"
+		ln -svf coreutils "$exe"
 	done
+
 	cd $aik/ramdisk/sbin
 	[[ -e su ]] && echo rm su && rm -v su sulogin
 	#Hard link warning beacause of ../ and I don't care enough to look online so I expect YOu to look and correct me if i'm not wrong at this time of the day if it work.
@@ -64,7 +97,7 @@ recovery_miracle() {
 	#		ln -sv system_root/system system
 	#	)
 	echo mt-6765 >$aik/split_img/recovery.img-board
-	$aik/repackimg.sh
+	[[ $1 ]] || $aik/repackimg.sh
 }
 
 recovery_miracle "$@"

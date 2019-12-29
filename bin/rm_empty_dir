@@ -18,10 +18,12 @@ rm_dir() {
 		if rmdir "$fullpath" &>/dev/null; then
 			ANG "Directory ${C}$fullpath ${G}is empty, do you want to remove it?\n"
 			ANW "If you choose no, a file called .placeholder will be created inside the folder\n"
-			if yornq y; then
+			if yorn y; then
 				ANRED "REMOVED ${C}$fullpath ${RED}because it was EMPTY!!!\\n"
 			else
+				mkdir -p "$fullpath"
 				touch "$fullpath/.placeholder"
+				ANY "Created ${C}"$fullpath/.placeholder" ${Y}so this piece of code stop annoying us.\n"
 			fi
 		fi
 	done

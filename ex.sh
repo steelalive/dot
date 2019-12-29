@@ -210,7 +210,7 @@ LESSOPEN="| $(command -v highlight) %s --quit-if-one-screen --out-format truecol
 LOGDEST="$BUILDDIR"
 LS_COLLATE='C'
 LD_LIBRARY_PATH='/usr/lib:/usr/local/lib'
-[[ $HOSTNAME == PC ]] && LS_OPTIONS=' -l --color=auto --quoting-style=shell-escape --ignore-backups --group-directories-first --file-type --almost-all --human-readable -L'
+LS_OPTIONS=' -l --color=auto --quoting-style=shell-escape --ignore-backups --group-directories-first --file-type --almost-all --human-readable -L'
 MALLOC_CHECK_=3
 MALLOC_PERTURB_=$((RANDOM % 255 + 1))
 MANPAGER='less'

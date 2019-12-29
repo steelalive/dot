@@ -8,6 +8,7 @@
 #If you love havie na lot of tails:
 #is_in_path tail && alias tail=multitail
 #I won't man every command in linux, go to sleep, have some cocaine and pretend it impress girls when you(I) fuck them softly.
+LS_OPTIONS=' -l --color=auto --quoting-style=shell-escape --ignore-backups --group-directories-first --file-type --almost-all --human-readable -L'
 alias -- -='builtin \cd - && lk '
 alias ......='builtin \cd ../../../../.. && lk '
 alias .....='builtin \cd ../../../.. && lk '
@@ -23,7 +24,7 @@ alias rmv="command \rm -rfv --one-file-system --preserve-root --dir "
 alias cpv="command \cp -av --dereference --strip-trailing-slashes --update --context "
 alias cdpkg='command \cd $AURDEST '
 alias cdp="builtin \cd -P "
-alias cpdot="cp -av $dot/* $dot/.histfile $dot/.dir_colors ./"
+alias cpdot="cp -av $dot/* $dot/.histfile $dot/.dir_colors "
 alias e='. $dot/bin/e '
 alias mvv='mv -v '
 alias df='command \df -h '
@@ -34,7 +35,6 @@ alias mvv='command \mv -v '
 alias rmrf='command \rm -rvf --preserve-root --one-file-system '
 alias ncdu='command \ncdu --color dark '
 alias fce='command fc -e nano '
-alias fastboot='/ext/opt/platform-tools/fastboot --disable-verity --disable-verification --verbose '
 alias hd='command \od -Ax -tx1z -v '
 alias gitclone=". $dot/bin/gitclone "
 alias git='command \git --no-pager '
@@ -53,7 +53,6 @@ alias more='less '
 alias most='less '
 alias pacr='command pacman -Rcsn '
 alias pacs='command pacman -S --needed --noconfirm '
-alias reboot='command \systemctl \reboot '
 alias suedit='SUDO_EDITOR=kate sudoedit '
 alias tree='tree --dirsfirst -pshF -C '
 alias udevreload='command \udevadm control --reload-rules; systemctl restart systemd-udevd.service;udevadm control --reload '

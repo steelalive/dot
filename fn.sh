@@ -234,7 +234,3 @@ err() {
 	printf "${W}${0} : $RED""$*""\\n" >&2
 	return $EXIT
 }
-
-date_for_filename() {
-	date '+%F_%Hh%M'
-}

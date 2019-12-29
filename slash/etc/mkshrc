@@ -7,16 +7,25 @@
 # [[ -e /sbin/terminfo ]] && TERMINFO=/sbin/terminfo
 
 rwroot() {
-	[[ -e /external_sd ]] && mount -t ext4 /dev/block/mmcblk0p31 /system_root
-	mount -o remount,rw /
-	mount -o remount,rw /system
-	mount -o remount,rw /system_root
+	if [[ -e /external_sd ]]; then
+		twrp mount system_root || twrp mount system
+		twrp mount vendor
+		twrp mount data
+	fi
+	#mount -t ext4 /dev/block/mmcblk0p31 /system_root
+	(
+		mount -o remount,rw /
+		mount -o remount,rw /system
+		mount -o remount,rw /system_root
+		mount -o remount,rw /vendor
+	) &>/dev/null
 }
 mountdot() {
 	mountpoint /dot 2>/dev/null && return
-	rwroot
+	#	rwroot
 	rm /dot 2>/dev/null
 	mkdir -p /dot
+	e2fsck -f /dev/block/mmcblk1p2
 	mount -t ext4 /dev/block/mmcblk1p2 /dot
 }
 mountdot
@@ -38,10 +47,10 @@ if test -f "$bashrc"; then
 fi
 
 ########## _INIT_ ###########
-. /dot/slash/etc/mk || ./data/dot/slash/etc/mk || . mk || . /sbin/mk || . /etc/mk || . "$(find / -name mk | head -n1)"
 for p in ~/.bin /sbin /data/sbin /data/dot/slash/sbin /system/system/bin /system/system/xbin /system/bin /system/xbin; do
 	[[ -d $p/. ]] || continue
 	[[ :$PATH: == *:$p:* ]] || PATH=$p:$PATH
 done
 
 unset p
+. /dot/slash/etc/mk || ./data/dot/slash/etc/mk || . mk || . /sbin/mk || . /etc/mk || . "$(find / -name mk | head -n1)"

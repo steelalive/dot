@@ -91,9 +91,6 @@ Nfc_st
 FaceLock
 LPPeService
 TranslatePrebuilt
-MtkContacts
-MtkDeskClock
-MtkDialer
 BasicDreams
 Backgrounds
 BookmarkProvider
@@ -102,7 +99,6 @@ BuiltInPrintService
 CatchFavorites_Zero
 Crane
 DLNA
-DownloadProviderUi
 EasterEgg
 Eleven
 Email
@@ -171,7 +167,7 @@ MDMLSample"
 
 for dir in '/' /data/app /system/app /system/priv-app $PWD/ $PWD/data/app $PWD/system/app $PWD/system/priv-app $PWD/app $PWD/priv-app /system/system/app /system/system/priv-app; do
 	cd "$dir"
-	for crap in $DELETE $PMU; do
+	for crap in $DELETE; do
 		full="$(echo ${dir}/*${crap}*)"
 		[[ -e $full ]] && rm -rf "${full}" && ANRED "rm -rf ${full} \\nUNINSTALLED1 ${Y}$full${R} ...\n"
 		[[ -e "${dir}/${crap}" ]] && rm -rf "${dir}/${crap}" && ANRED "UNINSTALLED2 rm -rf ${Y}${dir}/${crap}${R} ...\n"

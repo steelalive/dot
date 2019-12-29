@@ -5,8 +5,8 @@
 #3#::..#####################_/dot/bin/ad_#######################..::#3#
 [[ -e /oem ]] && exit
 [[ $HOSTNAME != PC ]] && exit
-
-files_to_copy="/dot/* /dot/.dir_colors /dot/.histfile"
+export dot=/dot
+export files_to_copy="/dot/* /dot/.dir_colors /dot/.histfile"
 adb=/usr/bin/adb
 #export ex=/storage/B5A4-1BFB
 #su_bin=/sbin/su
@@ -22,6 +22,14 @@ if ! $adb devices | grep 'device$' &>/dev/null; then
 	[[ $1 ]] || exit
 fi
 #$adb root && $adb remount
+function lookForAdbDevice() {
+	echo "Waiting for device..."
+	$adb wait-for-any
+
+	echo "Devices detected:"
+	$adb devices
+}
+
 sutest() {
 	$adb shell "su -c ls $1 &>/dev/null && echo $1" | grep $1 &>/dev/null
 
@@ -45,15 +53,16 @@ export -f adbconnect
 adbsyncdot() {
 	liner
 	set -x
-	adb shell 'mount -t ext4 /dev/block/platform/bootdevice/by-name/system /system_root'
-	adb shell 'mount -t ext4 /dev/block/mmcblk1p2 /dot'
+	#	adb shell 'mount -t ext4 /dev/block/platform/bootdevice/by-name/system /system_root'
 	adbsu mkdir -p $dot
-	adbsu "chmod -R 0755 $dot/bin $dot/slash"
-	adbsu chmod -R 0755 $dot/bin $dot/slash
-	adbsu chown 2000:2000 -R $dot/bin $dot/slash
+	adbsu "e2fsck /dev/block/mmcblk1p2"
+	adbsu 'mount -t ext4 /dev/block/mmcblk1p2 /dot'
+	adbsu "chmod -R 0755 $dot/bin"
+	adbsu chown 2000:2000 -R $dot/bin
 	$adb push --sync $files_to_copy $dot
 	#	[[ $ex = /external_sd ]] || $adb push --sync $files_to_copy /system/dot
 	#$adb push --sync /last/dot.zip $ex/
+	adbsu chmod -R 0755 $dot/bin
 	set +x
 	ANG 'Sync completed!\\n'
 	liner
@@ -166,7 +175,7 @@ g4u* | g4_* | usb)
 	exit
 	;;
 esac
-
+lookForAdbDevice
 export exsd=$ex exdo="$ex/Download" ex
 #[[ $ex == /sdcard ]] && ANBORANGE '$ex is /sdcard. This is a problem?'
 case $1 in
@@ -182,9 +191,11 @@ connect)
 	exit
 	;;
 backup)
-	if [[ $2 == system ]]; then
-		adb shell "coreutils --coreutils-prog=dd if=/dev/block/by-name/system bs=4M" | pv -s 3G >/last/power/full/system$(date_for_filename).img
-	fi
+	select partition in $(adb shell "cd /dev/block/by-name/; echo *"); do
+		echo $partition
+		break
+	done
+	adb shell "coreutils --coreutils-prog=dd if=/dev/block/by-name/$partition bs=4M" | pv -s 3G >/last/power/full/$partition$(date_for_filename).img
 	;;
 
 misc*)
@@ -195,6 +206,29 @@ ex)
 	echo $ex
 	exit
 	;;
+fixpart)
+	adb shell 'fixpart() {
+        for i in $(/sbin/busybox blkid | cut -d: -f1); do
+                echo "##############################---${i}---#######################################"
+                mountpoint $i && umount "$i" 2>/dev/null || echo "UNABLE TO UMOUNT $I WITHOUT FORCING THINGS. I RESPECT WOMAN, JUST SO I CAN AJUST MYSELF TO MY FEMINNE SIDE AND BECAUSE I LOATHE THE PROXIMITY OF THAT FEMALE FRIEND WHO SPREAD HER LEGS ON A SUNDAY AND REFUSES TWO HOURS OF MANUPILITAIVE PLAYFUL ADVANCES JUST TO GET A HANDJOB THAT WOULD HAVE EVOLVED, FINALLY. i WOULD MANIPUALTE MY WAY INTOR SEX AND MY FATHER AND MOTHER WOULD CLAP THEIR HANDS AND SAY HELLO, HERE IS YOUR ALLOCATION FOR THE WEEK, BYE."
+                /sbin/e2fsck -fp "$i" 2>/dev/null
+                [[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
+                /sbin/e2fsck -f "$i"
+                resize2fs "$i"
+                /sbin/tune2fs -c 30 -m 1 -o journal_data_writeback,nobarrier "$i"
+                echo "##############################---${i}---#######################################"
+        done
+        fat=/dev/block/mmcblk1p1
+        umount $fat 2>/dev/null
+        fsck.exfat $fat 2>/dev/null
+        fsck.fat $fat 2>/dev/null
+        fsck_msdos $fat 2>/dev/null
+        fsck.vfat $fat 2>/dev/null
+
+}; fixpart
+'
+	;;
+
 partback*)
 	shift
 	ad_backup() {
@@ -231,7 +265,7 @@ var)
 i | install | /data/app)
 	shift
 	for i; do
-		adbde install -g "$i"
+		$adb install -g "$i"
 	done
 	exit
 	;;
@@ -243,13 +277,14 @@ pullapk | apkpull)
 			test -z $real_name && real_name="$(aapt2 dump badging "$apk" | grep -m1 -o "name='[a-z.]*' " | sed -e "s|name=||" -e "s|'||g")"
 			real_name="$(trimall "$real_name")"
 			[[ $real_name == .apk ]] && ANBR "Package $apk renaming malcunfionned.${R}\n"
-			test -z $real_name || ANG mv -v "${apk} ${ORANGE}${real_name}.apk\n"
-			test -z $real_name || mv -v "${apk}" "${real_name}.apk"
+			[[ $real_name == $apk ]] || continue
+			test -z "$real_name" || ANG mv -v "${apk} ${ORANGE}${real_name}.apk\n"
+			test -z "$real_name" || mv -v "${apk}" "${real_name}.apk"
 		done
 	}
 	cd /last/APK || exit
 	for apk in $(adbsu command \ls "$ex/titanium/*.apk"); do
-		adb pull "$apk" /last/APK
+		adb-sync --reverse "$apk" /last/APK
 	done
 
 	rename_apk
@@ -300,15 +335,8 @@ pushdot)
 	shift
 	adbsu "setenforce 0"
 	ANLO "/dot sync in progress...\n"
-	adbsu 'mkdir -p $dot'
-	[[ $ex == *storage* ]] || {
-		adbde shell "mkdir -p $ex/dot"
-		#		sync_delete /dot/* $dot
-		adbsyncdot
-	}
-	if [[ $ex == /external_sd ]]; then
-		adbsyncdot
-	fi
+	adbsu "mkdir -p $dot"
+	adbsyncdot
 	exit
 	;;
 pushall | sync-delete)

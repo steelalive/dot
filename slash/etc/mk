@@ -10,12 +10,12 @@ rwroot() {
 	mount -t ext4 -o remount,rw /system_root
 }
 mountdot() {
-	mountpoint /dot &>/dev/null && return
-	rwroot
+	mountpoint /dot && return
 	rm /dot 2>/dev/null
 	mkdir -p /dot
+	e2fsck -fp $dev_dot
 	mount -t ext4 -o remount,rw $dev_dot /dot
-	rm -rfv /data/dot
+	rm -rf /data/dot
 	ln -s /dot /data/dot
 }
 mountdot
@@ -26,7 +26,7 @@ export dot=/dot
 [[ -e /data/dot/init.sh ]] && export dot=/data/dot
 [[ -e /dot/init.sh ]] && export dot=/dot
 export slash=$dot/slash
-export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
+export PATH="/sbin:/system/system/xbin:/system/system/bin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/adb/magisk:${PATH}:$slash/etc:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
 if [[ $UID -gt 199 ]] && [[ "$(id -gn)" == "$(id -un)" ]]; then
 	umask 002
 else
@@ -36,10 +36,11 @@ fi
 	mount -o remount,rw /
 	mount -o remount,rw /system
 	mount -o remount,rw /system_root
-) 2>dev/null
+	mount -o remount,rw /vendor
+) 2>/dev/null
 unset LD_PRELOAD LD_LIBRARY_PATH
 shopt -u execfail &>/dev/null
-#su_bin=/sbin/su
+su_bin=/sbin/su
 if test -e /external_sd; then
 	grep "bash" <<<"$0" &>/dev/null || exec /sbin/bash --init-file /dot/slash/etc/mk
 fi
@@ -65,16 +66,17 @@ for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkw
 done
 rm /bin 2>/dev/null || rmdir /bin 2>/dev/null
 mkdir -p /bin
-ln -s /dot/slash/sbin/bash /bin/bash
+ln -s /dot/slash/sbin/bash /bin/bash 2 &>/dev/null
 [[ $PS1 ]] || return 0
 . "$dot/fn.sh"
-. /dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc
+. /dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc || $(find / -name rc 2>/dev/null)
 . $dot/init.sh
 shopt -s checkwinsize histappend
 
 test ! -e /data/misc/adb/adb_keys && cp $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
 
-[[ -e $termux/usr/bin ]] && export PATH=$PATH:$termux/bin:$termux/bin/applets LD_LIBRARY_PATH=/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib:$termux/lib:$termux/bin/applets
+#[[ -e $termux/usr/bin ]] && export PATH="$termux/usr/bin:$termux/usr/bin/applets:$PATH" LD_LIBRARY_PATH="$termux/lib:$termux/bin/applets:/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib"
+[[ -e $termux/usr/bin ]] && export PATH="$PATH:$termux/usr/bin:$termux/usr/bin/applets" LD_LIBRARY_PATH="/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib:$termux/lib:$termux/bin/applets"
 if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
 	hash resize &>/dev/null && eval resize
 fi
