@@ -8,7 +8,7 @@
 #If you love havie na lot of tails:
 #is_in_path tail && alias tail=multitail
 #I won't man every command in linux, go to sleep, have some cocaine and pretend it impress girls when you(I) fuck them softly.
-LS_OPTIONS=' -l --color=auto --quoting-style=shell-escape --ignore-backups --group-directories-first --file-type --almost-all --human-readable -L'
+LS_OPTIONS=' -l --color=auto --ignore-backups --quoting-style=shell-escape --group-directories-first --file-type --almost-all --human-readable -L'
 alias -- -='builtin \cd - && lk '
 alias ......='builtin \cd ../../../../.. && lk '
 alias .....='builtin \cd ../../../.. && lk '
@@ -38,7 +38,7 @@ alias fce='command fc -e nano '
 alias hd='command \od -Ax -tx1z -v '
 alias gitclone=". $dot/bin/gitclone "
 alias git='command \git --no-pager '
-alias l="command $dot/bin/lk $LS_OPTIONS -lL "
+alias l="command \ls $LS_OPTIONS -lL "
 alias lkcat='cat /last/power/rooted-rom/lk.img | adb shell "dd of=/dev/block/by-name/lk"; adb reboot recovery'
 alias ll="exa -l@ --group-directories-first 2>dev/null || ls -l"
 alias lh="lk -lH "
@@ -72,7 +72,7 @@ done
 unset method
 
 #cw, colrisise word or whatever, is a must-have in any shell. Colors are lively and make your screen look fabulous!
-if [[ -e /usr/lib/cw ]]; then
+if [[ -e /usr/lib/cw ]] && [[ -e /usr/lib/ping ]]; then
 	cd /usr/lib/cw && rm -v ping traceroute netstat mount make lsof iptables ifconfig free env dig df clock configure cw-pipe cw-test.cgi etc figlet host ltrace-color nmap nslookup pmap_dump praliases quota quotastats strace-color syslog tcpdump finger 2>/dev/null
 fi
 

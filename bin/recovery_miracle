@@ -35,10 +35,10 @@ recovery_miracle() {
 	cp -av $sbin/coreutils .
 	cp -av $sbin/libpcre.so .
 
-	for exe in $(</ext/AIK-Linux/bb_list); do
+	for exe in $(<$slash/bb_noselist); do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv busybox "$exe"
 	done
-	for exe in $(</ext/AIK-Linux/toylist); do
+	for exe in $(<$slash/toylist); do
 		[[ -L $exe ]] || [[ ! -f $exe ]] && ln -sv toybox "$exe"
 	done
 	for exe in "b2sum

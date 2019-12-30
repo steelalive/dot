@@ -1,0 +1,56 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: Francis Demers <steelalive@github.com>
+#2#::.. Last edit: - Sun Dec 29 22:32:46 EST 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-12-29#@# #2#
+# vi: ft=sh
+#3#::..#####################__#######################..::#3#
+
+script_dir() {
+	local SOURCE DIR
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+		DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+		SOURCE="$(readlink "$SOURCE")"
+		[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	echo "$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+}
+aline() {
+	for apk in $(find $sys/app -name "*.apk") $(find $sys/priv-app -name "*.apk"); do
+		zipalign -c 4 $apk
+		ZIPCHECK=1
+		if [ $ZIPCHECK -eq 1 ]; then
+			echo ZipAligning $(basename $apk) | tee -a $LOG_FILE
+			zipalign -f 4 $apk /cache/$(basename $apk)
+			if [ -e /cache/$(basename $apk) ]; then
+				cp -f -p /cache/$(basename $apk) $apk | tee -a $LOG_FILE
+				rm /cache/$(basename $apk)
+			else
+				echo ZipAligning $(basename $apk) Failed | tee -a $LOG_FILE
+			fi
+		else
+			echo ZipAlign already completed on $apk | tee -a $LOG_FILE
+		fi
+	done
+}
+
+aline2() {
+	for apk in $(find $sys/framework -name "*.apk"); do
+		zipalign -c 4 $apk
+		ZIPCHECK=1
+		if [ $ZIPCHECK -eq 1 ]; then
+			echo ZipAligning $(basename $apk) | tee -a $LOG_FILE
+			zipalign -f 4 $apk /cache/$(basename $apk)
+			if [ -e /cache/$(basename $apk) ]; then
+				cp -f -p /cache/$(basename $apk) $apk | tee -a $LOG_FILE
+				rm /cache/$(basename $apk)
+			else
+				echo ZipAligning $(basename $apk) Failed | tee -a $LOG_FILE
+			fi
+		else
+			echo ZipAlign already completed on $apk | tee -a $LOG_FILE
+		fi
+	done
+}
+aline "$@"
+aline2 "$@"

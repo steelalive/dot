@@ -1,0 +1,63 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: Francis Demers <steelalive@github.com>
+#2#::.. Last edit: - Sun Dec 29 22:34:26 EST 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-12-29#@# #2#
+# vi: ft=sh
+#3#::..#####################_/dot/bin/setupsystem_#######################..::#3#
+
+script_dir() {
+	local SOURCE DIR
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+		DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+		SOURCE="$(readlink "$SOURCE")"
+		[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	echo "$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+}
+setupsystem() {
+	if [[ -e /sdcard ]] && [[ -e /external_sd ]] && { mountpoint /system || mountpoint /system_root; }; then
+		(
+			cd /external_sd && {
+				mkdir -p /sdcard/TWRP /data/adb/modules
+				coreutils --coreutils-prog=mv -v /sdcard/Download/* /external_sd/Download/
+				rm -rf /sdcard/Download/*
+				rsync --delete -ru /sdcard /external_sd/
+
+				[[ -e Open-GApps ]] || {
+					cu cp -av /external_sd/misc-android/config/Open-GApps /sdcard/
+					coreutils --coreutils-prog=cp -ru /external_sd/sdcard /
+				}
+				mount /system
+				mount /system_root
+				mount /vendor
+				mount -o remount,rw /vendor
+				mount -o remount,rw /system
+				mount -o remount,rw /system_root
+				coreutils --coreutils-prog=cp -avu $dot/system $sysroot/
+				coreutils --coreutils-prog=cp -avu $dot/vendor/* /vendor/
+				coreutils --coreutils-prog=cp -avu $dot/slash/sbin/* $sys/xbin/
+				coreutils --coreutils-prog=mv -v /external_sd/Android/data/com.android.chrome/files/Download/* /external_sd/Download/
+				coreutils --coreutils-prog=cp -avu /sdcard /external_sd/
+				cu cp -avu /data/data/com.termux/files/* $dot/termux/
+				cp -av $slash/etc/mkshrc $sys/etc/
+				chmod 644 $sys/etc/mkshrc
+				ln -svf $slash/sbin/bash /data/
+				ln -svf $slash/etc/rc /data/
+				ln -svf $slash/etc/mk /data/
+				ln -svf $slash/pushthem /data/pu
+				2sys Phonesky com.android.vending-
+				2sys Chrome chrome-
+				2sys CalendarGoogle .calendar-
+				2sys Messages apps.messaging
+				2sys Street android.street
+				2sys GmsCore gms
+				2sysnew /data/app contacts Contacts
+				cu chown 0:0 -Rc $sys/app $sys/priv-app
+				echo "Clear?"
+				yorn && clear
+			}
+		)
+	fi
+}
+setupsystem "$@"

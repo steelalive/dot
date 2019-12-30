@@ -5,13 +5,14 @@
 #3#::..#####################_/dot/bin/ad_#######################..::#3#
 [[ -e /oem ]] && exit
 [[ $HOSTNAME != PC ]] && exit
-if ! $adb devices | grep 'device$' &>/dev/null; then
-	[[ $1 ]] || exit
+adb=/usr/bin/adb
+if ! $adb devices | grep -e 'device$' -e 'recovery$' &>/dev/null; then
+	echo "Please plug cellphone in, wiseass."
+	exit 1
 fi
 
 export dot=/dot
 export files_to_copy="/dot/* /dot/.dir_colors /dot/.histfile"
-adb=/usr/bin/adb
 #export ex=/storage/B5A4-1BFB
 #su_bin=/sbin/su
 export tmp_serial=/tmp/adbserial

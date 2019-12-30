@@ -5,11 +5,10 @@
 # vi: set filetype=sh:
 
 export cmd=' androidboot.selinux=permissive buildvariant=eng threadirqs nowatchdog fsck.repair=yes commit=30 errors=remount-ro rootfstype=ext4 raid=noautodetect plymouth.enable=0 smsc95xx.turbo_mode=N net.ifnames=0 noatime libahci.ignore_sss=1 cgroup_disable=memory sysrq_always_enabled'
-export PATH=$PATH:/dot/bin:/dot/bin/final:/dot/slash/sbin
-mount /system
 mount /vendor
 mount /nvdata
-[[ -e /system/build.prop ]] && mount -o remount,rw /system
+mount $sysroot
+[[ -e /system/build.prop ]] || mount -o remount,rw $sysroot
 mount -o remount,rw /vendor
 mount -o remount,rw /nvdata
 
@@ -41,24 +40,34 @@ for i in \
 		-e "s|=q201$|=S912|" \
 		-e "s|=q9377$|=S912|" \
 		-e "s/=cortex-a7$/=cortex-a53/" \
-		-i "$i" && ANBG "Edited ${i}${R}...\\n${R}"
+		-i "$i" &&
+		ANBG "Edited ${i}${R}...\\n${R}"
 done
-[[ -e $sysroot/init ]] && cd $sysroot || { cd /system_root || cd /system; } && {
+sed -e 's|false|true|g' -i $(find $sys -name mtklog-config.prop | head -n1) && ANBG "Edited ${mtklog-config.prop}${R}...\\n${R}"
+if { cd $sysroot || cd /system_root || cd /system; } && [[ -e init ]]; then
 	rm -v etc
 	ln -sv system/etc etc
 	rm -v bin
-	ln -sv system/bin bin
+	ln -sv system/xbin bin
 	rm -v product
 	ln -sv system/product product
-	mkdir -v tmp
-	mkdir -v root
-}
+	ln -sv /dot/slash/etc/mk mk
+	mkdir -p tmp
+	mkdir -p root
+	mkdir -p dot
+	ln -svf ./dot /data/
+	rm -rf usr
+	▎ mkdir -p usr
+	ln -sv system/xbin usr/bin
+	▎ [[ -x /bin/bash ]] || ln -sv $slash/sbin/bash system/bin/bash
+	▎ [[ -x usr/bin/bash ]] && ln -sv $slash/sbin/bash bin/bash
+fi
 cat $dot/bin/build.prop >/data/local.prop
 
-for i in $(find $system/priv-app -type f); do chmod -v 644 "$i"; done
-for i in $(find $system/app -type f); do chmod -v 644 "$i"; done
-for i in $(find $system/priv-app -type d); do chmod -v 755 "$i"; done
-for i in $(find $system/app -type d); do chmod -v 755 "$i"; done
+for i in $(find $sys/priv-app -type f); do cu chmod -c 644 "$i"; done
+for i in $(find $sys/app -type f); do cu chmod -c 644 "$i"; done
+for i in $(find $sys/priv-app -type d); do cu chmod -c 755 "$i"; done
+for i in $(find $sys/app -type d); do cu chmod -c 755 "$i"; done
 
 #for file in /nvdata/fstab* /vendor/etc/fstab.mt6765; do
 #	sed -e "s|,encryptable=/dev/block/platform/bootdevice/by-name/metadata||" \

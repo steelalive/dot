@@ -24,12 +24,8 @@ ln -sfv /proc/self/mounts $sys/etc/mtab
 ln -sfv $slash/etc/mk /data/
 ln -sfv $slash/pushthem /data/pu
 
-rmdir /bin 2>/dev/null || rm /bin
-mkdir /bin
-cp $slash/sbin/bash /bin/bash
 echo EST5EDT >/system/etc/timezone
 echo "Initialize system..."
-busybox mount -o rw,remount /system
 bash $dot/bin/remnt
 echo "System init completed!"
 cat $dot/bin/build.prop >/data/local.prop
@@ -43,14 +39,12 @@ RECOVERYMODE=false" >>/data/.magisk
 fi
 #yorn y proper && proper && echo "Proper executed sucessfully"
 #rmbloat
-setupbox $dot/slash/sbin
-[[ -e /external_sd ]] && setupbox $sys/xbin
-yorn y rmbloat && rmbloat
+rmbloat
 echo "Done!"
 # vi: ft=sh
 
 #yorn y aline && aline "$@" && aline2 "$@"
-yorn y setupsystem && setupsystem "$@"
+setupsystem "$@"
 rm_empty_dir /system/app/* /system/priv-app/* /sdcard/* /data/app/*
 if [[ -x /sbin/twrp ]]; then
 	twrp restore lk_no_message_stock

@@ -1,0 +1,31 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: Francis Demers <steelalive@github.com>
+#2#::.. Last edit: - Sun Dec 29 22:29:45 EST 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-12-29#@# #2#
+# vi: ft=sh
+#3#::..#####################__#######################..::#3#
+
+script_dir() {
+	local SOURCE DIR
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+		DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+		SOURCE="$(readlink "$SOURCE")"
+		[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	echo "$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+}
+
+2sysEchoApp() {
+	[[ $1 ]] || {
+		echo '$2 is a unique part of app folder.'
+		echo "Ex.: 2sysEchoApp /data/app spotify will return /data/app/spotifyomfsioemfoiesfnsoinefgoin35rm25r235=====. Easy."
+		return 1
+	}
+	begin_folder="${1:-/data/app}"
+	for keyword in $2; do
+		datapath="$(printf "%s\n" $begin_folder/* | grep "$keyword")"
+		echo "$datapath"
+	done
+}
+2sysEchoApp "$@"

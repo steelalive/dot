@@ -10,22 +10,15 @@ export dot=/dot
 [[ -e /data/dot/init.sh ]] && export dot=/data/dot
 [[ -e /dot/init.sh ]] && export dot=/dot
 export slash="$dot/slash"
-if mountpoint /system; then
+if mountpoint /system && [[ -e /system/init ]]; then
 	sysroot=/system
-elif mountpoint /system_root; then
+	sys=/system/system
+elif mountpoint /system_root && [[ -e /system_root/init ]]; then
 	sysroot=/system_root
+	sys=/system_root/system
 else
 	sysroot=/
-fi
-if [[ -e /external_sd ]]; then
-	[[ -e /system/build.prop ]] && sys=/system
-	[[ -e /system_root/build.prop ]] && sys=/system_root/system
-	export ex=/external_sd
-	export rootsys=$sysroot/system sys sysroot ex
-else
-	export sys=/system
-	sysroot=/
-	export rootsys=$sysroot/system sys sysroot ex
+	sys=/system
 fi
 
 export ex="/mnt/media_rw/????-????"
@@ -34,12 +27,10 @@ export ex="/mnt/media_rw/????-????"
 [[ -e $ex ]] || ex=/sdcard
 export termux="$dot/termux"
 export HOME=/root
-export LD_LIBRARY_PATH="/sbin:$sys/lib64:$sys/lib:$termux/usr/lib:$termux/usr/bin/applets"
-export PATH="$termux/usr/bin:$termux/usr/bin/applets:$PATH"
 export LANG='en_US.UTF-8'
 export SHELL="$termux/usr/bin/bash"
 export pc=192.168.0.20 s4=192.168.0.8 tv=192.168.0.5
-export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:${PATH}:$termux/usr/bin:$termux/usr/bin/applets:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
+export PATH="/su/xbin:/su/bin:/supersu:/su:/data/adb/su/xbin:/data/adb/su/bin:${slash}/sbin:/data/sbin:/system/xbin:/sbin:/system/bin:/vendor/bin:/data/local/bin:/data/local/xbin:/data/adb/xbin:/data/adb/bin:/system/sbin:/vendor/bin:${PATH}:$termux/usr/bin:$termux/usr/bin/applets:$slash/sbin:$dot/bin:$dot/bin/final:$dot"
 result=":"
 IFS=:
 for p in $PATH; do
@@ -96,32 +87,25 @@ lk="$(readlink "$(find /dev/block -iname lk | tail -1)")"
 system="$(readlink "$(find /dev/block -iname system | tail -1)")"
 vendor="$(readlink "$(find /dev/block -iname vendor | tail -1)")"
 
-export vendor recovery lk system vendor TMP TMPDIR="$TMP" BASH SHELL="$BASH" HISTFILE="${dot}/root/histfile_android" HISTSIZE=50000 USER slash lk boot recovery lux
+export vendor recovery sys sysroot rootsys lk system vendor TMP TMPDIR="$TMP" BASH SHELL="$BASH" HISTFILE="${dot}/root/histfile_android" HISTSIZE=50000 USER slash lk boot recovery lux
 test "$HOSTNAME" && hostname "$HOSTNAME"
 alias e=". $dot/bin/e"
 hash remnt &>/dev/null && remnt
 unalias src 2>/dev/null
+###Setting up ls
 unalias ls &>/dev/null
-unset ls LS_OPTIONS &>/dev/null
-if [[ -e $slash/sbin/dir ]]; then
-	LS_BIN="$slash/sbin/dir"
-elif [[ -e /system/xbin/ls ]]; then
-	LS_BIN="$slash/sbin/dir"
-else
-	LS_BIN="dir"
-fi
-
-if $LS_BIN --help 2>&1 | grep 'Z' &>/dev/null; then LS_OPTIONS=' -Z '; fi
-if $LS_BIN --help 2>&1 | grep 'group-directories-first' &>/dev/null; then
-	export LS_OPTIONS="$LS_OPTIONS --group-directories-first "
-fi
-export LS_OPTIONS="--group-directories-first -AHhpFl --color "
-
-command -v coreutils && ls() { coreutils --coreutils-prog=dir $LS_OPTIONS "$@"; }
 unset lk
-alias lk="command \dir --group-directories-first --color=auto $LS_OPTIONS"
-is_recovery && ls() { /sbin/ls $LS_OPTIONS "$@"; }
+unset ls LS_OPTIONS &>/dev/null
+LS_BIN=ls
+#if $LS_BIN --help 2>&1 | grep 'Z' &>/dev/null; then LS_OPTIONS=' -Z '; fi
+#if $LS_BIN --help 2>&1 | grep 'group-directories-first' &>/dev/null; then
+#	export LS_OPTIONS="$LS_OPTIONS --group-directories-first "
+#fi
+export LS_OPTIONS="--group-directories-first -AHhpFl --color "
+ls() { command \ls $LS_OPTIONS "$@"; }
+lk() { command \dir --group-directories-first --color=auto $LS_OPTIONS "$@"; }
 
+ls() { coreutils --coreutils-prog=dir $LS_OPTIONS "$@"; }
 nano=$termux/usr/bin/nano
 if [[ -x $nano ]] || [[ ! -e /external_sd ]]; then
 	alias nano="$nano "
@@ -131,113 +115,23 @@ fi
 #####_MISC_MAINTENANCE_#####
 
 test -x /usr/bin/bash || {
-	rm /bin
-	mkdir -p /bin /usr/bin /system/sbin
-	[[ -x /bin/bash ]] || cp -av $slash/sbin/bash /bin/bash
+	rm -rf /bin
+	ln -s $sys/xbin /bin
+	mkdir -p /usr
+	ln -s $sys/xbin /usr/bin
 	test -f /root/.bashrc || {
 		mkdir -p /root
-		chmod 755 /root
 		ln -s $dot/root/.???* /root/ 2>/dev/null
 		ln -s $dot/root/folders/.???* /root/ 2>/dev/null
 	}
 }
 #####_SETUP RC FILES_#####
-
-pminstall() {
-	[[ $1 ]] || select apk in ./*.apk; do yorn y || break; done
-	for apk; do
-		ANLO "Installing $apk ...\n"
-		pm install --user 0 -r -g "$apk"
-	done
-}
-export -f pminstall
-cmdcompile() {
-	if command -v fstrim; then
-		fstrim /system
-		fstrim /data
-		fstrim /cache
-		fstrim /vendor
-	fi
-	cmd package compile -a -m everything
-}
-export -f cmdcompile
-
-2sysEchoApp() {
-	[[ $1 ]] || {
-		echo '$1 is the path of the folder for the app you want to fuzzyecho. $2 is a unique part of app folder.'
-		echo "Ex.: $0 /data/app spotify will return /data/app/spotifyomfsioemfoiesfnsoinefgoin35rm25r235=====. Easy."
-		return 1
-	}
-	for keyword in $2; do
-		datapath="$(printf "%s\n" $1/* | grep "$keyword")"
-		echo "$datapath"
-	done
-}
-export -f 2sysEchoApp
-2sys() {
-	[[ $1 ]] || {
-		\ls --color $sysroot/system/app $sysroot/system/priv-app /data/app
-		echo '$1=app name in /system $2=part of the folder name in /data/app'
-		return
-	}
-	sysname=$1
-	for i in $(2sysEchoApp /data/app $2); do
-		path="$(find $sys/priv-app -type d -name "*$sysname*" | head -n1)"
-		[[ -e $path ]] || path="$(find $sys/app -type d -name "*$sysname*" | head -n1)"
-		[[ -e $path ]] || continue
-		[[ -e $i ]] || continue
-		rm -rf "$i"/oat "$path/oat"
-		mv -v "$i/base.apk" "$path/${sysname}.apk"
-		mv -v "$i"/* $path/
-		adperm "$path/${sysname}.apk"
-		rm -rfv "$i"
-		ls /data/app
-	done
-}
-export -f 2sys
-aline() {
-	for apk in $(find $sys/app -name "*.apk") $(find $sys/priv-app -name "*.apk"); do
-		zipalign -c 4 $apk
-		ZIPCHECK=1
-		if [ $ZIPCHECK -eq 1 ]; then
-			echo ZipAligning $(basename $apk) | tee -a $LOG_FILE
-			zipalign -f 4 $apk /cache/$(basename $apk)
-			if [ -e /cache/$(basename $apk) ]; then
-				cp -f -p /cache/$(basename $apk) $apk | tee -a $LOG_FILE
-				rm /cache/$(basename $apk)
-			else
-				echo ZipAligning $(basename $apk) Failed | tee -a $LOG_FILE
-			fi
-		else
-			echo ZipAlign already completed on $apk | tee -a $LOG_FILE
-		fi
-	done
-}
-export -f aline
-aline2() {
-	for apk in $(find $sys/framework -name "*.apk"); do
-		zipalign -c 4 $apk
-		ZIPCHECK=1
-		if [ $ZIPCHECK -eq 1 ]; then
-			echo ZipAligning $(basename $apk) | tee -a $LOG_FILE
-			zipalign -f 4 $apk /cache/$(basename $apk)
-			if [ -e /cache/$(basename $apk) ]; then
-				cp -f -p /cache/$(basename $apk) $apk | tee -a $LOG_FILE
-				rm /cache/$(basename $apk)
-			else
-				echo ZipAligning $(basename $apk) Failed | tee -a $LOG_FILE
-			fi
-		else
-			echo ZipAlign already completed on $apk | tee -a $LOG_FILE
-		fi
-	done
-}
-export -f aline2
-
+tb() { $sys/bin/toybox "$@"; }
+export -f tb
 fixpart() {
 	for i in $(/sbin/busybox blkid | cut -d: -f1); do
 		echo "##############################---${i}---#######################################"
-		mountpoint $i && umount "$i" 2>/dev/null || echo "UNABLE TO UMOUNT $I WITHOUT FORCING THINGS. I RESPECT WOMAN, JUST SO I CAN AJUST MYSELF TO MY FEMINNE SIDE AND BECAUSE I LOATHE THE PROXIMITY OF THAT FEMALE FRIEND WHO SPREAD HER LEGS ON A SUNDAY AND REFUSES TWO HOURS OF MANUPILITAIVE PLAYFUL ADVANCES JUST TO GET A HANDJOB THAT WOULD HAVE EVOLVED, FINALLY. i WOULD MANIPUALTE MY WAY INTOR SEX AND MY FATHER AND MOTHER WOULD CLAP THEIR HANDS AND SAY HELLO, HERE IS YOUR ALLOCATION FOR THE WEEK, BYE."
+		mountpoint "$i" && umount "$i" 2>/dev/null || echo "UNABLE TO UMOUNT $i WITHOUT FORCING THINGS."
 		/sbin/e2fsck -fp "$i" 2>/dev/null
 		[[ -e /sbin/fsck.ext4 ]] && fsck.ext4 -p "$i" 2>/dev/null
 		/sbin/e2fsck -f "$i"
@@ -254,98 +148,26 @@ fixpart() {
 
 }
 export -f fixpart
-setupsystem() {
-	if [[ -e /sdcard ]] && [[ -e /external_sd ]] && { mountpoint /system || mountpoint /system_root; }; then
-		(
-			cd /external_sd && {
-				mkdir -p /sdcard/TWRP /data/adb/modules
-				coreutils --coreutils-prog=cp -ru /external_sd/sdcard /
-				mount /system
-				mount /system_root
-				mount /vendor
-				mount -o remount,rw /vendor
-				mount -o remount,rw /system
-				mount -o remount,rw /system_root
-				coreutils --coreutils-prog=cp -avu $dot/system $sysroot/
-				coreutils --coreutils-prog=cp -avu $dot/vendor /
-				coreutils --coreutils-prog=cp -avu $dot/slash/sbin/* $sys/xbin/
-				coreutils --coreutils-prog=mv -v /sdcard/Download/* /external_sd/Download/
-				coreutils --coreutils-prog=mv -v /external_sd/Android/data/com.android.chrome/files/Download/* /external_sd/Download/
-				coreutils --coreutils-prog=cp -avu /sdcard /external_sd/
-				cu cp -avu /data/data/com.termux/files/* $dot/termux/
-				cp -av /external_sd/misc-android/config/Open-GApps /sdcard/ 2>/dev/null
-				ln -svf $slash/sbin/bash /data/
-				ln -svf $slash/etc/rc /data/
-				ln -svf $slash/etc/mk /data/
-				ln -svf $slash/pushthem /data/pu
-				2sys Phonesky com.android.vending-
-				2sys Chrome chrome-
-				2sys CalendarGoogle .calendar-
-				2sys Messages apps.messaging
-				2sys Street android.street
-				2sys GmsCore gms
-				2sysnew /data/app contacts app
-				echo "Clear?"
-				yorn && clear
-			}
-		)
-	fi
-}
-2sysnew() {
-	ThatDudeNeedMyHelp() {
-		echo '$1 is the parent folder of the app you want to'
-		echo "move in $sys/\$2/\$3 or $sys/\$2/\$1. When \$2 is empty, it will default to priv-app"
-		echo "ex.: \"$0 /data/app app\" will move 'net.sourceforge.opencamera-D8EQDInzFeMW7f6dUayWkw==' in $sys/app."
-		echo "...and set what I thinjk is the right permissions in /etc/permissions folder"
-		return 1
+termux_switch() {
+	[[ $1 == 1 ]] && [[ -e $termux/usr/bin ]] && {
+		. $dot/setpath.sh android
+		export PATH="$termux/usr/bin:$termux/usr/bin/applets:$PATH" LD_LIBRARY_PATH="$termux/lib:$termux/bin/applets:/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib:/vendor/lib64:/vendor/lib"
 	}
-	apptomove=$(2sysEchoApp "$1" "$2" "$3" 2>/dev/null)
-	targetfolder="$3"
-	[[ -f $apptomove ]] || {
-		ThatDudeNeedMyHelp
-		return
+	[[ $1 == 0 ]] && [[ -e $termux/usr/bin ]] && {
+		. $dot/setpath.sh android
+		export PATH="$PATH:$termux/usr/bin:$termux/usr/bin/applets" LD_LIBRARY_PATH="/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib:$termux/lib:$termux/bin/applets"
 	}
-	[[ $3 ]] || targetfolder=priv-app
-
-	case $targetfolder in
-	app | priv-app)
-		[[ -e $apptomove ]] && mv -v "$apptomove" "$sys/$targetfolder/$apptomove"
-		for i in $sys/$targetfolder/$apptomove/*.apk; do
-			adperm "$i"
-		done
-		;;
-	*)
-		ThatDudeNeedMyHelp
-		;;
-	esac
-
+	path
 }
-export -f 2sysnew
+export -f termux_switch
+alias lz="tb ls --color -lAZpbHLFh"
 cu() {
-	prog=$1
+	local prog=$1
 	shift
-
 	coreutils --coreutils-prog="$prog" "$@"
 }
 export -f cu
 
-sysroot() {
-	echo "input any word to mount root on /system, no word=/system_root..."
-	mount $system /system_root
-	umount /system
-	mountpoint /system || rm -rf /system
-	ln -s /system_root/system /
-	[[ $1 ]] && {
-		umount /system
-		mountpoint /system || rm -rf /system
-		mkdir -p /system
-		mount $system /system
-		umount /system_root
-		rm -rf /system_root
-	}
-}
-export -f sysroot
-export -f setupsystem
 if ! grep 'KEEPVERITY=false' /data/.magisk; then
 	echo "KEEPVERITY=false
 KEEPFORCEENCRYPT=false

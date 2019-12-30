@@ -2,6 +2,7 @@ if [[ $- != *i* ]]; then
 	# Shell is non-interactive.  Be done now!
 	return
 fi
+setenforce 0
 export dev_dot=/dev/block/mmcblk1p2
 rwroot() {
 	[[ -e /external_sd ]] && mount -t ext4 /dev/block/mmcblk0p31 /system_root || mount -t ext4 /dev/block/mmcblk0p31 /
@@ -64,19 +65,16 @@ for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -
 for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath execfail lithist; do
 	builtin shopt -s "$shopt_opt" &>/dev/null
 done
-rm /bin 2>/dev/null || rmdir /bin 2>/dev/null
-mkdir -p /bin
-ln -s /dot/slash/sbin/bash /bin/bash 2 &>/dev/null
 [[ $PS1 ]] || return 0
-. "$dot/fn.sh"
+[[ -e /data/adb/magisk/util_functions.sh ]] && . /data/adb/magisk/util_functions.sh
+. "/dot/fn.sh"
 . /dot/slash/etc/rc || . "${BASH_SOURCE}/rc" || . ./rc || . /sbin/rc || $(find / -name rc 2>/dev/null)
 . $dot/init.sh
 shopt -s checkwinsize histappend
 
 test ! -e /data/misc/adb/adb_keys && cp $ex/misc-android/adb_keys /data/misc/adb/ && chmod 2750 /data/misc/adb/adb_keys && chown 1000:2000 /data/misc/adb/adb_keys
+termux_switch "1" 1>/dev/null
 
-#[[ -e $termux/usr/bin ]] && export PATH="$termux/usr/bin:$termux/usr/bin/applets:$PATH" LD_LIBRARY_PATH="$termux/lib:$termux/bin/applets:/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib"
-[[ -e $termux/usr/bin ]] && export PATH="$PATH:$termux/usr/bin:$termux/usr/bin/applets" LD_LIBRARY_PATH="/sbin:/system/system/lib64:/system/system/lib:/system/lib64:/system/lib:$termux/lib:$termux/bin/applets"
 if [ "z$ANDROID_SOCKET_adbd" != "z" ]; then
 	hash resize &>/dev/null && eval resize
 fi

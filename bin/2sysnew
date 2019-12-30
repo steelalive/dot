@@ -1,0 +1,39 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: Francis Demers <steelalive@github.com>
+#2#::.. Last edit: - Sun Dec 29 22:31:52 EST 2019 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2019-12-29#@# #2#
+# vi: ft=sh
+#3#::..#####################_/dot/bin/2sysnew_#######################..::#3#
+
+script_dir() {
+	local SOURCE DIR
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+		DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+		SOURCE="$(readlink "$SOURCE")"
+		[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	echo "$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+}
+2sysnew() {
+	ThatDudeNeedMyHelp() {
+		echo '$1 is the parent folder of the app you want to(/data/app); $2 is part of the folder name(gms); $3 is target  folder name; '
+		echo "move in $sys/\$2/\$3 or $sys/\$2/\$3. When \$3 is empty, it will default to priv-app"
+		echo "ex.: \"$0 /data/app app\" will move 'net.sourceforge.opencamera-D8EQDInzFeMW7f6dUayWkw==' in $sys/app."
+		echo "...and set what I think is the right permissions in /etc/permissions folder"
+		return 1
+	}
+	apptomove="$(2sysechoapp "$1" "$2" 2>/dev/null)"
+	[[ -e $apptomove ]] || {
+		ThatDudeNeedMyHelp
+		return
+	}
+	targetfolder=priv-app
+	[[ $3 ]] || name="$2"
+	mv -v "$apptomove" "$sys/$targetfolder/$name"
+	for i in "$sys/$targetfolder/$name/"*.apk; do
+		adperm "$i"
+	done
+
+}
+2sysnew "$@"
