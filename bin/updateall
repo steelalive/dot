@@ -71,7 +71,7 @@ paccache --keep 1 --verbose --remove
 	if cd $dot/.dotfiles2; then
 		make update
 	fi
-	setup-nvim
+	setup-nvim space
 	### Neovim setup ###
 	###CHeck for mising files or disparities with pacman database
 	paccheck | grep -v -e 'all dependencies satisfied' -e 'all files match database' -e "cw:" -e "memtest86+" -e "linux:" -e "system-config-printer"

@@ -6,7 +6,7 @@ call dein#add('Shougo/neoinclude.vim')
 call dein#add('Zabanaa/neuromancer.vim')
 call dein#add('abudden/EasyColour')
 call dein#add('altercation/vim-colors-solarized')
-call dein#add('autozimu/LanguageClient-neovim', { 'build': 'bash install.sh' })
+"call dein#add('autozimu/LanguageClient-neovim', { 'build': 'bash install.sh' })
 call dein#add('bounceme/base.vim')
 call dein#add('crusoexia/vim-dream')
 call dein#add('dracula/vim')
@@ -60,13 +60,13 @@ call dein#add('xolox/vim-misc')
 "call dein#add('')
 "call dein#add('')
 
-call dein#add('neomake/neomake')
+"call dein#add('neomake/neomake')
 call dein#add('Shougo/deoplete')
-call dein#add('autozimu/LanguageClient-neovim', {
-    \ 'rev': 'next',
-    \ 'build': 'bash install.sh',
-    \ })
-call dein#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
+"call dein#add('autozimu/LanguageClient-neovim', {
+ "   \ 'rev': 'next',
+ "   \ 'build': 'bash install.sh',
+  "  \ })
+"call dein#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
 
 "call dein#add('')
 "call dein#add('')
@@ -141,9 +141,9 @@ let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \}
 let g:powerline_pycmd = 'py3'
-"let g:python3_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/bin/python'
 let g:python_highlight_all = 1
-"let g:python_host_prog = '/usr/bin/python2.7'
+let g:python_host_prog = '/usr/bin/python2.7'
 let g:tex_flavor = 'latex'
 let g:ycm_max_num_candidates = 25
 let g:ycm_min_num_of_chars_for_completion = 2

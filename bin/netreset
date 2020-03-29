@@ -47,8 +47,6 @@ for service in NetworkManager.service \
 	systemd-networkd.socket \
 	systemd-networkd-wait-online.service \
 	systemd-resolved.service \
-	dhcpd4.service \
-	dhcpd6.service \
 	systemd-networkd.service \
 	systemd-networkd.socket \
 	systemd-resolved.service \

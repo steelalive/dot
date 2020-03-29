@@ -95,12 +95,13 @@ $sudo	pip install --upgrade pycodestyle pyflakes flake8 vim-vint proselint yamll
 space*)
 	rm -rfv $HOME/.config/nvim
 	lnr $dot/.SpaceVim $HOME/.config/nvim
-	lnr $dot/.SpaceVim.d $HOME/
+	#lnr $dot/.SpaceVim.d $HOME/
 	gitreset
 
 	nvim-link
 
 	cd /root/.config/nvim || exit
+	exit
 	;;
 rafi)
 	shift

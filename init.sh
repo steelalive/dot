@@ -51,7 +51,7 @@ export -f setenv
 export source_files="ps1.sh al.sh ps4.sh fn.sh init.sh ex.sh anset.sh setpath.sh"
 #[[ -e /oem ]] && dot_files="$dot/slash/etc/mk"
 unset dot_files
-export dot_files="$dot/al.sh $dot/anset.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh  /usr/share/fzf/key-bindings.bash /usr/share/fzf/completion.bash /usr/share/git/git-prompt.sh /usr/share/git/completion/git-prompt.sh $dot/ps1.sh" # $dot/ps4.sh  #$dot/bin/goto.sh$HOME/.bash_prompt
+export dot_files="$dot/al.sh $dot/anset.sh /usr/share/LS_COLORS/dircolors.sh $dot/ex.sh $dot/fn.sh $dot/LESS_TERMCAP.sh  /usr/share/fzf/key-bindings.bash /usr/share/fzf/completion.bash /usr/share/git/git-prompt.sh /usr/share/git/completion/git-prompt.sh $dot/ps1.sh" # $dot/ps4.sh  #$dot/bin/goto.sh$HOME/.bash_prompt
 
 [[ -e /oem ]] || dot_files="$dot_files $dot/ps1bg.sh"
 echo
@@ -72,7 +72,7 @@ unset IFS info this_4_real this future_path futur_path_test dot_files
 killjobs
 ps1_writer &
 disown &>/dev/null
-is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && $(dircolors --sh "$dot/.dir_colors")
+is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval $(dircolors --sh "$dot/.dir_colors")
 is_in_path archey && archey
 is_in_path fortunes &>/dev/null && fortunes
 [[ -e /oem ]] && . "$dot/setpath.sh" android

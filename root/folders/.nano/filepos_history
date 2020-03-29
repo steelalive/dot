@@ -1,6 +1,3 @@
-/out/out/debug/target/product/harpia/root/default.prop 9 1
-/out/out/debug/target/product/harpia/root/fstab.qcom 11 96
-/out/debug/target/product/harpia/root/default.prop 33 1
 /out/debug/target/product/harpia/root/fstab.qcom 21 1
 /out/debug/target/product/harpia/obj/KERNEL_OBJ/.config 215 31
 /prog/AIK-Linux/ramdisk/fstab.qcom 14 92
@@ -68,8 +65,6 @@
 /root/.adaway/files/config/dialogrc.cfg 2 1
 /root/.config/startupconfig 9 1
 /dot/etc/sudoers 152 1
-/dot/al.sh 29 14
-/etc/shells 5 1
 /etc/slimlock.conf 6 1
 /etc/pam.d/kde 8 1
 /etc/pam.d/sddm 10 1
@@ -119,8 +114,6 @@
 /ext/AIK-Linux/ramdisk/etc/mkshrc 23 1
 /ext/AIK-Linux/ramdisk/init.r 1 2
 /ext/AIK-Linux/ramdisk/etc/recovery.fstab 16 20
-/dot/ps1bg.sh 55 9
-/etc/mkinitcpio.d/linux.preset 4 30
 /etc/mkinitcpio.conf 42 1
 /dot/bin/makepkgsu 12 14
 /ext/AIK-Linux/ddreco 1 67
@@ -145,7 +138,6 @@
 /dot/bin/remnt 18 1
 /root/wordlist.txt 6326 14
 /dot/bin/wp 92 31
-/dot/fn.sh 79 116
 /dot/bin/init_helper 43 1
 /etc/systemd/user.conf 27 1
 /etc/systemd/system.conf 15 1
@@ -155,7 +147,6 @@
 /root/handshake-38:70:0C:D8:3F:6E.cap 1669 1
 /dot/bin/lk 18 2
 /usr/bin/grc 206 1
-/etc/makepkg.conf 136 11
 /dot/bin/setup-arch.sh 327 1
 /boot/EFI/refind/refind-theme-regular/theme.conf 56 1
 /dot/bin/p 18 1
@@ -172,7 +163,6 @@
 /last/power/kernelpatcher/META-INF/com/google/android/update-binary 521 1
 /last/power/kernelpatcher/common/boot_patch.sh 105 1
 /dot/bin/fastbooted 77 24
-/dot/bin/netreset 29 19
 /dot/bin/airscript 10 1
 /dot/bin/proper 59 41
 /last/wifi.txt 2 19
@@ -180,7 +170,6 @@
 /dot/bin/src_post.bash 11 128
 /dot/slash/etc/mk 64 82
 /dot/slash/etc/rc 175 3
-/dot/bin/wpa_supplicant.conf 18 19
 /dot/.SpaceVim/init.vim 10 2
 /dot/bin/updateall 70 20
 /dot/bin/e 12 2
@@ -188,7 +177,6 @@
 /tmp/neovim-init/install.sh 36 1
 /dot/bin/setup-nvim 18 24
 /dot/ex.sh 230 17
-/dot/root/folders/.config/nvim/local.vim 52 2
 /dot/bin/adp 24 1
 /dot/bin/bootcopy 49 34
 /dot/bin/rmspaceinfile 1 28
@@ -197,4 +185,17 @@
 /dot/init.sh 22 1
 /ext/AIK-Linux/mkshrc 29 13
 /ext/AIK-Linux/fstab 7 58
-/etc/fstab 2 33
+/root/.bashrc 91 15
+/etc/shells 8 1
+/dot/bin/wpa_supplicant.conf 28 1
+/etc/sudoers.tmp 149 6
+/etc/makepkg.conf 132 16
+/etc/fstab 2 10
+/etc/mkinitcpio.d/linux.preset 10 21
+/dot/fn.sh 2 1
+/dot/setpath.sh 59 1
+/dot/root/folders/.config/nvim/local.vim 306 1
+/ext/yay/ttf-ms-win10/PKGBUILD 387 2
+/etc/makepkg-optimize.conf 8 2
+/dot/.vim-config/venv.sh 12 23
+/root/.gitconfig 15 8

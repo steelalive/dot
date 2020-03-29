@@ -56,8 +56,7 @@ allpath+="/usr/bin
 /usr/bin/core_perl
 /usr/bin/site_perl
 $HOME/toolchain/bin
-/root/.gem/ruby/2.6.0/bin
-/shell/.gem/ruby/2.6.0/bin
+/root/.gem/ruby/2.7.0/bin
 /ext/opt/build-tools/29.0.2
 /root/.cargo/bin
 /ext/opt/crosstool-ng-build/bin

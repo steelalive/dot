@@ -95,6 +95,7 @@ is_in_path tput && SCREEN_COLORS="$SCREEN_COLORS:-$(tput colors 2>/dev/null)"
 is_in_path xhost && stfu xhost +local:local
 is_in_path xset && stfu xset r rate 300 40 && stfu xset dpms 600 1800 10000 && stfu xset s 500 &>/dev/null
 is_there "/usr/lib/cw/dmesg" && rm /usr/lib/cw/dmesg
+is_in_path pyenv && eval "$(pyenv virtualenv-init -)"
 [[ $HOSTNAME == PC ]] && is_there /tmp/ssh-agent && eval "$(head -n2 /tmp/ssh-agent)"
 is_in_path dbus-launch && test -z "$DBUS_SESSION_BUS_ADDRESS" && [[ ! -e /oem ]] && eval "$(dbus-launch --sh-syntax --exit-with-session 2>/dev/null)"
 if [[ "$SSH_CLIENT" ]]; then
@@ -138,7 +139,7 @@ ARG10='arg0 Arg1 aRg2 arG3 ARG4 arg5 ArG6 arg7 arg8 arg9 arg10 ARG11'
 BACKUP="/last/BACKUP"
 BASH="${BASH:-$(command -v bash 2>/dev/null)}"
 BROADCAST='192.168.0.1'
-BUILDDIR='/tmp/makepkg'
+#BUILDDIR='/tmp/makepkg'
 BROWSER='lynx -dump'
 CCACHE_DIR="/var/.ccache"
 CCACHE_TEMPDIR="/tmp/.ccache"
@@ -179,8 +180,8 @@ FFLAGS="-g -O3"
 CFLAGS="-march=native -O3 -pipe -m64 -fno-plt --param=ssp-buffer-size=4 "
 CXXFLAGS="$CFLAGS -ftree-vectorize"
 LDFLAGS="-Wl,-O3,--sort-common,--as-needed,-z,relro,-z,now"
-CC='/usr/bin/zapcc'
-CXX='/usr/bin/zapcc++'
+#CC='/usr/bin/zapcc'
+#CXX='/usr/bin/zapcc++'
 MAKEFLAGS="-j$(nproc --all)"
 DEBUG_CFLAGS="-g -fvar-tracking-assignments"
 DEBUG_CXXFLAGS="-g -fvar-tracking-assignments"
