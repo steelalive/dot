@@ -1,4 +1,3 @@
-/out/debug/target/product/harpia/root/fstab.qcom 21 1
 /out/debug/target/product/harpia/obj/KERNEL_OBJ/.config 215 31
 /prog/AIK-Linux/ramdisk/fstab.qcom 14 92
 /prog/AIK-Linux/ramdisk/default.prop 34 16
@@ -199,3 +198,4 @@
 /etc/makepkg-optimize.conf 8 2
 /dot/.vim-config/venv.sh 12 23
 /root/.gitconfig 15 8
+/dot/.gitignore 1 4
