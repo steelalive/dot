@@ -9,7 +9,6 @@
 #is_in_path tail && alias tail=multitail
 #I won't man every command in linux, go to sleep, have some cocaine and pretend it impress girls when you(I) fuck them softly.
 LS_OPTIONS=' -l --color=auto --ignore-backups --quoting-style=shell-escape --group-directories-first --file-type --almost-all --human-readable -L'
-alias -- -='builtin \cd - && lk '
 alias ......='builtin \cd ../../../../.. && lk '
 alias .....='builtin \cd ../../../.. && lk '
 alias ....='builtin \cd ../../.. && lk '
@@ -51,18 +50,19 @@ alias lssize="command \ls -lhHAr --color=auto  --sort size "
 alias lt='command \ls --color=always -alt | head -20 '
 alias more='less '
 alias most='less '
-alias pacr='command pacman -Rcsn '
-alias pacs='command pacman -S --needed --noconfirm '
+alias pacr='pacman -Rcsn '
+alias pacs='pacman -S --needed --noconfirm '
 alias suedit='SUDO_EDITOR=kate sudoedit '
 alias tree='tree --dirsfirst -pshF -C '
 alias udevreload='command \udevadm control --reload-rules; systemctl restart systemd-udevd.service;udevadm control --reload '
 alias vnstat="vnstat -i wlan0 "
 alias ~='builtin \cd ~; lk '
-#if is_in_path pacmatic; then
-#	alias pacr='command \pacmatic -Rcsn '
-#	alias pacs='command \pacmatic -S --needed --noconfirm '
-#	alias pacu='command \pacmatic --force --needed -U *.tar.xz '
-#fi
+if is_in_path powerpill; then
+	alias pacman="command \powerpill "
+	alias pacr='command \powerpill -Rcsn '
+	alias pacs='command \powerpill -S --needed --noconfirm '
+	alias pacu='command \powerpill --needed -U *.tar.xz '
+fi
 is_in_path htop && alias top=htop
 
 #Copied from some nerd, probably some apple shit. Ask jeeves, maybe he knows.
@@ -87,7 +87,7 @@ if GRC="$(command \which grc 2>/dev/null)"; then
 	fi
 fi
 if unalias du &>/dev/null; then alias du='/usr/bin/grc -es --colour=auto /usr/bin/du --separate-dirs --human-readable --one-file-system '; else alias du='du --separate-dirs --human-readable --one-file-system '; fi
-if grep --color=auto bash <<<"$SHELL" &>/dev/null; then
+if grep bash <<<"$SHELL" &>/dev/null; then
 	alias egrep='LANG=C command \egrep --color=auto '
 	alias fgrep='LANG=C command \fgrep --color=auto '
 	alias grep='LANG=C command \grep --color=auto '

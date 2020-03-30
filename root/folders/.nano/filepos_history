@@ -1,6 +1,3 @@
-/out/debug/target/product/harpia/obj/KERNEL_OBJ/.config 215 31
-/prog/AIK-Linux/ramdisk/fstab.qcom 14 92
-/prog/AIK-Linux/ramdisk/default.prop 34 16
 /etc/udev/rules.d/51-android.rules 113 71
 /src/settings.gradle 3 1
 /src/bionic/libc/kernel/android/scsi/scsi/power_device.h 60 12
@@ -199,3 +196,5 @@
 /dot/.vim-config/venv.sh 12 23
 /root/.gitconfig 15 8
 /dot/.gitignore 1 4
+/root/.zshrc 1 73
+/dot/README.md 6 2

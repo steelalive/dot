@@ -1,4 +1,3 @@
-. /dot/bin/env.sh
 path
 ls /ext/opt/platform
 ls /ext/opt/platform-tools/
@@ -498,3 +497,4 @@ mount /dev/sda6 -o remount,rw /
 nano /etc/fstab
 mount -av
 reboot
+su

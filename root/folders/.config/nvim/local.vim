@@ -6,7 +6,6 @@ call dein#add('Shougo/neoinclude.vim')
 call dein#add('Zabanaa/neuromancer.vim')
 call dein#add('abudden/EasyColour')
 call dein#add('altercation/vim-colors-solarized')
-"call dein#add('autozimu/LanguageClient-neovim', { 'build': 'bash install.sh' })
 call dein#add('bounceme/base.vim')
 call dein#add('crusoexia/vim-dream')
 call dein#add('dracula/vim')
@@ -34,7 +33,6 @@ call dein#add('tpope/vim-surround')
 call dein#add('veloce/vim-aldmeris')
 call dein#add('vim-scripts/industry.vim')
 call dein#add('w0ng/vim-hybrid')
-call dein#add('Shougo/deoplete.nvim')
 call dein#add('roxma/nvim-yarp')
 call dein#add('roxma/vim-hug-neovim-rpc')
 call dein#add('w0rp/ale')
@@ -60,13 +58,12 @@ call dein#add('xolox/vim-misc')
 "call dein#add('')
 "call dein#add('')
 
-"call dein#add('neomake/neomake')
-call dein#add('Shougo/deoplete')
-"call dein#add('autozimu/LanguageClient-neovim', {
- "   \ 'rev': 'next',
- "   \ 'build': 'bash install.sh',
-  "  \ })
-"call dein#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
+call dein#add('neomake/neomake')
+call dein#add('autozimu/LanguageClient-neovim', {
+    \ 'rev': 'next',
+    \ 'build': 'bash install.sh',
+    \ })
+call dein#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
 
 "call dein#add('')
 "call dein#add('')
