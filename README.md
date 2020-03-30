@@ -9,4 +9,4 @@ I hope my code inspire with people with this kinfof project. Someday, I wish I c
 technician of some sort. Tech-in-a-Dodge-Challenger. Your mother sister is just waiting to call me.
 She don't care why, until she will have recorded it on her laptop. Cellphone if she lost her laptop. \
 demers.francis@hotmail.com \
-Thank you for visiting and have a great day! \
+Thank you for visiting and have a great day!
