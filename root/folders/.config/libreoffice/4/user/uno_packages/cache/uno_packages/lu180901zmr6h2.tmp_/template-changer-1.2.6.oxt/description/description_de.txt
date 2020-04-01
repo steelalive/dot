@@ -1,2 +1,0 @@
-﻿Diese Extension ermöglicht es, Writer-Dokumenten eine neue Vorlage zuzuweisen.
-Alle Formatvorlagen der Vorlage werden in das Dokument übertragen und das Dokument verhält sich nachher so, als wäre es aus der Vorlagendatei erzeugt worden.

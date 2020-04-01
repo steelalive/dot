@@ -1,7 +1,0 @@
-De auteur van deze extensie is:
-    André Schnabel (andreschnabel@openoffice.org)
- Copyright 2007-2011. Enige rechten voorbehouden.
-
-Deze extensie is vrije software; u kunt het verspreiden en/of aanpassen onder de voorwaarden van de GNU Lesser General Public License version 3.0, zoals gepubliceerd door de Free Software Foundation.
-
-Deze extensie wordt verspreid in de hoop dat het nuttig is, maar ZONDER ENIGE GARANTIE EN AANSPRAKELIJKHEID; zelfs zonder de impliciete aansprakelijkheid van verhandelbaarheid of geschiktheid voor een bepaald doel. Lees voor meer details de GNU Lesser General Public License: http://www.gnu.org/licenses/
