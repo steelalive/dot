@@ -4,9 +4,15 @@
 #2#::.. Last edit: - Thu May 17 16:56:54 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.0 - #_# #@#170518#@# #2#
 #3#::..#####################_/dot/bin/nvim-setup_#######################..::#3#
 # vi: ft=sh:noro:
+target=$HOME/.config/nvim
+cdtarget() {
+	if ! cd $target; then
+		ANRED "Dude, where is $target folder?\n"
+		exit 1
+	fi
+}
 nvim_link() {
-	rm -rf /root/.vim
-	lnr /root/.config/nvim /root/.vim
+	ln -s $HOME/.vim $target 2 &>/dev/null
 	local="$dot/root/folders/.config/nvim/local.vim"
 	init="$HOME/.config/nvim/init.vim"
 	if ! grep -q "$local" $init; then
@@ -93,14 +99,15 @@ $sudo	pip install --upgrade pycodestyle pyflakes flake8 vim-vint proselint yamll
 
 	;;
 space*)
-	rm -rfv $HOME/.config/nvim
-	lnr $dot/.SpaceVim $HOME/.config/nvim
-	#lnr $dot/.SpaceVim.d $HOME/
+	folder="$dot/.SpaceVim"
+	if ! [[ -e $folder ]]; then
+		git clone https://github.com/SpaceVim/SpaceVim.git $folder
+	fi
+	rm -rfv $target
+	lnr $folder $target
+	cdtarget
 	gitreset
-
-	nvim-link
-
-	cd /root/.config/nvim || exit
+	nvim_link
 	exit
 	;;
 rafi)
@@ -115,7 +122,7 @@ link)
 	;;
 *)
 
-	cd /root/.config/nvim
+	cdtarget
 	gitreset
 	nvim_link
 	make update
