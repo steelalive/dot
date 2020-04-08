@@ -5,7 +5,7 @@
 #3#::..#####################_/dot/bin/ddv.sh_#######################..::#3#
 ddv() {
 	unset input output
-	select input in ./*.iso ./*.img; do
+	select input in ./*.iso ./*.ISO ./*.img; do
 		break
 	done
 	echo
@@ -28,4 +28,4 @@ ddv() {
 	yorn n || return 1
 	dd if="$input" of="$output" status=progress seek=0 bs=16M conv=notrunc
 }
-ddv $@
+ddv "$@"
