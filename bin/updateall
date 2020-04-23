@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #-*- coding: utf-8 -*-
 #2#::.. Last edit: - Wed May 30 08:24:14 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.5.8 - #_# #@#300518#@# #2#
 #3#::..#####################_MAIN_#######################..::#3#
@@ -34,7 +35,7 @@ paccache --keep 1 --verbose --remove
 	### Back to relative sanity.
 
 	#This take care of android-studio. I now have duplicated mountain of executables a little more ordered than android source.
-	sdkmanager --update
+	is_in_path sdkmanager && sdkmanager --update
 
 	#When pacman is away, mice dances and maintain the latest of the late ruby code
 	is_in_path bundle && bundle update
@@ -43,7 +44,9 @@ paccache --keep 1 --verbose --remove
 	[[ -d "$HOME"/.cache/pip ]] && chown root:root "$HOME"/.cache/pip "$HOME"/.cache/pip/http
 
 	###This is supposed to save me HOURS if I chmod 777 /usr...
-	pacman -Q | awk '{print $1}' >/packages.list
+	mkdir -p $dot/info/package_lists_backup
+	pacman -Q | awk '{print $1}' >$dot/packages.list
+	cp --backup -av $dot/package.list $dot/info/package_lists_backup/
 
 	#Permissions are taken care of
 	rm -rf /tmp/makepkg
@@ -60,6 +63,9 @@ paccache --keep 1 --verbose --remove
 	npm-check -g -y
 	npm update -g
 	npm doctor
+
+	#Update the manual pages indez, or something else...
+	mandb
 
 	#Let's do the same mystake with perl scripts. Just use the damned package manager. pacman -Syu and have a baby or make passionate love to a man.
 	if is_in_path cpanm && is_in_path cpanm-outdated; then

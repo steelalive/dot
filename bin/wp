@@ -92,10 +92,10 @@ while ((GOOG != 0)) && ((CUNT < REPEAT)); do
 	dhcpcd "$NET"
 	center_string "${RED}${UNDER}PING TEST AND ROUTE SETUP${R}\\n"
 	"${dot}"/bin/88
-	NET_AP="$(iwgetid -r $NET)"
+	is_in_path iwgetid && NET_AP="$(iwgetid -r $NET)"
 	[[ $NET_AP ]] && GOOG=0
 	sleep 1
-	p || GOOG=1
+	p all || GOOG=1
 done
 #######################################
 if ((GOOG != 0)); then

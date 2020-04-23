@@ -1,10 +1,3 @@
-path
-ls /ext/opt/platform
-ls /ext/opt/platform-tools/
-exit
-lsblk
-nano /etc/fstab
-nvim /etc/fstab
 lsblk
 blkid
 nvim /etc/fstab
@@ -498,3 +491,10 @@ nano /etc/fstab
 mount -av
 reboot
 su
+passwd
+passwd shell 
+nano /etc/systemd/system/getty.target.wants/getty\@tty1.service 
+reboot
+exit
+bash
+bash

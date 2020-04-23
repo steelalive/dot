@@ -125,8 +125,8 @@ link)
 	cdtarget
 	gitreset
 	nvim_link
-	make update
-	bash venv.sh
+	make update || make
+	[[ -e venv.sh ]] && bash venv.sh
 
 	;;
 

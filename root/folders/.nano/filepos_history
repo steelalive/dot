@@ -67,9 +67,7 @@
 /dot/bin/+arch 23 66
 /dot/etc/folders/default/grub 51 21
 /boot/efi/refind/refind.conf 277 30
-/etc/systemd/system/getty.target.wants/getty@tty1.service 6 1
 /etc/mkinitcpio.d/linux419.preset 6 19
-/etc/sddm.conf 119 1
 /dot/bin/build.prop 712 1
 /etc/grub.d/40_custom 88 1
 /mnt/a2/FONTS.txt 1 120
@@ -146,10 +144,8 @@
 /dot/bin/setup-arch.sh 327 1
 /boot/EFI/refind/refind-theme-regular/theme.conf 56 1
 /dot/bin/p 18 1
-/etc/pacman.conf 18 2
 /dot/bin/fix-sdcard-perm.sh 81 1
 /dot/bin/setupbox 662 1
-/boot/refind_linux.conf 1 364
 /boot/EFI/refind/refind.conf 53 1
 /ext/AIK-Linux/unpackimg.sh 349 1
 /ext/yay/lib32-ncurses5-compat-libs/PKGBUILD 39 22
@@ -186,7 +182,6 @@
 /dot/bin/wpa_supplicant.conf 28 1
 /etc/sudoers.tmp 149 6
 /etc/makepkg.conf 132 16
-/etc/fstab 2 10
 /etc/mkinitcpio.d/linux.preset 10 21
 /dot/fn.sh 2 1
 /dot/setpath.sh 59 1
@@ -198,3 +193,7 @@
 /dot/.gitignore 1 4
 /root/.zshrc 1 73
 /dot/README.md 11 29
+/etc/pacman.conf 92 1
+/boot/refind_linux.conf 1 433
+/etc/systemd/system/getty.target.wants/getty@tty1.service 50 1
+/etc/fstab 8 49

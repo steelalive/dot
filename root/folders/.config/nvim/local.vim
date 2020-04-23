@@ -48,15 +48,13 @@ call dein#add('dracula/vim')
 call dein#add('jacoborus/tender.vim')
 call dein#add('kyoz/purify')
 call dein#add('jszakmeister/vim-togglecursor')
-call dein#add('sheerun/vim-polyglot')
 call dein#add('xolox/vim-colorscheme-switcher')
 call dein#add('Taverius/vim-colorscheme-manager')
 call dein#add('xolox/vim-misc')
-"call dein#add('')
-"call dein#add('')
-"call dein#add('')
-"call dein#add('')
-"call dein#add('')
+call dein#add('joshdick/onedark.vim')
+call dein#add('mhartington/oceanic-next')
+call dein#add('drewtempelmeyer/palenight.vim')
+call dein#add('ayu-theme/ayu-vim')
 
 call dein#add('neomake/neomake')
 call dein#add('autozimu/LanguageClient-neovim', {
@@ -65,8 +63,8 @@ call dein#add('autozimu/LanguageClient-neovim', {
     \ })
 call dein#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
 
-"call dein#add('')
-"call dein#add('')
+call dein#add('rakr/vim-one')
+call dein#add('mhartington/oceanic-next')
 "call dein#add('')
 "call dein#add('')
 "call dein#add('')
@@ -228,7 +226,7 @@ set wildignore=*.o,*.obj,*.bak,*.exe,*.pyc,*.class
 set wildignorecase
 set wildmenu          " visual autocomplete for command menu
 set wildmode=list:longest
-let mapleader=','
+" let mapleader=','
 "let maplocalleader = ','
 syntax enable         " enables syntax highlighting
 

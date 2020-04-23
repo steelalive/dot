@@ -212,7 +212,7 @@ shiftlast() {
 export -f shiftlast
 #title "$(uname -rnsm)"
 bashnorc() {
-	env -i kernel='/ext/src/kernel/samsung/exynos7420' O=/ext/out OUT_DIR=/ext/out TOP=/ext/src src=/ext/src PS1='\$ ' PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
+	env -i kernel='/ext/src/kernel/samsung/exynos7420' dot=/dot O=/ext/out OUT_DIR=/ext/out TOP=/ext/src src=/ext/src PS1='\$ ' PATH=/usr/androbin:/usr/bin:/dot/bin:/dot/bin/final HOME=/root USER=root TERMINFO=/etc/terminfo TERM=xterm-256color /bin/bash --noprofile --norc
 }
 path_default() {
 	unset PATH
@@ -231,6 +231,6 @@ path_append() {
 
 err() {
 	EXIT=$?
-	printf "${W}${0} : $RED""$*""\\n" >&2
+	printf "${RED}$*${R}\\n" >&2
 	return $EXIT
 }

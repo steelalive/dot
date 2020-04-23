@@ -80,3 +80,4 @@ CR="$(echo -ne $'\r')"
 LF="$(echo -ne $'\n')"
 TAB="$(echo -ne $'\t')"
 #ESC="$(echo -ne '\033')"
+return 0

@@ -27,9 +27,6 @@ Do you want to launch $(command -v bash 2>/dev/null)?
 	yorn && $(command -v bash) -il --init-file $dot/init.sh || return 0
 }
 
-#sh $dot/bin/base16.bash
-#[[ -e /etc/rc ]] && . /system/etc/rc
-
 export dot_dir="$dot" dbin="$dot/bin" lux dot
 export PATH="$PATH:$dot/bin:$dot/bin/final:$dot"
 
@@ -37,13 +34,6 @@ for i in $(command \ps aux | command \grep ps1bg.sh | command \grep -v grep | co
 unset android
 is_android && android=android
 . "$dot"/setpath.sh $android
-
-src() {
-	[[ -x "$lux"/usr/local/bin/bash ]] && builtin exec "$lux"/usr/local/bin/bash --init-file /etc/profile
-	[[ -x "$slash/sbin/bash" ]] && builtin exec "$slash/sbin/bash" --init-file /etc/profile
-	[[ -x "$lux"/usr/bin/bash ]] && "$lux"/usr/bin/bash --init-file /etc/profile
-	echo "$lux/bin/bash is not there or something."
-}
 
 setenv() { export "$1=$2"; }
 export -f setenv
@@ -57,9 +47,8 @@ export dot_files="$dot/al.sh $dot/anset.sh /usr/share/LS_COLORS/dircolors.sh $do
 echo
 printf "%b" "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\n"
 for this in $dot_files; do
-	[[ -r $this ]] && "$dot"/bin/linerl "\x1b[1;38;2;0;255;191m$this\x1b[1;38;2;30;144;99m-->Sourcing...\x1b[0m" && source "$this"
+	[[ -r $this ]] && "$dot"/bin/linerl "\x1b[1;38;2;0;255;191m$this\x1b[1;38;2;30;144;99m-->Sourcing...\x1b[0m" $exit_code && source "$this"
 	exit_code=$?
-	[[ $exit_code == 0 ]] && "$dot"/bin/linerl "\x1b[1;38;2;0;255;255m$this\x1b[1;38;2;30;144;255m-->Succesfully sourced!\x1b[0m" $exit_code || printf "%b" "${RED}Cannot source $this\\n"
 done
 printf %b "\x1b[1;38;5;24m ##########################\x1b[1;38;2;0;255;255m$(command -v $0)\x1b[1;38;5;24m ########################## \x1b[0m\\n\\n"
 [[ -e /oem ]] && . $dot/setpath.sh android
@@ -73,7 +62,6 @@ killjobs
 ps1_writer &
 disown &>/dev/null
 is_there "$dot/.dir_colors" && is_in_path dircolors &>/dev/null && eval $(dircolors --sh "$dot/.dir_colors")
-is_in_path archey && archey
 is_in_path fortunes &>/dev/null && fortunes
 [[ -e /oem ]] && . "$dot/setpath.sh" android
 

@@ -4,6 +4,15 @@
 #1#_SCRIPT_#1# - by: steelalive
 #2#::.. Last edit: - Thu May 31 11:56:56 EDT 2018 - by: - steelalive - ..::## #_# - VERSION=0.0.2.9 - #_# #@#310518#@# #2#
 #3#vi ft=fsee ::..#####################_/dot/bin/on_#######################..::#3#
+test_result() {
+	if [[ -e $file_path ]]; then
+		shift 1
+		"${execute}" "${file_path}" $2
+		exit
+	fi
+
+}
+
 if [[ $1 == "-s" ]] || [[ $1 == "silent" ]]; then
 	shift
 	export silence=1
@@ -28,15 +37,6 @@ fi
 arg1_untouched="${1}"
 arg1="${1}"
 execute="${2}"
-test_result() {
-	if [[ -e $file_path ]]; then
-		shift 1
-		"${execute}" "${file_path}" $2
-		exit
-	fi
-
-}
-
 for set_plus in noclobber notify monitor histexpand; do set +o "$set_plus"; done
 for set_minus in ignoreeof hashall pipefail emacs interactive-comments; do set -o "$set_minus"; done
 for shopt_opt in gnu_errfmt lastpipe direxpand autocd cdable_vars cdspell checkwinsize checkhash cmdhist dirspell extglob globstar histappend histreedit histverify hostcomplete huponexit interactive_comments mailwarn nocaseglob nocasematch no_empty_cmd_completion nullglob progcomp promptvars sourcepath; do
@@ -180,6 +180,12 @@ for dir in $(<${findtmp:-/tmp/find.tmp}); do
 		test_result "$@"
 	fi
 done
+(
+	cd $dot
+	printf "%s\n " ./* ./*/* ./*/*/* | fz -q $arg1_untouched >/tmp/fz
+	file_path="$(realpath "$(</tmp/fz)")"
+	test_result "$@"
+)
 
 is_in_path fd && is_in_path fzf && IFS=$'\n' fd --full-path --hidden --max-depth 5 --type f -a . $dot | fz --query="$arg1_untouched" --exit-0 >/tmp/file_path
 unset IFS

@@ -108,8 +108,8 @@ tv)
 		((EXIT == 0)) && exit 0
 		exit 1
 	}
-	((EXIT == 0)) || ANLO "8.8.8.8 ${ORANGE}is not responding...\n"
-	((EXIT2 == 0)) || ANLO "Google.ca ${ORANGE}is not responding...\n"
+	((EXIT == 0)) || ANLO "Internet is not reachable...\n"
+	((EXIT2 == 0)) || ANLO "Name resolving failed.\n"
 	((EXIT == 0)) && ANG 'We are online.\n'
 	#{ (( EXIT != 0 )) || (( EXIT2 != 0 )); } && exit 1
 

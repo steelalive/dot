@@ -1,0 +1,9 @@
+#!/bin/bash
+#-*- coding: utf-8 -*-
+#1#_SCRIPT_#1# - by: steelalive
+#2#::.. Last edit: - Thu Jul 26 04:24:43 EDT 2018 ..::## #_# - VERSION=0.0.0.1 - #_# #@#2018-07-26#@# #2#
+# vi: set noro: ft=sh
+#3#::..#####################_/dot/bin/rmbrokenlink_#######################..::#3#
+ANORANGE
+find -L . -name . -o -type d -prune -o -type l -exec rm -v {} +
+ANR

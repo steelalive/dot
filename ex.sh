@@ -195,7 +195,6 @@ HISTIGNORE="&:cd:..:...:ls:la:lad:lsd:[bf]g:exit:yy"
 HISTFILE="$dot/.histfile"
 HISTFILESIZE=500000
 HISTSIZE=500000
-HOST="${HOST:-$(hostname)}" HOSTNAME="$HOST"
 HOME="${HOME:-/root}"
 HOSTFILE="${HOSTFILE:-$HOME/.ssh/known_hosts}"
 IGNOREEOF='2'
@@ -257,6 +256,7 @@ auto_resume=1
 broadcast='192.168.0.1'
 chmod 777 /tmp/loadcpu /tmp/prompt /tmp/START.1 2>/dev/null
 force_color_prompt=yes
+VIM_BIN=/usr/bin/nvim
 hotmail='demers.francis@hotmail.com'
 netmask='255.255.255.0'
 no_proxy='localhost,127.0.0.1,localaddress,.localdomain.com'
@@ -322,3 +322,4 @@ if [ -n "${BASH_VERSION-}" ] && [ -n "${PS1-}" ] && [ -z "${BASH_COMPLETION_COMP
 	fi
 
 fi
+return 0

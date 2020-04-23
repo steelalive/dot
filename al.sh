@@ -52,17 +52,18 @@ alias more='less '
 alias most='less '
 alias pacr='pacman -Rcsn '
 alias pacs='pacman -S --needed --noconfirm '
+alias pacq='pacman -Qi '
 alias suedit='SUDO_EDITOR=kate sudoedit '
 alias tree='tree --dirsfirst -pshF -C '
 alias udevreload='command \udevadm control --reload-rules; systemctl restart systemd-udevd.service;udevadm control --reload '
 alias vnstat="vnstat -i wlan0 "
 alias ~='builtin \cd ~; lk '
-if is_in_path powerpill; then
-	alias pacman="command \powerpill "
-	alias pacr='command \powerpill -Rcsn '
-	alias pacs='command \powerpill -S --needed --noconfirm '
-	alias pacu='command \powerpill --needed -U *.tar.xz '
-fi
+#if is_in_path powerpill; then
+#	alias pacman="command \powerpill "
+#	alias pacr='command \powerpill -Rcsn '
+#	alias pacs='command \powerpill -S --needed --noconfirm '
+#	alias pacu='command \powerpill --needed -U *.tar.xz '
+#fi
 is_in_path htop && alias top=htop
 
 #Copied from some nerd, probably some apple shit. Ask jeeves, maybe he knows.
