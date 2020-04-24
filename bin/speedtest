@@ -1,6 +1,0 @@
-#!/bin/bash
-#-*- coding: utf-8 -*-
-#1#_SCRIPT_#1#
-#2#::.. Last edit: - Mon Jun 19 08:49:56 EDT 2017 - by: -  - ..::## #_# - VERSION=0.0.0.2 - #_# #@#190617#@# #2#
-#3#::..#####################_/dot/bin/speedtest_#######################..::#3#
-[[ $HOSTNAME == GA ]] && rsync --progress --itemize-changes --progress --human-readable $pi:/swap /

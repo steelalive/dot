@@ -37,8 +37,10 @@ baloo
 baloo-widgets
 base
 bash
+bash-completion
 bat
 bc
+bcg729
 bettercap
 binutils
 bison
@@ -74,6 +76,7 @@ confuse
 convertlit
 coreutils
 covimerage
+cowpatty
 cracklib
 crda
 cryptsetup
@@ -117,6 +120,7 @@ expat
 expect
 faad2
 fakeroot
+fastjar
 fd
 ffmpeg
 ffmpeg2theora
@@ -135,6 +139,7 @@ flashrom
 flatpak
 flex
 fontconfig
+fping
 frameworkintegration
 freetype2
 fribidi
@@ -171,6 +176,7 @@ glm
 glslang
 glu
 gmp
+gnome-firmware
 gnupg
 gnustep-base
 gnutls
@@ -184,6 +190,7 @@ graphite
 grc
 grep
 groff
+grub
 gsettings-desktop-schemas
 gsm
 gst-libav
@@ -224,11 +231,13 @@ haskell-vector
 hcxdumptool
 hcxkeys
 hcxtools
+hdparm
 hicolor-icon-theme
 hidapi
 highlight
 hostapd
 hostsblock
+hstr-git
 http-parser
 hwids
 hwloc
@@ -249,8 +258,11 @@ iwd
 jack
 jansson
 jasper
+java-jsch
+java-runtime-common
 jbig2dec
 john
+jre8-openjdk-headless
 js60
 json-c
 json-glib
@@ -282,6 +294,8 @@ kdeplasma-addons
 kdesu
 kdialog
 kdnssd
+kdsoap
+kdsoap-ws-discovery-client
 kemoticons
 keyutils
 kfilemetadata
@@ -356,6 +370,7 @@ libavc1394
 libblockdev
 libbluray
 libbsd
+libburn
 libbytesize
 libcaca
 libcanberra
@@ -402,6 +417,8 @@ libidn2
 libiec61883
 libimobiledevice
 libinput
+libisoburn
+libisofs
 libjcat
 libjpeg-turbo
 libkate
@@ -416,6 +433,7 @@ liblqr
 libluv
 libmad
 libmatroska
+libmaxminddb
 libmbim
 libmfx
 libmicrohttpd
@@ -453,6 +471,7 @@ libpipeline
 libplacebo
 libplist
 libpng
+libportal
 libproxy
 libpsl
 libpulse
@@ -526,6 +545,7 @@ libxkbfile
 libxml2
 libxmlb
 libxmu
+libxnvctrl
 libxpm
 libxrandr
 libxrender
@@ -560,6 +580,7 @@ lz4
 lzo
 lzop
 m4
+macchanger
 make
 makepkg-optimize
 man-db
@@ -586,6 +607,7 @@ mpg123
 mpv
 msgpack-c
 mtdev
+mtools
 mujs
 nano
 nano-syntax-highlighting
@@ -613,6 +635,7 @@ ntfs-3g
 ntp
 numactl
 nvidia
+nvidia-settings
 nvidia-utils
 ocl-icd
 openal
@@ -622,11 +645,13 @@ openexr
 openjpeg2
 openmp
 openmpi
+opennic-up
 openssh
 openssl
 optipng
 opus
 orc
+os-prober
 ostree
 oxygen
 p11-kit
@@ -715,6 +740,7 @@ pulseaudio
 purpose
 pyalpm
 pygobject-devel
+pyrit
 pyside2
 python
 python-appdirs
@@ -909,7 +935,9 @@ solid
 sonnet
 sound-theme-freedesktop
 source-highlight
+spandsp
 speedcrunch
+speedtest-cli
 speex
 speexdsp
 spice
@@ -939,9 +967,18 @@ threadweaver
 tk
 tmux
 tpm2-tss
+tree
 tslib
 ttf-hack
 ttf-liberation
+ttf-ms-win10
+ttf-ms-win10-japanese
+ttf-ms-win10-korean
+ttf-ms-win10-other
+ttf-ms-win10-sea
+ttf-ms-win10-thai
+ttf-ms-win10-zh_cn
+ttf-ms-win10-zh_tw
 ttf-nerd-fonts-symbols-mono
 tzdata
 uchardet
@@ -974,8 +1011,11 @@ wdiff
 webrtc-audio-processing
 wget
 which
+wifite
+wifite2-git
 wireless-regdb
 wireless_tools
+wireshark-cli
 wpa_supplicant
 wxgtk-common
 wxgtk3

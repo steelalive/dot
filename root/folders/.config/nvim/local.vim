@@ -65,7 +65,7 @@ call dein#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
 
 call dein#add('rakr/vim-one')
 call dein#add('mhartington/oceanic-next')
-"call dein#add('')
+call dein#add('haishanh/night-owl')
 "call dein#add('')
 "call dein#add('')
 "call dein#add('')

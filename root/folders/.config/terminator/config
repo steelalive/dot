@@ -1,139 +1,155 @@
 [global_config]
-  always_split_with_profile = True
-  broadcast_default = off
-  enabled_plugins = TerminatorThemes, TerminalShot
   focus = mouse
-  suppress_multiple_term_dialog = True
-  title_inactive_bg_color = "#a40000"
-  title_receive_fg_color = "#000000"
-  title_transmit_bg_color = "#4e9a06"
-  title_transmit_fg_color = "#000000"
   window_state = maximise
+  broadcast_default = off
+  title_transmit_fg_color = "#000000"
+  title_transmit_bg_color = "#4e9a06"
+  title_receive_fg_color = "#000000"
+  title_inactive_bg_color = "#a40000"
+  enabled_plugins = TerminatorThemes, TerminalShot
+  suppress_multiple_term_dialog = True
+  always_split_with_profile = True
 [keybindings]
   go_next = <Primary>Tab
   next_tab = F1
-[layouts]
-  [[default]]
-    [[[child0]]]
-      fullscreen = False
-      last_active_window = True
-      maximised = True
-      order = 0
-      parent = ""
-      position = 0:0
-      size = 1920, 1155
-      title = /bin/bash
-      type = Window
-    [[[child1]]]
-      active_page = 1
-      labels = None, None
-      last_active_term = 56ca0c73-8a2d-4f21-89cd-8180c38bb347, 8a658dc7-fced-4f51-a23a-f3777d49aa17
-      order = 0
-      parent = child0
-      type = Notebook
-    [[[terminal2]]]
-      directory = ""
-      order = 0
-      parent = child1
-      profile = OceanicMaterial
-      type = Terminal
-      uuid = 56ca0c73-8a2d-4f21-89cd-8180c38bb347
-    [[[terminal3]]]
-      order = 1
-      parent = child1
-      profile = OceanicMaterial
-      type = Terminal
-      uuid = 8a658dc7-fced-4f51-a23a-f3777d49aa17
-[plugins]
 [profiles]
   [[default]]
     cursor_color = "#aaaaaa"
-    custom_command = exec sudo /bin/bash -il
-    font = Droid Sans Mono 12
-    login_shell = True
-    palette = "#1a1a1a:#f4005f:#98e024:#fa8419:#9d65ff:#f4005f:#58d1eb:#c4c5b5:#625e4c:#f4005f:#98e024:#e0d561:#9d65ff:#f4005f:#58d1eb:#f6f6ef"
+    font = Monospace 12
     scroll_on_keystroke = False
     scrollback_infinite = True
-    use_custom_command = True
-    use_system_font = False
+    palette = "#1a1a1a:#f4005f:#98e024:#fa8419:#9d65ff:#f4005f:#58d1eb:#c4c5b5:#625e4c:#f4005f:#98e024:#e0d561:#9d65ff:#f4005f:#58d1eb:#f6f6ef"
     word_chars = "-,.?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
   [[Galaxy]]
     background_color = "#1d2837"
     cursor_color = "#bbbbbb"
-    custom_command = exec sudo /bin/bash -il
     font = Monospace 12
     foreground_color = "#ffffff"
-    login_shell = True
-    palette = "#000000:#f9555f:#21b089:#fef02a:#589df6:#944d95:#1f9ee7:#bbbbbb:#555555:#fa8c8f:#35bb9a:#ffff55:#589df6:#e75699:#3979bc:#ffffff"
     scroll_on_keystroke = False
     scrollback_infinite = True
-    use_custom_command = True
-    use_system_font = False
+    palette = "#000000:#f9555f:#21b089:#fef02a:#589df6:#944d95:#1f9ee7:#bbbbbb:#555555:#fa8c8f:#35bb9a:#ffff55:#589df6:#e75699:#3979bc:#ffffff"
     word_chars = "-,.?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
   [[Gruvbox Dark]]
     background_color = "#1e1e1e"
     cursor_color = "#bbbbbb"
-    custom_command = exec sudo /bin/bash -il
     font = Monospace 12
     foreground_color = "#e6d4a3"
-    login_shell = True
-    palette = "#161819:#f73028:#aab01e:#f7b125:#719586:#c77089:#7db669:#faefbb:#7f7061:#be0f17:#868715:#cc881a:#377375:#a04b73:#578e57:#e6d4a3"
     scroll_on_keystroke = False
     scrollback_infinite = True
-    use_custom_command = True
-    use_system_font = False
+    palette = "#161819:#f73028:#aab01e:#f7b125:#719586:#c77089:#7db669:#faefbb:#7f7061:#be0f17:#868715:#cc881a:#377375:#a04b73:#578e57:#e6d4a3"
     word_chars = "-,./?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
   [[Material colors]]
     background_color = "#1e282c"
     cursor_color = "#657B83"
-    custom_command = exec sudo /bin/bash -il
     font = Monospace 12
     foreground_color = "#c3c7d1"
-    login_shell = True
-    palette = "#073641:#EB606B:#C3E88D:#F7EB95:#80CBC3:#FF2490:#AEDDFF:#FFFFFF:#002B36:#EB606B:#C3E88D:#F7EB95:#7DC6BF:#6C71C3:#34434D:#FFFFFF"
     scroll_on_keystroke = False
     scrollback_infinite = True
-    use_custom_command = True
-    use_system_font = False
+    palette = "#073641:#EB606B:#C3E88D:#F7EB95:#80CBC3:#FF2490:#AEDDFF:#FFFFFF:#002B36:#EB606B:#C3E88D:#F7EB95:#7DC6BF:#6C71C3:#34434D:#FFFFFF"
     word_chars = "-,.?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
   [[MonaLisa]]
     cursor_color = "#aaaaaa"
   [[Monokai Soda]]
     background_color = "#1a1a1a"
     cursor_color = "#f6f7ec"
-    custom_command = exec sudo /bin/bash -il
     font = Monospace 12
     foreground_color = "#c4c5b5"
-    login_shell = True
-    palette = "#1a1a1a:#f4005f:#98e024:#fa8419:#9d65ff:#f4005f:#58d1eb:#c4c5b5:#625e4c:#f4005f:#98e024:#e0d561:#9d65ff:#f4005f:#58d1eb:#f6f6ef"
     scroll_on_keystroke = False
     scrollback_infinite = True
-    use_custom_command = True
-    use_system_font = False
+    palette = "#1a1a1a:#f4005f:#98e024:#fa8419:#9d65ff:#f4005f:#58d1eb:#c4c5b5:#625e4c:#f4005f:#98e024:#e0d561:#9d65ff:#f4005f:#58d1eb:#f6f6ef"
     word_chars = "-,./?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
   [[Monokai Vivid]]
     background_color = "#120b0d"
     cursor_color = "#c46c32"
-    custom_command = exec sudo /bin/bash -il
     font = Monospace 12
     foreground_color = "#f7d66a"
-    login_shell = True
-    palette = "#351b0e:#9b291c:#636232:#c36e28:#515c5d:#9b1d29:#588056:#f7d75c:#874228:#ff4331:#b4b264:#ff9566:#9eb2b4:#ff5b6a:#8acd8f:#ffe598"
     scroll_on_keystroke = False
     scrollback_infinite = True
-    use_custom_command = True
-    use_system_font = False
+    palette = "#351b0e:#9b291c:#636232:#c36e28:#515c5d:#9b1d29:#588056:#f7d75c:#874228:#ff4331:#b4b264:#ff9566:#9eb2b4:#ff5b6a:#8acd8f:#ffe598"
     word_chars = "-,./?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
   [[OceanicMaterial]]
     background_color = "#1c262b"
     cursor_color = "#b3b8c3"
-    custom_command = exec sudo /bin/bash -il
     font = Monospace 12
     foreground_color = "#c2c8d7"
-    login_shell = True
-    palette = "#000000:#ee2b2a:#40a33f:#ffea2e:#1e80f0:#8800a0:#16afca:#a4a4a4:#777777:#dc5c60:#70be71:#fff163:#54a4f3:#aa4dbc:#42c7da:#ffffff"
     scroll_on_keystroke = False
     scrollback_infinite = True
-    use_custom_command = True
-    use_system_font = False
+    palette = "#000000:#ee2b2a:#40a33f:#ffea2e:#1e80f0:#8800a0:#16afca:#a4a4a4:#777777:#dc5c60:#70be71:#fff163:#54a4f3:#aa4dbc:#42c7da:#ffffff"
     word_chars = "-,.?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
+  [[Duotone Dark]]
+    background_color = "#1f1d27"
+    cursor_color = "#ff9839"
+    font = Droid Sans Mono 12
+    foreground_color = "#b7a1ff"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    palette = "#1f1d27:#d9393e:#2dcd73:#d9b76e:#ffc284:#de8d40:#2488ff:#b7a1ff:#353147:#d9393e:#2dcd73:#d9b76e:#ffc284:#de8d40:#2488ff:#eae5ff"
+    word_chars = "-,.?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
+  [[Grape]]
+    background_color = "#171423"
+    cursor_color = "#a288f7"
+    font = Droid Sans Mono 12
+    foreground_color = "#9f9fa1"
+    scroll_on_keystroke = False
+    scrollback_infinite = True
+    palette = "#2d283f:#ed2261:#1fa91b:#8ddc20:#487df4:#8d35c9:#3bdeed:#9e9ea0:#59516a:#f0729a:#53aa5e:#b2dc87:#a9bcec:#ad81c2:#9de3eb:#a288f7"
+    word_chars = "-,.?%&#_"
+    login_shell = True
+    use_custom_command = True
+    custom_command = exec sudo /bin/bash -il
+[layouts]
+  [[default]]
+    [[[child0]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 0:0
+      maximised = True
+      fullscreen = False
+      size = 1280, 955
+      title = /bin/bash
+      last_active_window = True
+    [[[child1]]]
+      type = Notebook
+      parent = child0
+      order = 0
+      labels = None, None
+      last_active_term = 56ca0c73-8a2d-4f21-89cd-8180c38bb347, 8a658dc7-fced-4f51-a23a-f3777d49aa17
+      active_page = 1
+    [[[terminal2]]]
+      type = Terminal
+      parent = child1
+      order = 0
+      profile = OceanicMaterial
+      uuid = 56ca0c73-8a2d-4f21-89cd-8180c38bb347
+    [[[terminal3]]]
+      type = Terminal
+      parent = child1
+      order = 1
+      profile = Gruvbox Dark
+      uuid = 8a658dc7-fced-4f51-a23a-f3777d49aa17
+[plugins]

@@ -6,13 +6,16 @@
 #grub-mkconfig -o /boot/grub/grub.cfg
 #grub-mkconfig -o /boot/efi/EFI/boot/grub.cfg
 #modprobe dm-mod
-for i in $(loc "grub.cfg") $(
-	cd /mnt
-	ff grub.cfg 2>/dev/null
-); do
-	ANW "Found $G${i}...\n$Y"
-	grub-mkconfig -o "$i"
-done
+echo "Press Y for extensive grub.cfg search and modification."
+yorn && {
+	for i in $(loc "grub.cfg") $(
+		cd /mnt
+		ff grub.cfg 2>/dev/null
+	); do
+		ANW "Found $G${i}...\n$Y"
+		yorn && grub-mkconfig -o "$i"
+	done
+}
 exec grub-mkconfig -o /boot/grub/grub.cfg "$@"
 #grub-mkconfig -o /boot/grub/grub.cfg
 # for i in /boot /last/boot /mnt/sda1/efi /mnt/sdb3/EFI; do grub-install --target=x86_64-efi --efi-directory=$i --bootloader-id=grub --recheck --debug;done
